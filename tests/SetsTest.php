@@ -10,6 +10,8 @@ use function Innmind\BlackBox\Set\{
     naturalNumbersExceptZero,
     realNumbers,
     range,
+    char,
+    strings,
 };
 use Innmind\BlackBox\Exception\LogicException;
 use Innmind\Immutable\SetInterface;
@@ -132,6 +134,25 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('float', (string) $set->type());
+        $this->assertCount(100, $set);
+    }
+
+    public function testChar()
+    {
+        $set = char();
+
+        $this->assertInstanceOf(SetInterface::class, $set);
+        $this->assertSame('string', (string) $set->type());
+        $this->assertCount(1, $set);
+        $this->assertSame(1, strlen($set->current()));
+    }
+
+    public function testStrings()
+    {
+        $set = strings(100, 42);
+
+        $this->assertInstanceOf(SetInterface::class, $set);
+        $this->assertSame('string', (string) $set->type());
         $this->assertCount(100, $set);
     }
 }

@@ -103,3 +103,25 @@ function range(float $min, float $max, float $step = 1): SetInterface
 {
     return Set::of('float', ...\range($min, $max, $step));
 }
+
+function char(): SetInterface
+{
+    return Set::of('string', chr(\random_int(0, 255)));
+}
+
+function strings(int $range, int $maxLength): SetInterface
+{
+    $set = Set::of('string');
+
+    foreach (range(1, $range) as $_) {
+        $string = '';
+
+        foreach (range(1, \random_int(2, $maxLength)) as $_) {
+            $string .= chr(\random_int(0, 255));
+        }
+
+        $set = $set->add($string);
+    }
+
+    return $set;
+}
