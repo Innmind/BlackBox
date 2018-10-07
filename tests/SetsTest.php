@@ -12,6 +12,7 @@ use function Innmind\BlackBox\Set\{
     range,
     char,
     strings,
+    unsafeStrings,
 };
 use Innmind\BlackBox\Exception\LogicException;
 use Innmind\Immutable\SetInterface;
@@ -154,5 +155,13 @@ class SetsTest extends TestCase
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('string', (string) $set->type());
         $this->assertCount(100, $set);
+    }
+
+    public function testUnsafeStrings()
+    {
+        $set = unsafeStrings();
+
+        $this->assertInstanceOf(SetInterface::class, $set);
+        $this->assertSame('string', (string) $set->type());
     }
 }

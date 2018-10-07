@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Exception\LogicException;
+use Innmind\Json\Json;
 use Innmind\Immutable\{
     SetInterface,
     Set,
@@ -124,4 +125,14 @@ function strings(int $range, int $maxLength): SetInterface
     }
 
     return $set;
+}
+
+/**
+ * @see https://github.com/minimaxir/big-list-of-naughty-strings
+ */
+function unsafeStrings(): SetInterface
+{
+    return Set::of('string', ...Json::decode(
+        \file_get_contents(__DIR__.'/unsafeStrings.json')
+    ));
 }
