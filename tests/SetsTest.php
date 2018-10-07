@@ -10,7 +10,7 @@ use function Innmind\BlackBox\Set\{
     naturalNumbersExceptZero,
     realNumbers,
     range,
-    char,
+    chars,
     strings,
     unsafeStrings,
 };
@@ -140,12 +140,13 @@ class SetsTest extends TestCase
 
     public function testChar()
     {
-        $set = char();
+        $set = chars();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('string', (string) $set->type());
-        $this->assertCount(1, $set);
-        $this->assertSame(1, strlen($set->current()));
+        $this->assertCount(256, $set);
+
+        $this->assertTrue($set->equals(chars()));
     }
 
     public function testStrings()
