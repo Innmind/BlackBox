@@ -158,6 +158,13 @@ class SetsTest extends TestCase
         $this->assertCount(1000, $set);
     }
 
+    public function testThrowWhenStringsRangeLessThanOne()
+    {
+        $this->expectException(LogicException::class);
+
+        strings(0);
+    }
+
     public function testUnsafeStrings()
     {
         $set = unsafeStrings();

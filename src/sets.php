@@ -118,12 +118,16 @@ function chars(): SetInterface
 
 function strings(int $range = 1000, int $maxLength = 512): SetInterface
 {
+    if ($range < 1) {
+        throw new LogicException;
+    }
+
     $set = Set::of('string');
 
-    foreach (range(1, $range) as $_) {
+    while ($set->size() < $range) {
         $string = '';
 
-        foreach (range(1, \random_int(2, $maxLength)) as $_) {
+        foreach (\range(1, \random_int(2, $maxLength)) as $_) {
             $string .= chr(\random_int(0, 255));
         }
 
