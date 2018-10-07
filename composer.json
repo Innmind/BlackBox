@@ -1,0 +1,25 @@
+{
+    "name": "innmind/black-box",
+    "type": "library",
+    "description": "Unit test library",
+    "keywords": ["test", "unit test", "property based testing"],
+    "homepage": "http://github.com/Innmind/BlackBox",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baptiste Langlade",
+            "email": "langlade.baptiste@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "http://github.com/Innmind/BlackBox/issues"
+    },
+    "require": {
+        "php": "~7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Innmind\\BlackBox\\": "src/"
+        }
+    }
+}
