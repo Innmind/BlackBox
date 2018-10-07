@@ -15,11 +15,16 @@
         "issues": "http://github.com/Innmind/BlackBox/issues"
     },
     "require": {
-        "php": "~7.2"
+        "php": "~7.2",
+        "innmind/immutable": "^2.9"
     },
     "autoload": {
         "psr-4": {
             "Innmind\\BlackBox\\": "src/"
-        }
+        },
+        "files": ["src/sets.php"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4"
     }
 }
