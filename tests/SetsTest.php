@@ -22,13 +22,13 @@ class SetsTest extends TestCase
 {
     public function testIntegers()
     {
-        $set = integers(100);
+        $set = integers();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(100, $set);
+        $this->assertCount(1000, $set);
 
-        $this->assertFalse($set->equals(integers(100)));
+        $this->assertFalse($set->equals(integers()));
     }
 
     public function testThrowWhenIntegersRangeLessThanOne()
@@ -40,14 +40,14 @@ class SetsTest extends TestCase
 
     public function testIntegersExceptZero()
     {
-        $set = integersExceptZero(100);
+        $set = integersExceptZero();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(100, $set);
+        $this->assertCount(1000, $set);
         $this->assertFalse($set->contains(0));
 
-        $this->assertFalse($set->equals(integersExceptZero(100)));
+        $this->assertFalse($set->equals(integersExceptZero()));
     }
 
     public function testThrowWhenIntegersExceptZeroRangeLessThanOne()
@@ -59,11 +59,11 @@ class SetsTest extends TestCase
 
     public function testNaturalNumbers()
     {
-        $set = naturalNumbers(100);
+        $set = naturalNumbers();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(100, $set);
+        $this->assertCount(1000, $set);
         $lowest = $set
             ->sort(static function(int $a, int $b): int {
                 return $a <=> $b;
@@ -71,7 +71,7 @@ class SetsTest extends TestCase
             ->first();
         $this->assertTrue($lowest >= 0);
 
-        $this->assertFalse($set->equals(naturalNumbers(100)));
+        $this->assertFalse($set->equals(naturalNumbers()));
     }
 
     public function testThrowWhenNaturalNumbersRangeLessThanOne()
@@ -83,11 +83,11 @@ class SetsTest extends TestCase
 
     public function testNaturalNumbersExceptZero()
     {
-        $set = naturalNumbersExceptZero(100);
+        $set = naturalNumbersExceptZero();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(100, $set);
+        $this->assertCount(1000, $set);
         $lowest = $set
             ->sort(static function(int $a, int $b): int {
                 return $a <=> $b;
@@ -95,7 +95,7 @@ class SetsTest extends TestCase
             ->first();
         $this->assertTrue($lowest >= 1);
 
-        $this->assertFalse($set->equals(naturalNumbersExceptZero(100)));
+        $this->assertFalse($set->equals(naturalNumbersExceptZero()));
     }
 
     public function testThrowWhenNaturalNumbersExceptZeroRangeLessThanOne()
@@ -107,11 +107,11 @@ class SetsTest extends TestCase
 
     public function testRealNumbers()
     {
-        $set = realNumbers(100);
+        $set = realNumbers();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('float', (string) $set->type());
-        $this->assertCount(100, $set);
+        $this->assertCount(1000, $set);
         $lowest = $set
             ->sort(static function(float $a, float $b): int {
                 return $a <=> $b;
@@ -119,7 +119,7 @@ class SetsTest extends TestCase
             ->first();
         $this->assertTrue($lowest < 0);
 
-        $this->assertFalse($set->equals(realNumbers(100)));
+        $this->assertFalse($set->equals(realNumbers()));
     }
 
     public function testThrowWhenRealNumbersRangeLessThanOne()
@@ -150,11 +150,11 @@ class SetsTest extends TestCase
 
     public function testStrings()
     {
-        $set = strings(100, 42);
+        $set = strings();
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('string', (string) $set->type());
-        $this->assertCount(100, $set);
+        $this->assertCount(1000, $set);
     }
 
     public function testUnsafeStrings()
