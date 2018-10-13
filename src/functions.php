@@ -3,10 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
-use Innmind\BlackBox\{
-    Given,
-    When,
-};
 use Innmind\Immutable\{
     SetInterface,
     Set,
