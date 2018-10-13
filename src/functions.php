@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
-use Innmind\BlackBox\Given;
+use Innmind\BlackBox\{
+    Given,
+    When,
+};
 use Innmind\Immutable\{
     SetInterface,
     Set,
@@ -33,4 +36,9 @@ function generate(string $name, callable $generate): Given\InitialValue
         new Given\InitialValue\Name($name),
         $generate
     );
+}
+
+function when(callable $callable): When
+{
+    return new When($callable);
 }

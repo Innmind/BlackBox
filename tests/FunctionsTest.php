@@ -8,13 +8,19 @@ use function Innmind\BlackBox\{
     any,
     value,
     generate,
+    when,
 };
 use Innmind\BlackBox\{
     Given,
     Given\Any,
     Given\Generate,
+    Given\Scenario,
+    When,
 };
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Map,
+};
 use PHPUnit\Framework\TestCase;
 
 class FunctionsTest extends TestCase
@@ -55,5 +61,15 @@ class FunctionsTest extends TestCase
         $this->assertInstanceOf(Given::class, $given);
         $this->assertCount(1, $given->scenarios());
         $this->assertSame(1, $given->scenarios()->current()->a);
+    }
+
+    public function testWhen()
+    {
+        $when = when(function() {
+            return 42;
+        });
+
+        $this->assertInstanceOf(When::class, $when);
+        $this->assertSame(42, $when(new Scenario(new Map('string', 'mixed')))->value());
     }
 }
