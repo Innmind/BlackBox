@@ -37,6 +37,10 @@ class AnyTest extends TestCase
             $any,
             $any->dependOn($this->createMock(InitialValue::class))
         );
+        $this->assertInstanceOf(
+            Any::class,
+            $any->dependOn($this->createMock(InitialValue::class))
+        );
     }
 
     public function testThrowWhenAlreadyDependOnOtherSet()
