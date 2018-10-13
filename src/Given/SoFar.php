@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Given;
 
-use Innmind\BlackBox\Given\InitialValue\Name;
+use Innmind\BlackBox\{
+    Given\InitialValue\Name,
+    Exception\LogicException,
+};
 use Innmind\Immutable\Map;
 
 final class SoFar
@@ -17,6 +20,10 @@ final class SoFar
 
     public function add(Name $name, $value): self
     {
+        if ($this->values->contains((string) $name)) {
+            throw new LogicException("$name already defined");
+        }
+
         $self = clone $this;
         $self->values = $self->values->put((string) $name, $value);
 

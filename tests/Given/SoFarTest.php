@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Given\SoFar,
     Given\Scenario,
     Given\InitialValue\Name,
+    Exception\LogicException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -26,6 +27,15 @@ class SoFarTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $soFar->foo;
+    }
+
+    public function testThrowWhenAddingAnAlredyDefinedName()
+    {
+        $this->expectException(LogicException::class);
+
+        (new SoFar)
+            ->add(new Name('foo'), 'watev')
+            ->add(new Name('foo'), 'watev');
     }
 
     public function testScenario()
