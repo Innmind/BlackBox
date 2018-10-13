@@ -49,4 +49,21 @@ class GivenTest extends TestCase
         $this->assertSame(2, $scenarios->get(5)->a);
         $this->assertSame(5, $scenarios->get(5)->b);
     }
+
+    public function testEmptyMatrix()
+    {
+        $given = new Given;
+
+        $this->assertCount(1, $given->matrix());
+    }
+
+    public function testOneDependency()
+    {
+        $given = new Given(
+            new Any(new Name('a'), Set::of('int', 1))
+        );
+
+        $this->assertCount(1, $given->matrix());
+        $this->assertSame(1, $given->matrix()->current()->a);
+    }
 }

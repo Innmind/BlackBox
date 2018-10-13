@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
 use Innmind\Immutable\{
     StreamInterface,
     Stream,
+    Map,
 };
 
 final class Given
@@ -22,7 +23,10 @@ final class Given
         $initialValues = Stream::of(InitialValue::class, ...$initialValues);
 
         if ($initialValues->size() === 0) {
-            $this->scenarios = Stream::of(Scenario::class, new Scenario);
+            $this->scenarios = Stream::of(
+                Scenario::class,
+                new Scenario(new Map('string', 'mixed'))
+            );
         } else {
             $this->scenarios = $initialValues
                 ->drop(1)
