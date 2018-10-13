@@ -17,14 +17,14 @@ use PHPUnit\Framework\TestCase;
 
 class GivenTest extends TestCase
 {
-    public function testMatrix()
+    public function testScenarios()
     {
         $given = new Given(
             new Any(new Name('a'), Set::of('int', 1, 2)),
             new Any(new Name('b'), Set::of('int', 3, 4, 5))
         );
 
-        $scenarios = $given->matrix();
+        $scenarios = $given->scenarios();
 
         // [1, 3]
         // [2, 3]
@@ -54,7 +54,7 @@ class GivenTest extends TestCase
     {
         $given = new Given;
 
-        $this->assertCount(1, $given->matrix());
+        $this->assertCount(1, $given->scenarios());
     }
 
     public function testOneDependency()
@@ -63,7 +63,7 @@ class GivenTest extends TestCase
             new Any(new Name('a'), Set::of('int', 1))
         );
 
-        $this->assertCount(1, $given->matrix());
-        $this->assertSame(1, $given->matrix()->current()->a);
+        $this->assertCount(1, $given->scenarios());
+        $this->assertSame(1, $given->scenarios()->current()->a);
     }
 }

@@ -46,7 +46,7 @@ final class Given
         }
     }
 
-    public function matrix(): StreamInterface
+    public function scenarios(): StreamInterface
     {
         return $this->scenarios;
     }
