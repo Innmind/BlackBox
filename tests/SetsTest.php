@@ -13,6 +13,7 @@ use function Innmind\BlackBox\Set\{
     chars,
     strings,
     unsafeStrings,
+    mixed,
 };
 use Innmind\BlackBox\Exception\LogicException;
 use Innmind\Immutable\SetInterface;
@@ -171,5 +172,13 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('string', (string) $set->type());
+    }
+
+    public function testMixed()
+    {
+        $set = mixed();
+
+        $this->assertInstanceOf(SetInterface::class, $set);
+        $this->assertSame('mixed', (string) $set->type());
     }
 }

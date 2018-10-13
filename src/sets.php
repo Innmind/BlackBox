@@ -146,3 +146,21 @@ function unsafeStrings(): SetInterface
         \file_get_contents(__DIR__.'/unsafeStrings.json')
     ));
 }
+
+function mixed(): SetInterface
+{
+    return Set::of(
+        'mixed',
+        -42,
+        0,
+        42,
+        -13.37,
+        13.37,
+        'foobar',
+        [],
+        ['foo'],
+        ['foo' => 'bar'],
+        new class {},
+        function() {}
+    );
+}
