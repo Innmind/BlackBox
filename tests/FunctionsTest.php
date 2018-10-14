@@ -87,6 +87,5 @@ class FunctionsTest extends TestCase
         $test = test('foo', given(), when(function(){}), then());
 
         $this->assertInstanceOf(Test::class, $test);
-        $this->assertSame('foo', (string) $test->name());
     }
 }

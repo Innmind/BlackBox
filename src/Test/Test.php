@@ -26,18 +26,13 @@ final class Test implements TestInterface
         $this->then = $then;
     }
 
-    public function name(): Name
-    {
-        return $this->name;
-    }
-
     public function __invoke(): Report
     {
         return $this
             ->given
             ->scenarios()
             ->reduce(
-                new Report,
+                new Report($this->name),
                 function(Report $report, Scenario $scenario): Report {
                     $result = ($this->when)($scenario);
 

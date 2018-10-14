@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Runner,
     Test,
     Test\Report,
+    Test\Name,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +26,7 @@ class SameProcessTest extends TestCase
         $test
             ->expects($this->once())
             ->method('__invoke')
-            ->willReturn($expected = new Report);
+            ->willReturn($expected = new Report(new Name('foo')));
 
         $this->assertSame($expected, $run($test));
     }

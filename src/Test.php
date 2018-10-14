@@ -10,6 +10,5 @@ use Innmind\BlackBox\{
 
 interface Test
 {
-    public function name(): Name;
     public function __invoke(): Report;
 }

@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     Runner,
     Test,
     Test\Report,
+    Test\Name,
 };
 use Innmind\Url\Path;
 use Innmind\Immutable\{
@@ -38,7 +39,7 @@ class SuiteTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($test)
-            ->willReturn($expected = new Report);
+            ->willReturn($expected = new Report(new Name('foo')));
 
         $reports = $suite($path);
 

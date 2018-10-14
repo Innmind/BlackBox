@@ -5,6 +5,7 @@ namespace Tests\Innmind\BlackBox\Test;
 
 use Innmind\BlackBox\{
     Test\Report,
+    Test\Name,
     Given\Scenario,
     When\Result,
     Then\ScenarioReport,
@@ -17,7 +18,7 @@ class ReportTest extends TestCase
 {
     public function testAddSuccessReport()
     {
-        $report = new Report;
+        $report = new Report(new Name('foo'));
 
         $this->assertFalse($report->failed());
         $this->assertSame(0, $report->assertions());
@@ -37,7 +38,7 @@ class ReportTest extends TestCase
 
     public function testAddFailedReport()
     {
-        $report = new Report;
+        $report = new Report(new Name('foo'));
 
         $this->assertFalse($report->failed());
         $this->assertSame(0, $report->assertions());
@@ -63,7 +64,7 @@ class ReportTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('No report must be added after a failure');
 
-        (new Report)
+        (new Report(new Name('foo')))
             ->add(
                 new Scenario(new Map('string', 'mixed')),
                 new Result(null),
@@ -81,7 +82,7 @@ class ReportTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('No report must be added after a failure');
 
-        (new Report)
+        (new Report(new Name('foo')))
             ->add(
                 new Scenario(new Map('string', 'mixed')),
                 new Result(null),

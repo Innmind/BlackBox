@@ -6,6 +6,7 @@ namespace Tests\Innmind\BlackBox\Loader;
 use Innmind\BlackBox\{
     Loader\RequireLoader,
     Loader,
+    Test,
     Exception\FileDoesntExist,
     Exception\NoTestGeneratorFound,
 };
@@ -32,9 +33,9 @@ class RequireLoaderTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $generators);
         $this->assertSame(\Generator::class, (string) $generators->type());
         $this->assertCount(1, $generators);
-        $this->assertSame(
-            'add',
-            (string) $generators->current()->current()->name()
+        $this->assertInstanceOf(
+            Test::class,
+            $generators->current()->current()
         );
     }
 
@@ -47,14 +48,14 @@ class RequireLoaderTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $generators);
         $this->assertSame(\Generator::class, (string) $generators->type());
         $this->assertCount(1, $generators);
-        $this->assertSame(
-            'constant',
-            (string) $generators->current()->current()->name()
+        $this->assertInstanceOf(
+            Test::class,
+            $generators->current()->current()
         );
         $generators->current()->next();
-        $this->assertSame(
-            'divide',
-            (string) $generators->current()->current()->name()
+        $this->assertInstanceOf(
+            Test::class,
+            $generators->current()->current()
         );
     }
 

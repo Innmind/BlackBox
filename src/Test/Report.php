@@ -13,10 +13,21 @@ use Innmind\BlackBox\{
 
 final class Report
 {
+    private $name;
     private $assertions = 0;
     private $failure;
     private $failedScenario;
     private $failedResult;
+
+    public function __construct(Name $name)
+    {
+        $this->name = $name;
+    }
+
+    public function name(): Name
+    {
+        return $this->name;
+    }
 
     public function add(Scenario $given, Result $result, ScenarioReport $report): self
     {

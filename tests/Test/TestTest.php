@@ -30,22 +30,10 @@ class TestTest extends TestCase
         );
     }
 
-    public function testName()
-    {
-        $test = new Test(
-            $name = new Name('foo'),
-            new Given,
-            new When(function(){}),
-            new Then
-        );
-
-        $this->assertSame($name, $test->name());
-    }
-
     public function testInvokationSuccess()
     {
         $test = new Test(
-            new Name('foo'),
+            $name = new Name('foo'),
             new Given,
             new When(function(){
                 return 42;
@@ -58,6 +46,7 @@ class TestTest extends TestCase
         $report = $test();
 
         $this->assertInstanceOf(Report::class, $report);
+        $this->assertSame($name, $report->name());
         $this->assertFalse($report->failed());
         $this->assertSame(1, $report->assertions());
     }
