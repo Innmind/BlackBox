@@ -22,7 +22,5 @@ class FailureTest extends TestCase
         $this->assertSame(Str::class, (string) $failure->stackTrace()->type());
         $this->assertCount(11, $failure->stackTrace());
         $this->assertTrue($failure->stackTrace()->get(0)->contains('tests/Then/FailureTest.php:17'));
-        $this->assertTrue($failure->stackTrace()->get(8)->contains('phpunit/phpunit/src/TextUI/Command.php:203'));
-        $this->assertTrue($failure->stackTrace()->get(9)->contains('phpunit/phpunit/src/TextUI/Command.php:156'));
     }
 }
