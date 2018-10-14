@@ -27,7 +27,7 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(1000, $set);
+        $this->assertCount(100, $set);
 
         $this->assertFalse($set->equals(integers()));
     }
@@ -45,7 +45,7 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(1000, $set);
+        $this->assertCount(100, $set);
         $this->assertFalse($set->contains(0));
 
         $this->assertFalse($set->equals(integersExceptZero()));
@@ -64,7 +64,7 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(1000, $set);
+        $this->assertCount(100, $set);
         $lowest = $set
             ->sort(static function(int $a, int $b): int {
                 return $a <=> $b;
@@ -88,7 +88,7 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('int', (string) $set->type());
-        $this->assertCount(1000, $set);
+        $this->assertCount(100, $set);
         $lowest = $set
             ->sort(static function(int $a, int $b): int {
                 return $a <=> $b;
@@ -112,7 +112,7 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('float', (string) $set->type());
-        $this->assertCount(1000, $set);
+        $this->assertCount(100, $set);
         $lowest = $set
             ->sort(static function(float $a, float $b): int {
                 return $a <=> $b;
@@ -156,7 +156,7 @@ class SetsTest extends TestCase
 
         $this->assertInstanceOf(SetInterface::class, $set);
         $this->assertSame('string', (string) $set->type());
-        $this->assertCount(1000, $set);
+        $this->assertCount(100, $set);
     }
 
     public function testThrowWhenStringsRangeLessThanOne()

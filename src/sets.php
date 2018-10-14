@@ -10,7 +10,7 @@ use Innmind\Immutable\{
     Set,
 };
 
-function integers(int $range = 1000): SetInterface
+function integers(int $range = 100): SetInterface
 {
     if ($range < 1) {
         throw new LogicException;
@@ -31,7 +31,7 @@ function integers(int $range = 1000): SetInterface
     return $set;
 }
 
-function integersExceptZero(int $range = 1000): SetInterface
+function integersExceptZero(int $range = 100): SetInterface
 {
     if ($range < 1) {
         throw new LogicException;
@@ -52,7 +52,7 @@ function integersExceptZero(int $range = 1000): SetInterface
     return $set;
 }
 
-function naturalNumbers(int $range = 1000): SetInterface
+function naturalNumbers(int $range = 100): SetInterface
 {
     if ($range < 1) {
         throw new LogicException;
@@ -67,7 +67,7 @@ function naturalNumbers(int $range = 1000): SetInterface
     return $set;
 }
 
-function naturalNumbersExceptZero(int $range = 1000): SetInterface
+function naturalNumbersExceptZero(int $range = 100): SetInterface
 {
     if ($range < 1) {
         throw new LogicException;
@@ -82,7 +82,7 @@ function naturalNumbersExceptZero(int $range = 1000): SetInterface
     return $set;
 }
 
-function realNumbers(int $range = 1000): SetInterface
+function realNumbers(int $range = 100): SetInterface
 {
     if ($range < 1) {
         throw new LogicException;
@@ -116,7 +116,7 @@ function chars(): SetInterface
     return $set;
 }
 
-function strings(int $range = 1000, int $maxLength = 512): SetInterface
+function strings(int $range = 100, int $maxLength = 128): SetInterface
 {
     if ($range < 1) {
         throw new LogicException;
