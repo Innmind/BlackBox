@@ -9,6 +9,8 @@ use function Innmind\BlackBox\{
     value,
     generate,
     when,
+    then,
+    test,
 };
 use Innmind\BlackBox\{
     Given,
@@ -16,6 +18,8 @@ use Innmind\BlackBox\{
     Given\Generate,
     Given\Scenario,
     When,
+    Then,
+    Test,
 };
 use Innmind\Immutable\{
     Set,
@@ -71,5 +75,18 @@ class FunctionsTest extends TestCase
 
         $this->assertInstanceOf(When::class, $when);
         $this->assertSame(42, $when(new Scenario(new Map('string', 'mixed')))->value());
+    }
+
+    public function testThen()
+    {
+        $this->assertInstanceOf(Then::class, then());
+    }
+
+    public function testTest()
+    {
+        $test = test('foo', given(), when(function(){}), then());
+
+        $this->assertInstanceOf(Test::class, $test);
+        $this->assertSame('foo', (string) $test->name());
     }
 }

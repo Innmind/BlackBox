@@ -38,3 +38,13 @@ function when(callable $callable): When
 {
     return new When($callable);
 }
+
+function then(Assertion ...$assertions): Then
+{
+    return new Then(...$assertions);
+}
+
+function test(string $name, Given $given, When $when, Then $then): Test
+{
+    return new Test\Test(new Test\Name($name), $given, $when, $then);
+}
