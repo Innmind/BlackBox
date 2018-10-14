@@ -42,7 +42,7 @@ class WhenTest extends TestCase
             $result->value()
         );
         $this->assertSame(
-            'Call to undefined method class@anonymous::assertSame()',
+            'Using $this when not in object context',
             $result->value()->getMessage()
         );
     }

@@ -16,7 +16,7 @@ final class That implements Assertion
 
     public function __construct(callable $predicate)
     {
-        $this->predicate = \Closure::fromCallable($predicate)->bindTo(new class {});
+        $this->predicate = \Closure::bind($predicate, null);
     }
 
     public function __invoke(

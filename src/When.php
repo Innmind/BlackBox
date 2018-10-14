@@ -15,7 +15,7 @@ final class When
     public function __construct(callable $test)
     {
         // the wrapping is to make sure there is no _$this_ inside the callable;
-        $this->test = \Closure::fromCallable($test)->bindTo(new class {});
+        $this->test = \Closure::bind($test, null);
     }
 
     public function __invoke(Scenario $scenario): Result
