@@ -52,7 +52,7 @@ class NotContainsTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Contains expected value', $report->failure());
+        $this->assertSame('Contains expected value', (string) $report->failure()->message());
     }
 
     public function testFailWhenResultNotACollection()
@@ -67,7 +67,7 @@ class NotContainsTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a collection', $report->failure());
+        $this->assertSame('Not a collection', (string) $report->failure()->message());
     }
 
     public function values(): array

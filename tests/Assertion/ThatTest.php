@@ -49,6 +49,6 @@ class ThatTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Does not match predicate', $report->failure());
+        $this->assertSame('Does not match predicate', (string) $report->failure()->message());
     }
 }

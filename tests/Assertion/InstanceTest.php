@@ -41,6 +41,6 @@ class InstanceTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not an instance of stdClass', $report->failure());
+        $this->assertSame('Not an instance of stdClass', (string) $report->failure()->message());
     }
 }

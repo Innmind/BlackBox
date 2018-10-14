@@ -44,7 +44,7 @@ class StreamTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a stream', $report->failure());
+        $this->assertSame('Not a stream', (string) $report->failure()->message());
 
         $report = $assert(
             new ScenarioReport,
@@ -54,6 +54,6 @@ class StreamTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a stream of type <int>, got <mixed>', $report->failure());
+        $this->assertSame('Not a stream of type <int>, got <mixed>', (string) $report->failure()->message());
     }
 }

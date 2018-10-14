@@ -58,7 +58,7 @@ class ThenTest extends TestCase
 
         $this->assertInstanceOf(ScenarioReport::class, $report);
         $this->assertTrue($report->failed());
-        $this->assertSame('something', $report->failure());
+        $this->assertSame('something', (string) $report->failure()->message());
         $this->assertSame(2, $report->assertions());
     }
 }

@@ -44,7 +44,7 @@ class SetTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a set', $report->failure());
+        $this->assertSame('Not a set', (string) $report->failure()->message());
 
         $report = $assert(
             new ScenarioReport,
@@ -54,6 +54,6 @@ class SetTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a set of type <int>, got <mixed>', $report->failure());
+        $this->assertSame('Not a set of type <int>, got <mixed>', (string) $report->failure()->message());
     }
 }

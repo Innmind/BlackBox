@@ -46,7 +46,7 @@ class NotCountTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame("Unexpected count of $bad", $report->failure());
+        $this->assertSame("Unexpected count of $bad", (string) $report->failure()->message());
     }
 
     public function testFailWhenNotCountable()
@@ -60,7 +60,7 @@ class NotCountTest extends TestCase
         );
 
         $this->assertTrue($report->failed());
-        $this->assertSame('Not countable', $report->failure());
+        $this->assertSame('Not countable', (string) $report->failure()->message());
     }
 
     public function values(): array

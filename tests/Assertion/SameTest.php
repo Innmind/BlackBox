@@ -43,6 +43,6 @@ class SameTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not same', $report->failure());
+        $this->assertSame('Not same', (string) $report->failure()->message());
     }
 }

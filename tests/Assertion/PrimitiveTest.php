@@ -45,7 +45,7 @@ class PrimitiveTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame("Not a $type", $report->failure());
+        $this->assertSame("Not a $type", (string) $report->failure()->message());
     }
 
     public function testThrowWhenTypeNotAPrimitive()

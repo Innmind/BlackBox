@@ -29,20 +29,20 @@ final class ScenarioReport
         }
 
         $self = clone $this;
-        $self->failure = $message;
+        $self->failure = new Failure($message);
         ++$self->assertions;
 
         return $self;
     }
 
-    public function failure(): string
+    public function failure(): Failure
     {
         return $this->failure;
     }
 
     public function failed(): bool
     {
-        return is_string($this->failure);
+        return $this->failure instanceof Failure;
     }
 
     public function assertions(): int

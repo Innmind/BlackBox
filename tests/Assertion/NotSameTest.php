@@ -43,6 +43,6 @@ class NotSameTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Same', $report->failure());
+        $this->assertSame('Same', (string) $report->failure()->message());
     }
 }

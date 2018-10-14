@@ -38,7 +38,7 @@ class ScenarioReportTest extends TestCase
         $this->assertTrue($report2->failed());
         $this->assertSame(0, $report->assertions());
         $this->assertSame(1, $report2->assertions());
-        $this->assertSame('something went wrong', $report2->failure());
+        $this->assertSame('something went wrong', (string) $report2->failure()->message());
 
         $this->expectException(\TypeError::class);
 

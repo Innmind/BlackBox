@@ -41,7 +41,7 @@ class MapTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a map', $report->failure());
+        $this->assertSame('Not a map', (string) $report->failure()->message());
 
         $report = $assert(
             new ScenarioReport,
@@ -51,6 +51,6 @@ class MapTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not a map of type <int, string>, got <mixed, string>', $report->failure());
+        $this->assertSame('Not a map of type <int, string>, got <mixed, string>', (string) $report->failure()->message());
     }
 }

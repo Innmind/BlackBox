@@ -44,7 +44,7 @@ class RegexTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not matches ~foo~', $report->failure());
+        $this->assertSame('Not matches ~foo~', (string) $report->failure()->message());
     }
 
     public function testInvokationOnStr()
@@ -68,7 +68,7 @@ class RegexTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not matches ~foo~', $report->failure());
+        $this->assertSame('Not matches ~foo~', (string) $report->failure()->message());
     }
 
     public function testFailWhenNotRegexable()
@@ -83,6 +83,6 @@ class RegexTest extends TestCase
 
         $this->assertTrue($report->failed());
         $this->assertSame(1, $report->assertions());
-        $this->assertSame('Not regexable', $report->failure());
+        $this->assertSame('Not regexable', (string) $report->failure()->message());
     }
 }
