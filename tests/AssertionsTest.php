@@ -29,6 +29,7 @@ use function Innmind\BlackBox\Assert\{
     set,
     map,
     that,
+    exception,
 };
 use Innmind\BlackBox\Assertion;
 use PHPUnit\Framework\TestCase;
@@ -62,5 +63,6 @@ class AssertionsTest extends TestCase
         $this->assertInstanceOf(Assertion\Set::class, set('int'));
         $this->assertInstanceOf(Assertion\Map::class, map('int', 'int'));
         $this->assertInstanceOf(Assertion\That::class, that(function(){}));
+        $this->assertInstanceOf(Assertion\Exception::class, exception('foo'));
     }
 }

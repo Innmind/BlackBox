@@ -130,3 +130,8 @@ function that(callable $predicate): Assertion
 {
     return new Assertion\That($predicate);
 }
+
+function exception(string $class, string $message = null, int $code = null): Assertion
+{
+    return new Assertion\Exception($class, $message, $code);
+}
