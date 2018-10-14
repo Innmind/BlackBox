@@ -25,7 +25,8 @@
         },
         "files": [
             "src/sets.php",
-            "src/functions.php"
+            "src/functions.php",
+            "src/assertions.php"
         ]
     },
     "require-dev": {
