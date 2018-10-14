@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Exception\LogicException;
+use Innmind\BlackBox\{
+    Set\Lazy,
+    Exception\LogicException,
+};
 use Innmind\Json\Json;
 use Innmind\Immutable\{
     SetInterface,
@@ -16,19 +19,21 @@ function integers(int $range = 100): SetInterface
         throw new LogicException;
     }
 
-    $set = Set::of('int');
+    return Lazy::of('int', function() use ($range) {
+        $set = Set::of('int');
 
-    while ($set->size() < $range) {
-        $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+        while ($set->size() < $range) {
+            $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
 
-        if ($int === 0) {
-            continue;
+            if ($int === 0) {
+                continue;
+            }
+
+            $set = $set->add($int);
         }
 
-        $set = $set->add($int);
-    }
-
-    return $set;
+        return $set;
+    });
 }
 
 function integersExceptZero(int $range = 100): SetInterface
@@ -37,19 +42,21 @@ function integersExceptZero(int $range = 100): SetInterface
         throw new LogicException;
     }
 
-    $set = Set::of('int');
+    return Lazy::of('int', function() use ($range) {
+        $set = Set::of('int');
 
-    while ($set->size() < $range) {
-        $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+        while ($set->size() < $range) {
+            $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
 
-        if ($int === 0) {
-            continue;
+            if ($int === 0) {
+                continue;
+            }
+
+            $set = $set->add($int);
         }
 
-        $set = $set->add($int);
-    }
-
-    return $set;
+        return $set;
+    });
 }
 
 function naturalNumbers(int $range = 100): SetInterface
@@ -58,13 +65,15 @@ function naturalNumbers(int $range = 100): SetInterface
         throw new LogicException;
     }
 
-    $set = Set::of('int');
+    return Lazy::of('int', function() use ($range) {
+        $set = Set::of('int');
 
-    while ($set->size() < $range) {
-        $set = $set->add(\random_int(0, \PHP_INT_MAX));
-    }
+        while ($set->size() < $range) {
+            $set = $set->add(\random_int(0, \PHP_INT_MAX));
+        }
 
-    return $set;
+        return $set;
+    });
 }
 
 function naturalNumbersExceptZero(int $range = 100): SetInterface
@@ -73,13 +82,15 @@ function naturalNumbersExceptZero(int $range = 100): SetInterface
         throw new LogicException;
     }
 
-    $set = Set::of('int');
+    return Lazy::of('int', function() use ($range) {
+        $set = Set::of('int');
 
-    while ($set->size() < $range) {
-        $set = $set->add(\random_int(1, \PHP_INT_MAX));
-    }
+        while ($set->size() < $range) {
+            $set = $set->add(\random_int(1, \PHP_INT_MAX));
+        }
 
-    return $set;
+        return $set;
+    });
 }
 
 function realNumbers(int $range = 100): SetInterface
@@ -88,32 +99,38 @@ function realNumbers(int $range = 100): SetInterface
         throw new LogicException;
     }
 
-    $set = Set::of('float');
+    return Lazy::of('float', function() use ($range) {
+        $set = Set::of('float');
 
-    while ($set->size() < $range) {
-        $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
-        $sub = \random_int(0, \PHP_INT_MAX);
+        while ($set->size() < $range) {
+            $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+            $sub = \random_int(0, \PHP_INT_MAX);
 
-        $set = $set->add((float) "$int.$sub");
-    }
+            $set = $set->add((float) "$int.$sub");
+        }
 
-    return $set;
+        return $set;
+    });
 }
 
 function range(float $min, float $max, float $step = 1): SetInterface
 {
-    return Set::of('float', ...\range($min, $max, $step));
+    return Lazy::of('float', function() use ($min, $max, $step) {
+        return Set::of('float', ...\range($min, $max, $step));
+    });
 }
 
 function chars(): SetInterface
 {
-    $set = Set::of('string');
+    return Lazy::of('string', function() {
+        $set = Set::of('string');
 
-    foreach (\range(0, 255) as $i) {
-        $set = $set->add(chr($i));
-    }
+        foreach (\range(0, 255) as $i) {
+            $set = $set->add(chr($i));
+        }
 
-    return $set;
+        return $set;
+    });
 }
 
 function strings(int $range = 100, int $maxLength = 128): SetInterface
@@ -122,19 +139,21 @@ function strings(int $range = 100, int $maxLength = 128): SetInterface
         throw new LogicException;
     }
 
-    $set = Set::of('string');
+    return Lazy::of('string', function() use ($range, $maxLength) {
+        $set = Set::of('string');
 
-    while ($set->size() < $range) {
-        $string = '';
+        while ($set->size() < $range) {
+            $string = '';
 
-        foreach (\range(1, \random_int(2, $maxLength)) as $_) {
-            $string .= chr(\random_int(0, 255));
+            foreach (\range(1, \random_int(2, $maxLength)) as $_) {
+                $string .= chr(\random_int(0, 255));
+            }
+
+            $set = $set->add($string);
         }
 
-        $set = $set->add($string);
-    }
-
-    return $set;
+        return $set;
+    });
 }
 
 /**
@@ -142,9 +161,11 @@ function strings(int $range = 100, int $maxLength = 128): SetInterface
  */
 function unsafeStrings(): SetInterface
 {
-    return Set::of('string', ...Json::decode(
-        \file_get_contents(__DIR__.'/unsafeStrings.json')
-    ));
+    return Lazy::of('string', function() {
+        return Set::of('string', ...Json::decode(
+            \file_get_contents(__DIR__.'/unsafeStrings.json')
+        ));
+    });
 }
 
 function mixed(): SetInterface
