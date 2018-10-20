@@ -52,4 +52,26 @@ class TestTest extends TestCase
         $this->assertFalse($report->failed());
         $this->assertSame(1, $report->assertions());
     }
+
+    public function testOnlyFirstFailureIsReported()
+    {
+        $test = new Test(
+            $name = new Name('foo'),
+            new Given,
+            new When(function(){
+                return 42;
+            }),
+            new Then(
+                Assert\same(24),
+                Assert\same(66)
+            )
+        );
+
+        $report = $test();
+
+        $this->assertInstanceOf(Report::class, $report);
+        $this->assertSame($name, $report->name());
+        $this->assertTrue($report->failed());
+        $this->assertSame(1, $report->assertions());
+    }
 }

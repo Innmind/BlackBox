@@ -34,6 +34,10 @@ final class Test implements TestInterface
             ->reduce(
                 new Report($this->name),
                 function(Report $report, Scenario $scenario): Report {
+                    if ($report->failed()) {
+                        return $report;
+                    }
+
                     $result = ($this->when)($scenario);
 
                     return $report->add(
