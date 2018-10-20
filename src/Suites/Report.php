@@ -14,4 +14,6 @@ interface Report
      * @return StreamInterface<Test\Report>
      */
     public function failures(): StreamInterface;
+    public function assertions(): int;
+    public function tests(): int;
 }

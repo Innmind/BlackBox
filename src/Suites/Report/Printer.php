@@ -38,6 +38,16 @@ final class Printer implements Report
         return $this->report->failures();
     }
 
+    public function assertions(): int
+    {
+        return $this->report->assertions();
+    }
+
+    public function tests(): int
+    {
+        return $this->report->tests();
+    }
+
     private function print(Test\Report $report): void
     {
         $this->stream->write(Str::of(

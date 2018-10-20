@@ -15,6 +15,8 @@ use Innmind\Immutable\{
 final class InMemory implements Report
 {
     private $failures;
+    private $assertions = 0;
+    private $tests = 0;
 
     public function __construct()
     {
@@ -23,12 +25,13 @@ final class InMemory implements Report
 
     public function add(Test\Report $report): Report
     {
-        if (!$report->failed()) {
-            return $this;
-        }
-
         $self = clone $this;
-        $self->failures = $self->failures->add($report);
+        ++$self->tests;
+        $self->assertions += $report->assertions();
+
+        if ($report->failed()) {
+            $self->failures = $self->failures->add($report);
+        }
 
         return $self;
     }
@@ -36,5 +39,15 @@ final class InMemory implements Report
     public function failures(): StreamInterface
     {
         return $this->failures;
+    }
+
+    public function assertions(): int
+    {
+        return $this->assertions;
+    }
+
+    public function tests(): int
+    {
+        return $this->tests;
     }
 }

@@ -31,11 +31,24 @@ class InMemoryTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $report->failures());
         $this->assertSame(Test\Report::class, (string) $report->failures()->type());
         $this->assertCount(0, $report->failures());
+        $this->assertSame(0, $report->tests());
+        $this->assertSame(0, $report->assertions());
 
-        $report2 = $report->add(new Test\Report(new Test\Name('foo')));
+        $report2 = $report->add(
+            (new Test\Report(new Test\Name('foo')))->add(
+                new Scenario(new Map('string', 'mixed')),
+                new Result(null),
+                (new ScenarioReport)->success()
+            )
+        );
 
-        $this->assertSame($report2, $report);
+        $this->assertNotSame($report2, $report);
         $this->assertCount(0, $report->failures());
+        $this->assertSame(0, $report->tests());
+        $this->assertSame(0, $report->assertions());
+        $this->assertCount(0, $report2->failures());
+        $this->assertSame(1, $report2->tests());
+        $this->assertSame(1, $report2->assertions());
     }
 
     public function testAddFailureReport()
@@ -45,19 +58,24 @@ class InMemoryTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $report->failures());
         $this->assertSame(Test\Report::class, (string) $report->failures()->type());
         $this->assertCount(0, $report->failures());
+        $this->assertSame(0, $report->tests());
+        $this->assertSame(0, $report->assertions());
 
         $report2 = $report->add(
-            $testReport = (new Test\Report(new Test\Name('foo')))
-                ->add(
-                    new Scenario(new Map('string', 'mixed')),
-                    new Result(null),
-                    (new ScenarioReport)->fail('foo')
-                )
+            $testReport = (new Test\Report(new Test\Name('foo')))->add(
+                new Scenario(new Map('string', 'mixed')),
+                new Result(null),
+                (new ScenarioReport)->fail('foo')
+            )
         );
 
         $this->assertNotSame($report2, $report);
         $this->assertCount(0, $report->failures());
+        $this->assertSame(0, $report->tests());
+        $this->assertSame(0, $report->assertions());
         $this->assertCount(1, $report2->failures());
+        $this->assertSame(1, $report2->tests());
+        $this->assertSame(1, $report2->assertions());
         $this->assertSame($testReport, $report2->failures()->first());
     }
 }

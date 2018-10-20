@@ -44,6 +44,14 @@ class PrinterTest extends TestCase
             ->method('write')
             ->with(Str::of('.'));
         $inner
+            ->expects($this->once())
+            ->method('assertions')
+            ->willReturn(0);
+        $inner
+            ->expects($this->once())
+            ->method('tests')
+            ->willReturn(0);
+        $inner
             ->expects($this->any())
             ->method('failures')
             ->willReturn($failures = Stream::of(Test\Report::class));
@@ -56,14 +64,26 @@ class PrinterTest extends TestCase
             ->expects($this->any())
             ->method('failures')
             ->willReturn($failures2 = Stream::of(Test\Report::class));
+        $inner2
+            ->expects($this->once())
+            ->method('assertions')
+            ->willReturn(1);
+        $inner2
+            ->expects($this->once())
+            ->method('tests')
+            ->willReturn(1);
 
         $this->assertSame($failures, $report->failures());
+        $this->assertSame(0, $report->assertions());
+        $this->assertSame(0, $report->tests());
 
         $report2 = $report->add($testReport);
 
         $this->assertSame($report2, $report);
         $this->assertNotSame($failures, $report2->failures());
         $this->assertSame($failures2, $report2->failures());
+        $this->assertSame(1, $report2->assertions());
+        $this->assertSame(1, $report2->tests());
     }
 
     public function testAddFailureReport()
@@ -83,6 +103,14 @@ class PrinterTest extends TestCase
             ->method('write')
             ->with(Str::of('F'));
         $inner
+            ->expects($this->once())
+            ->method('assertions')
+            ->willReturn(0);
+        $inner
+            ->expects($this->once())
+            ->method('tests')
+            ->willReturn(0);
+        $inner
             ->expects($this->any())
             ->method('failures')
             ->willReturn($failures = Stream::of(Test\Report::class));
@@ -95,13 +123,25 @@ class PrinterTest extends TestCase
             ->expects($this->any())
             ->method('failures')
             ->willReturn($failures2 = Stream::of(Test\Report::class));
+        $inner2
+            ->expects($this->once())
+            ->method('assertions')
+            ->willReturn(1);
+        $inner2
+            ->expects($this->once())
+            ->method('tests')
+            ->willReturn(1);
 
         $this->assertSame($failures, $report->failures());
+        $this->assertSame(0, $report->assertions());
+        $this->assertSame(0, $report->tests());
 
         $report2 = $report->add($testReport);
 
         $this->assertSame($report2, $report);
         $this->assertNotSame($failures, $report2->failures());
         $this->assertSame($failures2, $report2->failures());
+        $this->assertSame(1, $report2->assertions());
+        $this->assertSame(1, $report2->tests());
     }
 }
