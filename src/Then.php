@@ -14,9 +14,9 @@ final class Then
 {
     private $assertions;
 
-    public function __construct(Assertion ...$assertions)
+    public function __construct(Assertion $assertion, Assertion ...$assertions)
     {
-        $this->assertions = Stream::of(Assertion::class, ...$assertions);
+        $this->assertions = Stream::of(Assertion::class, $assertion, ...$assertions);
     }
 
     public function __invoke(Result $result, Scenario $scenario): ScenarioReport

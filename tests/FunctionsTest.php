@@ -20,6 +20,7 @@ use Innmind\BlackBox\{
     When,
     Then,
     Test,
+    Assert,
 };
 use Innmind\Immutable\{
     Set,
@@ -79,12 +80,12 @@ class FunctionsTest extends TestCase
 
     public function testThen()
     {
-        $this->assertInstanceOf(Then::class, then());
+        $this->assertInstanceOf(Then::class, then(Assert\int()));
     }
 
     public function testTest()
     {
-        $test = test('foo', given(), when(function(){}), then());
+        $test = test('foo', given(), when(function(){}), then(Assert\int()));
 
         $this->assertInstanceOf(Test::class, $test);
     }

@@ -25,7 +25,9 @@ class TestTest extends TestCase
                 new Name('foo'),
                 new Given,
                 new When(function(){}),
-                new Then
+                new Then(
+                    Assert\int()
+                )
             )
         );
     }
