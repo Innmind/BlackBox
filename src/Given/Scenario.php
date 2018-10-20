@@ -15,12 +15,19 @@ final class Scenario
             throw new \TypeError('Argument 1 must be of type MapInterface<string, mixed>');
         }
 
-        $this->values = $values;
+        $this->values = $values->reduce(
+            [],
+            static function(array $values, string $key, $value): array {
+                $values[$key] = $value;
+
+                return $values;
+            }
+        );
     }
 
     public function get(string $name)
     {
-        return $this->values->get($name);
+        return $this->values[$name];
     }
 
     public function __get(string $name)
