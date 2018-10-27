@@ -8,11 +8,7 @@ use Innmind\BlackBox\{
     Given\SoFar,
     Given\Scenario,
 };
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-    Map,
-};
+use Innmind\Immutable\Stream;
 
 final class Given
 {
@@ -23,10 +19,9 @@ final class Given
         $initialValues = Stream::of(InitialValue::class, ...$initialValues);
 
         if ($initialValues->size() === 0) {
-            $this->scenarios = Stream::of(
-                Scenario::class,
-                new Scenario(new Map('string', 'mixed'))
-            );
+            $this->scenarios = (function() {
+                yield new SoFar;
+            })();
         } else {
             $this->scenarios = $initialValues
                 ->drop(1)
@@ -36,18 +31,17 @@ final class Given
                         return $initialValue->dependOn($dependency);
                     }
                 )
-                ->sets()
-                ->reduce(
-                    Stream::of(Scenario::class),
-                    static function(StreamInterface $scenarios, SoFar $soFar): StreamInterface {
-                        return $scenarios->add($soFar->scenario());
-                    }
-                );
+                ->sets();
         }
     }
 
-    public function scenarios(): StreamInterface
+    /**
+     * @return \Generator<Scenario>
+     */
+    public function scenarios(): \Generator
     {
-        return $this->scenarios;
+        foreach ($this->scenarios as $soFar) {
+            yield $soFar->scenario();
+        }
     }
 }

@@ -64,8 +64,10 @@ class FunctionsTest extends TestCase
         $given = given(value('a', 1));
 
         $this->assertInstanceOf(Given::class, $given);
-        $this->assertCount(1, $given->scenarios());
-        $this->assertSame(1, $given->scenarios()->current()->a);
+        $scenarios = $given->scenarios();
+        $this->assertSame(1, $scenarios->current()->a);
+        $scenarios->next();
+        $this->assertFalse($scenarios->valid());
     }
 
     public function testWhen()

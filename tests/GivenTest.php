@@ -33,21 +33,26 @@ class GivenTest extends TestCase
         // [1, 5]
         // [2, 5]
 
-        $this->assertInstanceOf(StreamInterface::class, $scenarios);
-        $this->assertSame(Scenario::class, (string) $scenarios->type());
-        $this->assertCount(6, $scenarios);
-        $this->assertSame(1, $scenarios->get(0)->a);
-        $this->assertSame(3, $scenarios->get(0)->b);
-        $this->assertSame(2, $scenarios->get(1)->a);
-        $this->assertSame(3, $scenarios->get(1)->b);
-        $this->assertSame(1, $scenarios->get(2)->a);
-        $this->assertSame(4, $scenarios->get(2)->b);
-        $this->assertSame(2, $scenarios->get(3)->a);
-        $this->assertSame(4, $scenarios->get(3)->b);
-        $this->assertSame(1, $scenarios->get(4)->a);
-        $this->assertSame(5, $scenarios->get(4)->b);
-        $this->assertSame(2, $scenarios->get(5)->a);
-        $this->assertSame(5, $scenarios->get(5)->b);
+        $this->assertInstanceOf(\Generator::class, $scenarios);
+        $this->assertSame(1, $scenarios->current()->a);
+        $this->assertSame(3, $scenarios->current()->b);
+        $scenarios->next();
+        $this->assertSame(2, $scenarios->current()->a);
+        $this->assertSame(3, $scenarios->current()->b);
+        $scenarios->next();
+        $this->assertSame(1, $scenarios->current()->a);
+        $this->assertSame(4, $scenarios->current()->b);
+        $scenarios->next();
+        $this->assertSame(2, $scenarios->current()->a);
+        $this->assertSame(4, $scenarios->current()->b);
+        $scenarios->next();
+        $this->assertSame(1, $scenarios->current()->a);
+        $this->assertSame(5, $scenarios->current()->b);
+        $scenarios->next();
+        $this->assertSame(2, $scenarios->current()->a);
+        $this->assertSame(5, $scenarios->current()->b);
+        $scenarios->next();
+        $this->assertFalse($scenarios->valid());
     }
 
     public function testEmptyMatrix()
@@ -63,7 +68,9 @@ class GivenTest extends TestCase
             new Any(new Name('a'), Set::of('int', 1))
         );
 
-        $this->assertCount(1, $given->scenarios());
-        $this->assertSame(1, $given->scenarios()->current()->a);
+        $scenarios = $given->scenarios();
+        $this->assertSame(1, $scenarios->current()->a);
+        $scenarios->next();
+        $this->assertFalse($scenarios->valid());
     }
 }

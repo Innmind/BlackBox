@@ -10,10 +10,7 @@ use Innmind\BlackBox\{
     Given\SoFar,
     Exception\LogicException,
 };
-use Innmind\Immutable\{
-    Set,
-    StreamInterface,
-};
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
 class AnyTest extends TestCase
@@ -66,9 +63,7 @@ class AnyTest extends TestCase
 
         $sets = $any->sets();
 
-        $this->assertInstanceOf(StreamInterface::class, $sets);
-        $this->assertSame(SoFar::class, (string) $sets->type());
-        $this->assertCount(2, $sets);
+        $this->assertInstanceOf(\Generator::class, $sets);
         $this->assertSame(42, $sets->current()->foo);
         $sets->next();
         $this->assertSame('bar', $sets->current()->foo);
@@ -92,7 +87,6 @@ class AnyTest extends TestCase
 
         $sets = $any3->sets();
 
-        $this->assertCount(4, $sets);
         $this->assertSame(42, $sets->current()->foo);
         $this->assertSame(1, $sets->current()->baz);
         $sets->next();
@@ -104,5 +98,7 @@ class AnyTest extends TestCase
         $sets->next();
         $this->assertSame('bar', $sets->current()->foo);
         $this->assertSame(2, $sets->current()->baz);
+        $sets->next();
+        $this->assertFalse($sets->valid());
     }
 }

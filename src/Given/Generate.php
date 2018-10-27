@@ -7,10 +7,6 @@ use Innmind\BlackBox\{
     Given\InitialValue\Name,
     Exception\LogicException,
 };
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-};
 
 final class Generate implements InitialValue
 {
@@ -39,28 +35,26 @@ final class Generate implements InitialValue
     /**
      * {@inheritdoc}
      */
-    public function sets(): StreamInterface
+    public function sets(): \Generator
     {
         if (!$this->dependency instanceof InitialValue) {
             $soFar = new SoFar;
 
-            return Stream::of(
-                SoFar::class,
-                $soFar->add(
-                    $this->name,
-                    ($this->generate)($soFar)
-                )
+            yield $soFar->add(
+                $this->name,
+                ($this->generate)($soFar)
             );
+
+            return;
         }
 
-        return $this
-            ->dependency
-            ->sets()
-            ->map(function(SoFar $soFar): SoFar {
-                return $soFar->add(
-                    $this->name,
-                    ($this->generate)($soFar)
-                );
-            });
+        $dependencySets = $this->dependency->sets();
+
+        foreach ($dependencySets as $soFar) {
+            yield $soFar->add(
+                $this->name,
+                ($this->generate)($soFar)
+            );
+        }
     }
 }

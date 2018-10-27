@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Test;
 use Innmind\BlackBox\{
     Test as TestInterface,
     Given,
-    Given\Scenario,
     When,
     Then,
 };
@@ -28,24 +27,23 @@ final class Test implements TestInterface
 
     public function __invoke(): Report
     {
-        return $this
-            ->given
-            ->scenarios()
-            ->reduce(
-                new Report($this->name),
-                function(Report $report, Scenario $scenario): Report {
-                    if ($report->failed()) {
-                        return $report;
-                    }
+        $report = new Report($this->name);
+        $scenarios = $this->given->scenarios();
 
-                    $result = ($this->when)($scenario);
+        foreach ($scenarios as $scenario) {
+            if ($report->failed()) {
+                return $report;
+            }
 
-                    return $report->add(
-                        $scenario,
-                        $result,
-                        ($this->then)($result, $scenario)
-                    );
-                }
+            $result = ($this->when)($scenario);
+
+            $report->add(
+                $scenario,
+                $result,
+                ($this->then)($result, $scenario)
             );
+        }
+
+        return $report;
     }
 }

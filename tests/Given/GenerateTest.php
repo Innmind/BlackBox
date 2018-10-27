@@ -13,7 +13,6 @@ use Innmind\BlackBox\{
 };
 use Innmind\Immutable\{
     Set,
-    StreamInterface,
     Exception\ElementNotFoundException,
 };
 use PHPUnit\Framework\TestCase;
@@ -70,10 +69,10 @@ class GenerateTest extends TestCase
 
         $sets = $generate->sets();
 
-        $this->assertInstanceOf(StreamInterface::class, $sets);
-        $this->assertSame(SoFar::class, (string) $sets->type());
-        $this->assertCount(1, $sets);
+        $this->assertInstanceOf(\Generator::class, $sets);
         $this->assertSame(42, $sets->current()->foo);
+        $sets->next();
+        $this->assertFalse($sets->valid());
     }
 
     public function testGenerationWithADependency()
@@ -102,11 +101,12 @@ class GenerateTest extends TestCase
 
         $sets = $generate2->sets();
 
-        $this->assertCount(2, $sets);
         $this->assertSame(42, $sets->current()->foo);
         $this->assertSame(42, $sets->current()->baz);
         $sets->next();
         $this->assertSame('bar', $sets->current()->foo);
         $this->assertSame('bar', $sets->current()->baz);
+        $sets->next();
+        $this->assertFalse($sets->valid());
     }
 }
