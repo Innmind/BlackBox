@@ -10,14 +10,10 @@ use Innmind\BlackBox\{
     Exception\NoTestGeneratorFound,
 };
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-};
 
 final class RequireLoader implements Loader
 {
-    public function __invoke(PathInterface $path): StreamInterface
+    public function __invoke(PathInterface $path): \Generator
     {
         if (!\file_exists((string) $path)) {
             throw new FileDoesntExist((string) $path);
@@ -26,15 +22,15 @@ final class RequireLoader implements Loader
         $value = require (string) $path;
 
         if ($value instanceof Test) {
-            $value = (function() use ($value) {
-                yield $value;
-            })();
+            yield $value;
+
+            return;
         }
 
         if (!$value instanceof \Generator) {
             throw new NoTestGeneratorFound((string) $path);
         }
 
-        return Stream::of(\Generator::class, $value);
+        yield from $value;
     }
 }

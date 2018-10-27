@@ -5,7 +5,6 @@ namespace Innmind\BlackBox;
 
 use Innmind\BlackBox\Suites\Report;
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\Sequence;
 
 final class Suites
 {
@@ -18,16 +17,14 @@ final class Suites
 
     public function __invoke(Report $report, PathInterface ...$paths): Report
     {
-        return Sequence::of(...$paths)->reduce(
-            $report,
-            function(Report $report, PathInterface $path): Report {
-                return ($this->suite)($path)->reduce(
-                    $report,
-                    static function(Report $report, Test\Report $testReport): Report {
-                        return $report->add($testReport);
-                    }
-                );
+        foreach ($paths as $path) {
+            $testsReport = ($this->suite)($path);
+
+            foreach ($testsReport as $testReport) {
+                $report->add($testReport);
             }
-        );
+        }
+
+        return $report;
     }
 }

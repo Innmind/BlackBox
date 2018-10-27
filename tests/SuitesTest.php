@@ -11,7 +11,6 @@ use Innmind\BlackBox\{
     Runner,
 };
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class SuitesTest extends TestCase
@@ -31,9 +30,9 @@ class SuitesTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($path)
-            ->willReturn(Stream::of(\Generator::class, (function() use ($test) {
+            ->willReturn((function() use ($test) {
                 yield $test;
-            })()));
+            })());
         $run
             ->expects($this->once())
             ->method('__invoke')

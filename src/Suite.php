@@ -5,10 +5,6 @@ namespace Innmind\BlackBox;
 
 use Innmind\BlackBox\Test\Report;
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-};
 
 final class Suite
 {
@@ -22,21 +18,12 @@ final class Suite
     }
 
     /**
-     * @return StreamInterface<Report>
+     * @return \Generator<Report>
      */
-    public function __invoke(PathInterface $path): StreamInterface
+    public function __invoke(PathInterface $path): \Generator
     {
-        return ($this->load)($path)->reduce(
-            Stream::of(Report::class),
-            function(StreamInterface $reports, \Generator $tests): StreamInterface {
-                foreach ($tests as $test) {
-                    $reports = $reports->add(
-                        ($this->run)($test)
-                    );
-                }
-
-                return $reports;
-            }
-        );
+        foreach (($this->load)($path) as $test) {
+            yield ($this->run)($test);
+        }
     }
 }

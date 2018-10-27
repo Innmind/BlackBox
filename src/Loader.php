@@ -4,12 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox;
 
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\StreamInterface;
 
 interface Loader
 {
     /**
-     * @return StreamInterface<Generator>
+     * @return \Generator<Test>
      */
-    public function __invoke(PathInterface $path): StreamInterface;
+    public function __invoke(PathInterface $path): \Generator;
 }

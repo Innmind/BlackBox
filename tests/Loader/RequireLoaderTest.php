@@ -11,7 +11,6 @@ use Innmind\BlackBox\{
     Exception\NoTestGeneratorFound,
 };
 use Innmind\Url\Path;
-use Innmind\Immutable\StreamInterface;
 use PHPUnit\Framework\TestCase;
 
 class RequireLoaderTest extends TestCase
@@ -28,14 +27,12 @@ class RequireLoaderTest extends TestCase
     {
         $load = new RequireLoader;
 
-        $generators = $load(new Path('fixtures/test/single.php'));
+        $generator = $load(new Path('fixtures/test/single.php'));
 
-        $this->assertInstanceOf(StreamInterface::class, $generators);
-        $this->assertSame(\Generator::class, (string) $generators->type());
-        $this->assertCount(1, $generators);
+        $this->assertInstanceOf(\Generator::class, $generator);
         $this->assertInstanceOf(
             Test::class,
-            $generators->current()->current()
+            $generator->current()
         );
     }
 
@@ -43,19 +40,17 @@ class RequireLoaderTest extends TestCase
     {
         $load = new RequireLoader;
 
-        $generators = $load(new Path('fixtures/test/generator.php'));
+        $generator = $load(new Path('fixtures/test/generator.php'));
 
-        $this->assertInstanceOf(StreamInterface::class, $generators);
-        $this->assertSame(\Generator::class, (string) $generators->type());
-        $this->assertCount(1, $generators);
+        $this->assertInstanceOf(\Generator::class, $generator);
         $this->assertInstanceOf(
             Test::class,
-            $generators->current()->current()
+            $generator->current()
         );
-        $generators->current()->next();
+        $generator->next();
         $this->assertInstanceOf(
             Test::class,
-            $generators->current()->current()
+            $generator->current()
         );
     }
 
@@ -66,7 +61,8 @@ class RequireLoaderTest extends TestCase
         $this->expectException(FileDoesntExist::class);
         $this->expectExceptionMessage('fixtures/foo.php');
 
-        $load(new Path('fixtures/foo.php'));
+        $generator = $load(new Path('fixtures/foo.php'));
+        $generator->next();
     }
 
     public function testThrowWhenNoTestFound()
@@ -76,6 +72,7 @@ class RequireLoaderTest extends TestCase
         $this->expectException(NoTestGeneratorFound::class);
         $this->expectExceptionMessage('fixtures/random_file.php');
 
-        $load(new Path('fixtures/random_file.php'));
+        $generator = $load(new Path('fixtures/random_file.php'));
+        $generator->next();
     }
 }

@@ -11,7 +11,6 @@ use Innmind\BlackBox\{
     Test,
 };
 use Innmind\Url\Path;
-use Innmind\Immutable\StreamInterface;
 use PHPUnit\Framework\TestCase;
 
 class RecursiveLoaderTest extends TestCase
@@ -32,13 +31,11 @@ class RecursiveLoaderTest extends TestCase
             )
         );
 
-        $generators = $load(new Path('fixtures'));
+        $generator = $load(new Path('fixtures'));
 
-        $this->assertInstanceOf(StreamInterface::class, $generators);
-        $this->assertSame(\Generator::class, (string) $generators->type());
-        $this->assertCount(2, $generators);
-        $this->assertInstanceOf(Test::class, $generators->current()->current());
-        $generators->next();
-        $this->assertInstanceOf(Test::class, $generators->current()->current());
+        $this->assertInstanceOf(\Generator::class, $generator);
+        $this->assertInstanceOf(Test::class, $generator->current());
+        $generator->next();
+        $this->assertInstanceOf(Test::class, $generator->current());
     }
 }

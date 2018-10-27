@@ -12,10 +12,6 @@ use Innmind\BlackBox\{
     Test\Name,
 };
 use Innmind\Url\Path;
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-};
 use PHPUnit\Framework\TestCase;
 
 class SuiteTest extends TestCase
@@ -32,19 +28,18 @@ class SuiteTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($path)
-            ->willReturn(Stream::of(\Generator::class, (function() use ($test) {
+            ->willReturn((function() use ($test) {
                 yield $test;
-            })()));
+            })());
         $run
             ->expects($this->once())
             ->method('__invoke')
             ->with($test)
             ->willReturn($expected = new Report(new Name('foo')));
 
-        $reports = $suite($path);
+        $generator = $suite($path);
 
-        $this->assertInstanceOf(StreamInterface::class, $reports);
-        $this->assertSame(Report::class, (string) $reports->type());
-        $this->assertSame([$expected], $reports->toPrimitive());
+        $this->assertInstanceOf(\Generator::class, $generator);
+        $this->assertSame([$expected], iterator_to_array($generator));
     }
 }

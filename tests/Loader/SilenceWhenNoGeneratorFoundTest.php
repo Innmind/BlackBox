@@ -6,10 +6,10 @@ namespace Tests\Innmind\BlackBox\Loader;
 use Innmind\BlackBox\{
     Loader\SilenceWhenNoGeneratorFound,
     Loader,
+    Test,
     Exception\NoTestGeneratorFound,
 };
 use Innmind\Url\Path;
-use Innmind\Immutable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class SilenceWhenNoGeneratorFoundTest extends TestCase
@@ -28,13 +28,19 @@ class SilenceWhenNoGeneratorFoundTest extends TestCase
             $inner = $this->createMock(Loader::class)
         );
         $path = new Path('foo');
+        $expected = $this->createMock(Test::class);
         $inner
             ->expects($this->once())
             ->method('__invoke')
             ->with($path)
-            ->willReturn($expected = Stream::of(\Generator::class));
+            ->willReturn((function() use ($expected) {
+                yield $expected;
+            })());
 
-        $this->assertSame($expected, $load($path));
+        $generator = $load($path);
+
+        $this->assertInstanceOf(\Generator::class, $generator);
+        $this->assertSame([$expected], iterator_to_array($generator));
     }
 
     public function testReturnEmptyStreamWhenNoTestGeneratorFound()
@@ -49,6 +55,9 @@ class SilenceWhenNoGeneratorFoundTest extends TestCase
             ->with($path)
             ->will($this->throwException(new NoTestGeneratorFound));
 
-        $this->assertTrue($load($path)->equals(Stream::of(\Generator::class)));
+        $generator = $load($path);
+
+        $this->assertInstanceOf(\Generator::class, $generator);
+        $this->assertFalse($generator->valid());
     }
 }

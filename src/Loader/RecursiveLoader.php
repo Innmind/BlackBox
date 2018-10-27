@@ -8,10 +8,6 @@ use Innmind\Url\{
     PathInterface,
     Path,
 };
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-};
 
 final class RecursiveLoader implements Loader
 {
@@ -22,7 +18,7 @@ final class RecursiveLoader implements Loader
         $this->load = $load;
     }
 
-    public function __invoke(PathInterface $path): StreamInterface
+    public function __invoke(PathInterface $path): \Generator
     {
         $files = new \RegexIterator(
             new \RecursiveIteratorIterator(
@@ -30,18 +26,13 @@ final class RecursiveLoader implements Loader
             ),
             '~^.+\.php$~'
         );
-        $generators = Stream::of(\Generator::class);
 
         foreach ($files as $file => $info) {
             if ($info->isDir()) {
                 continue;
             }
 
-            $generators = $generators->append(
-                ($this->load)(new Path($file))
-            );
+            yield from ($this->load)(new Path($file));
         }
-
-        return $generators;
     }
 }

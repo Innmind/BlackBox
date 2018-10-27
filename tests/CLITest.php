@@ -21,10 +21,7 @@ use Innmind\CLI\{
     Environment,
 };
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\{
-    Stream,
-    Map,
-};
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class CLITest extends TestCase
@@ -60,9 +57,9 @@ class CLITest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($path)
-            ->willReturn(Stream::of(\Generator::class, (function() use ($test) {
+            ->willReturn((function() use ($test) {
                 yield $test;
-            })()));
+            })());
         $run
             ->expects($this->once())
             ->method('__invoke')
@@ -103,9 +100,9 @@ class CLITest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with($path)
-            ->willReturn(Stream::of(\Generator::class, (function() use ($test) {
+            ->willReturn((function() use ($test) {
                 yield $test;
-            })()));
+            })());
         $run
             ->expects($this->once())
             ->method('__invoke')

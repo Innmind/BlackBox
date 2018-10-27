@@ -8,10 +8,6 @@ use Innmind\BlackBox\{
     Exception\NoTestGeneratorFound,
 };
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\{
-    StreamInterface,
-    Stream,
-};
 
 final class SilenceWhenNoGeneratorFound implements Loader
 {
@@ -22,12 +18,12 @@ final class SilenceWhenNoGeneratorFound implements Loader
         $this->load = $load;
     }
 
-    public function __invoke(PathInterface $path): StreamInterface
+    public function __invoke(PathInterface $path): \Generator
     {
         try {
-            return ($this->load)($path);
+            yield from ($this->load)($path);
         } catch (NoTestGeneratorFound $e) {
-            return Stream::of(\Generator::class);
+            yield from [];
         }
     }
 }
