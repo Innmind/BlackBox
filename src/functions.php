@@ -25,7 +25,7 @@ function given(Given\InitialValue ...$initialValues): Given
     return new Given(...$initialValues);
 }
 
-function any(string $name, SetInterface $set): Given\InitialValue
+function any(string $name, \Iterator $set): Given\InitialValue
 {
     return new Given\Any(
         new Given\InitialValue\Name($name),

@@ -25,117 +25,101 @@ class SetsTest extends TestCase
     {
         $set = integers();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('int', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
+        $set = iterator_to_array($set);
         $this->assertCount(100, $set);
 
-        $this->assertFalse($set->equals(integers()));
+        $this->assertNotSame($set, iterator_to_array(integers()));
     }
 
     public function testThrowWhenIntegersRangeLessThanOne()
     {
         $this->expectException(LogicException::class);
 
-        integers(0);
+        integers(0)->next();
     }
 
     public function testIntegersExceptZero()
     {
         $set = integersExceptZero();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('int', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
+        $set = iterator_to_array($set);
         $this->assertCount(100, $set);
-        $this->assertFalse($set->contains(0));
+        $this->assertFalse(in_array(0, $set, true));
 
-        $this->assertFalse($set->equals(integersExceptZero()));
+        $this->assertNotSame($set, iterator_to_array(integersExceptZero()));
     }
 
     public function testThrowWhenIntegersExceptZeroRangeLessThanOne()
     {
         $this->expectException(LogicException::class);
 
-        integersExceptZero(0);
+        integersExceptZero(0)->next();
     }
 
     public function testNaturalNumbers()
     {
         $set = naturalNumbers();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('int', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
+        $set = iterator_to_array($set);
         $this->assertCount(100, $set);
-        $lowest = $set
-            ->sort(static function(int $a, int $b): int {
-                return $a <=> $b;
-            })
-            ->first();
-        $this->assertTrue($lowest >= 0);
+        $this->assertTrue(min($set) >= 0);
 
-        $this->assertFalse($set->equals(naturalNumbers()));
+        $this->assertNotSame($set, iterator_to_array(naturalNumbers()));
     }
 
     public function testThrowWhenNaturalNumbersRangeLessThanOne()
     {
         $this->expectException(LogicException::class);
 
-        naturalNumbers(0);
+        naturalNumbers(0)->next();
     }
 
     public function testNaturalNumbersExceptZero()
     {
         $set = naturalNumbersExceptZero();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('int', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
+        $set = iterator_to_array($set);
         $this->assertCount(100, $set);
-        $lowest = $set
-            ->sort(static function(int $a, int $b): int {
-                return $a <=> $b;
-            })
-            ->first();
-        $this->assertTrue($lowest >= 1);
+        $this->assertTrue(min($set) >= 1);
 
-        $this->assertFalse($set->equals(naturalNumbersExceptZero()));
+        $this->assertNotSame($set, iterator_to_array(naturalNumbersExceptZero()));
     }
 
     public function testThrowWhenNaturalNumbersExceptZeroRangeLessThanOne()
     {
         $this->expectException(LogicException::class);
 
-        naturalNumbersExceptZero(0);
+        naturalNumbersExceptZero(0)->next();
     }
 
     public function testRealNumbers()
     {
         $set = realNumbers();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('float', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
+        $set = iterator_to_array($set);
         $this->assertCount(100, $set);
-        $lowest = $set
-            ->sort(static function(float $a, float $b): int {
-                return $a <=> $b;
-            })
-            ->first();
-        $this->assertTrue($lowest < 0);
+        $this->assertTrue(min($set) < 0);
 
-        $this->assertFalse($set->equals(realNumbers()));
+        $this->assertNotSame($set, iterator_to_array(realNumbers()));
     }
 
     public function testThrowWhenRealNumbersRangeLessThanOne()
     {
         $this->expectException(LogicException::class);
 
-        realNumbers(0);
+        realNumbers(0)->next();
     }
 
     public function testRange()
     {
         $set = range(-100, 99, 2);
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('float', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
         $this->assertCount(100, $set);
     }
 
@@ -143,19 +127,18 @@ class SetsTest extends TestCase
     {
         $set = chars();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('string', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
+        $set = iterator_to_array($set);
         $this->assertCount(256, $set);
 
-        $this->assertTrue($set->equals(chars()));
+        $this->assertSame($set, iterator_to_array(chars()));
     }
 
     public function testStrings()
     {
         $set = strings();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('string', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
         $this->assertCount(100, $set);
     }
 
@@ -163,22 +146,20 @@ class SetsTest extends TestCase
     {
         $this->expectException(LogicException::class);
 
-        strings(0);
+        strings(0)->next();
     }
 
     public function testUnsafeStrings()
     {
         $set = unsafeStrings();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('string', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
     }
 
     public function testMixed()
     {
         $set = mixed();
 
-        $this->assertInstanceOf(SetInterface::class, $set);
-        $this->assertSame('mixed', (string) $set->type());
+        $this->assertInstanceOf(\Generator::class, $set);
     }
 }

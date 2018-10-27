@@ -73,19 +73,20 @@ class AnyTest extends TestCase
     {
         $any = new Any(
             new Name('foo'),
-            Set::of('mixed', 42, 'bar')
+            (function() {
+                yield 42;
+                yield 'bar';
+            })()
         );
         $any2 = new Any(
             new Name('baz'),
-            Set::of('mixed', 1, 2)
+            (function() {
+                yield 1;
+                yield 2;
+            })()
         );
 
-        $any3 = $any->dependOn($any2);
-
-        $this->assertCount(2, $any->sets());
-        $this->assertCount(2, $any2->sets());
-
-        $sets = $any3->sets();
+        $sets = $any->dependOn($any2)->sets();
 
         $this->assertSame(42, $sets->current()->foo);
         $this->assertSame(1, $sets->current()->baz);

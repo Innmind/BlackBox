@@ -15,7 +15,7 @@ final class Any implements InitialValue
     private $set;
     private $dependency;
 
-    public function __construct(Name $name, SetInterface $set)
+    public function __construct(Name $name, \Iterator $set)
     {
         $this->name = $name;
         $this->set = $set;
@@ -46,7 +46,7 @@ final class Any implements InitialValue
             return;
         }
 
-        $dependencySets = $this->dependency->sets();
+        $dependencySets = iterator_to_array($this->dependency->sets());
 
         foreach ($this->set as $value) {
             foreach ($dependencySets as $soFar) {

@@ -3,174 +3,115 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set\Lazy,
-    Exception\LogicException,
-};
+use Innmind\BlackBox\Exception\LogicException;
 use Innmind\Json\Json;
-use Innmind\Immutable\{
-    SetInterface,
-    Set,
-};
 
-function integers(int $range = 100): SetInterface
+function integers(int $range = 100): \Generator
 {
     if ($range < 1) {
         throw new LogicException;
     }
 
-    return Lazy::of('int', function() use ($range) {
-        $set = Set::of('int');
-
-        while ($set->size() < $range) {
-            $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
-
-            if ($int === 0) {
-                continue;
-            }
-
-            $set = $set->add($int);
-        }
-
-        return $set;
-    });
+    for ($i = 0; $i < $range; $i++) {
+        yield \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+    }
 }
 
-function integersExceptZero(int $range = 100): SetInterface
+function integersExceptZero(int $range = 100): \Generator
 {
     if ($range < 1) {
         throw new LogicException;
     }
 
-    return Lazy::of('int', function() use ($range) {
-        $set = Set::of('int');
+    for ($i = 0; $i < $range; $i++) {
+        $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
 
-        while ($set->size() < $range) {
-            $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
-
-            if ($int === 0) {
-                continue;
-            }
-
-            $set = $set->add($int);
+        if ($int === 0) {
+            continue;
         }
 
-        return $set;
-    });
+        yield $int;
+    }
 }
 
-function naturalNumbers(int $range = 100): SetInterface
+function naturalNumbers(int $range = 100): \Generator
 {
     if ($range < 1) {
         throw new LogicException;
     }
 
-    return Lazy::of('int', function() use ($range) {
-        $set = Set::of('int');
-
-        while ($set->size() < $range) {
-            $set = $set->add(\random_int(0, \PHP_INT_MAX));
-        }
-
-        return $set;
-    });
+    for ($i = 0; $i < $range; $i++) {
+        yield \random_int(0, \PHP_INT_MAX);
+    }
 }
 
-function naturalNumbersExceptZero(int $range = 100): SetInterface
+function naturalNumbersExceptZero(int $range = 100): \Generator
 {
     if ($range < 1) {
         throw new LogicException;
     }
 
-    return Lazy::of('int', function() use ($range) {
-        $set = Set::of('int');
-
-        while ($set->size() < $range) {
-            $set = $set->add(\random_int(1, \PHP_INT_MAX));
-        }
-
-        return $set;
-    });
+    for ($i = 0; $i < $range; $i++) {
+        yield \random_int(1, \PHP_INT_MAX);
+    }
 }
 
-function realNumbers(int $range = 100): SetInterface
+function realNumbers(int $range = 100): \Generator
 {
     if ($range < 1) {
         throw new LogicException;
     }
 
-    return Lazy::of('float', function() use ($range) {
-        $set = Set::of('float');
+    for ($i = 0; $i < $range; $i++) {
+        $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+        $sub = \random_int(0, \PHP_INT_MAX);
 
-        while ($set->size() < $range) {
-            $int = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
-            $sub = \random_int(0, \PHP_INT_MAX);
-
-            $set = $set->add((float) "$int.$sub");
-        }
-
-        return $set;
-    });
+        yield (float) "$int.$sub";
+    }
 }
 
-function range(float $min, float $max, float $step = 1): SetInterface
+function range(float $min, float $max, float $step = 1): \Generator
 {
-    return Lazy::of('float', function() use ($min, $max, $step) {
-        return Set::of('float', ...\range($min, $max, $step));
-    });
+    yield from \range($min, $max, $step);
 }
 
-function chars(): SetInterface
+function chars(): \Generator
 {
-    return Lazy::of('string', function() {
-        $set = Set::of('string');
-
-        foreach (\range(0, 255) as $i) {
-            $set = $set->add(chr($i));
-        }
-
-        return $set;
-    });
+    foreach (\range(0, 255) as $i) {
+        yield chr($i);
+    }
 }
 
-function strings(int $range = 100, int $maxLength = 128): SetInterface
+function strings(int $range = 100, int $maxLength = 128): \Generator
 {
     if ($range < 1) {
         throw new LogicException;
     }
 
-    return Lazy::of('string', function() use ($range, $maxLength) {
-        $set = Set::of('string');
+    for ($i = 0; $i < $range; $i++) {
+        $string = '';
 
-        while ($set->size() < $range) {
-            $string = '';
-
-            foreach (\range(1, \random_int(2, $maxLength)) as $_) {
-                $string .= chr(\random_int(0, 255));
-            }
-
-            $set = $set->add($string);
+        foreach (\range(1, \random_int(2, $maxLength)) as $_) {
+            $string .= chr(\random_int(0, 255));
         }
 
-        return $set;
-    });
+        yield $string;
+    }
 }
 
 /**
  * @see https://github.com/minimaxir/big-list-of-naughty-strings
  */
-function unsafeStrings(): SetInterface
+function unsafeStrings(): \Generator
 {
-    return Lazy::of('string', function() {
-        return Set::of('string', ...Json::decode(
-            \file_get_contents(__DIR__.'/unsafeStrings.json')
-        ));
-    });
+    yield from Json::decode(
+        \file_get_contents(__DIR__.'/unsafeStrings.json')
+    );
 }
 
-function mixed(): SetInterface
+function mixed(): \Generator
 {
-    return Set::of(
+    yield from [
         'mixed',
         -42,
         0,
@@ -182,6 +123,6 @@ function mixed(): SetInterface
         ['foo'],
         ['foo' => 'bar'],
         new class {},
-        function() {}
-    );
+        function() {},
+    ];
 }
