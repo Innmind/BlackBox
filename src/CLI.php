@@ -16,6 +16,7 @@ use Innmind\CLI\{
 };
 use Innmind\Stream\Writable;
 use Innmind\Url\PathInterface;
+use Innmind\Server\Status\Server\Memory\Bytes;
 use Innmind\Immutable\{
     StreamInterface,
     Str,
@@ -44,23 +45,13 @@ final class CLI implements Command
         );
 
         $report = ($this->suites)($report, ...$this->paths);
-        $failures = $report->failures()->size();
-        $result = 'OK';
 
-        if ($failures > 0) {
-            $result = 'KO';
+        if ($report->failures()->size() > 0) {
             $env->exit(1);
         }
 
         $this->print($env->output(), $report->failures());
-        $env->output()->write(
-            Str::of("\n\n%s (tests: %s, assertions: %s%s)\n")->sprintf(
-                $result,
-                \number_format($report->tests()),
-                \number_format($report->assertions()),
-                $failures > 0 ? ", failures: $failures" : ''
-            )
-        );
+        $this->printResult($env->output(), $report);
     }
 
     public function __toString(): string
@@ -95,6 +86,30 @@ USAGE;
                     ->write(Str::of("\n"))
                     ->write($report->failure()->message());
             }
+        );
+    }
+
+    private function printResult(Writable $stream, Report $report): void
+    {
+        $failures = $report->failures()->size();
+        $result = 'OK';
+
+        if ($failures > 0) {
+            $result = 'KO';
+        }
+
+        $stream->write(
+            Str::of("\n\nMemory: %s\n")->sprintf(
+                new Bytes(\memory_get_peak_usage())
+            )
+        );
+        $stream->write(
+            Str::of("%s (tests: %s, assertions: %s%s)\n")->sprintf(
+                $result,
+                \number_format($report->tests()),
+                \number_format($report->assertions()),
+                $failures > 0 ? ", failures: $failures" : ''
+            )
         );
     }
 }

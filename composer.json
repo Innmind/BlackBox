@@ -22,7 +22,8 @@
         "innmind/stream": "^1.4",
         "innmind/cli": "^1.5",
         "innmind/stack-trace": "^1.0",
-        "symfony/var-dumper": "^4.1"
+        "symfony/var-dumper": "^4.1",
+        "innmind/server-status": "^1.1"
     },
     "autoload": {
         "psr-4": {
