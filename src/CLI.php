@@ -17,6 +17,11 @@ use Innmind\CLI\{
 use Innmind\Stream\Writable;
 use Innmind\Url\PathInterface;
 use Innmind\Server\Status\Server\Memory\Bytes;
+use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\{
+    Period\Earth\Millisecond,
+    ElapsedPeriodInterface,
+};
 use Innmind\Immutable\{
     StreamInterface,
     Str,
@@ -28,11 +33,16 @@ use Symfony\Component\VarDumper\{
 
 final class CLI implements Command
 {
+    private $os;
     private $suites;
     private $paths;
 
-    public function __construct(Suites $suites, PathInterface ...$paths)
-    {
+    public function __construct(
+        OperatingSystem $os,
+        Suites $suites,
+        PathInterface ...$paths
+    ) {
+        $this->os = $os;
         $this->suites = $suites;
         $this->paths = $paths;
     }
@@ -44,14 +54,16 @@ final class CLI implements Command
             new InMemory
         );
 
+        $start = $this->os->clock()->now();
         $report = ($this->suites)($report, ...$this->paths);
+        $end = $this->os->clock()->now();
 
         if ($report->failures()->size() > 0) {
             $env->exit(1);
         }
 
         $this->print($env->output(), $report->failures());
-        $this->printResult($env->output(), $report);
+        $this->printResult($env->output(), $report, $end->elapsedSince($start));
     }
 
     public function __toString(): string
@@ -89,8 +101,11 @@ USAGE;
         );
     }
 
-    private function printResult(Writable $stream, Report $report): void
-    {
+    private function printResult(
+        Writable $stream,
+        Report $report,
+        ElapsedPeriodInterface $duration
+    ): void {
         $failures = $report->failures()->size();
         $result = 'OK';
 
@@ -98,13 +113,17 @@ USAGE;
             $result = 'KO';
         }
 
+        $duration = new Millisecond($duration->milliseconds());
         $stream->write(
-            Str::of("\n\nMemory: %s\n")->sprintf(
+            Str::of("\n\nTime: %s m %s s %s ms, Memory: %s\n")->sprintf(
+                $duration->minutes() + ($duration->hours() * 60),
+                $duration->seconds(),
+                $duration->milliseconds(),
                 new Bytes(\memory_get_peak_usage())
             )
         );
         $stream->write(
-            Str::of("%s (tests: %s, assertions: %s%s)\n")->sprintf(
+            Str::of("\n%s (tests: %s, assertions: %s%s)\n")->sprintf(
                 $result,
                 \number_format($report->tests()),
                 \number_format($report->assertions()),

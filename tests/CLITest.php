@@ -20,6 +20,7 @@ use Innmind\CLI\{
     Command\Options,
     Environment,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Url\PathInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -31,6 +32,7 @@ class CLITest extends TestCase
         $this->assertInstanceOf(
             Command::class,
             new CLI(
+                $this->createMock(OperatingSystem::class),
                 new Suites(
                     new Suite(
                         $this->createMock(Loader::class),
@@ -44,6 +46,7 @@ class CLITest extends TestCase
     public function testFailure()
     {
         $command = new CLI(
+            $this->createMock(OperatingSystem::class),
             new Suites(
                 new Suite(
                     $load = $this->createMock(Loader::class),
@@ -87,6 +90,7 @@ class CLITest extends TestCase
     public function testSuccess()
     {
         $command = new CLI(
+            $this->createMock(OperatingSystem::class),
             new Suites(
                 new Suite(
                     $load = $this->createMock(Loader::class),

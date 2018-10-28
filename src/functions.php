@@ -8,6 +8,7 @@ use Innmind\CLI\{
     Environment\BackPressureWrites,
     Commands,
 };
+use Innmind\OperatingSystem\Factory;
 use Innmind\TimeContinuum\TimeContinuum\Earth;
 use Innmind\TimeWarp\Halt\Usleep;
 use Innmind\Stream\Writable;
@@ -66,12 +67,15 @@ function test(string $name, Given $given, When $when, Then $then): Test
 
 function run(string ...$suites): void
 {
+    $clock = new Earth;
+
     $suites = Sequence::of(...$suites)->map(static function(string $suite): Path {
         return new Path($suite);
     });
 
     $run = new Commands(
         new CLI(
+            Factory::build($clock),
             new Suites(
                 new Suite(
                     new Loader\RecursiveLoader(
@@ -87,7 +91,7 @@ function run(string ...$suites): void
     );
     $env = new BackPressureWrites(
         new GlobalEnvironment,
-        new Earth,
+        $clock,
         new Usleep
     );
 
