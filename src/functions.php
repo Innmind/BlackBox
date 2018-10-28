@@ -5,8 +5,11 @@ namespace Innmind\BlackBox;
 
 use Innmind\CLI\{
     Environment\GlobalEnvironment,
+    Environment\BackPressureWrites,
     Commands,
 };
+use Innmind\TimeContinuum\TimeContinuum\Earth;
+use Innmind\TimeWarp\Halt\Usleep;
 use Innmind\Stream\Writable;
 use Innmind\StackTrace\{
     StackTrace,
@@ -82,7 +85,11 @@ function run(string ...$suites): void
             ...$suites
         )
     );
-    $env = new GlobalEnvironment;
+    $env = new BackPressureWrites(
+        new GlobalEnvironment,
+        new Earth,
+        new Usleep
+    );
 
     try {
         $run($env);
