@@ -44,16 +44,21 @@ final class CLI implements Command
         );
 
         $report = ($this->suites)($report, ...$this->paths);
+        $failures = $report->failures()->size();
+        $result = 'OK';
 
-        if ($report->failures()->size() > 0) {
+        if ($failures > 0) {
+            $result = 'KO';
             $env->exit(1);
         }
 
         $this->print($env->output(), $report->failures());
         $env->output()->write(
-            Str::of("\n\n(%s tests, %s assertions)\n")->sprintf(
-                $report->tests(),
-                $report->assertions()
+            Str::of("\n\n%s (tests: %s, assertions: %s%s)\n")->sprintf(
+                $result,
+                \number_format($report->tests()),
+                \number_format($report->assertions()),
+                $failures > 0 ? ", failures: $failures" : ''
             )
         );
     }
