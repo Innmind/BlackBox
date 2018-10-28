@@ -46,7 +46,7 @@ final class Any implements InitialValue
             return;
         }
 
-        $dependencySets = iterator_to_array($this->dependency->sets());
+        $dependencySets = \iterator_to_array($this->dependency->sets());
 
         foreach ($this->set as $value) {
             foreach ($dependencySets as $soFar) {
