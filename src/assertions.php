@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Assert;
 
 use Innmind\BlackBox\Assertion;
+use Innmind\TimeContinuum\ElapsedPeriod;
 use Innmind\Immutable\SequenceInterface;
 
 function same($value): Assertion
@@ -134,4 +135,14 @@ function that(callable $predicate): Assertion
 function exception(string $class, string $message = null, int $code = null): Assertion
 {
     return new Assertion\Exception($class, $message, $code);
+}
+
+function maxExecutionTime(int $milliseconds): Assertion
+{
+    return new Assertion\MaxExecutionTime(new ElapsedPeriod($milliseconds));
+}
+
+function minExecutionTime(int $milliseconds): Assertion
+{
+    return new Assertion\MinExecutionTime(new ElapsedPeriod($milliseconds));
 }

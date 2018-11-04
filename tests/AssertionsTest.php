@@ -30,6 +30,8 @@ use function Innmind\BlackBox\Assert\{
     map,
     that,
     exception,
+    maxExecutionTime,
+    minExecutionTime,
 };
 use Innmind\BlackBox\Assertion;
 use PHPUnit\Framework\TestCase;
@@ -64,5 +66,7 @@ class AssertionsTest extends TestCase
         $this->assertInstanceOf(Assertion\Map::class, map('int', 'int'));
         $this->assertInstanceOf(Assertion\That::class, that(function(){}));
         $this->assertInstanceOf(Assertion\Exception::class, exception('foo'));
+        $this->assertInstanceOf(Assertion\MaxExecutionTime::class, maxExecutionTime(42));
+        $this->assertInstanceOf(Assertion\MinExecutionTime::class, minExecutionTime(42));
     }
 }
