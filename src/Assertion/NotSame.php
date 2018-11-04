@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class NotSame implements Assertion
 {
@@ -23,6 +24,7 @@ final class NotSame implements Assertion
     }
 
     public function __invoke(
+        OperatingSystem $os,
         ScenarioReport $report,
         Result $result,
         Scenario $scenario

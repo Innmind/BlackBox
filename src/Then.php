@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\Stream;
 
 final class Then
@@ -19,16 +20,19 @@ final class Then
         $this->assertions = Stream::of(Assertion::class, $assertion, ...$assertions);
     }
 
-    public function __invoke(Result $result, Scenario $scenario): ScenarioReport
-    {
+    public function __invoke(
+        OperatingSystem $os,
+        Result $result,
+        Scenario $scenario
+    ): ScenarioReport {
         return $this->assertions->reduce(
             new ScenarioReport,
-            static function(ScenarioReport $report, Assertion $assert) use ($result, $scenario): ScenarioReport {
+            static function(ScenarioReport $report, Assertion $assert) use ($os, $result, $scenario): ScenarioReport {
                 if ($report->failed()) {
                     return $report;
                 }
 
-                return $assert($report, $result, $scenario);
+                return $assert($os, $report, $result, $scenario);
             }
         );
     }

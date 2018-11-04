@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +26,7 @@ class InstanceTest extends TestCase
         $assert = new Instance('stdClass');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \stdClass),
             new Scenario(new Map('string', 'mixed'))
@@ -34,6 +36,7 @@ class InstanceTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('foo'),
             new Scenario(new Map('string', 'mixed'))

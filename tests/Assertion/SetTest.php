@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
     Set as ISet,
@@ -28,6 +29,7 @@ class SetTest extends TestCase
         $assert = new Set('int');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(ISet::of('int')),
             new Scenario(new Map('string', 'mixed'))
@@ -37,6 +39,7 @@ class SetTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('foo'),
             new Scenario(new Map('string', 'mixed'))
@@ -47,6 +50,7 @@ class SetTest extends TestCase
         $this->assertSame('Not a set', (string) $report->failure()->message());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(ISet::of('mixed')),
             new Scenario(new Map('string', 'mixed'))

@@ -13,6 +13,7 @@ use Innmind\BlackBox\{
     Then,
     Assert,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use PHPUnit\Framework\TestCase;
 
 class TestTest extends TestCase
@@ -45,7 +46,7 @@ class TestTest extends TestCase
             )
         );
 
-        $report = $test();
+        $report = $test($this->createMock(OperatingSystem::class));
 
         $this->assertInstanceOf(Report::class, $report);
         $this->assertSame($name, $report->name());
@@ -67,7 +68,7 @@ class TestTest extends TestCase
             )
         );
 
-        $report = $test();
+        $report = $test($this->createMock(OperatingSystem::class));
 
         $this->assertInstanceOf(Report::class, $report);
         $this->assertSame($name, $report->name());

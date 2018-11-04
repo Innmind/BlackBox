@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
     Str,
@@ -28,6 +29,7 @@ class RegexTest extends TestCase
         $assert = new Regex('~foo~');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('foobar'),
             new Scenario(new Map('string', 'mixed'))
@@ -37,6 +39,7 @@ class RegexTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('bar'),
             new Scenario(new Map('string', 'mixed'))
@@ -52,6 +55,7 @@ class RegexTest extends TestCase
         $assert = new Regex('~foo~');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(Str::of('foobar')),
             new Scenario(new Map('string', 'mixed'))
@@ -61,6 +65,7 @@ class RegexTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(Str::of('bar')),
             new Scenario(new Map('string', 'mixed'))
@@ -76,6 +81,7 @@ class RegexTest extends TestCase
         $assert = new Regex('~foo~');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(42),
             new Scenario(new Map('string', 'mixed'))

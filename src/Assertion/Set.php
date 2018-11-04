@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\SetInterface;
 
 final class Set implements Assertion
@@ -21,6 +22,7 @@ final class Set implements Assertion
     }
 
     public function __invoke(
+        OperatingSystem $os,
         ScenarioReport $report,
         Result $result,
         Scenario $scenario

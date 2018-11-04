@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
     Stream as IStream,
@@ -28,6 +29,7 @@ class StreamTest extends TestCase
         $assert = new Stream('int');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(IStream::of('int')),
             new Scenario(new Map('string', 'mixed'))
@@ -37,6 +39,7 @@ class StreamTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('foo'),
             new Scenario(new Map('string', 'mixed'))
@@ -47,6 +50,7 @@ class StreamTest extends TestCase
         $this->assertSame('Not a stream', (string) $report->failure()->message());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(IStream::of('mixed')),
             new Scenario(new Map('string', 'mixed'))

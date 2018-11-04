@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
     Exception\LogicException,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -29,6 +30,7 @@ class PrimitiveTest extends TestCase
         $assert = new Primitive($type);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result($good),
             new Scenario(new Map('string', 'mixed'))
@@ -38,6 +40,7 @@ class PrimitiveTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result($bad),
             new Scenario(new Map('string', 'mixed'))

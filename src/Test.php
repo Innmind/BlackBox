@@ -7,8 +7,9 @@ use Innmind\BlackBox\{
     Test\Name,
     Test\Report,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 interface Test
 {
-    public function __invoke(): Report;
+    public function __invoke(OperatingSystem $os): Report;
 }

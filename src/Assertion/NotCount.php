@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class NotCount implements Assertion
 {
@@ -20,6 +21,7 @@ final class NotCount implements Assertion
     }
 
     public function __invoke(
+        OperatingSystem $os,
         ScenarioReport $report,
         Result $result,
         Scenario $scenario

@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,7 @@ class ExceptionTest extends TestCase
         $assert = new Exception(\RuntimeException::class);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \RuntimeException),
             new Scenario(new Map('string', 'mixed'))
@@ -45,6 +47,7 @@ class ExceptionTest extends TestCase
         );
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \RuntimeException('foobarbaz')),
             new Scenario(new Map('string', 'mixed'))
@@ -63,6 +66,7 @@ class ExceptionTest extends TestCase
         );
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \RuntimeException('', 42)),
             new Scenario(new Map('string', 'mixed'))
@@ -77,6 +81,7 @@ class ExceptionTest extends TestCase
         $assert = new Exception(\RuntimeException::class);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(42),
             new Scenario(new Map('string', 'mixed'))
@@ -92,6 +97,7 @@ class ExceptionTest extends TestCase
         $assert = new Exception(\RuntimeException::class);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \LogicException),
             new Scenario(new Map('string', 'mixed'))
@@ -110,6 +116,7 @@ class ExceptionTest extends TestCase
         );
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \RuntimeException),
             new Scenario(new Map('string', 'mixed'))
@@ -129,6 +136,7 @@ class ExceptionTest extends TestCase
         );
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new \RuntimeException),
             new Scenario(new Map('string', 'mixed'))

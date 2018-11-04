@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\Map as IMap;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +26,7 @@ class MapTest extends TestCase
         $assert = new Map('int', 'string');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new IMap('int', 'string')),
             new Scenario(new IMap('string', 'mixed'))
@@ -34,6 +36,7 @@ class MapTest extends TestCase
         $this->assertSame(1, $report->assertions());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('foo'),
             new Scenario(new IMap('string', 'mixed'))
@@ -44,6 +47,7 @@ class MapTest extends TestCase
         $this->assertSame('Not a map', (string) $report->failure()->message());
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new IMap('mixed', 'string')),
             new Scenario(new IMap('string', 'mixed'))

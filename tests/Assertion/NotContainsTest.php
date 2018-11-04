@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
     Set,
@@ -34,6 +35,7 @@ class NotContainsTest extends TestCase
         $assert = new NotContains($good);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result($result),
             new Scenario(new Map('string', 'mixed'))
@@ -45,6 +47,7 @@ class NotContainsTest extends TestCase
         $assert = new NotContains($bad);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result($result),
             new Scenario(new Map('string', 'mixed'))
@@ -60,6 +63,7 @@ class NotContainsTest extends TestCase
         $assert = new NotContains('foo');
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result(new class {}),
             new Scenario(new Map('string', 'mixed'))

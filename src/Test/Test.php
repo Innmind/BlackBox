@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     When,
     Then,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class Test implements TestInterface
 {
@@ -25,7 +26,7 @@ final class Test implements TestInterface
         $this->then = $then;
     }
 
-    public function __invoke(): Report
+    public function __invoke(OperatingSystem $os): Report
     {
         $report = new Report($this->name);
         $scenarios = $this->given->scenarios();
@@ -40,7 +41,7 @@ final class Test implements TestInterface
             $report->add(
                 $scenario,
                 $result,
-                ($this->then)($result, $scenario)
+                ($this->then)($os, $result, $scenario)
             );
         }
 

@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
     Exception\LogicException,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class Primitive implements Assertion
 {
@@ -29,6 +30,7 @@ final class Primitive implements Assertion
     }
 
     public function __invoke(
+        OperatingSystem $os,
         ScenarioReport $report,
         Result $result,
         Scenario $scenario

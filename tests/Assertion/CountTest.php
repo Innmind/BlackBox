@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,7 @@ class CountTest extends TestCase
         $assert = new Count($good);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result($collection),
             new Scenario(new Map('string', 'mixed'))
@@ -39,6 +41,7 @@ class CountTest extends TestCase
         $assert = new Count($bad);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result($collection),
             new Scenario(new Map('string', 'mixed'))
@@ -55,6 +58,7 @@ class CountTest extends TestCase
         $assert = new Count(42);
 
         $report = $assert(
+            $this->createMock(OperatingSystem::class),
             new ScenarioReport,
             new Result('foo'),
             new Scenario(new Map('string', 'mixed'))
