@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +24,7 @@ class ThatTest extends TestCase
 
     public function testInvokation()
     {
-        $result = new Result(1);
+        $result = new Result(1, $this->createMock(ElapsedPeriodInterface::class));
         $scenario = new Scenario(new Map('string', 'mixed'));
         $assert = new That(function($a, $b) use ($result, $scenario) {
             return $a === $result->value() && $b === $scenario;
@@ -46,7 +47,7 @@ class ThatTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(2),
+            new Result(2, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 

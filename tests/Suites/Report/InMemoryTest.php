@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     When\Result,
     Then\ScenarioReport,
 };
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\{
     Map,
     StreamInterface,
@@ -37,7 +38,7 @@ class InMemoryTest extends TestCase
         $report2 = $report->add(
             (new Test\Report(new Test\Name('foo')))->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 (new ScenarioReport)->success()
             )
         );
@@ -64,7 +65,7 @@ class InMemoryTest extends TestCase
         $report2 = $report->add(
             $testReport = (new Test\Report(new Test\Name('foo')))->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 (new ScenarioReport)->fail('foo')
             )
         );

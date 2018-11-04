@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\When;
 
 use Innmind\BlackBox\When\Result;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
@@ -13,9 +14,13 @@ class ResultTest extends TestCase
      */
     public function testValue($value)
     {
-        $result = new Result($value);
+        $result = new Result(
+            $value,
+            $executionTime = $this->createMock(ElapsedPeriodInterface::class)
+        );
 
         $this->assertSame($value, $result->value());
+        $this->assertSame($executionTime, $result->executionTime());
     }
 
     public function values(): array

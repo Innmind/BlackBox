@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +32,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new \RuntimeException),
+            new Result(new \RuntimeException, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -49,7 +50,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new \RuntimeException('foobarbaz')),
+            new Result(new \RuntimeException('foobarbaz'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -68,7 +69,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new \RuntimeException('', 42)),
+            new Result(new \RuntimeException('', 42), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -83,7 +84,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(42),
+            new Result(42, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -99,7 +100,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new \LogicException),
+            new Result(new \LogicException, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -118,7 +119,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new \RuntimeException),
+            new Result(new \RuntimeException, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -138,7 +139,7 @@ class ExceptionTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new \RuntimeException),
+            new Result(new \RuntimeException, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 

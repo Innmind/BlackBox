@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\{
     Map,
     Str,
@@ -31,7 +32,7 @@ class RegexTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result('foobar'),
+            new Result('foobar', $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -41,7 +42,7 @@ class RegexTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result('bar'),
+            new Result('bar', $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -57,7 +58,7 @@ class RegexTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(Str::of('foobar')),
+            new Result(Str::of('foobar'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -67,7 +68,7 @@ class RegexTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(Str::of('bar')),
+            new Result(Str::of('bar'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -83,7 +84,7 @@ class RegexTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(42),
+            new Result(42, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 

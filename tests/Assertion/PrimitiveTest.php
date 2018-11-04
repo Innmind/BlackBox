@@ -12,6 +12,7 @@ use Innmind\BlackBox\{
     Exception\LogicException,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +33,7 @@ class PrimitiveTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result($good),
+            new Result($good, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -42,7 +43,7 @@ class PrimitiveTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result($bad),
+            new Result($bad, $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 

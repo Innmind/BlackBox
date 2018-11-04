@@ -24,11 +24,15 @@ final class When
         Scenario $scenario
     ): Result {
         try {
+            $start = $os->clock()->now();
             $result = ($this->test)($scenario);
         } catch (\Throwable $e) {
             $result = $e;
         } finally {
-            return new Result($result);
+            return new Result(
+                $result,
+                $os->clock()->now()->elapsedSince($start)
+            );
         }
     }
 }

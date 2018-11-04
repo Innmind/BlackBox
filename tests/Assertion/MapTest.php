@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\Map as IMap;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +29,7 @@ class MapTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new IMap('int', 'string')),
+            new Result(new IMap('int', 'string'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new IMap('string', 'mixed'))
         );
 
@@ -38,7 +39,7 @@ class MapTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result('foo'),
+            new Result('foo', $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new IMap('string', 'mixed'))
         );
 
@@ -49,7 +50,7 @@ class MapTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(new IMap('mixed', 'string')),
+            new Result(new IMap('mixed', 'string'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new IMap('string', 'mixed'))
         );
 

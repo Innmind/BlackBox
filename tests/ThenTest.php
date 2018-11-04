@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Assertion,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +25,7 @@ class ThenTest extends TestCase
             $assertion3 = $this->createMock(Assertion::class)
         );
         $os = $this->createMock(OperatingSystem::class);
-        $result = new Result(null);
+        $result = new Result(null, $this->createMock(ElapsedPeriodInterface::class));
         $scenario = new Scenario(new Map('string', 'mixed'));
         $assertion
             ->expects($this->once())

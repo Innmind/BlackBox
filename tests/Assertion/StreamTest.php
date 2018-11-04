@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\{
     Map,
     Stream as IStream,
@@ -31,7 +32,7 @@ class StreamTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(IStream::of('int')),
+            new Result(IStream::of('int'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -41,7 +42,7 @@ class StreamTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result('foo'),
+            new Result('foo', $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 
@@ -52,7 +53,7 @@ class StreamTest extends TestCase
         $report = $assert(
             $this->createMock(OperatingSystem::class),
             new ScenarioReport,
-            new Result(IStream::of('mixed')),
+            new Result(IStream::of('mixed'), $this->createMock(ElapsedPeriodInterface::class)),
             new Scenario(new Map('string', 'mixed'))
         );
 

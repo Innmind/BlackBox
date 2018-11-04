@@ -21,6 +21,7 @@ use Innmind\CLI\{
     Environment,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Url\PathInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -70,7 +71,7 @@ class CLITest extends TestCase
             ->willReturn(
                 (new Test\Report(new Test\Name('foo')))->add(
                     new Scenario(new Map('string', 'mixed')),
-                    new Result(null),
+                    new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                     (new ScenarioReport)->fail('foo')
                 )
             );
@@ -114,7 +115,7 @@ class CLITest extends TestCase
             ->willReturn(
                 (new Test\Report(new Test\Name('foo')))->add(
                     new Scenario(new Map('string', 'mixed')),
-                    new Result(null),
+                    new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                     (new ScenarioReport)->success()
                 )
             );

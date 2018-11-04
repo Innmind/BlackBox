@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Then\ScenarioReport,
     Exception\LogicException,
 };
+use Innmind\TimeContinuum\ElapsedPeriodInterface;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +27,7 @@ class ReportTest extends TestCase
             $report,
             $report->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 (new ScenarioReport)
                     ->success()
                     ->success()
@@ -46,7 +47,7 @@ class ReportTest extends TestCase
             $report,
             $report->add(
                 $scenario = new Scenario(new Map('string', 'mixed')),
-                $result = new Result(null),
+                $result = new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 $scenarioReport = (new ScenarioReport)
                     ->success()
                     ->fail('foo')
@@ -67,12 +68,12 @@ class ReportTest extends TestCase
         (new Report(new Name('foo')))
             ->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 (new ScenarioReport)->fail('')
             )
             ->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 new ScenarioReport
             );
     }
@@ -85,12 +86,12 @@ class ReportTest extends TestCase
         (new Report(new Name('foo')))
             ->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 (new ScenarioReport)->fail('')
             )
             ->add(
                 new Scenario(new Map('string', 'mixed')),
-                new Result(null),
+                new Result(null, $this->createMock(ElapsedPeriodInterface::class)),
                 (new ScenarioReport)->fail('')
             );
     }
