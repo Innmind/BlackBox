@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Given\Scenario,
     When\Result,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class When
 {
@@ -18,8 +19,10 @@ final class When
         $this->test = \Closure::bind($test, null);
     }
 
-    public function __invoke(Scenario $scenario): Result
-    {
+    public function __invoke(
+        OperatingSystem $os,
+        Scenario $scenario
+    ): Result {
         try {
             $result = ($this->test)($scenario);
         } catch (\Throwable $e) {

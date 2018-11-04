@@ -22,6 +22,7 @@ use Innmind\BlackBox\{
     Test,
     Assert,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Set,
     Map,
@@ -72,12 +73,16 @@ class FunctionsTest extends TestCase
 
     public function testWhen()
     {
+        $os = $this->createMock(OperatingSystem::class);
         $when = when(function() {
             return 42;
         });
 
         $this->assertInstanceOf(When::class, $when);
-        $this->assertSame(42, $when(new Scenario(new Map('string', 'mixed')))->value());
+        $this->assertSame(
+            42,
+            $when($os, new Scenario(new Map('string', 'mixed')))->value()
+        );
     }
 
     public function testThen()

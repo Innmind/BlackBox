@@ -36,7 +36,7 @@ final class Test implements TestInterface
                 return $report;
             }
 
-            $result = ($this->when)($scenario);
+            $result = ($this->when)($os, $scenario);
 
             $report->add(
                 $scenario,
