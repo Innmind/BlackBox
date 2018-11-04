@@ -5,6 +5,7 @@ namespace Innmind\BlackBox;
 
 use Innmind\BlackBox\Suites\Report;
 use Innmind\Url\PathInterface;
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class Suites
 {
@@ -15,10 +16,13 @@ final class Suites
         $this->suite = $suite;
     }
 
-    public function __invoke(Report $report, PathInterface ...$paths): Report
-    {
+    public function __invoke(
+        OperatingSystem $os,
+        Report $report,
+        PathInterface ...$paths
+    ): Report {
         foreach ($paths as $path) {
-            $testsReport = ($this->suite)($path);
+            $testsReport = ($this->suite)($os, $path);
 
             foreach ($testsReport as $testReport) {
                 $report->add($testReport);

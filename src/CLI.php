@@ -55,7 +55,7 @@ final class CLI implements Command
         );
 
         $start = $this->os->clock()->now();
-        $report = ($this->suites)($report, ...$this->paths);
+        $report = ($this->suites)($this->os, $report, ...$this->paths);
         $end = $this->os->clock()->now();
 
         if ($report->failures()->size() > 0) {

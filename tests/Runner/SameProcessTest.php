@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     Test\Report,
     Test\Name,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 use PHPUnit\Framework\TestCase;
 
 class SameProcessTest extends TestCase
@@ -22,12 +23,17 @@ class SameProcessTest extends TestCase
     public function testInvokation()
     {
         $run = new SameProcess;
+        $os = $this->createMock(OperatingSystem::class);
         $test = $this->createMock(Test::class);
         $test
             ->expects($this->once())
             ->method('__invoke')
+            ->with($os)
             ->willReturn($expected = new Report(new Name('foo')));
 
-        $this->assertSame($expected, $run($test));
+        $this->assertSame(
+            $expected,
+            $run($os, $test)
+        );
     }
 }

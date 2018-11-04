@@ -12,6 +12,7 @@ use Innmind\BlackBox\{
     Test\Name,
 };
 use Innmind\Url\Path;
+use Innmind\OperatingSystem\OperatingSystem;
 use PHPUnit\Framework\TestCase;
 
 class SuiteTest extends TestCase
@@ -23,6 +24,7 @@ class SuiteTest extends TestCase
             $run = $this->createMock(Runner::class)
         );
         $path = new Path('foo');
+        $os = $this->createMock(OperatingSystem::class);
         $test = $this->createMock(Test::class);
         $load
             ->expects($this->once())
@@ -34,10 +36,10 @@ class SuiteTest extends TestCase
         $run
             ->expects($this->once())
             ->method('__invoke')
-            ->with($test)
+            ->with($os, $test)
             ->willReturn($expected = new Report(new Name('foo')));
 
-        $generator = $suite($path);
+        $generator = $suite($os, $path);
 
         $this->assertInstanceOf(\Generator::class, $generator);
         $this->assertSame([$expected], iterator_to_array($generator));

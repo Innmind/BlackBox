@@ -5,6 +5,7 @@ namespace Innmind\BlackBox;
 
 use Innmind\BlackBox\Test\Report;
 use Innmind\Url\PathInterface;
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class Suite
 {
@@ -20,10 +21,12 @@ final class Suite
     /**
      * @return \Generator<Report>
      */
-    public function __invoke(PathInterface $path): \Generator
-    {
+    public function __invoke(
+        OperatingSystem $os,
+        PathInterface $path
+    ): \Generator {
         foreach (($this->load)($path) as $test) {
-            yield ($this->run)($test);
+            yield ($this->run)($os, $test);
         }
     }
 }

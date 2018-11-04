@@ -8,11 +8,12 @@ use Innmind\BlackBox\{
     Test,
     Test\Report,
 };
+use Innmind\OperatingSystem\OperatingSystem;
 
 final class SameProcess implements Runner
 {
-    public function __invoke(Test $test): Report
+    public function __invoke(OperatingSystem $os, Test $test): Report
     {
-        return $test();
+        return $test($os);
     }
 }

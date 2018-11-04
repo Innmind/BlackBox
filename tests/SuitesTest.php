@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Runner,
 };
 use Innmind\Url\PathInterface;
+use Innmind\OperatingSystem\OperatingSystem;
 use PHPUnit\Framework\TestCase;
 
 class SuitesTest extends TestCase
@@ -25,6 +26,7 @@ class SuitesTest extends TestCase
         );
         $report = $this->createMock(Suites\Report::class);
         $path = $this->createMock(PathInterface::class);
+        $os = $this->createMock(OperatingSystem::class);
         $test = $this->createMock(Test::class);
         $load
             ->expects($this->once())
@@ -36,7 +38,7 @@ class SuitesTest extends TestCase
         $run
             ->expects($this->once())
             ->method('__invoke')
-            ->with($test)
+            ->with($os, $test)
             ->willReturn($testReport = new Test\Report(new Test\Name('foo')));
         $report
             ->expects($this->once())
@@ -44,6 +46,6 @@ class SuitesTest extends TestCase
             ->with($testReport)
             ->will($this->returnSelf());
 
-        $this->assertSame($report, $suites($report, $path));
+        $this->assertSame($report, $suites($os, $report, $path));
     }
 }

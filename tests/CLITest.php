@@ -46,7 +46,7 @@ class CLITest extends TestCase
     public function testFailure()
     {
         $command = new CLI(
-            $this->createMock(OperatingSystem::class),
+            $os = $this->createMock(OperatingSystem::class),
             new Suites(
                 new Suite(
                     $load = $this->createMock(Loader::class),
@@ -66,7 +66,7 @@ class CLITest extends TestCase
         $run
             ->expects($this->once())
             ->method('__invoke')
-            ->with($test)
+            ->with($os, $test)
             ->willReturn(
                 (new Test\Report(new Test\Name('foo')))->add(
                     new Scenario(new Map('string', 'mixed')),
@@ -90,7 +90,7 @@ class CLITest extends TestCase
     public function testSuccess()
     {
         $command = new CLI(
-            $this->createMock(OperatingSystem::class),
+            $os = $this->createMock(OperatingSystem::class),
             new Suites(
                 new Suite(
                     $load = $this->createMock(Loader::class),
@@ -110,7 +110,7 @@ class CLITest extends TestCase
         $run
             ->expects($this->once())
             ->method('__invoke')
-            ->with($test)
+            ->with($os, $test)
             ->willReturn(
                 (new Test\Report(new Test\Name('foo')))->add(
                     new Scenario(new Map('string', 'mixed')),
