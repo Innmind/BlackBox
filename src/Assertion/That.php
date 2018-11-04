@@ -26,7 +26,7 @@ final class That implements Assertion
         Result $result,
         Scenario $scenario
     ): ScenarioReport {
-        if (($this->predicate)($result->value(), $scenario) === true) {
+        if (($this->predicate)($result->value(), $scenario, $os) === true) {
             return $report->success();
         }
 
