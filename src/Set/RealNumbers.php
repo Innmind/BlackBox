@@ -5,7 +5,7 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
-final class Integers implements Set
+final class RealNumbers implements Set
 {
     private $name;
     private $size;
@@ -51,7 +51,7 @@ final class Integers implements Set
         $iterations = 0;
 
         do {
-            $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+            $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX) * \lcg_value();
 
             foreach ($this->predicates as $predicate) {
                 if (!$predicate($value)) {
