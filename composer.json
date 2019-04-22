@@ -15,7 +15,8 @@
         "issues": "http://github.com/Innmind/BlackBox/issues"
     },
     "require": {
-        "php": "~7.2"
+        "php": "~7.2",
+        "innmind/json": "^1.1"
     },
     "autoload": {
         "psr-4": {
