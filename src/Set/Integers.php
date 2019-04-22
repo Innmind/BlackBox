@@ -10,6 +10,7 @@ final class Integers implements Set
     private $name;
     private $size;
     private $predicates = [];
+    private $values;
 
     public function __construct(string $name)
     {
@@ -31,6 +32,7 @@ final class Integers implements Set
     {
         $self = clone $this;
         $self->size = $size;
+        $self->values = null;
 
         return $self;
     }
@@ -39,6 +41,7 @@ final class Integers implements Set
     {
         $self = clone $this;
         $self->predicates[] = $predicate;
+        $self->values = null;
 
         return $self;
     }
@@ -48,21 +51,26 @@ final class Integers implements Set
      */
     public function reduce($carry, callable $reducer)
     {
-        $iterations = 0;
+        if (\is_null($this->values)) {
+            $iterations = 0;
+            $values = [];
 
-        do {
-            $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+            do {
+                $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
 
-            foreach ($this->predicates as $predicate) {
-                if (!$predicate($value)) {
-                    continue 2;
+                foreach ($this->predicates as $predicate) {
+                    if (!$predicate($value)) {
+                        continue 2;
+                    }
                 }
-            }
 
-            $carry = $reducer($carry, $value);
-            ++$iterations;
-        } while ($iterations < $this->size);
+                $values[] = $value;
+                ++$iterations;
+            } while ($iterations < $this->size);
 
-        return $carry;
+            $this->values = $values;
+        }
+
+        return \array_reduce($this->values, $reducer, $carry);
     }
 }

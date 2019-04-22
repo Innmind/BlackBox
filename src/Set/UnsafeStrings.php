@@ -11,6 +11,7 @@ final class UnsafeStrings implements Set
     private $name;
     private $size;
     private $predicate;
+    private $values;
 
     public function __construct(string $name)
     {
@@ -35,6 +36,7 @@ final class UnsafeStrings implements Set
     {
         $self = clone $this;
         $self->size = $size;
+        $self->values = null;
 
         return $self;
     }
@@ -49,6 +51,7 @@ final class UnsafeStrings implements Set
 
             return $predicate($value);
         };
+        $self->values = null;
 
         return $self;
     }
@@ -58,12 +61,15 @@ final class UnsafeStrings implements Set
      */
     public function reduce($carry, callable $reducer)
     {
-        $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
-        \shuffle($values);
+        if (\is_null($this->values)) {
+            $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
+            \shuffle($values);
 
-        $values = array_filter($values, $this->predicate);
-        $values = \array_slice($values, 0, $this->size);
+            $values = array_filter($values, $this->predicate);
+            $values = \array_slice($values, 0, $this->size);
+            $this->values = $values;
+        }
 
-        return \array_reduce($values, $reducer, $carry);
+        return \array_reduce($this->values, $reducer, $carry);
     }
 }

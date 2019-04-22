@@ -10,6 +10,7 @@ final class Chars implements Set
     private $name;
     private $size;
     private $predicate;
+    private $values;
 
     public function __construct(string $name)
     {
@@ -34,6 +35,7 @@ final class Chars implements Set
     {
         $self = clone $this;
         $self->size = $size;
+        $self->values = null;
 
         return $self;
     }
@@ -48,6 +50,7 @@ final class Chars implements Set
 
             return $predicate($value);
         };
+        $self->values = null;
 
         return $self;
     }
@@ -57,15 +60,19 @@ final class Chars implements Set
      */
     public function reduce($carry, callable $reducer)
     {
-        $values = \range(0, 255);
-        \shuffle($values);
-        $values = array_map(static function(int $i): string {
-            return chr($i);
-        }, $values);
+        if (\is_null($this->values)) {
+            $values = \range(0, 255);
+            \shuffle($values);
+            $values = array_map(static function(int $i): string {
+                return chr($i);
+            }, $values);
 
-        $values = array_filter($values, $this->predicate);
-        $values = \array_slice($values, 0, $this->size);
+            $values = array_filter($values, $this->predicate);
+            $values = \array_slice($values, 0, $this->size);
 
-        return \array_reduce($values, $reducer, $carry);
+            $this->values = $values;
+        }
+
+        return \array_reduce($this->values, $reducer, $carry);
     }
 }
