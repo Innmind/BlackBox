@@ -9,13 +9,16 @@ final class RealNumbers implements Set
 {
     private $name;
     private $size;
-    private $predicates = [];
+    private $predicate;
     private $values;
 
     public function __construct(string $name)
     {
         $this->name = $name;
         $this->size = 100;
+        $this->predicate = static function(): bool {
+            return true;
+        };
     }
 
     public static function of(string $name): self
@@ -40,7 +43,13 @@ final class RealNumbers implements Set
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
-        $self->predicates[] = $predicate;
+        $self->predicate = function($value) use ($predicate): bool {
+            if (!($this->predicate)($value)) {
+                return false;
+            }
+
+            return $predicate($value);
+        };
         $self->values = null;
 
         return $self;
@@ -58,10 +67,8 @@ final class RealNumbers implements Set
             do {
                 $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX) * \lcg_value();
 
-                foreach ($this->predicates as $predicate) {
-                    if (!$predicate($value)) {
-                        continue 2;
-                    }
+                if (!($this->predicate)($value)) {
+                    continue;
                 }
 
                 $values[] = $value;
