@@ -11,9 +11,7 @@ final class NaturalNumbersExceptZero implements Set
 
     public function __construct(string $name)
     {
-        $this->set = Integers::of($name)->filter(static function(int $value): bool {
-            return $value > 0;
-        });
+        $this->set = Integers::of($name, 1);
     }
 
     public static function of(string $name): self
