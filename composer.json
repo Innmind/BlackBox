@@ -1,0 +1,31 @@
+{
+    "name": "innmind/black-box",
+    "type": "library",
+    "description": "Test library",
+    "keywords": ["test", "fixtures", "property based testing"],
+    "homepage": "http://github.com/Innmind/BlackBox",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baptiste Langlade",
+            "email": "langlade.baptiste@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "http://github.com/Innmind/BlackBox/issues"
+    },
+    "require": {
+        "php": "~7.2",
+        "innmind/json": "^1.1",
+        "innmind/immutable": "^2.16",
+        "innmind/time-continuum": "^1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Innmind\\BlackBox\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    }
+}
