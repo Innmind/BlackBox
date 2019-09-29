@@ -1,8 +1,8 @@
 {
     "name": "innmind/black-box",
     "type": "library",
-    "description": "Unit test library",
-    "keywords": ["test", "unit test", "property based testing"],
+    "description": "Test library",
+    "keywords": ["test", "fixtures", "property based testing"],
     "homepage": "http://github.com/Innmind/BlackBox",
     "license": "MIT",
     "authors": [
@@ -16,27 +16,16 @@
     },
     "require": {
         "php": "~7.2",
-        "innmind/immutable": "^2.9",
-        "innmind/json": "^1.0",
-        "innmind/url": "^2.0",
-        "innmind/stream": "^1.4",
-        "innmind/cli": "^1.5",
-        "innmind/stack-trace": "^1.0",
-        "symfony/var-dumper": "^4.1",
-        "innmind/server-status": "^1.1",
-        "innmind/operating-system": "^1.0"
+        "innmind/json": "^1.1",
+        "innmind/immutable": "^2.16",
+        "innmind/time-continuum": "^1.3"
     },
     "autoload": {
         "psr-4": {
             "Innmind\\BlackBox\\": "src/"
-        },
-        "files": [
-            "src/sets.php",
-            "src/functions.php",
-            "src/assertions.php"
-        ]
+        }
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.4"
+        "phpunit/phpunit": "^8.0"
     }
 }
