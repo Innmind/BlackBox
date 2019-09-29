@@ -14,8 +14,7 @@ final class Composite implements Set
 {
     private $name;
     private $aggregate;
-    private $first;
-    private $second;
+    private $sets;
     private $size;
     private $predicate;
     private $values;
