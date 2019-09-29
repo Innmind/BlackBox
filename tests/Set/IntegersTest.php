@@ -15,23 +15,18 @@ class IntegersTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Integers('a')
+            new Integers
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(Integers::class, Integers::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', Integers::of('a')->name());
+        $this->assertInstanceOf(Integers::class, Integers::of());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = Integers::of('a')->reduce(
+        $values = Integers::of()->reduce(
             [],
             static function(array $values, int $value): array {
                 $values[] = $value;
@@ -45,7 +40,7 @@ class IntegersTest extends TestCase
 
     public function testBoundsAreApplied()
     {
-        $values = Integers::of('a', -10, 10);
+        $values = Integers::of(-10, 10);
 
         $hasOutsideBounds = $values->reduce(
             false,
@@ -59,7 +54,7 @@ class IntegersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = Integers::of('a');
+        $integers = Integers::of();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -85,7 +80,7 @@ class IntegersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Integers::of('a');
+        $a = Integers::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Integers::class, $b);

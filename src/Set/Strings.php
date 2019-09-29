@@ -7,15 +7,13 @@ use Innmind\BlackBox\Set;
 
 final class Strings implements Set
 {
-    private $name;
     private $maxLength;
     private $size;
     private $predicate;
     private $values;
 
-    public function __construct(string $name, int $maxLength = 128)
+    public function __construct(int $maxLength = 128)
     {
-        $this->name = $name;
         $this->maxLength = $maxLength;
         $this->size = 100;
         $this->predicate = static function(): bool {
@@ -23,14 +21,9 @@ final class Strings implements Set
         };
     }
 
-    public static function of(string $name, int $maxLength = 128): self
+    public static function of(int $maxLength = 128): self
     {
-        return new self($name, $maxLength);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return new self($maxLength);
     }
 
     public function take(int $size): Set

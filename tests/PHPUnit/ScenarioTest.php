@@ -13,7 +13,7 @@ class ScenarioTest extends TestCase
 {
     public function testCallingWithOnlyOneSet()
     {
-        $scenario = new Scenario(Integers::of('foo'));
+        $scenario = new Scenario(Integers::of());
 
         $called = 0;
         $scenario->then(static function(int $foo) use (&$called): void {
@@ -25,7 +25,7 @@ class ScenarioTest extends TestCase
 
     public function testCallingWithMultipleSets()
     {
-        $scenario = new Scenario(Integers::of('a'), Integers::of('b'));
+        $scenario = new Scenario(Integers::of(), Integers::of());
 
         $called = 0;
         $scenario->then(static function(int $a, $b) use (&$called): void {

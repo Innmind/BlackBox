@@ -15,23 +15,18 @@ class StringsTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Strings('a')
+            new Strings
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(Strings::class, Strings::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', Strings::of('a')->name());
+        $this->assertInstanceOf(Strings::class, Strings::of());
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = Strings::of('a')->reduce(
+        $values = Strings::of()->reduce(
             [],
             static function(array $values, string $value): array {
                 $values[] = $value;
@@ -45,7 +40,7 @@ class StringsTest extends TestCase
 
     public function testByDefaultMaxLengthIs128()
     {
-        $values = Strings::of('a')->reduce(
+        $values = Strings::of()->reduce(
             [],
             static function(array $values, string $value): array {
                 $values[] = \strlen($value);
@@ -59,7 +54,7 @@ class StringsTest extends TestCase
 
     public function testMaxLengthIsParametrable()
     {
-        $values = Strings::of('a', 256)->reduce(
+        $values = Strings::of(256)->reduce(
             [],
             static function(array $values, string $value): array {
                 $values[] = \strlen($value);
@@ -74,7 +69,7 @@ class StringsTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Strings::of('a');
+        $values = Strings::of();
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -100,7 +95,7 @@ class StringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Strings::of('a');
+        $a = Strings::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Strings::class, $b);

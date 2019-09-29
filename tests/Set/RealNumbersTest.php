@@ -15,23 +15,18 @@ class RealNumbersTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new RealNumbers('a')
+            new RealNumbers
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(RealNumbers::class, RealNumbers::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', RealNumbers::of('a')->name());
+        $this->assertInstanceOf(RealNumbers::class, RealNumbers::of());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = RealNumbers::of('a')->reduce(
+        $values = RealNumbers::of()->reduce(
             [],
             static function(array $values, float $value): array {
                 $values[] = $value;
@@ -45,7 +40,7 @@ class RealNumbersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = RealNumbers::of('a');
+        $values = RealNumbers::of();
         $positive = $values->filter(static function(float $float): bool {
             return $float > 0;
         });
@@ -71,7 +66,7 @@ class RealNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = RealNumbers::of('a');
+        $a = RealNumbers::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(RealNumbers::class, $b);

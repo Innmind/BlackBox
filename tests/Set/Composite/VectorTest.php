@@ -33,11 +33,11 @@ class VectorTest extends TestCase
 
     public function testOf()
     {
-        $a = Vector::of(FromGenerator::of('', function() {
+        $a = Vector::of(FromGenerator::of(function() {
             yield 'a';
             yield 'b';
         }));
-        $b = Vector::of(FromGenerator::of('', function() {
+        $b = Vector::of(FromGenerator::of(function() {
             yield 'c';
             yield 'd';
         }));

@@ -7,7 +7,6 @@ use Innmind\BlackBox\Set;
 
 final class FromGenerator implements Set
 {
-    private $name;
     private $size;
     private $generatorFactory;
     private $predicate;
@@ -16,13 +15,12 @@ final class FromGenerator implements Set
     /**
      * @param callable(): \Generator $generatorFactory
      */
-    public function __construct(string $name, callable $generatorFactory)
+    public function __construct(callable $generatorFactory)
     {
         if (!$generatorFactory() instanceof \Generator) {
-            throw new \TypeError('Argument 2 must be of type callable(): \Generator');
+            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
         }
 
-        $this->name = $name;
         $this->size = 100;
         $this->generatorFactory = $generatorFactory;
         $this->predicate = static function(): bool {
@@ -33,14 +31,9 @@ final class FromGenerator implements Set
     /**
      * @param callable(): \Generator $generatorFactory
      */
-    public static function of(string $name, callable $generatorFactory): self
+    public static function of(callable $generatorFactory): self
     {
-        return new self($name, $generatorFactory);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return new self($generatorFactory);
     }
 
     public function take(int $size): Set

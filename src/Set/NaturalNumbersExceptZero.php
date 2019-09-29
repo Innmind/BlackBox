@@ -9,19 +9,14 @@ final class NaturalNumbersExceptZero implements Set
 {
     private $set;
 
-    public function __construct(string $name)
+    public function __construct()
     {
-        $this->set = Integers::of($name, 1);
+        $this->set = Integers::of(1);
     }
 
-    public static function of(string $name): self
+    public static function of(): self
     {
-        return new self($name);
-    }
-
-    public function name(): string
-    {
-        return $this->set->name();
+        return new self;
     }
 
     public function take(int $size): Set

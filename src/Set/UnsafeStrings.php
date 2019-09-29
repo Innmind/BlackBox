@@ -8,28 +8,21 @@ use Innmind\Json\Json;
 
 final class UnsafeStrings implements Set
 {
-    private $name;
     private $size;
     private $predicate;
     private $values;
 
-    public function __construct(string $name)
+    public function __construct()
     {
-        $this->name = $name;
         $this->size = 100;
         $this->predicate = static function(): bool {
             return true;
         };
     }
 
-    public static function of(string $name): self
+    public static function of(): self
     {
-        return new self($name);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return new self;
     }
 
     public function take(int $size): Set

@@ -15,23 +15,18 @@ class NaturalNumbersTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new NaturalNumbers('a')
+            new NaturalNumbers
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(NaturalNumbers::class, NaturalNumbers::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', NaturalNumbers::of('a')->name());
+        $this->assertInstanceOf(NaturalNumbers::class, NaturalNumbers::of());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = NaturalNumbers::of('a')->reduce(
+        $values = NaturalNumbers::of()->reduce(
             [],
             static function(array $values, int $value): array {
                 $values[] = $value;
@@ -49,7 +44,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = NaturalNumbers::of('a');
+        $integers = NaturalNumbers::of();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -75,7 +70,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = NaturalNumbers::of('a');
+        $a = NaturalNumbers::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(NaturalNumbers::class, $b);

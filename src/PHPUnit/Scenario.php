@@ -33,7 +33,6 @@ final class Scenario
         }
 
         $set = Composite::of(
-            '',
             function(...$args): array {
                 return $args;
             },

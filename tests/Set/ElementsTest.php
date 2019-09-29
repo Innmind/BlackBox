@@ -15,7 +15,7 @@ class ElementsTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Elements('foo', 42)
+            new Elements(42)
         );
     }
 
@@ -23,18 +23,13 @@ class ElementsTest extends TestCase
     {
         $this->assertInstanceOf(
             Elements::class,
-            Elements::of('foo', 42, 24)
+            Elements::of(42, 24)
         );
-    }
-
-    public function testName()
-    {
-        $this->assertSame('foo', Elements::of('foo', 42)->name());
     }
 
     public function testTake100ValuesByDefault()
     {
-        $elements = Elements::of('foo', ...range(0, 1000));
+        $elements = Elements::of(...range(0, 1000));
         $values = $elements->reduce(
             [],
             static function(array $values, $value): array {
@@ -49,7 +44,7 @@ class ElementsTest extends TestCase
 
     public function testTake()
     {
-        $elements = Elements::of('foo', ...range(0, 1000));
+        $elements = Elements::of(...range(0, 1000));
         $elements2 = $elements->take(10);
         $aValues = $elements->reduce(
             [],
@@ -76,7 +71,7 @@ class ElementsTest extends TestCase
 
     public function testFilter()
     {
-        $elements = Elements::of('foo', ...range(0, 1000));
+        $elements = Elements::of(...range(0, 1000));
         $elements2 = $elements->filter(static function(int $value): bool {
             return $value % 2 === 0;
         });

@@ -8,15 +8,13 @@ use Innmind\Immutable\Sequence;
 
 final class Elements implements Set
 {
-    private $name;
     private $size;
     private $elements;
     private $predicate;
     private $values;
 
-    public function __construct(string $name, $first, ...$elements)
+    public function __construct($first, ...$elements)
     {
-        $this->name = $name;
         $this->size = 100;
         $this->elements = Sequence::of($first, ...$elements);
         $this->predicate = static function(): bool {
@@ -24,14 +22,9 @@ final class Elements implements Set
         };
     }
 
-    public static function of(string $name, $first, ...$elements): self
+    public static function of($first, ...$elements): self
     {
-        return new self($name, $first, ...$elements);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return new self($first, ...$elements);
     }
 
     public function take(int $size): Set

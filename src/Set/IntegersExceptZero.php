@@ -9,21 +9,16 @@ final class IntegersExceptZero implements Set
 {
     private $set;
 
-    public function __construct(string $name)
+    public function __construct()
     {
-        $this->set = Integers::of($name)->filter(static function(int $value): bool {
+        $this->set = Integers::of()->filter(static function(int $value): bool {
             return $value !== 0;
         });
     }
 
-    public static function of(string $name): self
+    public static function of(): self
     {
-        return new self($name);
-    }
-
-    public function name(): string
-    {
-        return $this->set->name();
+        return new self;
     }
 
     public function take(int $size): Set

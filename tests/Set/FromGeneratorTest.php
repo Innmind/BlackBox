@@ -15,7 +15,7 @@ class FromGeneratorTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new FromGenerator('foo', function(){
+            new FromGenerator(function(){
                 yield 42;
             })
         );
@@ -25,7 +25,7 @@ class FromGeneratorTest extends TestCase
     {
         $this->assertInstanceOf(
             FromGenerator::class,
-            FromGenerator::of('foo', function() {
+            FromGenerator::of(function() {
                 yield 42;
             })
         );
@@ -34,24 +34,14 @@ class FromGeneratorTest extends TestCase
     public function testThrowWhenTheCallableDoesntReturnAGenerator()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type callable(): \Generator');
+        $this->expectExceptionMessage('Argument 1 must be of type callable(): \Generator');
 
-        new FromGenerator('foo', function(){});
-    }
-
-    public function testName()
-    {
-        $this->assertSame(
-            'foo',
-            FromGenerator::of('foo', function() {
-                yield 42;
-            })->name()
-        );
+        new FromGenerator(function(){});
     }
 
     public function testTake()
     {
-        $a = FromGenerator::of('foo', function() {
+        $a = FromGenerator::of(function() {
             foreach (range(0, 1000) as $i) {
                 yield $i;
             }
@@ -83,7 +73,7 @@ class FromGeneratorTest extends TestCase
 
     public function testFilter()
     {
-        $a = FromGenerator::of('foo', function() {
+        $a = FromGenerator::of(function() {
             foreach (range(0, 1000) as $i) {
                 yield $i;
             }
@@ -124,7 +114,7 @@ class FromGeneratorTest extends TestCase
 
     public function testStopsGeneratingValueWhenGeneratorRunsOut()
     {
-        $a = FromGenerator::of('foo', function() {
+        $a = FromGenerator::of(function() {
             foreach (range(0, 10) as $i) {
                 yield $i;
             }

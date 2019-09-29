@@ -12,7 +12,6 @@ use Innmind\Immutable\Sequence;
 
 final class Composite implements Set
 {
-    private $name;
     private $aggregate;
     private $sets;
     private $size;
@@ -20,13 +19,11 @@ final class Composite implements Set
     private $values;
 
     public function __construct(
-        string $name,
         callable $aggregate,
         Set $first,
         Set $second,
         Set ...$sets
     ) {
-        $this->name = $name;
         $this->aggregate = $aggregate;
         $this->sets = Sequence::of($first, $second, ...$sets)->reverse();
         $this->size = null; // by default allow all combinations
@@ -36,16 +33,10 @@ final class Composite implements Set
     }
 
     public static function of(
-        string $name,
         callable $aggregate,
         Set ...$sets
     ): self {
-        return new self($name, $aggregate, ...$sets);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return new self($aggregate, ...$sets);
     }
 
     public function take(int $size): Set

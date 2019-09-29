@@ -20,7 +20,7 @@ class BlackBoxTest extends TestCase
             {
                 $called = 0;
                 $this
-                    ->forAll(Set\Integers::of('a'))
+                    ->forAll(Set\Integers::of())
                     ->then(static function() use (&$called) {
                         ++$called;
                     });

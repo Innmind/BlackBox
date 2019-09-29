@@ -7,16 +7,14 @@ use Innmind\BlackBox\Set;
 
 final class Integers implements Set
 {
-    private $name;
     private $lowerBound;
     private $upperBound;
     private $size;
     private $predicate;
     private $values;
 
-    public function __construct(string $name, int $lowerBound = null, int $upperBound = null)
+    public function __construct(int $lowerBound = null, int $upperBound = null)
     {
-        $this->name = $name;
         $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
         $this->upperBound = $upperBound ?? \PHP_INT_MAX;
         $this->size = 100;
@@ -25,14 +23,9 @@ final class Integers implements Set
         };
     }
 
-    public static function of(string $name, int $lowerBound = null, int $upperBound = null): self
+    public static function of(int $lowerBound = null, int $upperBound = null): self
     {
-        return new self($name, $lowerBound, $upperBound);
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+        return new self($lowerBound, $upperBound);
     }
 
     public function take(int $size): Set

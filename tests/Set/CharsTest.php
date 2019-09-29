@@ -15,23 +15,18 @@ class CharsTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Chars('a')
+            new Chars
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(Chars::class, Chars::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', Chars::of('a')->name());
+        $this->assertInstanceOf(Chars::class, Chars::of());
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = Chars::of('a')->reduce(
+        $values = Chars::of()->reduce(
             [],
             static function(array $values, string $value): array {
                 $values[] = $value;
@@ -45,7 +40,7 @@ class CharsTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Chars::of('a');
+        $values = Chars::of();
         $even = $values->filter(static function(string $value): bool {
             return \ord($value) % 2 === 0;
         });
@@ -71,7 +66,7 @@ class CharsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Chars::of('a');
+        $a = Chars::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Chars::class, $b);

@@ -5,7 +5,6 @@ namespace Innmind\BlackBox;
 
 interface Set
 {
-    public function name(): string;
     public function take(int $size): self;
     public function filter(callable $predicate): self;
 

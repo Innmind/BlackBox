@@ -15,23 +15,18 @@ class IntegersExceptZeroTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new IntegersExceptZero('a')
+            new IntegersExceptZero
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(IntegersExceptZero::class, IntegersExceptZero::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', IntegersExceptZero::of('a')->name());
+        $this->assertInstanceOf(IntegersExceptZero::class, IntegersExceptZero::of());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = IntegersExceptZero::of('a')->reduce(
+        $values = IntegersExceptZero::of()->reduce(
             [],
             static function(array $values, int $value): array {
                 $values[] = $value;
@@ -46,7 +41,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = IntegersExceptZero::of('a');
+        $integers = IntegersExceptZero::of();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -72,7 +67,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = IntegersExceptZero::of('a');
+        $a = IntegersExceptZero::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(IntegersExceptZero::class, $b);

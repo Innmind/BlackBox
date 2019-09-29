@@ -15,23 +15,18 @@ class UnsafeStringsTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new UnsafeStrings('a')
+            new UnsafeStrings
         );
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(UnsafeStrings::class, UnsafeStrings::of('a'));
-    }
-
-    public function testName()
-    {
-        $this->assertSame('a', UnsafeStrings::of('a')->name());
+        $this->assertInstanceOf(UnsafeStrings::class, UnsafeStrings::of());
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = UnsafeStrings::of('a')->reduce(
+        $values = UnsafeStrings::of()->reduce(
             [],
             static function(array $values, string $value): array {
                 $values[] = $value;
@@ -45,7 +40,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = UnsafeStrings::of('a');
+        $values = UnsafeStrings::of();
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -71,7 +66,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = UnsafeStrings::of('a');
+        $a = UnsafeStrings::of();
         $b = $a->take(50);
 
         $this->assertInstanceOf(UnsafeStrings::class, $b);

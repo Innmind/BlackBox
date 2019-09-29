@@ -17,19 +17,18 @@ class Test extends TestCase
     public function setUp(): void
     {
         $this->set = new Composite(
-            'foo',
             function(string ...$args) {
                 return implode('', $args);
             },
-            FromGenerator::of('', function() {
+            FromGenerator::of(function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of('', function() {
+            FromGenerator::of(function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of('', function() {
+            FromGenerator::of(function() {
                 yield 'c';
                 yield 'd';
             })
@@ -49,27 +48,21 @@ class Test extends TestCase
         $this->assertInstanceOf(
             Composite::class,
             Composite::of(
-                'foo',
                 function() {},
-                FromGenerator::of('', function() {
+                FromGenerator::of(function() {
                     yield 'e';
                     yield 'f';
                 }),
-                FromGenerator::of('', function() {
+                FromGenerator::of(function() {
                     yield 'a';
                     yield 'b';
                 }),
-                FromGenerator::of('', function() {
+                FromGenerator::of(function() {
                     yield 'c';
                     yield 'd';
                 })
             )
         );
-    }
-
-    public function testName()
-    {
-        $this->assertSame('foo', $this->set->name());
     }
 
     public function testTake()

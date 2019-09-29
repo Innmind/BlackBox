@@ -42,7 +42,6 @@ class MatrixTest extends TestCase
             new Combination('b', 'c')
         );
         $matrix2 = $matrix->dot(FromGenerator::of(
-            'foo',
             function() {
                 yield 'e';
                 yield 'f';
