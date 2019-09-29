@@ -16,7 +16,8 @@
     },
     "require": {
         "php": "~7.2",
-        "innmind/json": "^1.1"
+        "innmind/json": "^1.1",
+        "innmind/immutable": "^2.16"
     },
     "autoload": {
         "psr-4": {
