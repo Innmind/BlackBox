@@ -1,8 +1,8 @@
 {
     "name": "innmind/black-box",
     "type": "library",
-    "description": "Unit test library",
-    "keywords": ["test", "unit test", "property based testing"],
+    "description": "Test library",
+    "keywords": ["test", "fixtures", "property based testing"],
     "homepage": "http://github.com/Innmind/BlackBox",
     "license": "MIT",
     "authors": [
