@@ -17,18 +17,6 @@ final class Scenario
         \array_unshift($sets, $first);
 
         $this->sets = $sets;
-
-        if (\count($sets) === 1) {
-            $this->set = \reset($sets);
-        } else {
-            $this->set = Composite::of(
-                '',
-                function(...$args): array {
-                    return $args;
-                },
-                ...$sets
-            );
-        }
     }
 
     public function then(callable $test): void
