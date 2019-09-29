@@ -43,6 +43,20 @@ class IntegersTest extends TestCase
         $this->assertCount(100, $values);
     }
 
+    public function testBoundsAreApplied()
+    {
+        $values = Integers::of('a', -10, 10);
+
+        $hasOutsideBounds = $values->reduce(
+            false,
+            static function(bool $hasOutsideBounds, int $value): bool {
+                return $hasOutsideBounds || $value > 10 || $value < -10;
+            }
+        );
+
+        $this->assertFalse($hasOutsideBounds);
+    }
+
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
         $integers = Integers::of('a');

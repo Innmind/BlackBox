@@ -8,22 +8,26 @@ use Innmind\BlackBox\Set;
 final class Integers implements Set
 {
     private $name;
+    private $lowerBound;
+    private $upperBound;
     private $size;
     private $predicate;
     private $values;
 
-    public function __construct(string $name)
+    public function __construct(string $name, int $lowerBound = null, int $upperBound = null)
     {
         $this->name = $name;
+        $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
+        $this->upperBound = $upperBound ?? \PHP_INT_MAX;
         $this->size = 100;
         $this->predicate = static function(): bool {
             return true;
         };
     }
 
-    public static function of(string $name): self
+    public static function of(string $name, int $lowerBound = null, int $upperBound = null): self
     {
-        return new self($name);
+        return new self($name, $lowerBound, $upperBound);
     }
 
     public function name(): string
@@ -65,7 +69,7 @@ final class Integers implements Set
             $values = [];
 
             do {
-                $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX);
+                $value = \random_int($this->lowerBound, $this->upperBound);
 
                 if (!($this->predicate)($value)) {
                     continue;
