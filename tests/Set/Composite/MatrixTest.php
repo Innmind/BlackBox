@@ -15,31 +15,38 @@ class MatrixTest extends TestCase
     public function testInterface()
     {
         $matrix = new Matrix(
-            new Combination('a', 'b'),
-            new Combination('a', 'c'),
-            new Combination('b', 'a'),
-            new Combination('b', 'c')
+            FromGenerator::of(function() {
+                yield 'a';
+                yield 'b';
+            }),
+            FromGenerator::of(function() {
+                yield new Combination('c');
+                yield new Combination('d');
+            })
         );
 
-        $this->assertInstanceOf(\Iterator::class, $matrix);
         $this->assertSame(
             [
-                ['a', 'b'],
                 ['a', 'c'],
-                ['b', 'a'],
+                ['a', 'd'],
                 ['b', 'c'],
+                ['b', 'd'],
             ],
-            \iterator_to_array($matrix)
+            $this->toArray($matrix)
         );
     }
 
     public function testDot()
     {
         $matrix = new Matrix(
-            new Combination('a', 'b'),
-            new Combination('a', 'c'),
-            new Combination('b', 'a'),
-            new Combination('b', 'c')
+            FromGenerator::of(function() {
+                yield 'a';
+                yield 'b';
+            }),
+            FromGenerator::of(function() {
+                yield new Combination('c');
+                yield new Combination('d');
+            })
         );
         $matrix2 = $matrix->dot(FromGenerator::of(
             function() {
@@ -52,25 +59,35 @@ class MatrixTest extends TestCase
         $this->assertNotSame($matrix, $matrix2);
         $this->assertSame(
             [
-                ['a', 'b'],
                 ['a', 'c'],
-                ['b', 'a'],
+                ['a', 'd'],
                 ['b', 'c'],
+                ['b', 'd'],
             ],
-            \iterator_to_array($matrix)
+            $this->toArray($matrix)
         );
         $this->assertSame(
             [
-                ['e', 'a', 'b'],
                 ['e', 'a', 'c'],
-                ['e', 'b', 'a'],
+                ['e', 'a', 'd'],
                 ['e', 'b', 'c'],
-                ['f', 'a', 'b'],
+                ['e', 'b', 'd'],
                 ['f', 'a', 'c'],
-                ['f', 'b', 'a'],
+                ['f', 'a', 'd'],
                 ['f', 'b', 'c'],
+                ['f', 'b', 'd'],
             ],
-            \iterator_to_array($matrix2)
+            $this->toArray($matrix2)
+        );
+    }
+
+    public function toArray(Matrix $matrix): array
+    {
+        return \array_map(
+            function($combination) {
+                return $combination->toArray();
+            },
+            \iterator_to_array($matrix->values())
         );
     }
 }

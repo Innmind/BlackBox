@@ -6,11 +6,13 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 use Innmind\Json\Json;
 
+/**
+ * {@inheritdoc}
+ */
 final class UnsafeStrings implements Set
 {
     private $size;
     private $predicate;
-    private $values;
 
     public function __construct()
     {
@@ -29,11 +31,13 @@ final class UnsafeStrings implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -44,25 +48,21 @@ final class UnsafeStrings implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<string>
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
-            \shuffle($values);
+        $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
+        \shuffle($values);
 
-            $values = array_filter($values, $this->predicate);
-            $values = \array_slice($values, 0, $this->size);
-            $this->values = $values;
-        }
+        $values = array_filter($values, $this->predicate);
+        $values = \array_slice($values, 0, $this->size);
 
-        return \array_reduce($this->values, $reducer, $carry);
+        yield from $values;
     }
 }

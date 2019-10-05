@@ -5,13 +5,15 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class Integers implements Set
 {
     private $lowerBound;
     private $upperBound;
     private $size;
     private $predicate;
-    private $values;
 
     public function __construct(int $lowerBound = null, int $upperBound = null)
     {
@@ -32,11 +34,13 @@ final class Integers implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -47,34 +51,26 @@ final class Integers implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<int>
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $iterations = 0;
-            $values = [];
+        $iterations = 0;
 
-            do {
-                $value = \random_int($this->lowerBound, $this->upperBound);
+        do {
+            $value = \random_int($this->lowerBound, $this->upperBound);
 
-                if (!($this->predicate)($value)) {
-                    continue;
-                }
+            if (!($this->predicate)($value)) {
+                continue;
+            }
 
-                $values[] = $value;
-                ++$iterations;
-            } while ($iterations < $this->size);
-
-            $this->values = $values;
-        }
-
-        return \array_reduce($this->values, $reducer, $carry);
+            yield $value;
+            ++$iterations;
+        } while ($iterations < $this->size);
     }
 }

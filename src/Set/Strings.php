@@ -5,12 +5,14 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class Strings implements Set
 {
     private $maxLength;
     private $size;
     private $predicate;
-    private $values;
 
     public function __construct(int $maxLength = 128)
     {
@@ -30,11 +32,13 @@ final class Strings implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -45,38 +49,30 @@ final class Strings implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<string>
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $iterations = 0;
-            $values = [];
+        $iterations = 0;
 
-            do {
-                $value = '';
+        do {
+            $value = '';
 
-                foreach (range(1, \random_int(2, $this->maxLength)) as $_) {
-                    $value .= \chr(\random_int(33, 126));
-                }
+            foreach (range(1, \random_int(2, $this->maxLength)) as $_) {
+                $value .= \chr(\random_int(33, 126));
+            }
 
-                if (!($this->predicate)($value)) {
-                    continue ;
-                }
+            if (!($this->predicate)($value)) {
+                continue ;
+            }
 
-                $values[] = $value;
-                ++$iterations;
-            } while ($iterations < $this->size);
-
-            $this->values = $values;
-        }
-
-        return \array_reduce($this->values, $reducer, $carry);
+            yield $value;
+            ++$iterations;
+        } while ($iterations < $this->size);
     }
 }

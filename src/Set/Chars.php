@@ -5,11 +5,13 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class Chars implements Set
 {
     private $size;
     private $predicate;
-    private $values;
 
     public function __construct()
     {
@@ -28,11 +30,13 @@ final class Chars implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -43,29 +47,24 @@ final class Chars implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<string>
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $values = \range(0, 255);
-            \shuffle($values);
-            $values = array_map(static function(int $i): string {
-                return chr($i);
-            }, $values);
+        $values = \range(0, 255);
+        \shuffle($values);
+        $values = array_map(static function(int $i): string {
+            return chr($i);
+        }, $values);
 
-            $values = array_filter($values, $this->predicate);
-            $values = \array_slice($values, 0, $this->size);
+        $values = array_filter($values, $this->predicate);
+        $values = \array_slice($values, 0, $this->size);
 
-            $this->values = $values;
-        }
-
-        return \array_reduce($this->values, $reducer, $carry);
+        yield from $values;
     }
 }

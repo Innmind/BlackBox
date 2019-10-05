@@ -5,12 +5,14 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class FromGenerator implements Set
 {
     private $size;
     private $generatorFactory;
     private $predicate;
-    private $values;
 
     /**
      * @param callable(): \Generator $generatorFactory
@@ -29,7 +31,7 @@ final class FromGenerator implements Set
     }
 
     /**
-     * @param callable(): \Generator $generatorFactory
+     * @param callable(): \Generator<T> $generatorFactory
      */
     public static function of(callable $generatorFactory): self
     {
@@ -40,11 +42,13 @@ final class FromGenerator implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -55,7 +59,6 @@ final class FromGenerator implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
@@ -63,27 +66,21 @@ final class FromGenerator implements Set
     /**
      * {@inheritdoc}
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $values = [];
-            $generator = ($this->generatorFactory)();
-            $iterations = 0;
+        $generator = ($this->generatorFactory)();
+        $iterations = 0;
 
-            while ($iterations < $this->size && $generator->valid()) {
-                $value = $generator->current();
+        while ($iterations < $this->size && $generator->valid()) {
+            $value = $generator->current();
 
-                if (($this->predicate)($value)) {
-                    $values[] = $value;
-                    ++$iterations;
-                }
+            if (($this->predicate)($value)) {
+                yield $value;
 
-                $generator->next();
+                ++$iterations;
             }
 
-            $this->values = $values;
+            $generator->next();
         }
-
-        return \array_reduce($this->values, $reducer, $carry);
     }
 }

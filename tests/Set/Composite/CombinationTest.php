@@ -10,19 +10,19 @@ class CombinationTest extends TestCase
 {
     public function testToArray()
     {
-        $combination = new Combination('foo', 42);
+        $combination = new Combination('foo');
 
-        $this->assertSame(['foo', 42], $combination->toArray());
+        $this->assertSame(['foo'], $combination->toArray());
     }
 
     public function testAdd()
     {
-        $combination = new Combination('foo', 42);
+        $combination = new Combination('foo');
         $combination2 = $combination->add('baz');
 
         $this->assertInstanceOf(Combination::class, $combination2);
         $this->assertNotSame($combination, $combination2);
-        $this->assertSame(['foo', 42], $combination->toArray());
-        $this->assertSame(['baz', 'foo', 42], $combination2->toArray());
+        $this->assertSame(['foo'], $combination->toArray());
+        $this->assertSame(['baz', 'foo'], $combination2->toArray());
     }
 }

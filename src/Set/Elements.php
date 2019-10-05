@@ -6,12 +6,14 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 use Innmind\Immutable\Sequence;
 
+/**
+ * {@inheritdoc}
+ */
 final class Elements implements Set
 {
     private $size;
     private $elements;
     private $predicate;
-    private $values;
 
     public function __construct($first, ...$elements)
     {
@@ -31,11 +33,13 @@ final class Elements implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -46,7 +50,6 @@ final class Elements implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
@@ -54,19 +57,15 @@ final class Elements implements Set
     /**
      * {@inheritdoc}
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $values = $this
-                ->elements
-                ->take($this->size)
-                ->filter($this->predicate)
-                ->toPrimitive();
-            \shuffle($values);
+        $values = $this
+            ->elements
+            ->take($this->size)
+            ->filter($this->predicate)
+            ->toPrimitive();
+        \shuffle($values);
 
-            $this->values = $values;
-        }
-
-        return \array_reduce($this->values, $reducer, $carry);
+        yield from $values;
     }
 }

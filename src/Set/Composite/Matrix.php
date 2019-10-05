@@ -5,63 +5,49 @@ namespace Innmind\BlackBox\Set\Composite;
 
 use Innmind\BlackBox\Set;
 
-final class Matrix implements \Iterator
+final class Matrix
 {
-    private $combinations;
+    private $a;
+    private $b;
 
-    public function __construct(Combination ...$combinations)
+    /**
+     * @param Set<mixed> $a
+     * @param Set<Combination> $b
+     */
+    public function __construct(Set $a, Set $b)
     {
-        $this->combinations = $combinations;
+        $this->a = $a;
+        $this->b = $b;
+    }
+
+    public static function of(Set $a, Set $b): self
+    {
+        return new self(
+            $a,
+            Set\FromGenerator::of(function() use ($b) {
+                foreach ($b->values() as $value) {
+                    yield new Combination($value);
+                }
+            })
+        );
     }
 
     public function dot(Set $set): self
     {
-        $combinations = $set->reduce(
-            [],
-            function(array $combinations, $value): array {
-                return \array_merge(
-                    $combinations,
-                    $this->add($value)->combinations
-                );
-            }
+        return new self(
+            $set,
+            Set\FromGenerator::of(function() {
+                yield from $this->values();
+            })
         );
-
-        return new self(...$combinations);
     }
 
-    public function current(): array
+    public function values(): \Generator
     {
-        return \current($this->combinations)->toArray();
-    }
-
-    public function key(): int
-    {
-        return \key($this->combinations);
-    }
-
-    public function next(): void
-    {
-        \next($this->combinations);
-    }
-
-    public function rewind(): void
-    {
-        \reset($this->combinations);
-    }
-
-    public function valid(): bool
-    {
-        return !\is_null(\key($this->combinations));
-    }
-
-    private function add($value): self
-    {
-        $combinations = [];
-
-        foreach ($this->combinations as $combination) {
-            $combinations[] = $combination->add($value);
+        foreach ($this->a->values() as $a) {
+            foreach ($this->b->values() as $b) {
+                yield $b->add($a);
+            }
         }
-
-        return new self(...$combinations);
     }
 }
