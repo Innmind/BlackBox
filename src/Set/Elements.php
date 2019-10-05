@@ -6,6 +6,9 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 use Innmind\Immutable\Sequence;
 
+/**
+ * {@inheritdoc}
+ */
 final class Elements implements Set
 {
     private $size;
@@ -36,6 +39,9 @@ final class Elements implements Set
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -63,6 +69,9 @@ final class Elements implements Set
         return \array_reduce($this->values, $reducer, $carry);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function values(): \Generator
     {
         $values = $this

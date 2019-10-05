@@ -6,6 +6,9 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 use Innmind\Json\Json;
 
+/**
+ * {@inheritdoc}
+ */
 final class UnsafeStrings implements Set
 {
     private $size;
@@ -34,6 +37,9 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -61,6 +67,9 @@ final class UnsafeStrings implements Set
         return \array_reduce($this->values, $reducer, $carry);
     }
 
+    /**
+     * @return \Generator<string>
+     */
     public function values(): \Generator
     {
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));

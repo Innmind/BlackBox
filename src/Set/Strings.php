@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class Strings implements Set
 {
     private $maxLength;
@@ -35,6 +38,9 @@ final class Strings implements Set
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -62,6 +68,9 @@ final class Strings implements Set
         return \array_reduce($this->values, $reducer, $carry);
     }
 
+    /**
+     * @return \Generator<string>
+     */
     public function values(): \Generator
     {
         $iterations = 0;

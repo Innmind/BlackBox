@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class FromGenerator implements Set
 {
     private $size;
@@ -29,7 +32,7 @@ final class FromGenerator implements Set
     }
 
     /**
-     * @param callable(): \Generator $generatorFactory
+     * @param callable(): \Generator<T> $generatorFactory
      */
     public static function of(callable $generatorFactory): self
     {
@@ -45,6 +48,9 @@ final class FromGenerator implements Set
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -72,6 +78,9 @@ final class FromGenerator implements Set
         return \array_reduce($this->values, $reducer, $carry);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function values(): \Generator
     {
         $generator = ($this->generatorFactory)();

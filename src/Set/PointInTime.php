@@ -8,6 +8,9 @@ use Innmind\TimeContinuum\PointInTime\Earth\PointInTime as Model;
 
 final class PointInTime
 {
+    /**
+     * @return Set<Model>
+     */
     public static function of(): Set
     {
         return Composite::of(

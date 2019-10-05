@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class Chars implements Set
 {
     private $size;
@@ -33,6 +36,9 @@ final class Chars implements Set
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -60,6 +66,9 @@ final class Chars implements Set
         return \array_reduce($this->values, $reducer, $carry);
     }
 
+    /**
+     * @return \Generator<string>
+     */
     public function values(): \Generator
     {
         $values = \range(0, 255);
