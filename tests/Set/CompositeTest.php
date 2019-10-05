@@ -10,7 +10,7 @@ use Innmind\BlackBox\{
 };
 use PHPUnit\Framework\TestCase;
 
-class Test extends TestCase
+class CompositeTest extends TestCase
 {
     private $set;
 

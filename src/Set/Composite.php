@@ -77,16 +77,23 @@ final class Composite implements Set
 
     public function values(): \Generator
     {
-        $matrix = $this->sets->drop(2)->reduce(
-            Vector::of($this->sets->get(1))->dot(Vector::of($this->sets->first())),
-            static function(Matrix $matrix, Set $set): Matrix {
-                return $matrix->dot($set);
-            }
-        );
+        $matrix = $this
+            ->sets
+            ->drop(2)
+            ->reduce(
+                Matrix::of(
+                    $this->sets->get(1),
+                    $this->sets->first()
+                ),
+                static function(Matrix $matrix, Set $set): Matrix {
+                    return $matrix->dot($set);
+                }
+            )
+            ->values();
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
-            $value = ($this->aggregate)(...$matrix->current());
+            $value = ($this->aggregate)(...$matrix->current()->toArray());
 
             if (($this->predicate)($value)) {
                 yield $value;

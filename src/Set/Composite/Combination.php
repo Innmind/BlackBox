@@ -7,15 +7,15 @@ final class Combination
 {
     private $values;
 
-    public function __construct($a, $b)
+    public function __construct($right)
     {
-        $this->values = [$a, $b];
+        $this->values = [$right];
     }
 
-    public function add($c): self
+    public function add($left): self
     {
         $self = clone $this;
-        \array_unshift($self->values, $c);
+        \array_unshift($self->values, $left);
 
         return $self;
     }
