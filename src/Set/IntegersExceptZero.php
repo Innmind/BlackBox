@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class IntegersExceptZero implements Set
 {
     private $set;
@@ -29,6 +32,9 @@ final class IntegersExceptZero implements Set
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -38,10 +44,10 @@ final class IntegersExceptZero implements Set
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<int>
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        return $this->set->reduce($carry, $reducer);
+        yield from $this->set->values();
     }
 }

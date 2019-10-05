@@ -26,14 +26,7 @@ class CharsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = Chars::of()->reduce(
-            [],
-            static function(array $values, string $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array(Chars::of()->values());
 
         $this->assertCount(100, $values);
     }
@@ -47,19 +40,21 @@ class CharsTest extends TestCase
 
         $this->assertInstanceOf(Chars::class, $even);
         $this->assertNotSame($values, $even);
-        $hasOddChar = $values->reduce(
-            false,
+        $hasOddChar = \array_reduce(
+            \iterator_to_array($values->values()),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || ord($value) % 2 === 1;
-            }
+            },
+            false
         );
         $this->assertTrue($hasOddChar);
 
-        $hasOddChar = $even->reduce(
-            false,
+        $hasOddChar = \array_reduce(
+            \iterator_to_array($even->values()),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || ord($value) % 2 === 1;
-            }
+            },
+            false
         );
         $this->assertFalse($hasOddChar);
     }
@@ -71,27 +66,15 @@ class CharsTest extends TestCase
 
         $this->assertInstanceOf(Chars::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(
-            100,
-            $a->reduce(
-                [],
-                static function(array $values, string $value): array {
-                    $values[] = $value;
+        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(50, \iterator_to_array($b->values()));
+    }
 
-                    return $values;
-                }
-            )
-        );
-        $this->assertCount(
-            50,
-            $b->reduce(
-                [],
-                static function(array $values, string $value): array {
-                    $values[] = $value;
+    public function testValues()
+    {
+        $a = Chars::of();
 
-                    return $values;
-                }
-            )
-        );
+        $this->assertInstanceOf(\Generator::class, $a->values());
+        $this->assertCount(100, \iterator_to_array($a->values()));
     }
 }

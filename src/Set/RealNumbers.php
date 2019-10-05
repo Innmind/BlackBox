@@ -5,11 +5,13 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * {@inheritdoc}
+ */
 final class RealNumbers implements Set
 {
     private $size;
     private $predicate;
-    private $values;
 
     public function __construct()
     {
@@ -28,11 +30,13 @@ final class RealNumbers implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -43,34 +47,26 @@ final class RealNumbers implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
 
     /**
-     * {@inheritdoc}
+     * @return \Generator<int>
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $iterations = 0;
-            $values = [];
+        $iterations = 0;
 
-            do {
-                $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX) * \lcg_value();
+        do {
+            $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX) * \lcg_value();
 
-                if (!($this->predicate)($value)) {
-                    continue;
-                }
+            if (!($this->predicate)($value)) {
+                continue;
+            }
 
-                $values[] = $value;
-                ++$iterations;
-            } while ($iterations < $this->size);
-
-            $this->values = $values;
-        }
-
-        return \array_reduce($this->values, $reducer, $carry);
+            yield $value;
+            ++$iterations;
+        } while ($iterations < $this->size);
     }
 }

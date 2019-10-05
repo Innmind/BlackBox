@@ -26,14 +26,7 @@ class IntegersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = Integers::of()->reduce(
-            [],
-            static function(array $values, int $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array(Integers::of()->values());
 
         $this->assertCount(100, $values);
     }
@@ -42,11 +35,12 @@ class IntegersTest extends TestCase
     {
         $values = Integers::of(-10, 10);
 
-        $hasOutsideBounds = $values->reduce(
-            false,
+        $hasOutsideBounds = \array_reduce(
+            \iterator_to_array($values->values()),
             static function(bool $hasOutsideBounds, int $value): bool {
                 return $hasOutsideBounds || $value > 10 || $value < -10;
-            }
+            },
+            false
         );
 
         $this->assertFalse($hasOutsideBounds);
@@ -61,19 +55,21 @@ class IntegersTest extends TestCase
 
         $this->assertInstanceOf(Integers::class, $even);
         $this->assertNotSame($integers, $even);
-        $hasOddInteger = $integers->reduce(
-            false,
+        $hasOddInteger = \array_reduce(
+            \iterator_to_array($integers->values()),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
-            }
+            },
+            false
         );
         $this->assertTrue($hasOddInteger);
 
-        $hasOddInteger = $even->reduce(
-            false,
+        $hasOddInteger = \array_reduce(
+            \iterator_to_array($even->values()),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
-            }
+            },
+            false
         );
         $this->assertFalse($hasOddInteger);
     }
@@ -85,27 +81,15 @@ class IntegersTest extends TestCase
 
         $this->assertInstanceOf(Integers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(
-            100,
-            $a->reduce(
-                [],
-                static function(array $values, int $value): array {
-                    $values[] = $value;
+        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(50, \iterator_to_array($b->values()));
+    }
 
-                    return $values;
-                }
-            )
-        );
-        $this->assertCount(
-            50,
-            $b->reduce(
-                [],
-                static function(array $values, int $value): array {
-                    $values[] = $value;
+    public function testValues()
+    {
+        $a = Integers::of();
 
-                    return $values;
-                }
-            )
-        );
+        $this->assertInstanceOf(\Generator::class, $a->values());
+        $this->assertCount(100, \iterator_to_array($a->values()));
     }
 }

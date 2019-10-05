@@ -10,7 +10,7 @@ use Innmind\BlackBox\{
 };
 use PHPUnit\Framework\TestCase;
 
-class Test extends TestCase
+class CompositeTest extends TestCase
 {
     private $set;
 
@@ -67,14 +67,7 @@ class Test extends TestCase
 
     public function testTake()
     {
-        $values = $this->set->take(2)->reduce(
-            [],
-            static function(array $values, $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array($this->set->take(2)->values());
 
         $this->assertSame(
             [
@@ -91,15 +84,7 @@ class Test extends TestCase
             ->set
             ->filter(static function(string $value): bool {
                 return $value[0] === 'e';
-            })
-            ->reduce(
-                [],
-                static function(array $values, $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            );
+            });
 
         $this->assertSame(
             [
@@ -108,20 +93,13 @@ class Test extends TestCase
                 'ebc',
                 'ebd',
             ],
-            $values
+            \iterator_to_array($values->values())
         );
     }
 
     public function testReduce()
     {
-        $values = $this->set->reduce(
-            [],
-            static function(array $values, $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array($this->set->values());
 
         $this->assertSame(
             [
@@ -136,5 +114,11 @@ class Test extends TestCase
             ],
             $values
         );
+    }
+
+    public function testValues()
+    {
+        $this->assertInstanceOf(\Generator::class, $this->set->values());
+        $this->assertCount(8, \iterator_to_array($this->set->values()));
     }
 }

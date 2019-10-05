@@ -10,13 +10,15 @@ use Innmind\BlackBox\{
 };
 use Innmind\Immutable\Sequence;
 
+/**
+ * {@inheritdoc}
+ */
 final class Composite implements Set
 {
     private $aggregate;
     private $sets;
     private $size;
     private $predicate;
-    private $values;
 
     public function __construct(
         callable $aggregate,
@@ -43,11 +45,13 @@ final class Composite implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -58,7 +62,6 @@ final class Composite implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
     }
@@ -66,33 +69,33 @@ final class Composite implements Set
     /**
      * {@inheritdoc}
      */
-    public function reduce($carry, callable $reducer)
+    public function values(): \Generator
     {
-        if (\is_null($this->values)) {
-            $matrix = $this->sets->drop(2)->reduce(
-                Vector::of($this->sets->get(1))->dot(Vector::of($this->sets->first())),
+        $matrix = $this
+            ->sets
+            ->drop(2)
+            ->reduce(
+                Matrix::of(
+                    $this->sets->get(1),
+                    $this->sets->first()
+                ),
                 static function(Matrix $matrix, Set $set): Matrix {
                     return $matrix->dot($set);
                 }
-            );
-            $iterations = 0;
-            $values = [];
+            )
+            ->values();
+        $iterations = 0;
 
-            while ($matrix->valid() && $this->continue($iterations)) {
-                $value = ($this->aggregate)(...$matrix->current());
+        while ($matrix->valid() && $this->continue($iterations)) {
+            $value = ($this->aggregate)(...$matrix->current()->toArray());
 
-                if (($this->predicate)($value)) {
-                    $values[] = $value;
-                    ++$iterations;
-                }
-
-                $matrix->next();
+            if (($this->predicate)($value)) {
+                yield $value;
+                ++$iterations;
             }
 
-            $this->values = $values;
+            $matrix->next();
         }
-
-        return \array_reduce($this->values, $reducer, $carry);
     }
 
     private function continue(int $iterations): bool
