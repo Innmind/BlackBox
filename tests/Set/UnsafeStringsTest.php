@@ -26,14 +26,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = UnsafeStrings::of()->reduce(
-            [],
-            static function(array $values, string $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array(UnsafeStrings::of()->values());
 
         $this->assertCount(100, $values);
     }
@@ -47,19 +40,21 @@ class UnsafeStringsTest extends TestCase
 
         $this->assertInstanceOf(UnsafeStrings::class, $others);
         $this->assertNotSame($values, $others);
-        $hasLengthAbove10 = $values->reduce(
-            false,
+        $hasLengthAbove10 = \array_reduce(
+            \iterator_to_array($values->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
-            }
+            },
+            false
         );
         $this->assertTrue($hasLengthAbove10);
 
-        $hasLengthAbove10 = $others->reduce(
-            false,
+        $hasLengthAbove10 = \array_reduce(
+            \iterator_to_array($others->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
-            }
+            },
+            false
         );
         $this->assertFalse($hasLengthAbove10);
     }
@@ -71,28 +66,8 @@ class UnsafeStringsTest extends TestCase
 
         $this->assertInstanceOf(UnsafeStrings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(
-            100,
-            $a->reduce(
-                [],
-                static function(array $values, string $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            )
-        );
-        $this->assertCount(
-            50,
-            $b->reduce(
-                [],
-                static function(array $values, string $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            )
-        );
+        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(50, \iterator_to_array($b->values()));
     }
 
     public function testValues()

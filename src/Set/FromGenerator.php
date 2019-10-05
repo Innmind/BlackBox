@@ -13,7 +13,6 @@ final class FromGenerator implements Set
     private $size;
     private $generatorFactory;
     private $predicate;
-    private $values;
 
     /**
      * @param callable(): \Generator $generatorFactory
@@ -43,7 +42,6 @@ final class FromGenerator implements Set
     {
         $self = clone $this;
         $self->size = $size;
-        $self->values = null;
 
         return $self;
     }
@@ -61,21 +59,8 @@ final class FromGenerator implements Set
 
             return $predicate($value);
         };
-        $self->values = null;
 
         return $self;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function reduce($carry, callable $reducer)
-    {
-        if (\is_null($this->values)) {
-            $this->values = \iterator_to_array($this->values());
-        }
-
-        return \array_reduce($this->values, $reducer, $carry);
     }
 
     /**

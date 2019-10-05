@@ -26,14 +26,7 @@ class RealNumbersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = RealNumbers::of()->reduce(
-            [],
-            static function(array $values, float $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array(RealNumbers::of()->values());
 
         $this->assertCount(100, $values);
     }
@@ -47,19 +40,21 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(RealNumbers::class, $positive);
         $this->assertNotSame($values, $positive);
-        $hasNegative = $values->reduce(
-            false,
+        $hasNegative = \array_reduce(
+            \iterator_to_array($values->values()),
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <=0;
-            }
+            },
+            false
         );
         $this->assertTrue($hasNegative);
 
-        $hasNegative = $positive->reduce(
-            false,
+        $hasNegative = \array_reduce(
+            \iterator_to_array($positive->values()),
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <= 0;
-            }
+            },
+            false
         );
         $this->assertFalse($hasNegative);
     }
@@ -71,28 +66,8 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(RealNumbers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(
-            100,
-            $a->reduce(
-                [],
-                static function(array $values, float $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            )
-        );
-        $this->assertCount(
-            50,
-            $b->reduce(
-                [],
-                static function(array $values, float $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            )
-        );
+        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(50, \iterator_to_array($b->values()));
     }
 
     public function testValues()

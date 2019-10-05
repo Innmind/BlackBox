@@ -46,24 +46,10 @@ class FromGeneratorTest extends TestCase
                 yield $i;
             }
         });
-        $aValues = $a->reduce(
-            [],
-            static function(array $values, int $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $aValues = \iterator_to_array($a->values());
 
         $b = $a->take(50);
-        $bValues = $b->reduce(
-            [],
-            static function(array $values, int $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $bValues = \iterator_to_array($b->values());
 
         $this->assertInstanceOf(FromGenerator::class, $b);
         $this->assertNotSame($a, $b);
@@ -80,26 +66,12 @@ class FromGeneratorTest extends TestCase
         })->filter(static function(int $value): bool {
             return $value > 50;
         });
-        $aValues = $a->reduce(
-            [],
-            static function(array $values, int $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $aValues = \iterator_to_array($a->values());
 
         $b = $a->filter(static function(int $value): bool {
             return $value <= 100;
         });
-        $bValues = $b->reduce(
-            [],
-            static function(array $values, int $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $bValues = \iterator_to_array($b->values());
 
         $this->assertInstanceOf(FromGenerator::class, $a);
         $this->assertInstanceOf(FromGenerator::class, $b);
@@ -119,14 +91,7 @@ class FromGeneratorTest extends TestCase
                 yield $i;
             }
         });
-        $aValues = $a->reduce(
-            [],
-            static function(array $values, int $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $aValues = \iterator_to_array($a->values());
 
         $this->assertCount(11, $aValues);
     }

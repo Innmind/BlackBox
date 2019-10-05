@@ -22,12 +22,9 @@ final class Scenario
     public function then(callable $test): void
     {
         if (\count($this->sets) === 1) {
-            \reset($this->sets)->reduce(
-                null,
-                static function($_, $value) use ($test): void {
-                    $test($value);
-                }
-            );
+            foreach (\reset($this->sets)->values() as $value) {
+                $test($value);
+            }
 
             return;
         }
@@ -38,11 +35,9 @@ final class Scenario
             },
             ...$this->sets
         );
-        $set->reduce(
-            null,
-            static function($_, array $values) use ($test): void {
-                $test(...$values);
-            }
-        );
+
+        foreach ($set->values() as $values) {
+            $test(...$values);
+        }
     }
 }

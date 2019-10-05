@@ -15,16 +15,8 @@ class PointInTimeTest extends TestCase
     public function testOf()
     {
         $pointsInTime = PointInTime::of();
-        $values = $pointsInTime->reduce(
-            [],
-            static function(array $values, Model $point): array {
-                $values[] = $point;
-
-                return $values;
-            }
-        );
 
         $this->assertInstanceOf(Set::class, $pointsInTime);
-        $this->assertCount(100, $values);
+        $this->assertCount(100, \iterator_to_array($pointsInTime->values()));
     }
 }

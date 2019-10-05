@@ -44,14 +44,6 @@ final class IntegersExceptZero implements Set
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function reduce($carry, callable $reducer)
-    {
-        return $this->set->reduce($carry, $reducer);
-    }
-
-    /**
      * @return \Generator<int>
      */
     public function values(): \Generator

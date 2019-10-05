@@ -26,27 +26,18 @@ class StringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = Strings::of()->reduce(
-            [],
-            static function(array $values, string $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array(Strings::of()->values());
 
         $this->assertCount(100, $values);
     }
 
     public function testByDefaultMaxLengthIs128()
     {
-        $values = Strings::of()->reduce(
-            [],
-            static function(array $values, string $value): array {
-                $values[] = \strlen($value);
-
-                return $values;
-            }
+        $values = \array_map(
+            static function(string $value): int {
+                return \strlen($value);
+            },
+            \iterator_to_array(Strings::of()->values())
         );
 
         $this->assertTrue(128 >= \max($values));
@@ -54,13 +45,11 @@ class StringsTest extends TestCase
 
     public function testMaxLengthIsParametrable()
     {
-        $values = Strings::of(256)->reduce(
-            [],
-            static function(array $values, string $value): array {
-                $values[] = \strlen($value);
-
-                return $values;
-            }
+        $values = \array_map(
+            static function(string $value): int {
+                return \strlen($value);
+            },
+            \iterator_to_array(Strings::of(256)->values())
         );
 
         $this->assertTrue(256 >= \max($values));
@@ -76,19 +65,21 @@ class StringsTest extends TestCase
 
         $this->assertInstanceOf(Strings::class, $others);
         $this->assertNotSame($values, $others);
-        $hasLengthAbove10 = $values->reduce(
-            false,
+        $hasLengthAbove10 = \array_reduce(
+            \iterator_to_array($values->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
-            }
+            },
+            false
         );
         $this->assertTrue($hasLengthAbove10);
 
-        $hasLengthAbove10 = $others->reduce(
-            false,
+        $hasLengthAbove10 = \array_reduce(
+            \iterator_to_array($others->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
-            }
+            },
+            false
         );
         $this->assertFalse($hasLengthAbove10);
     }
@@ -100,28 +91,8 @@ class StringsTest extends TestCase
 
         $this->assertInstanceOf(Strings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(
-            100,
-            $a->reduce(
-                [],
-                static function(array $values, string $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            )
-        );
-        $this->assertCount(
-            50,
-            $b->reduce(
-                [],
-                static function(array $values, string $value): array {
-                    $values[] = $value;
-
-                    return $values;
-                }
-            )
-        );
+        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(50, \iterator_to_array($b->values()));
     }
 
     public function testValues()

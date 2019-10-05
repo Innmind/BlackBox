@@ -16,13 +16,6 @@ interface Set
     public function filter(callable $predicate): self;
 
     /**
-     * @param mixed $carry
-     *
-     * @return mixed
-     */
-    public function reduce($carry, callable $reducer);
-
-    /**
      * @return \Generator<T>
      */
     public function values(): \Generator;

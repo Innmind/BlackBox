@@ -30,14 +30,7 @@ class ElementsTest extends TestCase
     public function testTake100ValuesByDefault()
     {
         $elements = Elements::of(...range(0, 1000));
-        $values = $elements->reduce(
-            [],
-            static function(array $values, $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $values = \iterator_to_array($elements->values());
 
         $this->assertCount(100, $values);
     }
@@ -46,22 +39,8 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...range(0, 1000));
         $elements2 = $elements->take(10);
-        $aValues = $elements->reduce(
-            [],
-            static function(array $values, $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
-        $bValues = $elements2->reduce(
-            [],
-            static function(array $values, $value): array {
-                $values[] = $value;
-
-                return $values;
-            }
-        );
+        $aValues = \iterator_to_array($elements->values());
+        $bValues = \iterator_to_array($elements2->values());
 
         $this->assertInstanceOf(Elements::class, $elements2);
         $this->assertNotSame($elements, $elements2);
@@ -81,8 +60,20 @@ class ElementsTest extends TestCase
 
         $this->assertInstanceOf(Elements::class, $elements2);
         $this->assertNotSame($elements, $elements2);
-        $this->assertFalse($elements2->reduce(false, $containsEvenInt));
-        $this->assertTrue($elements->reduce(false, $containsEvenInt));
+        $this->assertFalse(
+            \array_reduce(
+                \iterator_to_array($elements2->values()),
+                $containsEvenInt,
+                false
+            )
+        );
+        $this->assertTrue(
+            \array_reduce(
+                \iterator_to_array($elements->values()),
+                $containsEvenInt,
+                false
+            )
+        );
     }
 
     public function testValues()
