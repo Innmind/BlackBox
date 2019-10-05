@@ -27,15 +27,15 @@ final class PointInTime
             ): Model {
                 return new Model("$year-$month-{$day}T$hour:$minute:$second$offsetDirection$hourOffset:$minuteOffset");
             },
-            Integers::of(0, 9999)->take(10), // the numbers taken is arbitrary in order to reduce the numbers of combinations generated
-            Integers::of(1, 12)->take(3),
-            Integers::of(1, 31)->take(3),
-            Integers::of(0, 23)->take(3),
-            Integers::of(0, 59)->take(3),
-            Integers::of(0, 59)->take(3),
+            Integers::of(0, 9999),
+            Integers::of(1, 12),
+            Integers::of(1, 31),
+            Integers::of(0, 23),
+            Integers::of(0, 59),
+            Integers::of(0, 59),
             Elements::of('-', '+'),
-            Integers::of(0, 12)->take(3),
-            Elements::of('00', '15', '30', '45')->take(1)
+            Integers::of(0, 12),
+            Elements::of('00', '15', '30', '45')
         )->take(100);
     }
 }
