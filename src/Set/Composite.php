@@ -69,30 +69,32 @@ final class Composite implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $matrix = $this->sets->drop(2)->reduce(
-                Vector::of($this->sets->get(1))->dot(Vector::of($this->sets->first())),
-                static function(Matrix $matrix, Set $set): Matrix {
-                    return $matrix->dot($set);
-                }
-            );
-            $iterations = 0;
-            $values = [];
-
-            while ($matrix->valid() && $this->continue($iterations)) {
-                $value = ($this->aggregate)(...$matrix->current());
-
-                if (($this->predicate)($value)) {
-                    $values[] = $value;
-                    ++$iterations;
-                }
-
-                $matrix->next();
-            }
-
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $matrix = $this->sets->drop(2)->reduce(
+            Vector::of($this->sets->get(1))->dot(Vector::of($this->sets->first())),
+            static function(Matrix $matrix, Set $set): Matrix {
+                return $matrix->dot($set);
+            }
+        );
+        $iterations = 0;
+
+        while ($matrix->valid() && $this->continue($iterations)) {
+            $value = ($this->aggregate)(...$matrix->current());
+
+            if (($this->predicate)($value)) {
+                yield $value;
+                ++$iterations;
+            }
+
+            $matrix->next();
+        }
     }
 
     private function continue(int $iterations): bool

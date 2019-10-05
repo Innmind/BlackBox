@@ -54,18 +54,23 @@ final class Chars implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $values = \range(0, 255);
-            \shuffle($values);
-            $values = array_map(static function(int $i): string {
-                return chr($i);
-            }, $values);
-
-            $values = array_filter($values, $this->predicate);
-            $values = \array_slice($values, 0, $this->size);
-
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $values = \range(0, 255);
+        \shuffle($values);
+        $values = array_map(static function(int $i): string {
+            return chr($i);
+        }, $values);
+
+        $values = array_filter($values, $this->predicate);
+        $values = \array_slice($values, 0, $this->size);
+
+        yield from $values;
     }
 }

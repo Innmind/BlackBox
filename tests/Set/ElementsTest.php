@@ -84,4 +84,12 @@ class ElementsTest extends TestCase
         $this->assertFalse($elements2->reduce(false, $containsEvenInt));
         $this->assertTrue($elements->reduce(false, $containsEvenInt));
     }
+
+    public function testValues()
+    {
+        $elements = Elements::of(...range(0, 1000));
+
+        $this->assertInstanceOf(\Generator::class, $elements->values());
+        $this->assertCount(100, \iterator_to_array($elements->values()));
+    }
 }

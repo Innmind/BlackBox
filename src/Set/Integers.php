@@ -58,23 +58,25 @@ final class Integers implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $iterations = 0;
-            $values = [];
-
-            do {
-                $value = \random_int($this->lowerBound, $this->upperBound);
-
-                if (!($this->predicate)($value)) {
-                    continue;
-                }
-
-                $values[] = $value;
-                ++$iterations;
-            } while ($iterations < $this->size);
-
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $iterations = 0;
+
+        do {
+            $value = \random_int($this->lowerBound, $this->upperBound);
+
+            if (!($this->predicate)($value)) {
+                continue;
+            }
+
+            yield $value;
+            ++$iterations;
+        } while ($iterations < $this->size);
     }
 }

@@ -42,4 +42,9 @@ final class NaturalNumbers implements Set
     {
         return $this->set->reduce($carry, $reducer);
     }
+
+    public function values(): \Generator
+    {
+        yield from $this->set->values();
+    }
 }

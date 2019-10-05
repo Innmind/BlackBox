@@ -55,14 +55,20 @@ final class UnsafeStrings implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
-            \shuffle($values);
-
-            $values = array_filter($values, $this->predicate);
-            $values = \array_slice($values, 0, $this->size);
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
+        \shuffle($values);
+
+        $values = array_filter($values, $this->predicate);
+        $values = \array_slice($values, 0, $this->size);
+
+        yield from $values;
     }
 }

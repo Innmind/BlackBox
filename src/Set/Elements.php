@@ -57,16 +57,21 @@ final class Elements implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $values = $this
-                ->elements
-                ->take($this->size)
-                ->filter($this->predicate)
-                ->toPrimitive();
-            \shuffle($values);
-
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $values = $this
+            ->elements
+            ->take($this->size)
+            ->filter($this->predicate)
+            ->toPrimitive();
+        \shuffle($values);
+
+        yield from $values;
     }
 }

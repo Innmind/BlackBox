@@ -56,27 +56,29 @@ final class Strings implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $iterations = 0;
-            $values = [];
-
-            do {
-                $value = '';
-
-                foreach (range(1, \random_int(2, $this->maxLength)) as $_) {
-                    $value .= \chr(\random_int(33, 126));
-                }
-
-                if (!($this->predicate)($value)) {
-                    continue ;
-                }
-
-                $values[] = $value;
-                ++$iterations;
-            } while ($iterations < $this->size);
-
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $iterations = 0;
+
+        do {
+            $value = '';
+
+            foreach (range(1, \random_int(2, $this->maxLength)) as $_) {
+                $value .= \chr(\random_int(33, 126));
+            }
+
+            if (!($this->predicate)($value)) {
+                continue ;
+            }
+
+            yield $value;
+            ++$iterations;
+        } while ($iterations < $this->size);
     }
 }

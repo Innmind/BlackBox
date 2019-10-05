@@ -14,4 +14,5 @@ interface Set
      * @return mixed
      */
     public function reduce($carry, callable $reducer);
+    public function values(): \Generator;
 }

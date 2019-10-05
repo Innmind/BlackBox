@@ -137,4 +137,10 @@ class Test extends TestCase
             $values
         );
     }
+
+    public function testValues()
+    {
+        $this->assertInstanceOf(\Generator::class, $this->set->values());
+        $this->assertCount(8, \iterator_to_array($this->set->values()));
+    }
 }

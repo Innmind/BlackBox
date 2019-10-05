@@ -66,24 +66,27 @@ final class FromGenerator implements Set
     public function reduce($carry, callable $reducer)
     {
         if (\is_null($this->values)) {
-            $values = [];
-            $generator = ($this->generatorFactory)();
-            $iterations = 0;
-
-            while ($iterations < $this->size && $generator->valid()) {
-                $value = $generator->current();
-
-                if (($this->predicate)($value)) {
-                    $values[] = $value;
-                    ++$iterations;
-                }
-
-                $generator->next();
-            }
-
-            $this->values = $values;
+            $this->values = \iterator_to_array($this->values());
         }
 
         return \array_reduce($this->values, $reducer, $carry);
+    }
+
+    public function values(): \Generator
+    {
+        $generator = ($this->generatorFactory)();
+        $iterations = 0;
+
+        while ($iterations < $this->size && $generator->valid()) {
+            $value = $generator->current();
+
+            if (($this->predicate)($value)) {
+                yield $value;
+
+                ++$iterations;
+            }
+
+            $generator->next();
+        }
     }
 }

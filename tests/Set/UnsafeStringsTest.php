@@ -94,4 +94,12 @@ class UnsafeStringsTest extends TestCase
             )
         );
     }
+
+    public function testValues()
+    {
+        $a = UnsafeStrings::of();
+
+        $this->assertInstanceOf(\Generator::class, $a->values());
+        $this->assertCount(100, \iterator_to_array($a->values()));
+    }
 }
