@@ -5,7 +5,6 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
     Set,
-    Set\Composite\Vector,
     Set\Composite\Matrix,
 };
 use Innmind\Immutable\Sequence;
