@@ -18,7 +18,8 @@
         "php": "~7.2",
         "innmind/json": "^1.1",
         "innmind/immutable": "^2.16",
-        "innmind/time-continuum": "^1.3"
+        "innmind/time-continuum": "^1.3",
+        "innmind/url": "^2.0"
     },
     "autoload": {
         "psr-4": {
