@@ -14,9 +14,9 @@ class UrlTest extends TestCase
 {
     public function testOf()
     {
-        $pointsInTime = Url::of();
+        $urls = Url::of();
 
-        $this->assertInstanceOf(Set::class, $pointsInTime);
-        $this->assertCount(100, \iterator_to_array($pointsInTime->values()));
+        $this->assertInstanceOf(Set::class, $urls);
+        $this->assertCount(100, \iterator_to_array($urls->values()));
     }
 }
