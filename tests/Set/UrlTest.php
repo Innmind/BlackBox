@@ -7,16 +7,20 @@ use Innmind\BlackBox\{
     Set\Url,
     Set,
 };
-use Innmind\Url\Url as Model;
+use Innmind\Url\UrlInterface;
 use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase
 {
     public function testOf()
     {
-        $pointsInTime = Url::of();
+        $urls = Url::of();
 
-        $this->assertInstanceOf(Set::class, $pointsInTime);
-        $this->assertCount(100, \iterator_to_array($pointsInTime->values()));
+        $this->assertInstanceOf(Set::class, $urls);
+        $this->assertCount(100, \iterator_to_array($urls->values()));
+
+        foreach ($urls->values() as $url) {
+            $this->assertInstanceOf(UrlInterface::class, $url);
+        }
     }
 }
