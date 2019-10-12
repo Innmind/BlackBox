@@ -24,6 +24,7 @@ class DecorateTest extends TestCase
                 yield 'ea';
                 yield 'fb';
                 yield 'gc';
+                yield 'eb';
             })
         );
     }
@@ -74,6 +75,7 @@ class DecorateTest extends TestCase
         $this->assertSame(
             [
                 ['ea'],
+                ['eb'],
             ],
             \iterator_to_array($values->values())
         );
@@ -88,6 +90,7 @@ class DecorateTest extends TestCase
                 ['ea'],
                 ['fb'],
                 ['gc'],
+                ['eb'],
             ],
             $values
         );
@@ -96,6 +99,6 @@ class DecorateTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values());
-        $this->assertCount(3, \iterator_to_array($this->set->values()));
+        $this->assertCount(4, \iterator_to_array($this->set->values()));
     }
 }

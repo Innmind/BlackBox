@@ -10,33 +10,35 @@ use Innmind\BlackBox\{
 
 final class Scenario
 {
-    private $sets;
+    private $set;
 
     public function __construct(Set $first , Set ...$sets)
     {
-        \array_unshift($sets, $first);
+        if (\count($sets) === 0) {
+            $set = new Set\Decorate(
+                static function($value): array {
+                    return [$value];
+                },
+                $first
+            );
+        } else {
+            $set = new Set\Composite(
+                function(...$args): array {
+                    return $args;
+                },
+                $first,
+                ...$sets
+            );
+        }
 
-        $this->sets = $sets;
+        $this->set = $set;
     }
 
     public function then(callable $test): void
     {
-        if (\count($this->sets) === 1) {
-            foreach (\reset($this->sets)->values() as $value) {
-                $test($value);
-            }
+        $values = $this->set->values();
 
-            return;
-        }
-
-        $set = Composite::of(
-            function(...$args): array {
-                return $args;
-            },
-            ...$this->sets
-        );
-
-        foreach ($set->values() as $values) {
+        foreach ($values as $values) {
             $test(...$values);
         }
     }
