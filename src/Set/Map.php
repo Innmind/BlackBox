@@ -53,7 +53,6 @@ final class Map implements Set
     public function take(int $size): Set
     {
         $self = clone $this;
-        $self->size = $size;
         $self->sizes = $this->sizes->take($size);
 
         return $self;
