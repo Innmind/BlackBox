@@ -69,19 +69,19 @@ final class Stream implements Set
     public function values(): \Generator
     {
         foreach ($this->sizes->values() as $size) {
-            $sequence = new Structure($this->type);
+            $stream = new Structure($this->type);
             $values = $this->set->values();
 
-            while ($sequence->size() < $size && $values->valid()) {
-                $sequence = $sequence->add($values->current());
+            while ($stream->size() < $size && $values->valid()) {
+                $stream = $stream->add($values->current());
                 $values->next();
             }
 
-            if (!($this->predicate)($sequence)) {
+            if (!($this->predicate)($stream)) {
                 continue;
             }
 
-            yield $sequence;
+            yield $stream;
         }
     }
 }

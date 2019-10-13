@@ -69,19 +69,19 @@ final class Set implements SetInterface
     public function values(): \Generator
     {
         foreach ($this->sizes->values() as $size) {
-            $sequence = new Structure($this->type);
+            $set = new Structure($this->type);
             $values = $this->set->values();
 
-            while ($sequence->size() < $size && $values->valid()) {
-                $sequence = $sequence->add($values->current());
+            while ($set->size() < $size && $values->valid()) {
+                $set = $set->add($values->current());
                 $values->next();
             }
 
-            if (!($this->predicate)($sequence)) {
+            if (!($this->predicate)($set)) {
                 continue;
             }
 
-            yield $sequence;
+            yield $set;
         }
     }
 }
