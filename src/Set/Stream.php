@@ -15,15 +15,13 @@ final class Stream implements Set
     private $type;
     private $set;
     private $sizes;
-    private $size;
     private $predicate;
 
     public function __construct(string $type, Set $set, Integers $sizes = null)
     {
         $this->type = $type;
         $this->set = $set;
-        $this->size = 100;
-        $this->sizes = ($sizes ?? Integers::of(0, 100))->take($this->size);
+        $this->sizes = ($sizes ?? Integers::of(0, 100))->take(100);
         $this->predicate = static function(): bool {
             return true;
         };
@@ -40,7 +38,6 @@ final class Stream implements Set
     public function take(int $size): Set
     {
         $self = clone $this;
-        $self->size = $size;
         $self->sizes = $this->sizes->take($size);
 
         return $self;
