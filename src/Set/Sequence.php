@@ -64,9 +64,9 @@ final class Sequence implements Set
     {
         foreach ($this->sizes->values() as $size) {
             $sequence = new Structure;
-            $values = $this->set->values();
+            $values = $this->set->take($size)->values();
 
-            while ($sequence->size() < $size && $values->valid()) {
+            while ($sequence->size() < $size) {
                 $sequence = $sequence->add($values->current());
                 $values->next();
             }

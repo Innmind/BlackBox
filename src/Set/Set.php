@@ -70,9 +70,9 @@ final class Set implements SetInterface
     {
         foreach ($this->sizes->values() as $size) {
             $set = new Structure($this->type);
-            $values = $this->set->values();
+            $values = $this->set->take($size)->values();
 
-            while ($set->size() < $size && $values->valid()) {
+            while ($set->size() < $size) {
                 $set = $set->add($values->current());
                 $values->next();
             }

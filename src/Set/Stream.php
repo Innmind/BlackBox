@@ -70,9 +70,9 @@ final class Stream implements Set
     {
         foreach ($this->sizes->values() as $size) {
             $stream = new Structure($this->type);
-            $values = $this->set->values();
+            $values = $this->set->take($size)->values();
 
-            while ($stream->size() < $size && $values->valid()) {
+            while ($stream->size() < $size) {
                 $stream = $stream->add($values->current());
                 $values->next();
             }
