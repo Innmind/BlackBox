@@ -10,7 +10,7 @@ final class Uuid
     /**
      * @return Set<string>
      */
-    public static function of(): Set
+    public static function any(): Set
     {
         $bits = [];
 
@@ -34,9 +34,18 @@ final class Uuid
         )->take(100);
     }
 
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(): Set
+    {
+        return self::any();
+    }
+
     private static function bit(): Set
     {
-        return Chars::of()->filter(static function(string $bit): bool {
+        return Chars::any()->filter(static function(string $bit): bool {
             return (bool) \preg_match('~^[a-f0-9]$~', $bit);
         });
     }

@@ -31,7 +31,7 @@ final class Map implements Set
         $this->valueType = $valueType;
         $this->keys = $keys;
         $this->values = $values;
-        $this->sizes = ($sizes ?? Integers::of(0, 100))->take(100);
+        $this->sizes = ($sizes ?? Integers::between(0, 100))->take(100);
         $this->predicate = static function(): bool {
             return true;
         };

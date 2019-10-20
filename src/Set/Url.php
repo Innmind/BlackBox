@@ -11,7 +11,7 @@ final class Url
     /**
      * @return Set<Model>
      */
-    public static function of(): Set
+    public static function any(): Set
     {
         return Composite::of(
             static function(
@@ -27,17 +27,26 @@ final class Url
                 return Model::fromString("$scheme://$user:$password@$host:$port/$path?$query#$fragment");
             },
             Elements::of('http', 'https', 'ftp', 'ssh'),
-            Strings::of()->filter(static function(string $user): bool {
+            Strings::any()->filter(static function(string $user): bool {
                 return (bool) \preg_match('/^[\pL\pN-]+$/', $user);
             }),
-            Strings::of()->filter(static function(string $user): bool {
+            Strings::any()->filter(static function(string $user): bool {
                 return (bool) \preg_match('/^[\pL\pN-]+$/', $user);
             }),
             Elements::of('example.com', '127.0.0.1'),
-            Integers::of(0, 9999),
-            Strings::of(),
-            Strings::of(),
-            Strings::of()
+            Integers::between(0, 9999),
+            Strings::any(),
+            Strings::any(),
+            Strings::any()
         )->take(100);
+    }
+
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(): Set
+    {
+        return self::any();
     }
 }

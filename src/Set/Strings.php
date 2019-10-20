@@ -23,9 +23,18 @@ final class Strings implements Set
         };
     }
 
-    public static function of(int $maxLength = 128): self
+    public static function any(int $maxLength = 128): self
     {
         return new self($maxLength);
+    }
+
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(int $maxLength = 128): self
+    {
+        return self::any($maxLength);
     }
 
     public function take(int $size): Set

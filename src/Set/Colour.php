@@ -14,10 +14,19 @@ final class Colour
     /**
      * @return Set<RGBA>
      */
-    public static function of(): Set
+    public static function any(): Set
     {
         return Elements::of(
             ...Colours::literals()->values()
         );
+    }
+
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(): Set
+    {
+        return self::any();
     }
 }

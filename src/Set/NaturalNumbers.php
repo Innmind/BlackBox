@@ -14,12 +14,21 @@ final class NaturalNumbers implements Set
 
     public function __construct()
     {
-        $this->set = Integers::of(0);
+        $this->set = Integers::between(0);
     }
 
-    public static function of(): self
+    public static function any(): self
     {
         return new self;
+    }
+
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(): self
+    {
+        return self::any();
     }
 
     public function take(int $size): Set

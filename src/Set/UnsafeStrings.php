@@ -22,9 +22,18 @@ final class UnsafeStrings implements Set
         };
     }
 
-    public static function of(): self
+    public static function any(): self
     {
         return new self;
+    }
+
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(): self
+    {
+        return self::any();
     }
 
     public function take(int $size): Set
