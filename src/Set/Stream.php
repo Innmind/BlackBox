@@ -21,7 +21,7 @@ final class Stream implements Set
     {
         $this->type = $type;
         $this->set = $set;
-        $this->sizes = ($sizes ?? Integers::of(0, 100))->take(100);
+        $this->sizes = ($sizes ?? Integers::between(0, 100))->take(100);
         $this->predicate = static function(): bool {
             return true;
         };

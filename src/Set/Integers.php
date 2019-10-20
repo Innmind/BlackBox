@@ -25,9 +25,18 @@ final class Integers implements Set
         };
     }
 
-    public static function of(int $lowerBound = null, int $upperBound = null): self
+    public static function between(int $lowerBound = null, int $upperBound = null): self
     {
         return new self($lowerBound, $upperBound);
+    }
+
+    /**
+     * @deprecated
+     * @see self::between()
+     */
+    public static function of(int $lowerBound = null, int $upperBound = null): self
+    {
+        return self::between($lowerBound, $upperBound);
     }
 
     public function take(int $size): Set

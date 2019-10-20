@@ -14,14 +14,23 @@ final class IntegersExceptZero implements Set
 
     public function __construct()
     {
-        $this->set = Integers::of()->filter(static function(int $value): bool {
+        $this->set = (new Integers)->filter(static function(int $value): bool {
             return $value !== 0;
         });
     }
 
-    public static function of(): self
+    public static function any(): self
     {
         return new self;
+    }
+
+    /**
+     * @deprecated
+     * @see self::any()
+     */
+    public static function of(): self
+    {
+        return self::any();
     }
 
     public function take(int $size): Set
