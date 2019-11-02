@@ -31,7 +31,7 @@ final class Scenario
             );
         }
 
-        $this->set = $set;
+        $this->set = $set->take(100);
     }
 
     public function take(int $size): self
