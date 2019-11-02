@@ -32,13 +32,13 @@ class ScenarioTest extends TestCase
             ++$called;
         });
 
-        $this->assertSame(10000, $called);
+        $this->assertSame(100, $called);
     }
 
     public function testAllowToOnlyTakeACertainNumberOfScenarios()
     {
         $scenario1 = new Scenario(Integers::of(), Integers::of());
-        $scenario2 = $scenario1->take(100);
+        $scenario2 = $scenario1->take(10);
 
         $this->assertNotSame($scenario1, $scenario2);
         $this->assertInstanceOf(Scenario::class, $scenario2);
@@ -52,8 +52,8 @@ class ScenarioTest extends TestCase
             ++$called2;
         });
 
-        $this->assertSame(10000, $called1);
-        $this->assertSame(100, $called2);
+        $this->assertSame(100, $called1);
+        $this->assertSame(10, $called2);
     }
 
     public function testAllowAFilterCanBeAppliedOnTheScenario()
@@ -75,10 +75,10 @@ class ScenarioTest extends TestCase
             $additions2[] = ($a + $b) % 2;
         });
 
-        $this->assertCount(10000, $additions1);
-        // less because the composite is at max 10000 and the filter is applied
+        $this->assertCount(100, $additions1);
+        // less because the composite is at max 100 and the filter is applied
         // after the generation so it can only be lower
-        $this->assertLessThan(10000, \count($additions2));
+        $this->assertLessThanOrEqual(100, \count($additions2));
         $this->assertSame(1, max($additions1));
         $this->assertSame(0, max($additions2));
     }
