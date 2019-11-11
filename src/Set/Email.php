@@ -27,6 +27,10 @@ final class Email
             Strings::any()->filter(static function(string $string): bool {
                 return (bool) \preg_match('~^[a-zA-Z]+$~', $string);
             })
-        )->take(100);
+        )
+            ->take(100)
+            ->filter(static function($email): bool {
+                return (bool) !\preg_match('~(\-.|\.\-)~', $email);
+            });
     }
 }
