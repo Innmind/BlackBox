@@ -4,20 +4,20 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
-use Innmind\Immutable\Sequence;
 
 /**
- * {@inheritdoc}
+ * @implements Set<mixed>
  */
 final class Either implements Set
 {
-    private $sets;
-    private $size;
-    private $predicate;
+    /** @var list<Set> */
+    private array $sets;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct(Set $first, Set $second, Set ...$rest)
     {
-        $this->sets = Sequence::of($first, $second, ...$rest);
+        $this->sets = [$first, $second, ...$rest];
         $this->size = 100;
         $this->predicate = static function(): bool {
             return true;
@@ -27,22 +27,26 @@ final class Either implements Set
     public function take(int $size): Set
     {
         $self = clone $this;
-        $self->sets = $this->sets->map(static function(Set $set) use ($size): Set {
-            return $set->take($size);
-        });
+        $self->sets = \array_map(
+            static function(Set $set) use ($size): Set {
+                return $set->take($size);
+            },
+            $this->sets,
+        );
         $self->size = $size;
 
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -52,16 +56,14 @@ final class Either implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<mixed>
-     */
     public function values(): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $setToChoose = \random_int(0, $this->sets->size() - 1);
-            $value = $this->sets->get($setToChoose)->values()->current();
+            $setToChoose = \random_int(0, \count($this->sets) - 1);
+            /** @var mixed */
+            $value = $this->sets[$setToChoose]->values()->current();
 
             if (($this->predicate)($value)) {
                 yield $value;

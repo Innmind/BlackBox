@@ -6,16 +6,16 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @template T
  */
 final class FromGenerator implements Set
 {
-    private $size;
-    private $generatorFactory;
-    private $predicate;
+    private int $size;
+    private \Closure $generatorFactory;
+    private \Closure $predicate;
 
     /**
-     * @param callable(): \Generator $generatorFactory
+     * @param callable(): \Generator<T> $generatorFactory
      */
     public function __construct(callable $generatorFactory)
     {
@@ -24,7 +24,7 @@ final class FromGenerator implements Set
         }
 
         $this->size = 100;
-        $this->generatorFactory = $generatorFactory;
+        $this->generatorFactory = \Closure::fromCallable($generatorFactory);
         $this->predicate = static function(): bool {
             return true;
         };
@@ -46,14 +46,15 @@ final class FromGenerator implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -63,11 +64,9 @@ final class FromGenerator implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(): \Generator
     {
+        /** @var \Generator<T> */
         $generator = ($this->generatorFactory)();
         $iterations = 0;
 

@@ -7,17 +7,14 @@ use Innmind\BlackBox\{
     Set,
     Set\Composite\Matrix,
 };
-use Innmind\Immutable\Sequence;
 
-/**
- * {@inheritdoc}
- */
 final class Composite implements Set
 {
-    private $aggregate;
-    private $sets;
-    private $size;
-    private $predicate;
+    private \Closure $aggregate;
+    /** @var list<Set> */
+    private array $sets;
+    private ?int $size;
+    private \Closure $predicate;
 
     public function __construct(
         callable $aggregate,
@@ -25,8 +22,10 @@ final class Composite implements Set
         Set $second,
         Set ...$sets
     ) {
-        $this->aggregate = $aggregate;
-        $this->sets = Sequence::of($first, $second, ...$sets)->reverse();
+        $sets = [$first, $second, ...$sets];
+
+        $this->aggregate = \Closure::fromCallable($aggregate);
+        $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
         $this->predicate = static function(): bool {
             return true;
@@ -48,14 +47,15 @@ final class Composite implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -65,27 +65,26 @@ final class Composite implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(): \Generator
     {
-        $matrix = $this
-            ->sets
-            ->drop(2)
-            ->reduce(
-                Matrix::of(
-                    $this->sets->get(1),
-                    $this->sets->first()
-                ),
-                static function(Matrix $matrix, Set $set): Matrix {
-                    return $matrix->dot($set);
-                }
-            )
-            ->values();
+        $sets = $this->sets;
+        $first = \array_shift($sets);
+        $second = \array_shift($sets);
+        $matrix = \array_reduce(
+            $sets,
+            static function(Matrix $matrix, Set $set): Matrix {
+                return $matrix->dot($set);
+            },
+            Matrix::of(
+                $second,
+                $first,
+            ),
+        );
+        $matrix = $matrix->values();
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
+            /** @var mixed */
             $value = ($this->aggregate)(...$matrix->current()->toArray());
 
             if (($this->predicate)($value)) {

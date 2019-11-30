@@ -31,16 +31,13 @@ class CompositeTest extends TestCase
             FromGenerator::of(function() {
                 yield 'c';
                 yield 'd';
-            })
+            }),
         );
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            $this->set
-        );
+        $this->assertInstanceOf(Set::class, $this->set);
     }
 
     public function testOf()
@@ -60,8 +57,8 @@ class CompositeTest extends TestCase
                 FromGenerator::of(function() {
                     yield 'c';
                     yield 'd';
-                })
-            )
+                }),
+            ),
         );
     }
 
@@ -74,7 +71,7 @@ class CompositeTest extends TestCase
                 'eac',
                 'ead',
             ],
-            $values
+            $values,
         );
     }
 
@@ -93,7 +90,7 @@ class CompositeTest extends TestCase
                 'ebc',
                 'ebd',
             ],
-            \iterator_to_array($values->values())
+            \iterator_to_array($values->values()),
         );
     }
 
@@ -112,7 +109,7 @@ class CompositeTest extends TestCase
                 'fbc',
                 'fbd',
             ],
-            $values
+            $values,
         );
     }
 

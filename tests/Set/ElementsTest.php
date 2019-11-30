@@ -13,18 +13,12 @@ class ElementsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new Elements(42)
-        );
+        $this->assertInstanceOf(Set::class, new Elements(42));
     }
 
     public function testOf()
     {
-        $this->assertInstanceOf(
-            Elements::class,
-            Elements::of(42, 24)
-        );
+        $this->assertInstanceOf(Elements::class, Elements::of(42, 24));
     }
 
     public function testTake100ValuesByDefault()
@@ -64,15 +58,15 @@ class ElementsTest extends TestCase
             \array_reduce(
                 \iterator_to_array($elements2->values()),
                 $containsEvenInt,
-                false
-            )
+                false,
+            ),
         );
         $this->assertTrue(
             \array_reduce(
                 \iterator_to_array($elements->values()),
                 $containsEvenInt,
-                false
-            )
+                false,
+            ),
         );
     }
 

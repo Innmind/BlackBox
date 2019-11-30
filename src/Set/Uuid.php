@@ -18,6 +18,7 @@ final class Uuid
             $bits[] = self::bit();
         }
 
+        /** @var Set<string> */
         return Composite::of(
             static function(string ...$bits): string {
                 $chunks = \array_chunk($bits, 4);
@@ -30,17 +31,8 @@ final class Uuid
 
                 return "{$chunks[0]}{$chunks[1]}-{$chunks[2]}-{$chunks[3]}-{$chunks[4]}-{$chunks[5]}{$chunks[6]}{$chunks[7]}";
             },
-            ...$bits
+            ...$bits,
         )->take(100);
-    }
-
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(): Set
-    {
-        return self::any();
     }
 
     private static function bit(): Set

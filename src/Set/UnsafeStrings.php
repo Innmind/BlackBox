@@ -7,12 +7,12 @@ use Innmind\BlackBox\Set;
 use Innmind\Json\Json;
 
 /**
- * {@inheritdoc}
+ * @implements Set<string>
  */
 final class UnsafeStrings implements Set
 {
-    private $size;
-    private $predicate;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct()
     {
@@ -27,15 +27,6 @@ final class UnsafeStrings implements Set
         return new self;
     }
 
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(): self
-    {
-        return self::any();
-    }
-
     public function take(int $size): Set
     {
         $self = clone $this;
@@ -44,14 +35,15 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -61,15 +53,13 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<string>
-     */
     public function values(): \Generator
     {
+        /** @var list<string> */
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
         \shuffle($values);
 
-        $values = array_filter($values, $this->predicate);
+        $values = \array_filter($values, $this->predicate);
         $values = \array_slice($values, 0, $this->size);
 
         yield from $values;

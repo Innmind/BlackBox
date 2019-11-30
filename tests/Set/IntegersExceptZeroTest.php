@@ -13,20 +13,17 @@ class IntegersExceptZeroTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new IntegersExceptZero
-        );
+        $this->assertInstanceOf(Set::class, new IntegersExceptZero);
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(IntegersExceptZero::class, IntegersExceptZero::of());
+        $this->assertInstanceOf(IntegersExceptZero::class, IntegersExceptZero::any());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(IntegersExceptZero::of()->values());
+        $values = \iterator_to_array(IntegersExceptZero::any()->values());
 
         $this->assertCount(100, $values);
         $this->assertNotContains(0, $values);
@@ -34,7 +31,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = IntegersExceptZero::of();
+        $integers = IntegersExceptZero::any();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -46,7 +43,7 @@ class IntegersExceptZeroTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertTrue($hasOddInteger);
 
@@ -55,14 +52,14 @@ class IntegersExceptZeroTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertFalse($hasOddInteger);
     }
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = IntegersExceptZero::of();
+        $a = IntegersExceptZero::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(IntegersExceptZero::class, $b);
@@ -73,7 +70,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testValues()
     {
-        $a = IntegersExceptZero::of();
+        $a = IntegersExceptZero::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

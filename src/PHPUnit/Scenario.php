@@ -10,24 +10,30 @@ use Innmind\BlackBox\{
 
 final class Scenario
 {
-    private $set;
+    private Set $set;
 
     public function __construct(Set $first , Set ...$sets)
     {
         if (\count($sets) === 0) {
             $set = new Set\Decorate(
+                /**
+                 * @psalm-suppress MissingClosureParamType
+                 */
                 static function($value): array {
                     return [$value];
                 },
-                $first
+                $first,
             );
         } else {
             $set = new Set\Composite(
-                function(...$args): array {
+                /**
+                 * @psalm-suppress MissingClosureParamType
+                 */
+                static function(...$args): array {
                     return $args;
                 },
                 $first,
-                ...$sets
+                ...$sets,
             );
         }
 
@@ -55,9 +61,8 @@ final class Scenario
 
     public function then(callable $test): void
     {
-        $values = $this->set->values();
-
-        foreach ($values as $values) {
+        /** @var array $values */
+        foreach ($this->set->values() as $values) {
             $test(...$values);
         }
     }

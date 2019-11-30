@@ -22,7 +22,7 @@ class MatrixTest extends TestCase
             FromGenerator::of(function() {
                 yield new Combination('c');
                 yield new Combination('d');
-            })
+            }),
         );
 
         $this->assertSame(
@@ -32,7 +32,7 @@ class MatrixTest extends TestCase
                 ['b', 'c'],
                 ['b', 'd'],
             ],
-            $this->toArray($matrix)
+            $this->toArray($matrix),
         );
     }
 
@@ -46,14 +46,12 @@ class MatrixTest extends TestCase
             FromGenerator::of(function() {
                 yield new Combination('c');
                 yield new Combination('d');
-            })
+            }),
         );
-        $matrix2 = $matrix->dot(FromGenerator::of(
-            function() {
-                yield 'e';
-                yield 'f';
-            }
-        ));
+        $matrix2 = $matrix->dot(FromGenerator::of(function() {
+            yield 'e';
+            yield 'f';
+        }));
 
         $this->assertInstanceOf(Matrix::class, $matrix2);
         $this->assertNotSame($matrix, $matrix2);
@@ -64,7 +62,7 @@ class MatrixTest extends TestCase
                 ['b', 'c'],
                 ['b', 'd'],
             ],
-            $this->toArray($matrix)
+            $this->toArray($matrix),
         );
         $this->assertSame(
             [
@@ -77,7 +75,7 @@ class MatrixTest extends TestCase
                 ['f', 'b', 'c'],
                 ['f', 'b', 'd'],
             ],
-            $this->toArray($matrix2)
+            $this->toArray($matrix2),
         );
     }
 
@@ -87,7 +85,7 @@ class MatrixTest extends TestCase
             function($combination) {
                 return $combination->toArray();
             },
-            \iterator_to_array($matrix->values())
+            \iterator_to_array($matrix->values()),
         );
     }
 }

@@ -6,16 +6,16 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<int>
  */
 final class Integers implements Set
 {
-    private $lowerBound;
-    private $upperBound;
-    private $size;
-    private $predicate;
+    private int $lowerBound;
+    private int $upperBound;
+    private int $size;
+    private \Closure $predicate;
 
-    public function __construct(int $lowerBound = null, int $upperBound = null)
+    private function __construct(int $lowerBound = null, int $upperBound = null)
     {
         $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
         $this->upperBound = $upperBound ?? \PHP_INT_MAX;
@@ -25,7 +25,12 @@ final class Integers implements Set
         };
     }
 
-    public static function between(int $lowerBound = null, int $upperBound = null): self
+    public static function any(): self
+    {
+        return new self;
+    }
+
+    public static function between(int $lowerBound, int $upperBound): self
     {
         return new self($lowerBound, $upperBound);
     }
@@ -40,15 +45,6 @@ final class Integers implements Set
         return new self(null, $upperBound);
     }
 
-    /**
-     * @deprecated
-     * @see self::between()
-     */
-    public static function of(int $lowerBound = null, int $upperBound = null): self
-    {
-        return self::between($lowerBound, $upperBound);
-    }
-
     public function take(int $size): Set
     {
         $self = clone $this;
@@ -57,14 +53,15 @@ final class Integers implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -74,9 +71,6 @@ final class Integers implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<int>
-     */
     public function values(): \Generator
     {
         $iterations = 0;

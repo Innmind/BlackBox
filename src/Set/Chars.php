@@ -6,12 +6,12 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<string>
  */
 final class Chars implements Set
 {
-    private $size;
-    private $predicate;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct()
     {
@@ -26,15 +26,6 @@ final class Chars implements Set
         return new self;
     }
 
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(): self
-    {
-        return self::any();
-    }
-
     public function take(int $size): Set
     {
         $self = clone $this;
@@ -43,14 +34,15 @@ final class Chars implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -60,9 +52,6 @@ final class Chars implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<string>
-     */
     public function values(): \Generator
     {
         $values = \range(0, 255);

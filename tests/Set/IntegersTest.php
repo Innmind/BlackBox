@@ -13,34 +13,31 @@ class IntegersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new Integers
-        );
+        $this->assertInstanceOf(Set::class, Integers::any());
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(Integers::class, Integers::of());
+        $this->assertInstanceOf(Integers::class, Integers::any());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(Integers::of()->values());
+        $values = \iterator_to_array(Integers::any()->values());
 
         $this->assertCount(100, $values);
     }
 
     public function testBoundsAreApplied()
     {
-        $values = Integers::of(-10, 10);
+        $values = Integers::between(-10, 10);
 
         $hasOutsideBounds = \array_reduce(
             \iterator_to_array($values->values()),
             static function(bool $hasOutsideBounds, int $value): bool {
                 return $hasOutsideBounds || $value > 10 || $value < -10;
             },
-            false
+            false,
         );
 
         $this->assertFalse($hasOutsideBounds);
@@ -54,7 +51,7 @@ class IntegersTest extends TestCase
         $this->assertCount(100, \iterator_to_array($values->values()));
         $this->assertGreaterThanOrEqual(
             10,
-            \min(\iterator_to_array($values->values()))
+            \min(\iterator_to_array($values->values())),
         );
     }
 
@@ -66,13 +63,13 @@ class IntegersTest extends TestCase
         $this->assertCount(100, \iterator_to_array($values->values()));
         $this->assertLessThanOrEqual(
             10,
-            \max(\iterator_to_array($values->values()))
+            \max(\iterator_to_array($values->values())),
         );
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = Integers::of();
+        $integers = Integers::any();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -84,7 +81,7 @@ class IntegersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertTrue($hasOddInteger);
 
@@ -93,14 +90,14 @@ class IntegersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertFalse($hasOddInteger);
     }
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Integers::of();
+        $a = Integers::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Integers::class, $b);
@@ -111,7 +108,7 @@ class IntegersTest extends TestCase
 
     public function testValues()
     {
-        $a = Integers::of();
+        $a = Integers::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

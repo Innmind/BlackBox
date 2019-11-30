@@ -17,8 +17,8 @@ class EitherTest extends TestCase
             Set::class,
             new Either(
                 $this->createMock(Set::class),
-                $this->createMock(Set::class)
-            )
+                $this->createMock(Set::class),
+            ),
         );
     }
 
@@ -26,7 +26,7 @@ class EitherTest extends TestCase
     {
         $either = new Either(
             Set\Elements::of(1),
-            Set\Elements::of(2)
+            Set\Elements::of(2),
         );
 
         $this->assertInstanceOf(\Generator::class, $either->values());
@@ -40,7 +40,7 @@ class EitherTest extends TestCase
     {
         $either1 = new Either(
             Set\Elements::of(1),
-            Set\Elements::of(2)
+            Set\Elements::of(2),
         );
         $either2 = $either1->take(50);
 
@@ -55,7 +55,7 @@ class EitherTest extends TestCase
         $either1 = new Either(
             Set\Elements::of(1),
             Set\Elements::of(null),
-            Set\Elements::of(2)
+            Set\Elements::of(2),
         );
         $either2 = $either1->filter(static function(?int $value): bool {
             return $value === 1;

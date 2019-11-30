@@ -17,7 +17,7 @@ class FromGeneratorTest extends TestCase
             Set::class,
             new FromGenerator(function(){
                 yield 42;
-            })
+            }),
         );
     }
 
@@ -27,7 +27,7 @@ class FromGeneratorTest extends TestCase
             FromGenerator::class,
             FromGenerator::of(function() {
                 yield 42;
-            })
+            }),
         );
     }
 

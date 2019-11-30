@@ -6,15 +6,16 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<int>
  */
 final class IntegersExceptZero implements Set
 {
-    private $set;
+    /** @var Set<int> */
+    private Set $set;
 
     public function __construct()
     {
-        $this->set = (new Integers)->filter(static function(int $value): bool {
+        $this->set = Integers::any()->filter(static function(int $value): bool {
             return $value !== 0;
         });
     }
@@ -22,15 +23,6 @@ final class IntegersExceptZero implements Set
     public static function any(): self
     {
         return new self;
-    }
-
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(): self
-    {
-        return self::any();
     }
 
     public function take(int $size): Set
@@ -41,9 +33,6 @@ final class IntegersExceptZero implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -52,9 +41,6 @@ final class IntegersExceptZero implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<int>
-     */
     public function values(): \Generator
     {
         yield from $this->set->values();

@@ -25,16 +25,13 @@ class DecorateTest extends TestCase
                 yield 'fb';
                 yield 'gc';
                 yield 'eb';
-            })
+            }),
         );
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            $this->set
-        );
+        $this->assertInstanceOf(Set::class, $this->set);
     }
 
     public function testOf()
@@ -46,8 +43,8 @@ class DecorateTest extends TestCase
                 FromGenerator::of(function() {
                     yield 'e';
                     yield 'f';
-                })
-            )
+                }),
+            ),
         );
     }
 
@@ -60,7 +57,7 @@ class DecorateTest extends TestCase
                 ['ea'],
                 ['fb'],
             ],
-            $values
+            $values,
         );
     }
 
@@ -77,7 +74,7 @@ class DecorateTest extends TestCase
                 ['ea'],
                 ['eb'],
             ],
-            \iterator_to_array($values->values())
+            \iterator_to_array($values->values()),
         );
     }
 
@@ -92,7 +89,7 @@ class DecorateTest extends TestCase
                 ['gc'],
                 ['eb'],
             ],
-            $values
+            $values,
         );
     }
 

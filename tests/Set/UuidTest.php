@@ -11,9 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 class UuidTest extends TestCase
 {
-    public function testOf()
+    public function testAny()
     {
-        $uuids = Uuid::of();
+        $uuids = Uuid::any();
 
         $this->assertInstanceOf(Set::class, $uuids);
         $this->assertCount(100, \iterator_to_array($uuids->values()));
@@ -21,7 +21,7 @@ class UuidTest extends TestCase
         foreach ($uuids->values() as $uuid) {
             $this->assertRegExp(
                 '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
-                $uuid
+                $uuid,
             );
         }
     }

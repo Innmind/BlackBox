@@ -2,8 +2,7 @@
 
 | `develop` |
 |-----------|
-| [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/BlackBox/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/BlackBox/?branch=develop) |
-| [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/BlackBox/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/BlackBox/?branch=develop) |
+| [![codecov](https://codecov.io/gh/Innmind/Filesystem/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Filesystem) |
 | [![Build Status](https://scrutinizer-ci.com/g/Innmind/BlackBox/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/BlackBox/build-status/develop) |
 
 Contains an ensemble of sets to easily generate data for property based tests.
@@ -13,6 +12,8 @@ Contains an ensemble of sets to easily generate data for property based tests.
 When I run tests I need some data to assert the validity of my code, the first approach is to hardcode the test data in the test class itself but it lacks enough variety in order to make sure all (or at least enough) cases are covered. In order to generate data we can use a property based testing library such as [`giorgiosironi/eris`](https://packagist.org/packages/giorgiosironi/eris), but the problem is that for each test you need to redeclare the base sets of data you need test against.
 
 The goal of this library is to help build higher order sets to facilitate the understanding of tests.
+
+**Note**: the library only generates primitives types, any user defined type set must be declared in its dedicated package.
 
 ## Installation
 

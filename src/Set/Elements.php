@@ -4,26 +4,33 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
-use Innmind\Immutable\Sequence;
 
 /**
- * {@inheritdoc}
+ * @implements Set<mixed>
  */
 final class Elements implements Set
 {
-    private $size;
-    private $elements;
-    private $predicate;
+    private int $size;
+    private array $elements;
+    private \Closure $predicate;
 
+    /**
+     * @param mixed $first
+     * @param mixed $elements
+     */
     public function __construct($first, ...$elements)
     {
         $this->size = 100;
-        $this->elements = Sequence::of($first, ...$elements);
+        $this->elements = [$first, ...$elements];
         $this->predicate = static function(): bool {
             return true;
         };
     }
 
+    /**
+     * @param mixed $first
+     * @param mixed $elements
+     */
     public static function of($first, ...$elements): self
     {
         return new self($first, ...$elements);
@@ -37,14 +44,15 @@ final class Elements implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
@@ -54,16 +62,10 @@ final class Elements implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(): \Generator
     {
-        $values = $this
-            ->elements
-            ->take($this->size)
-            ->filter($this->predicate)
-            ->toPrimitive();
+        $values = \array_slice($this->elements, 0, $this->size);
+        $values = \array_filter($values, $this->predicate);
         \shuffle($values);
 
         yield from $values;

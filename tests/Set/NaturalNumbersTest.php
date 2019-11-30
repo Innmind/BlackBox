@@ -13,20 +13,17 @@ class NaturalNumbersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new NaturalNumbers
-        );
+        $this->assertInstanceOf(Set::class, new NaturalNumbers);
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(NaturalNumbers::class, NaturalNumbers::of());
+        $this->assertInstanceOf(NaturalNumbers::class, NaturalNumbers::any());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(NaturalNumbers::of()->values());
+        $values = \iterator_to_array(NaturalNumbers::any()->values());
 
         $this->assertCount(100, $values);
 
@@ -37,7 +34,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = NaturalNumbers::of();
+        $integers = NaturalNumbers::any();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -49,7 +46,7 @@ class NaturalNumbersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertTrue($hasOddInteger);
 
@@ -58,14 +55,14 @@ class NaturalNumbersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertFalse($hasOddInteger);
     }
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = NaturalNumbers::of();
+        $a = NaturalNumbers::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(NaturalNumbers::class, $b);
@@ -76,7 +73,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testValues()
     {
-        $a = NaturalNumbers::of();
+        $a = NaturalNumbers::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

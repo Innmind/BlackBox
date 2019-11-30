@@ -13,27 +13,24 @@ class UnsafeStringsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new UnsafeStrings
-        );
+        $this->assertInstanceOf(Set::class, new UnsafeStrings);
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(UnsafeStrings::class, UnsafeStrings::of());
+        $this->assertInstanceOf(UnsafeStrings::class, UnsafeStrings::any());
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = \iterator_to_array(UnsafeStrings::of()->values());
+        $values = \iterator_to_array(UnsafeStrings::any()->values());
 
         $this->assertCount(100, $values);
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = UnsafeStrings::of();
+        $values = UnsafeStrings::any();
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -45,7 +42,7 @@ class UnsafeStringsTest extends TestCase
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
-            false
+            false,
         );
         $this->assertTrue($hasLengthAbove10);
 
@@ -54,14 +51,14 @@ class UnsafeStringsTest extends TestCase
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
-            false
+            false,
         );
         $this->assertFalse($hasLengthAbove10);
     }
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = UnsafeStrings::of();
+        $a = UnsafeStrings::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(UnsafeStrings::class, $b);
@@ -72,7 +69,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testValues()
     {
-        $a = UnsafeStrings::of();
+        $a = UnsafeStrings::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));
