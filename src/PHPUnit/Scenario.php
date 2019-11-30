@@ -29,7 +29,7 @@ final class Scenario
                 /**
                  * @psalm-suppress MissingClosureParamType
                  */
-                function(...$args): array {
+                static function(...$args): array {
                     return $args;
                 },
                 $first,

@@ -46,12 +46,13 @@ final class Elements implements Set
 
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
         /**
          * @psalm-suppress MissingClosureParamType
          */
-        $self->predicate = function($value) use ($predicate): bool {
-            if (!($this->predicate)($value)) {
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
                 return false;
             }
 
