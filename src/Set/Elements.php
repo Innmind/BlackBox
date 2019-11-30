@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
-use Innmind\Immutable\Sequence;
 
 /**
  * {@inheritdoc}
@@ -18,7 +17,7 @@ final class Elements implements Set
     public function __construct($first, ...$elements)
     {
         $this->size = 100;
-        $this->elements = Sequence::of($first, ...$elements);
+        $this->elements = [$first, ...$elements];
         $this->predicate = static function(): bool {
             return true;
         };
@@ -59,11 +58,8 @@ final class Elements implements Set
      */
     public function values(): \Generator
     {
-        $values = $this
-            ->elements
-            ->take($this->size)
-            ->filter($this->predicate)
-            ->toPrimitive();
+        $values = \array_slice($this->elements, 0, $this->size);
+        $values = \array_filter($values, $this->predicate);
         \shuffle($values);
 
         yield from $values;

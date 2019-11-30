@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     Set,
     Set\Composite\Matrix,
 };
-use Innmind\Immutable\Sequence;
 
 /**
  * {@inheritdoc}
@@ -25,8 +24,10 @@ final class Composite implements Set
         Set $second,
         Set ...$sets
     ) {
+        $sets = [$first, $second, ...$sets];
+
         $this->aggregate = $aggregate;
-        $this->sets = Sequence::of($first, $second, ...$sets)->reverse();
+        $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
         $this->predicate = static function(): bool {
             return true;
@@ -70,19 +71,20 @@ final class Composite implements Set
      */
     public function values(): \Generator
     {
-        $matrix = $this
-            ->sets
-            ->drop(2)
-            ->reduce(
-                Matrix::of(
-                    $this->sets->get(1),
-                    $this->sets->first()
-                ),
-                static function(Matrix $matrix, Set $set): Matrix {
-                    return $matrix->dot($set);
-                }
-            )
-            ->values();
+        $sets = $this->sets;
+        $first = \array_shift($sets);
+        $second = \array_shift($sets);
+        $matrix = \array_reduce(
+            $sets,
+            static function(Matrix $matrix, Set $set): Matrix {
+                return $matrix->dot($set);
+            },
+            Matrix::of(
+                $second,
+                $first
+            ),
+        );
+        $matrix = $matrix->values();
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
