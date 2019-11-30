@@ -13,10 +13,10 @@ use Innmind\BlackBox\{
  */
 final class Composite implements Set
 {
-    private $aggregate;
-    private $sets;
-    private $size;
-    private $predicate;
+    private \Closure $aggregate;
+    private array $sets;
+    private ?int $size;
+    private \Closure $predicate;
 
     public function __construct(
         callable $aggregate,

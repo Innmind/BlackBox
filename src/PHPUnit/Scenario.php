@@ -10,7 +10,7 @@ use Innmind\BlackBox\{
 
 final class Scenario
 {
-    private $set;
+    private Set $set;
 
     public function __construct(Set $first , Set ...$sets)
     {

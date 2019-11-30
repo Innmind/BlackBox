@@ -10,9 +10,9 @@ use Innmind\BlackBox\Set;
  */
 final class FromGenerator implements Set
 {
-    private $size;
-    private $generatorFactory;
-    private $predicate;
+    private int $size;
+    private \Closure $generatorFactory;
+    private \Closure $predicate;
 
     /**
      * @param callable(): \Generator $generatorFactory

@@ -10,7 +10,7 @@ use Innmind\BlackBox\Set;
  */
 final class NaturalNumbers implements Set
 {
-    private $set;
+    private Set $set;
 
     public function __construct()
     {

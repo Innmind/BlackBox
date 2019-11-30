@@ -10,9 +10,9 @@ use Innmind\BlackBox\Set;
  */
 final class Elements implements Set
 {
-    private $size;
-    private $elements;
-    private $predicate;
+    private int $size;
+    private array $elements;
+    private \Closure $predicate;
 
     public function __construct($first, ...$elements)
     {

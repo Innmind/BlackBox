@@ -10,9 +10,9 @@ use Innmind\BlackBox\Set;
  */
 final class Either implements Set
 {
-    private $sets;
-    private $size;
-    private $predicate;
+    private array $sets;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct(Set $first, Set $second, Set ...$rest)
     {

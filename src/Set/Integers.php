@@ -10,10 +10,10 @@ use Innmind\BlackBox\Set;
  */
 final class Integers implements Set
 {
-    private $lowerBound;
-    private $upperBound;
-    private $size;
-    private $predicate;
+    private int $lowerBound;
+    private int $upperBound;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct(int $lowerBound = null, int $upperBound = null)
     {

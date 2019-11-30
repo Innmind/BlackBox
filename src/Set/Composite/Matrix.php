@@ -7,8 +7,8 @@ use Innmind\BlackBox\Set;
 
 final class Matrix
 {
-    private $a;
-    private $b;
+    private Set $a;
+    private Set $b;
 
     /**
      * @param Set<mixed> $a

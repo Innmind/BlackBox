@@ -10,9 +10,9 @@ use Innmind\BlackBox\Set;
  */
 final class Strings implements Set
 {
-    private $maxLength;
-    private $size;
-    private $predicate;
+    private int $maxLength;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct(int $maxLength = 128)
     {

@@ -5,7 +5,7 @@ namespace Innmind\BlackBox\Set\Composite;
 
 final class Combination
 {
-    private $values;
+    private array $values;
 
     public function __construct($right)
     {

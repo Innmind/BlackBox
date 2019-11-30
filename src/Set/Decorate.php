@@ -10,8 +10,8 @@ use Innmind\BlackBox\Set;
  */
 final class Decorate implements Set
 {
-    private $decorate;
-    private $set;
+    private \Closure $decorate;
+    private Set $set;
 
     public function __construct(
         callable $decorate,

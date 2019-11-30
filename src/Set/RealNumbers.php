@@ -10,8 +10,8 @@ use Innmind\BlackBox\Set;
  */
 final class RealNumbers implements Set
 {
-    private $size;
-    private $predicate;
+    private int $size;
+    private \Closure $predicate;
 
     public function __construct()
     {
