@@ -14,7 +14,7 @@ final class NaturalNumbers implements Set
 
     public function __construct()
     {
-        $this->set = Integers::between(0);
+        $this->set = Integers::above(0);
     }
 
     public static function any(): self

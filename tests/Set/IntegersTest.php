@@ -46,6 +46,30 @@ class IntegersTest extends TestCase
         $this->assertFalse($hasOutsideBounds);
     }
 
+    public function testAbove()
+    {
+        $values = Integers::above(10);
+
+        $this->assertInstanceOf(Integers::class, $values);
+        $this->assertCount(100, \iterator_to_array($values->values()));
+        $this->assertGreaterThanOrEqual(
+            10,
+            \min(\iterator_to_array($values->values()))
+        );
+    }
+
+    public function testBelow()
+    {
+        $values = Integers::below(10);
+
+        $this->assertInstanceOf(Integers::class, $values);
+        $this->assertCount(100, \iterator_to_array($values->values()));
+        $this->assertLessThanOrEqual(
+            10,
+            \max(\iterator_to_array($values->values()))
+        );
+    }
+
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
         $integers = Integers::of();
