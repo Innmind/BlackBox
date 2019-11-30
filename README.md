@@ -14,6 +14,8 @@ When I run tests I need some data to assert the validity of my code, the first a
 
 The goal of this library is to help build higher order sets to facilitate the understanding of tests.
 
+**Note**: the library only generates primitives types, any user defined type set must be declared in its dedicated package.
+
 ## Installation
 
 ```sh
