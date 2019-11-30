@@ -19,21 +19,21 @@ class IntegersTest extends TestCase
         );
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(Integers::class, Integers::of());
+        $this->assertInstanceOf(Integers::class, Integers::any());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(Integers::of()->values());
+        $values = \iterator_to_array(Integers::any()->values());
 
         $this->assertCount(100, $values);
     }
 
     public function testBoundsAreApplied()
     {
-        $values = Integers::of(-10, 10);
+        $values = Integers::between(-10, 10);
 
         $hasOutsideBounds = \array_reduce(
             \iterator_to_array($values->values()),
@@ -72,7 +72,7 @@ class IntegersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = Integers::of();
+        $integers = Integers::any();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -100,7 +100,7 @@ class IntegersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Integers::of();
+        $a = Integers::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Integers::class, $b);
@@ -111,7 +111,7 @@ class IntegersTest extends TestCase
 
     public function testValues()
     {
-        $a = Integers::of();
+        $a = Integers::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

@@ -19,14 +19,14 @@ class StringsTest extends TestCase
         );
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(Strings::class, Strings::of());
+        $this->assertInstanceOf(Strings::class, Strings::any());
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = \iterator_to_array(Strings::of()->values());
+        $values = \iterator_to_array(Strings::any()->values());
 
         $this->assertCount(100, $values);
     }
@@ -37,7 +37,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            \iterator_to_array(Strings::of()->values())
+            \iterator_to_array(Strings::any()->values())
         );
 
         $this->assertTrue(128 >= \max($values));
@@ -49,7 +49,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            \iterator_to_array(Strings::of(256)->values())
+            \iterator_to_array(Strings::any(256)->values())
         );
 
         $this->assertTrue(256 >= \max($values));
@@ -58,7 +58,7 @@ class StringsTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Strings::of();
+        $values = Strings::any();
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -86,7 +86,7 @@ class StringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Strings::of();
+        $a = Strings::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Strings::class, $b);
@@ -97,7 +97,7 @@ class StringsTest extends TestCase
 
     public function testValues()
     {
-        $a = Strings::of();
+        $a = Strings::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

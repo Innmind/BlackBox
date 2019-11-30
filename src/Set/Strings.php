@@ -28,15 +28,6 @@ final class Strings implements Set
         return new self($maxLength);
     }
 
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(int $maxLength = 128): self
-    {
-        return self::any($maxLength);
-    }
-
     public function take(int $size): Set
     {
         $self = clone $this;

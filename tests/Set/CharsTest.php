@@ -19,21 +19,21 @@ class CharsTest extends TestCase
         );
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(Chars::class, Chars::of());
+        $this->assertInstanceOf(Chars::class, Chars::any());
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = \iterator_to_array(Chars::of()->values());
+        $values = \iterator_to_array(Chars::any()->values());
 
         $this->assertCount(100, $values);
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Chars::of();
+        $values = Chars::any();
         $even = $values->filter(static function(string $value): bool {
             return \ord($value) % 2 === 0;
         });
@@ -61,7 +61,7 @@ class CharsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Chars::of();
+        $a = Chars::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Chars::class, $b);
@@ -72,7 +72,7 @@ class CharsTest extends TestCase
 
     public function testValues()
     {
-        $a = Chars::of();
+        $a = Chars::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

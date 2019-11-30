@@ -11,9 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 class UuidTest extends TestCase
 {
-    public function testOf()
+    public function testAny()
     {
-        $uuids = Uuid::of();
+        $uuids = Uuid::any();
 
         $this->assertInstanceOf(Set::class, $uuids);
         $this->assertCount(100, \iterator_to_array($uuids->values()));

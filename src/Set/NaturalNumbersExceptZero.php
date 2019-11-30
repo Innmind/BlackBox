@@ -22,15 +22,6 @@ final class NaturalNumbersExceptZero implements Set
         return new self;
     }
 
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(): self
-    {
-        return self::any();
-    }
-
     public function take(int $size): Set
     {
         $self = clone $this;

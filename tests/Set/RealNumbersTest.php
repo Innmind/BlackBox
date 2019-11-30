@@ -19,21 +19,21 @@ class RealNumbersTest extends TestCase
         );
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(RealNumbers::class, RealNumbers::of());
+        $this->assertInstanceOf(RealNumbers::class, RealNumbers::any());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(RealNumbers::of()->values());
+        $values = \iterator_to_array(RealNumbers::any()->values());
 
         $this->assertCount(100, $values);
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = RealNumbers::of();
+        $values = RealNumbers::any();
         $positive = $values->filter(static function(float $float): bool {
             return $float > 0;
         });
@@ -61,7 +61,7 @@ class RealNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = RealNumbers::of();
+        $a = RealNumbers::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(RealNumbers::class, $b);
@@ -72,7 +72,7 @@ class RealNumbersTest extends TestCase
 
     public function testValues()
     {
-        $a = RealNumbers::of();
+        $a = RealNumbers::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

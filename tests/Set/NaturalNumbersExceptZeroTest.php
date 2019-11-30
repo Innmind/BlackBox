@@ -19,14 +19,14 @@ class NaturalNumbersExceptZeroTest extends TestCase
         );
     }
 
-    public function testOf()
+    public function testAny()
     {
-        $this->assertInstanceOf(NaturalNumbersExceptZero::class, NaturalNumbersExceptZero::of());
+        $this->assertInstanceOf(NaturalNumbersExceptZero::class, NaturalNumbersExceptZero::any());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(NaturalNumbersExceptZero::of()->values());
+        $values = \iterator_to_array(NaturalNumbersExceptZero::any()->values());
 
         $this->assertCount(100, $values);
 
@@ -37,7 +37,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = NaturalNumbersExceptZero::of();
+        $integers = NaturalNumbersExceptZero::any();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -65,7 +65,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = NaturalNumbersExceptZero::of();
+        $a = NaturalNumbersExceptZero::any();
         $b = $a->take(50);
 
         $this->assertInstanceOf(NaturalNumbersExceptZero::class, $b);
@@ -76,7 +76,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
 
     public function testValues()
     {
-        $a = NaturalNumbersExceptZero::of();
+        $a = NaturalNumbersExceptZero::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, \iterator_to_array($a->values()));

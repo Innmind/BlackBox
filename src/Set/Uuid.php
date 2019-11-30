@@ -34,15 +34,6 @@ final class Uuid
         )->take(100);
     }
 
-    /**
-     * @deprecated
-     * @see self::any()
-     */
-    public static function of(): Set
-    {
-        return self::any();
-    }
-
     private static function bit(): Set
     {
         return Chars::any()->filter(static function(string $bit): bool {
