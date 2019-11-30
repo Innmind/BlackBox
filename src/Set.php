@@ -8,10 +8,15 @@ namespace Innmind\BlackBox;
  */
 interface Set
 {
+    /**
+     * @return self<T>
+     */
     public function take(int $size): self;
 
     /**
-     * @param callable(): bool $predicate
+     * @param callable(mixed): bool $predicate
+     *
+     * @return self<T>
      */
     public function filter(callable $predicate): self;
 

@@ -8,12 +8,10 @@ use Innmind\BlackBox\{
     Set\Composite\Matrix,
 };
 
-/**
- * {@inheritdoc}
- */
 final class Composite implements Set
 {
     private \Closure $aggregate;
+    /** @var list<Set> */
     private array $sets;
     private ?int $size;
     private \Closure $predicate;
@@ -26,7 +24,7 @@ final class Composite implements Set
     ) {
         $sets = [$first, $second, ...$sets];
 
-        $this->aggregate = $aggregate;
+        $this->aggregate = \Closure::fromCallable($aggregate);
         $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
         $this->predicate = static function(): bool {
@@ -49,12 +47,12 @@ final class Composite implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
         $self->predicate = function($value) use ($predicate): bool {
             if (!($this->predicate)($value)) {
                 return false;
@@ -66,9 +64,6 @@ final class Composite implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(): \Generator
     {
         $sets = $this->sets;
@@ -81,13 +76,14 @@ final class Composite implements Set
             },
             Matrix::of(
                 $second,
-                $first
+                $first,
             ),
         );
         $matrix = $matrix->values();
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
+            /** @var mixed */
             $value = ($this->aggregate)(...$matrix->current()->toArray());
 
             if (($this->predicate)($value)) {

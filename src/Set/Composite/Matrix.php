@@ -8,45 +8,51 @@ use Innmind\BlackBox\Set;
 final class Matrix
 {
     private Set $a;
-    private Set $b;
+    /** @var Set<Combination> */
+    private Set $combinations;
 
     /**
      * @param Set<mixed> $a
-     * @param Set<Combination> $b
+     * @param Set<Combination> $combinations
      */
-    public function __construct(Set $a, Set $b)
+    public function __construct(Set $a, Set $combinations)
     {
         $this->a = $a;
-        $this->b = $b;
+        $this->combinations = $combinations;
     }
 
     public static function of(Set $a, Set $b): self
     {
-        return new self(
-            $a,
-            Set\FromGenerator::of(static function() use ($b) {
-                foreach ($b->values() as $value) {
-                    yield new Combination($value);
-                }
-            })
-        );
+        /** @var Set<Combination> */
+        $combinations = Set\FromGenerator::of(static function() use ($b): \Generator {
+            /** @var mixed */
+            foreach ($b->values() as $value) {
+                yield new Combination($value);
+            }
+        });
+
+        return new self($a, $combinations);
     }
 
     public function dot(Set $set): self
     {
-        return new self(
-            $set,
-            Set\FromGenerator::of(function() {
-                yield from $this->values();
-            })
-        );
+        /** @var Set<Combination> */
+        $combinations = Set\FromGenerator::of(function(): \Generator {
+            yield from $this->values();
+        });
+
+        return new self($set, $combinations);
     }
 
+    /**
+     * @return \Generator<Combination>
+     */
     public function values(): \Generator
     {
+        /** @var mixed */
         foreach ($this->a->values() as $a) {
-            foreach ($this->b->values() as $b) {
-                yield $b->add($a);
+            foreach ($this->combinations->values() as $combination) {
+                yield $combination->add($a);
             }
         }
     }

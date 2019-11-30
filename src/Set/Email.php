@@ -8,10 +8,12 @@ use Innmind\BlackBox\Set;
 final class Email
 {
     /**
-     * @return Set<Model>
+     *
+     * @return Set<string>
      */
     public static function any(): Set
     {
+        /** @var Set<string> */
         return Composite::of(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
@@ -29,7 +31,7 @@ final class Email
             }),
         )
             ->take(100)
-            ->filter(static function($email): bool {
+            ->filter(static function(string $email): bool {
                 return (bool) !\preg_match('~(\-.|\.\-)~', $email);
             });
     }

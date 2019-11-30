@@ -7,11 +7,17 @@ final class Combination
 {
     private array $values;
 
+    /**
+     * @param mixed $right
+     */
     public function __construct($right)
     {
         $this->values = [$right];
     }
 
+    /**
+     * @param mixed $left
+     */
     public function add($left): self
     {
         $self = clone $this;

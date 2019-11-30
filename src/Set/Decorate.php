@@ -5,9 +5,6 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
-/**
- * {@inheritdoc}
- */
 final class Decorate implements Set
 {
     private \Closure $decorate;
@@ -17,7 +14,7 @@ final class Decorate implements Set
         callable $decorate,
         Set $set
     ) {
-        $this->decorate = $decorate;
+        $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
     }
 
@@ -36,9 +33,6 @@ final class Decorate implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -47,11 +41,9 @@ final class Decorate implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(): \Generator
     {
+        /** @var mixed */
         foreach ($this->set->values() as $value) {
             yield ($this->decorate)($value);
         }

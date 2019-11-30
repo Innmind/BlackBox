@@ -18,6 +18,7 @@ final class Uuid
             $bits[] = self::bit();
         }
 
+        /** @var Set<string> */
         return Composite::of(
             static function(string ...$bits): string {
                 $chunks = \array_chunk($bits, 4);

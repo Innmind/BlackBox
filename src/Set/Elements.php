@@ -6,7 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<mixed>
  */
 final class Elements implements Set
 {
@@ -14,6 +14,10 @@ final class Elements implements Set
     private array $elements;
     private \Closure $predicate;
 
+    /**
+     * @param mixed $first
+     * @param mixed $elements
+     */
     public function __construct($first, ...$elements)
     {
         $this->size = 100;
@@ -23,6 +27,10 @@ final class Elements implements Set
         };
     }
 
+    /**
+     * @param mixed $first
+     * @param mixed $elements
+     */
     public static function of($first, ...$elements): self
     {
         return new self($first, ...$elements);
@@ -36,12 +44,12 @@ final class Elements implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
         $self->predicate = function($value) use ($predicate): bool {
             if (!($this->predicate)($value)) {
                 return false;
@@ -53,9 +61,6 @@ final class Elements implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(): \Generator
     {
         $values = \array_slice($this->elements, 0, $this->size);

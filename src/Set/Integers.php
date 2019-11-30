@@ -6,7 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<int>
  */
 final class Integers implements Set
 {
@@ -53,12 +53,12 @@ final class Integers implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
         $self->predicate = function($value) use ($predicate): bool {
             if (!($this->predicate)($value)) {
                 return false;
@@ -70,9 +70,6 @@ final class Integers implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<int>
-     */
     public function values(): \Generator
     {
         $iterations = 0;

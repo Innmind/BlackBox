@@ -7,7 +7,7 @@ use Innmind\BlackBox\Set;
 use Innmind\Json\Json;
 
 /**
- * {@inheritdoc}
+ * @implements Set<string>
  */
 final class UnsafeStrings implements Set
 {
@@ -35,12 +35,12 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
         $self->predicate = function($value) use ($predicate): bool {
             if (!($this->predicate)($value)) {
                 return false;
@@ -52,11 +52,9 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<string>
-     */
     public function values(): \Generator
     {
+        /** @var list<string> */
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
         \shuffle($values);
 

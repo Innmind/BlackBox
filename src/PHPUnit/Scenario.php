@@ -16,6 +16,9 @@ final class Scenario
     {
         if (\count($sets) === 0) {
             $set = new Set\Decorate(
+                /**
+                 * @psalm-suppress MissingClosureParamType
+                 */
                 static function($value): array {
                     return [$value];
                 },
@@ -23,6 +26,9 @@ final class Scenario
             );
         } else {
             $set = new Set\Composite(
+                /**
+                 * @psalm-suppress MissingClosureParamType
+                 */
                 function(...$args): array {
                     return $args;
                 },
@@ -55,9 +61,8 @@ final class Scenario
 
     public function then(callable $test): void
     {
-        $values = $this->set->values();
-
-        foreach ($values as $values) {
+        /** @var array $values */
+        foreach ($this->set->values() as $values) {
             $test(...$values);
         }
     }

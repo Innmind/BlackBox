@@ -6,10 +6,11 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<int>
  */
 final class NaturalNumbers implements Set
 {
+    /** @var Set<int> */
     private Set $set;
 
     public function __construct()
@@ -30,9 +31,6 @@ final class NaturalNumbers implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
@@ -41,9 +39,6 @@ final class NaturalNumbers implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<int>
-     */
     public function values(): \Generator
     {
         yield from $this->set->values();

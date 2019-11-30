@@ -6,10 +6,11 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
- * {@inheritdoc}
+ * @implements Set<mixed>
  */
 final class Either implements Set
 {
+    /** @var list<Set> */
     private array $sets;
     private int $size;
     private \Closure $predicate;
@@ -37,12 +38,12 @@ final class Either implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
+        /**
+         * @psalm-suppress MissingClosureParamType
+         */
         $self->predicate = function($value) use ($predicate): bool {
             if (!($this->predicate)($value)) {
                 return false;
@@ -54,15 +55,13 @@ final class Either implements Set
         return $self;
     }
 
-    /**
-     * @return \Generator<mixed>
-     */
     public function values(): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
             $setToChoose = \random_int(0, \count($this->sets) - 1);
+            /** @var mixed */
             $value = $this->sets[$setToChoose]->values()->current();
 
             if (($this->predicate)($value)) {
