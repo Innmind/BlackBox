@@ -30,6 +30,16 @@ final class Integers implements Set
         return new self($lowerBound, $upperBound);
     }
 
+    public static function above(int $lowerBound): self
+    {
+        return new self($lowerBound);
+    }
+
+    public static function below(int $upperBound): self
+    {
+        return new self(null, $upperBound);
+    }
+
     /**
      * @deprecated
      * @see self::between()
