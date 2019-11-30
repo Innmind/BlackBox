@@ -15,7 +15,7 @@ final class Integers implements Set
     private int $size;
     private \Closure $predicate;
 
-    public function __construct(int $lowerBound = null, int $upperBound = null)
+    private function __construct(int $lowerBound = null, int $upperBound = null)
     {
         $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
         $this->upperBound = $upperBound ?? \PHP_INT_MAX;
@@ -30,7 +30,7 @@ final class Integers implements Set
         return new self;
     }
 
-    public static function between(int $lowerBound = null, int $upperBound = null): self
+    public static function between(int $lowerBound, int $upperBound): self
     {
         return new self($lowerBound, $upperBound);
     }

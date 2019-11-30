@@ -15,7 +15,7 @@ class IntegersTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Integers
+            Integers::any()
         );
     }
 
