@@ -13,10 +13,7 @@ class NaturalNumbersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new NaturalNumbers
-        );
+        $this->assertInstanceOf(Set::class, new NaturalNumbers);
     }
 
     public function testAny()
@@ -49,7 +46,7 @@ class NaturalNumbersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertTrue($hasOddInteger);
 
@@ -58,7 +55,7 @@ class NaturalNumbersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertFalse($hasOddInteger);
     }

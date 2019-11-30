@@ -13,10 +13,7 @@ class StringsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new Strings
-        );
+        $this->assertInstanceOf(Set::class, new Strings);
     }
 
     public function testAny()
@@ -37,7 +34,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            \iterator_to_array(Strings::any()->values())
+            \iterator_to_array(Strings::any()->values()),
         );
 
         $this->assertTrue(128 >= \max($values));
@@ -49,7 +46,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            \iterator_to_array(Strings::any(256)->values())
+            \iterator_to_array(Strings::any(256)->values()),
         );
 
         $this->assertTrue(256 >= \max($values));
@@ -70,7 +67,7 @@ class StringsTest extends TestCase
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
-            false
+            false,
         );
         $this->assertTrue($hasLengthAbove10);
 
@@ -79,7 +76,7 @@ class StringsTest extends TestCase
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
-            false
+            false,
         );
         $this->assertFalse($hasLengthAbove10);
     }

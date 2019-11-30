@@ -13,10 +13,7 @@ class RealNumbersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new RealNumbers
-        );
+        $this->assertInstanceOf(Set::class, new RealNumbers);
     }
 
     public function testAny()
@@ -45,7 +42,7 @@ class RealNumbersTest extends TestCase
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <=0;
             },
-            false
+            false,
         );
         $this->assertTrue($hasNegative);
 
@@ -54,7 +51,7 @@ class RealNumbersTest extends TestCase
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <= 0;
             },
-            false
+            false,
         );
         $this->assertFalse($hasNegative);
     }

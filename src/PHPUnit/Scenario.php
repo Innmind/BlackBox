@@ -19,7 +19,7 @@ final class Scenario
                 static function($value): array {
                     return [$value];
                 },
-                $first
+                $first,
             );
         } else {
             $set = new Set\Composite(
@@ -27,7 +27,7 @@ final class Scenario
                     return $args;
                 },
                 $first,
-                ...$sets
+                ...$sets,
             );
         }
 

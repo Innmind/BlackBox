@@ -13,10 +13,7 @@ class IntegersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            Integers::any()
-        );
+        $this->assertInstanceOf(Set::class, Integers::any());
     }
 
     public function testAny()
@@ -40,7 +37,7 @@ class IntegersTest extends TestCase
             static function(bool $hasOutsideBounds, int $value): bool {
                 return $hasOutsideBounds || $value > 10 || $value < -10;
             },
-            false
+            false,
         );
 
         $this->assertFalse($hasOutsideBounds);
@@ -54,7 +51,7 @@ class IntegersTest extends TestCase
         $this->assertCount(100, \iterator_to_array($values->values()));
         $this->assertGreaterThanOrEqual(
             10,
-            \min(\iterator_to_array($values->values()))
+            \min(\iterator_to_array($values->values())),
         );
     }
 
@@ -66,7 +63,7 @@ class IntegersTest extends TestCase
         $this->assertCount(100, \iterator_to_array($values->values()));
         $this->assertLessThanOrEqual(
             10,
-            \max(\iterator_to_array($values->values()))
+            \max(\iterator_to_array($values->values())),
         );
     }
 
@@ -84,7 +81,7 @@ class IntegersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertTrue($hasOddInteger);
 
@@ -93,7 +90,7 @@ class IntegersTest extends TestCase
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertFalse($hasOddInteger);
     }

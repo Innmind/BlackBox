@@ -21,7 +21,7 @@ class UuidTest extends TestCase
         foreach ($uuids->values() as $uuid) {
             $this->assertRegExp(
                 '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
-                $uuid
+                $uuid,
             );
         }
     }

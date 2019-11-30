@@ -60,7 +60,7 @@ final class UnsafeStrings implements Set
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
         \shuffle($values);
 
-        $values = array_filter($values, $this->predicate);
+        $values = \array_filter($values, $this->predicate);
         $values = \array_slice($values, 0, $this->size);
 
         yield from $values;

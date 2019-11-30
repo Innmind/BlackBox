@@ -30,7 +30,7 @@ final class Either implements Set
             static function(Set $set) use ($size): Set {
                 return $set->take($size);
             },
-            $this->sets
+            $this->sets,
         );
         $self->size = $size;
 

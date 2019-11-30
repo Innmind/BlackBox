@@ -13,10 +13,7 @@ class UnsafeStringsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new UnsafeStrings
-        );
+        $this->assertInstanceOf(Set::class, new UnsafeStrings);
     }
 
     public function testAny()
@@ -45,7 +42,7 @@ class UnsafeStringsTest extends TestCase
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
-            false
+            false,
         );
         $this->assertTrue($hasLengthAbove10);
 
@@ -54,7 +51,7 @@ class UnsafeStringsTest extends TestCase
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
-            false
+            false,
         );
         $this->assertFalse($hasLengthAbove10);
     }

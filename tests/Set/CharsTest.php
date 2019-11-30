@@ -13,10 +13,7 @@ class CharsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(
-            Set::class,
-            new Chars
-        );
+        $this->assertInstanceOf(Set::class, new Chars);
     }
 
     public function testAny()
@@ -45,7 +42,7 @@ class CharsTest extends TestCase
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || ord($value) % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertTrue($hasOddChar);
 
@@ -54,7 +51,7 @@ class CharsTest extends TestCase
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || ord($value) % 2 === 1;
             },
-            false
+            false,
         );
         $this->assertFalse($hasOddChar);
     }

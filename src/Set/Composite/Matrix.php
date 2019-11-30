@@ -24,7 +24,7 @@ final class Matrix
     {
         return new self(
             $a,
-            Set\FromGenerator::of(function() use ($b) {
+            Set\FromGenerator::of(static function() use ($b) {
                 foreach ($b->values() as $value) {
                     yield new Combination($value);
                 }
