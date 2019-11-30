@@ -2,8 +2,7 @@
 
 | `develop` |
 |-----------|
-| [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/BlackBox/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/BlackBox/?branch=develop) |
-| [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/BlackBox/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/BlackBox/?branch=develop) |
+| [![codecov](https://codecov.io/gh/Innmind/Filesystem/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Filesystem) |
 | [![Build Status](https://scrutinizer-ci.com/g/Innmind/BlackBox/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/BlackBox/build-status/develop) |
 
 Contains an ensemble of sets to easily generate data for property based tests.

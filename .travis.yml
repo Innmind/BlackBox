@@ -9,6 +9,5 @@ before_script: composer install
 script:
     - vendor/bin/phpunit --coverage-clover=coverage.clover
     - vendor/bin/psalm
-after_script:
-    - if [ -f coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-    - if [ -f coverage.clover ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+after_success:
+     - bash <(curl -s https://codecov.io/bash)
