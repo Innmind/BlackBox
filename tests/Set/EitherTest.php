@@ -52,24 +52,18 @@ class EitherTest extends TestCase
 
     public function testFilter()
     {
-        $either1 = new Either(
+        $either = new Either(
             Set\Elements::of(1),
             Set\Elements::of(null),
             Set\Elements::of(2),
         );
-        $either2 = $either1->filter(static function(?int $value): bool {
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Either set can\'t be filtered, underlying data must be filtered beforehand');
+
+        $either->filter(static function(?int $value): bool {
             return $value === 1;
         });
-
-        $this->assertNotSame($either1, $either2);
-        $this->assertInstanceOf(Either::class, $either2);
-        $this->assertCount(100, $this->unwrap($either1->values()));
-        $this->assertCount(100, $this->unwrap($either2->values()));
-        $values1 = \array_values(\array_unique($this->unwrap($either1->values())));
-        \sort($values1);
-        $this->assertSame([null, 1, 2], $values1);
-        $values2 = \array_values(\array_unique($this->unwrap($either2->values())));
-        $this->assertSame([1], $values2);
     }
 
     public function testValues()

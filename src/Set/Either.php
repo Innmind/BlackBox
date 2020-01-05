@@ -13,15 +13,11 @@ final class Either implements Set
     /** @var list<Set> */
     private array $sets;
     private int $size;
-    private \Closure $predicate;
 
     public function __construct(Set $first, Set $second, Set ...$rest)
     {
         $this->sets = [$first, $second, ...$rest];
         $this->size = 100;
-        $this->predicate = static function(): bool {
-            return true;
-        };
     }
 
     public function take(int $size): Set
@@ -40,20 +36,7 @@ final class Either implements Set
 
     public function filter(callable $predicate): Set
     {
-        $previous = $this->predicate;
-        $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
-
-            return $predicate($value);
-        };
-
-        return $self;
+        throw new \LogicException('Either set can\'t be filtered, underlying data must be filtered beforehand');
     }
 
     public function values(): \Generator
@@ -62,12 +45,9 @@ final class Either implements Set
 
         while ($iterations < $this->size) {
             $setToChoose = \random_int(0, \count($this->sets) - 1);
-            $value = $this->sets[$setToChoose]->values()->current();
 
-            if (($this->predicate)($value->unwrap())) {
-                yield $value;
-                ++$iterations;
-            }
+            yield $this->sets[$setToChoose]->values()->current();
+            ++$iterations;
         }
     }
 }
