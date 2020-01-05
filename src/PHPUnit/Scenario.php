@@ -15,7 +15,7 @@ final class Scenario
     public function __construct(Set $first , Set ...$sets)
     {
         if (\count($sets) === 0) {
-            $set = Set\Decorate::of(
+            $set = Set\Decorate::immutable(
                 /**
                  * @psalm-suppress MissingClosureParamType
                  */

@@ -16,7 +16,7 @@ class DecorateTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = Decorate::of(
+        $this->set = Decorate::immutable(
             function(string $value) {
                 return [$value];
             },
@@ -34,11 +34,11 @@ class DecorateTest extends TestCase
         $this->assertInstanceOf(Set::class, $this->set);
     }
 
-    public function testOf()
+    public function testImmutable()
     {
         $this->assertInstanceOf(
             Decorate::class,
-            Decorate::of(
+            Decorate::immutable(
                 function() {},
                 FromGenerator::of(function() {
                     yield 'e';
@@ -101,6 +101,63 @@ class DecorateTest extends TestCase
         foreach ($this->set->values() as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
+        }
+    }
+
+    public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
+    {
+        $set = Decorate::mutable(
+            function(string $value) {
+                $std = new \stdClass;
+                $std->prop = $value;
+
+                return $std;
+            },
+            FromGenerator::of(function() {
+                yield 'ea';
+                yield 'fb';
+                yield 'gc';
+                yield 'eb';
+            }),
+        );
+
+        foreach ($set->values() as $value) {
+            $this->assertFalse($value->isImmutable());
+            $this->assertNotSame($value->unwrap(), $value->unwrap());
+            $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
+        }
+    }
+
+    public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
+    {
+        $set = Decorate::immutable(
+            function(object $value) {
+                $std = new \stdClass;
+                $std->prop = $value;
+
+                return $std;
+            },
+            Decorate::mutable(
+                function(string $value) {
+                    $std = new \stdClass;
+                    $std->prop = $value;
+
+                    return $std;
+                },
+                FromGenerator::of(function() {
+                    yield 'ea';
+                    yield 'fb';
+                    yield 'gc';
+                    yield 'eb';
+                }),
+            )
+        );
+
+        foreach ($set->values() as $value) {
+            $this->assertFalse($value->isImmutable());
+            $this->assertNotSame($value->unwrap(), $value->unwrap());
+            $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
+            $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
         }
     }
 }

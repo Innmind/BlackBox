@@ -9,20 +9,23 @@ final class Decorate implements Set
 {
     private \Closure $decorate;
     private Set $set;
+    private bool $immutable;
 
-    private function __construct(
-        callable $decorate,
-        Set $set
-    ) {
+    private function __construct(bool $immutable, callable $decorate, Set $set)
+    {
         $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
+        $this->immutable = $immutable;
     }
 
-    public static function of(
-        callable $decorate,
-        Set $set
-    ): self {
-        return new self($decorate, $set);
+    public static function immutable(callable $decorate, Set $set): self
+    {
+        return new self(true, $decorate, $set);
+    }
+
+    public static function mutable(callable $decorate, Set $set): self
+    {
+        return new self(false, $decorate, $set);
     }
 
     public function take(int $size): Set
@@ -44,7 +47,12 @@ final class Decorate implements Set
     public function values(): \Generator
     {
         foreach ($this->set->values() as $value) {
-            yield Value::immutable(($this->decorate)($value->unwrap()));
+            if ($value->isImmutable() && $this->immutable) {
+                yield Value::immutable(($this->decorate)($value->unwrap()));
+            } else {
+                /** @psalm-suppress MissingClosureReturnType */
+                yield Value::mutable(fn() => ($this->decorate)($value->unwrap()));
+            }
         }
     }
 }
