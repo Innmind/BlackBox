@@ -22,7 +22,7 @@ final class Combination
         return $self;
     }
 
-    public function toArray(): array
+    public function unwrap(): array
     {
         /** @psalm-suppress MissingClosureReturnType */
         return \array_map(

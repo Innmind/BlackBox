@@ -85,7 +85,7 @@ final class Composite implements Set
 
         while ($matrix->valid() && $this->continue($iterations)) {
             /** @var mixed */
-            $value = ($this->aggregate)(...$matrix->current()->toArray());
+            $value = ($this->aggregate)(...$matrix->current()->unwrap());
 
             if (($this->predicate)($value)) {
                 yield Value::immutable($value);

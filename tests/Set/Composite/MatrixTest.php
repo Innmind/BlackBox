@@ -84,7 +84,7 @@ class MatrixTest extends TestCase
     {
         return \array_map(
             function($combination) {
-                return $combination->toArray();
+                return $combination->unwrap();
             },
             \iterator_to_array($matrix->values()),
         );

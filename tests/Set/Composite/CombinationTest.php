@@ -15,7 +15,7 @@ class CombinationTest extends TestCase
     {
         $combination = new Combination(Value::immutable('foo'));
 
-        $this->assertSame(['foo'], $combination->toArray());
+        $this->assertSame(['foo'], $combination->unwrap());
     }
 
     public function testAdd()
@@ -25,7 +25,7 @@ class CombinationTest extends TestCase
 
         $this->assertInstanceOf(Combination::class, $combination2);
         $this->assertNotSame($combination, $combination2);
-        $this->assertSame(['foo'], $combination->toArray());
-        $this->assertSame(['baz', 'foo'], $combination2->toArray());
+        $this->assertSame(['foo'], $combination->unwrap());
+        $this->assertSame(['baz', 'foo'], $combination2->unwrap());
     }
 }
