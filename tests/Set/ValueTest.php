@@ -18,4 +18,14 @@ class ValueTest extends TestCase
         $this->assertSame($object, $value->unwrap());
         $this->assertTrue($value->isImmutable());
     }
+
+    public function testANewMutableValueIsGeneratedEachTimeItsAccessed()
+    {
+        $value = Value::mutable(fn() => new \stdClass);
+
+        $this->assertInstanceOf(Value::class, $value);
+        $this->assertFalse($value->isImmutable());
+        $this->assertInstanceOf(\stdClass::class, $value->unwrap());
+        $this->assertNotSame($value->unwrap(), $value->unwrap());
+    }
 }
