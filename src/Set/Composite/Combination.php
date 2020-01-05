@@ -22,6 +22,15 @@ final class Combination
         return $self;
     }
 
+    public function immutable(): bool
+    {
+        return \array_reduce(
+            $this->values,
+            fn(bool $immutable, Value $value): bool => $immutable && $value->isImmutable(),
+            true,
+        );
+    }
+
     public function unwrap(): array
     {
         /** @psalm-suppress MissingClosureReturnType */

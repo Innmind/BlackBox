@@ -28,4 +28,15 @@ class CombinationTest extends TestCase
         $this->assertSame(['foo'], $combination->unwrap());
         $this->assertSame(['baz', 'foo'], $combination2->unwrap());
     }
+
+    public function testIsImmutableIfAllValuesAreImmutable()
+    {
+        $immutable = new Combination(Value::immutable(42));
+        $immutable = $immutable->add(Value::immutable(24));
+        $mutable = $immutable->add(Value::mutable(fn() => new \stdClass));
+        $immutable = $immutable->add(Value::immutable(66));
+
+        $this->assertTrue($immutable->immutable());
+        $this->assertFalse($mutable->immutable());
+    }
 }
