@@ -65,7 +65,7 @@ class DecorateTest extends TestCase
     {
         $values = $this
             ->set
-            ->filter(static function(string $value): bool {
+            ->filter(static function(array $value): bool {
                 return $value[0][0] === 'e';
             });
 
@@ -151,7 +151,9 @@ class DecorateTest extends TestCase
                     yield 'eb';
                 }),
             )
-        );
+        )->filter(fn($object) => $object->prop->prop[0] === 'e');
+
+        $this->assertCount(2, \iterator_to_array($set->values()));
 
         foreach ($set->values() as $value) {
             $this->assertFalse($value->isImmutable());

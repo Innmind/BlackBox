@@ -9,6 +9,7 @@ final class Decorate implements Set
 {
     private \Closure $decorate;
     private Set $set;
+    private \Closure $predicate;
     private bool $immutable;
 
     private function __construct(bool $immutable, callable $decorate, Set $set)
@@ -16,6 +17,7 @@ final class Decorate implements Set
         $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
         $this->immutable = $immutable;
+        $this->predicate = static fn(): bool => true;
     }
 
     public static function immutable(callable $decorate, Set $set): self
@@ -38,8 +40,16 @@ final class Decorate implements Set
 
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->set = $this->set->filter($predicate);
+        /** @psalm-suppress MissingClosureParamType */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
+                return false;
+            }
+
+            return $predicate($value);
+        };
 
         return $self;
     }
@@ -47,9 +57,20 @@ final class Decorate implements Set
     public function values(): \Generator
     {
         foreach ($this->set->values() as $value) {
+            /** @var mixed */
+            $decorated = ($this->decorate)($value->unwrap());
+
+            if (!($this->predicate)($decorated)) {
+                continue;
+            }
+
             if ($value->isImmutable() && $this->immutable) {
-                yield Value::immutable(($this->decorate)($value->unwrap()));
+                yield Value::immutable($decorated);
             } else {
+                // we don't need to re-apply the predicate when we handle mutable
+                // data as the underlying data is already validated and the mutable
+                // nature is about the enclosing of the data and should not be part
+                // of the filtering process
                 /** @psalm-suppress MissingClosureReturnType */
                 yield Value::mutable(fn() => ($this->decorate)($value->unwrap()));
             }
