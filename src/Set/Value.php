@@ -10,14 +10,15 @@ final class Value
 {
     /** @var \Closure(): T */
     private \Closure $unwrap;
-    private bool $immutable = false;
+    private bool $immutable;
 
     /**
      * @param callable(): T $unwrap
      */
-    private function __construct(callable $unwrap)
+    private function __construct(bool $immutable, callable $unwrap)
     {
         $this->unwrap = \Closure::fromCallable($unwrap);
+        $this->immutable = $immutable;
     }
 
     /**
@@ -25,10 +26,7 @@ final class Value
      */
     public static function immutable($value): self
     {
-        $self = new self(static fn() => $value);
-        $self->immutable = true;
-
-        return $self;
+        return new self(true, static fn() => $value);
     }
 
     /**
@@ -36,7 +34,7 @@ final class Value
      */
     public static function mutable(callable $unwrap): self
     {
-        return new self($unwrap);
+        return new self(false, $unwrap);
     }
 
     public function isImmutable(): bool
