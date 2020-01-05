@@ -25,7 +25,7 @@ final class Scenario
                 $first,
             );
         } else {
-            $set = Set\Composite::of(
+            $set = Set\Composite::immutable(
                 /**
                  * @psalm-suppress MissingClosureParamType
                  */

@@ -15,8 +15,10 @@ final class Composite implements Set
     private array $sets;
     private ?int $size;
     private \Closure $predicate;
+    private bool $immutable;
 
     private function __construct(
+        bool $immutable,
         callable $aggregate,
         Set $first,
         Set $second,
@@ -24,6 +26,7 @@ final class Composite implements Set
     ) {
         $sets = [$first, $second, ...$sets];
 
+        $this->immutable = $immutable;
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
@@ -32,11 +35,20 @@ final class Composite implements Set
         };
     }
 
-    public static function of(
+    public static function immutable(
         callable $aggregate,
+        Set $first,
         Set ...$sets
     ): self {
-        return new self($aggregate, ...$sets);
+        return new self(true, $aggregate, $first, ...$sets);
+    }
+
+    public static function mutable(
+        callable $aggregate,
+        Set $first,
+        Set ...$sets
+    ): self {
+        return new self(false, $aggregate, $first, ...$sets);
     }
 
     public function take(int $size): Set
@@ -84,15 +96,27 @@ final class Composite implements Set
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
+            $combination = $matrix->current();
             /** @var mixed */
-            $value = ($this->aggregate)(...$matrix->current()->unwrap());
+            $value = ($this->aggregate)(...$combination->unwrap());
+            $matrix->next();
 
-            if (($this->predicate)($value)) {
-                yield Value::immutable($value);
-                ++$iterations;
+            if (!($this->predicate)($value)) {
+                continue;
             }
 
-            $matrix->next();
+            if ($combination->immutable() && $this->immutable) {
+                yield Value::immutable($value);
+            } else {
+                // we don't need to re-apply the predicate when we handle mutable
+                // data as the underlying data is already validated and the mutable
+                // nature is about the enclosing of the data and should not be part
+                // of the filtering process
+                /** @psalm-suppress MissingClosureReturnType */
+                yield Value::mutable(fn() => ($this->aggregate)(...$combination->unwrap()));
+            }
+
+            ++$iterations;
         }
     }
 
