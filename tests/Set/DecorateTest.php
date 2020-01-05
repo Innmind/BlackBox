@@ -16,7 +16,7 @@ class DecorateTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = new Decorate(
+        $this->set = Decorate::of(
             function(string $value) {
                 return [$value];
             },

@@ -10,7 +10,7 @@ final class Decorate implements Set
     private \Closure $decorate;
     private Set $set;
 
-    public function __construct(
+    private function __construct(
         callable $decorate,
         Set $set
     ) {
