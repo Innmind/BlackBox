@@ -25,7 +25,6 @@ final class Matrix
     {
         /** @var Set<Combination> */
         $combinations = Set\FromGenerator::of(static function() use ($b): \Generator {
-            /** @var mixed */
             foreach ($b->values() as $value) {
                 yield new Combination($value);
             }
@@ -49,10 +48,9 @@ final class Matrix
      */
     public function values(): \Generator
     {
-        /** @var mixed */
         foreach ($this->a->values() as $a) {
             foreach ($this->combinations->values() as $combination) {
-                yield $combination->add($a);
+                yield $combination->unwrap()->add($a);
             }
         }
     }

@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\FromGenerator,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class FromGeneratorTest extends TestCase
 {
@@ -46,10 +46,10 @@ class FromGeneratorTest extends TestCase
                 yield $i;
             }
         });
-        $aValues = \iterator_to_array($a->values());
+        $aValues = $this->unwrap($a->values());
 
         $b = $a->take(50);
-        $bValues = \iterator_to_array($b->values());
+        $bValues = $this->unwrap($b->values());
 
         $this->assertInstanceOf(FromGenerator::class, $b);
         $this->assertNotSame($a, $b);
@@ -66,12 +66,12 @@ class FromGeneratorTest extends TestCase
         })->filter(static function(int $value): bool {
             return $value > 50;
         });
-        $aValues = \iterator_to_array($a->values());
+        $aValues = $this->unwrap($a->values());
 
         $b = $a->filter(static function(int $value): bool {
             return $value <= 100;
         });
-        $bValues = \iterator_to_array($b->values());
+        $bValues = $this->unwrap($b->values());
 
         $this->assertInstanceOf(FromGenerator::class, $a);
         $this->assertInstanceOf(FromGenerator::class, $b);
@@ -91,7 +91,7 @@ class FromGeneratorTest extends TestCase
                 yield $i;
             }
         });
-        $aValues = \iterator_to_array($a->values());
+        $aValues = $this->unwrap($a->values());
 
         $this->assertCount(11, $aValues);
     }
@@ -105,6 +105,11 @@ class FromGeneratorTest extends TestCase
         });
 
         $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertSame(\range(0, 10), \iterator_to_array($a->values()));
+        $this->assertSame(\range(0, 10), $this->unwrap($a->values()));
+
+        foreach ($a->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

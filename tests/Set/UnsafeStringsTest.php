@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\UnsafeStrings,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class UnsafeStringsTest extends TestCase
 {
@@ -23,7 +23,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = \iterator_to_array(UnsafeStrings::any()->values());
+        $values = $this->unwrap(UnsafeStrings::any()->values());
 
         $this->assertCount(100, $values);
     }
@@ -38,7 +38,7 @@ class UnsafeStringsTest extends TestCase
         $this->assertInstanceOf(UnsafeStrings::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            \iterator_to_array($values->values()),
+            $this->unwrap($values->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -47,7 +47,7 @@ class UnsafeStringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            \iterator_to_array($others->values()),
+            $this->unwrap($others->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -63,8 +63,8 @@ class UnsafeStringsTest extends TestCase
 
         $this->assertInstanceOf(UnsafeStrings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, \iterator_to_array($a->values()));
-        $this->assertCount(50, \iterator_to_array($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertCount(50, $this->unwrap($b->values()));
     }
 
     public function testValues()
@@ -72,6 +72,11 @@ class UnsafeStringsTest extends TestCase
         $a = UnsafeStrings::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+
+        foreach ($a->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

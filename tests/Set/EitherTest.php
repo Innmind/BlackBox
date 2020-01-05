@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Either,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class EitherTest extends TestCase
 {
@@ -30,8 +30,8 @@ class EitherTest extends TestCase
         );
 
         $this->assertInstanceOf(\Generator::class, $either->values());
-        $this->assertCount(100, \iterator_to_array($either->values()));
-        $values = \array_values(\array_unique(\iterator_to_array($either->values())));
+        $this->assertCount(100, $this->unwrap($either->values()));
+        $values = \array_values(\array_unique($this->unwrap($either->values())));
         \sort($values);
         $this->assertSame([1, 2], $values);
     }
@@ -46,29 +46,37 @@ class EitherTest extends TestCase
 
         $this->assertNotSame($either1, $either2);
         $this->assertInstanceOf(Either::class, $either2);
-        $this->assertCount(100, \iterator_to_array($either1->values()));
-        $this->assertCount(50, \iterator_to_array($either2->values()));
+        $this->assertCount(100, $this->unwrap($either1->values()));
+        $this->assertCount(50, $this->unwrap($either2->values()));
     }
 
     public function testFilter()
     {
-        $either1 = new Either(
+        $either = new Either(
             Set\Elements::of(1),
             Set\Elements::of(null),
             Set\Elements::of(2),
         );
-        $either2 = $either1->filter(static function(?int $value): bool {
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Either set can\'t be filtered, underlying data must be filtered beforehand');
+
+        $either->filter(static function(?int $value): bool {
             return $value === 1;
         });
+    }
 
-        $this->assertNotSame($either1, $either2);
-        $this->assertInstanceOf(Either::class, $either2);
-        $this->assertCount(100, \iterator_to_array($either1->values()));
-        $this->assertCount(100, \iterator_to_array($either2->values()));
-        $values1 = \array_values(\array_unique(\iterator_to_array($either1->values())));
-        \sort($values1);
-        $this->assertSame([null, 1, 2], $values1);
-        $values2 = \array_values(\array_unique(\iterator_to_array($either2->values())));
-        $this->assertSame([1], $values2);
+    public function testValues()
+    {
+        $set = new Either(
+            Set\Elements::of(1),
+            Set\Elements::of(null),
+            Set\Elements::of(2),
+        );
+
+        foreach ($set->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

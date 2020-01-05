@@ -15,8 +15,10 @@ final class Composite implements Set
     private array $sets;
     private ?int $size;
     private \Closure $predicate;
+    private bool $immutable;
 
-    public function __construct(
+    private function __construct(
+        bool $immutable,
         callable $aggregate,
         Set $first,
         Set $second,
@@ -24,19 +26,27 @@ final class Composite implements Set
     ) {
         $sets = [$first, $second, ...$sets];
 
+        $this->immutable = $immutable;
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
-        $this->predicate = static function(): bool {
-            return true;
-        };
+        $this->predicate = static fn(): bool => true;
     }
 
-    public static function of(
+    public static function immutable(
         callable $aggregate,
+        Set $first,
         Set ...$sets
     ): self {
-        return new self($aggregate, ...$sets);
+        return new self(true, $aggregate, $first, ...$sets);
+    }
+
+    public static function mutable(
+        callable $aggregate,
+        Set $first,
+        Set ...$sets
+    ): self {
+        return new self(false, $aggregate, $first, ...$sets);
     }
 
     public function take(int $size): Set
@@ -51,9 +61,7 @@ final class Composite implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         */
+        /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
@@ -72,27 +80,34 @@ final class Composite implements Set
         $second = \array_shift($sets);
         $matrix = \array_reduce(
             $sets,
-            static function(Matrix $matrix, Set $set): Matrix {
-                return $matrix->dot($set);
-            },
-            Matrix::of(
-                $second,
-                $first,
-            ),
+            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            Matrix::of($second, $first),
         );
         $matrix = $matrix->values();
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
+            $combination = $matrix->current();
             /** @var mixed */
-            $value = ($this->aggregate)(...$matrix->current()->toArray());
+            $value = ($this->aggregate)(...$combination->unwrap());
+            $matrix->next();
 
-            if (($this->predicate)($value)) {
-                yield $value;
-                ++$iterations;
+            if (!($this->predicate)($value)) {
+                continue;
             }
 
-            $matrix->next();
+            if ($combination->immutable() && $this->immutable) {
+                yield Value::immutable($value);
+            } else {
+                // we don't need to re-apply the predicate when we handle mutable
+                // data as the underlying data is already validated and the mutable
+                // nature is about the enclosing of the data and should not be part
+                // of the filtering process
+                /** @psalm-suppress MissingClosureReturnType */
+                yield Value::mutable(fn() => ($this->aggregate)(...$combination->unwrap()));
+            }
+
+            ++$iterations;
         }
     }
 

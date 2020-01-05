@@ -14,7 +14,7 @@ final class Email
     public static function any(): Set
     {
         /** @var Set<string> */
-        return Composite::of(
+        return Composite::immutable(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
             },

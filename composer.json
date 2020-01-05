@@ -23,8 +23,13 @@
             "Innmind\\BlackBox\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Innmind\\BlackBox\\": "tests/"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
-        "vimeo/psalm": "^3.7"
+        "vimeo/psalm": "~3.7.0"
     }
 }

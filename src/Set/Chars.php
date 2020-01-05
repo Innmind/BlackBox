@@ -16,9 +16,7 @@ final class Chars implements Set
     public function __construct()
     {
         $this->size = 100;
-        $this->predicate = static function(): bool {
-            return true;
-        };
+        $this->predicate = static fn(): bool => true;
     }
 
     public static function any(): self
@@ -38,9 +36,7 @@ final class Chars implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         */
+        /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
@@ -52,17 +48,23 @@ final class Chars implements Set
         return $self;
     }
 
+    /**
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
     public function values(): \Generator
     {
         $values = \range(0, 255);
         \shuffle($values);
-        $values = array_map(static function(int $i): string {
-            return chr($i);
-        }, $values);
+        $values = \array_map(
+            static fn(int $i): string => chr($i),
+            $values,
+        );
 
         $values = array_filter($values, $this->predicate);
         $values = \array_slice($values, 0, $this->size);
 
-        yield from $values;
+        foreach ($values as $value) {
+            yield Value::immutable($value);
+        }
     }
 }

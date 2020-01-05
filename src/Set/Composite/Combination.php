@@ -3,22 +3,18 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Composite;
 
+use Innmind\BlackBox\Set\Value;
+
 final class Combination
 {
     private array $values;
 
-    /**
-     * @param mixed $right
-     */
-    public function __construct($right)
+    public function __construct(Value $right)
     {
         $this->values = [$right];
     }
 
-    /**
-     * @param mixed $left
-     */
-    public function add($left): self
+    public function add(Value $left): self
     {
         $self = clone $this;
         \array_unshift($self->values, $left);
@@ -26,8 +22,21 @@ final class Combination
         return $self;
     }
 
-    public function toArray(): array
+    public function immutable(): bool
     {
-        return $this->values;
+        return \array_reduce(
+            $this->values,
+            fn(bool $immutable, Value $value): bool => $immutable && $value->isImmutable(),
+            true,
+        );
+    }
+
+    public function unwrap(): array
+    {
+        /** @psalm-suppress MissingClosureReturnType */
+        return \array_map(
+            static fn(Value $value) => $value->unwrap(),
+            $this->values,
+        );
     }
 }

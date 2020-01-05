@@ -6,9 +6,10 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Composite,
     Set\FromGenerator,
+    Set\Decorate,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class CompositeTest extends TestCase
 {
@@ -16,7 +17,7 @@ class CompositeTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = new Composite(
+        $this->set = Composite::immutable(
             function(string ...$args) {
                 return implode('', $args);
             },
@@ -40,11 +41,11 @@ class CompositeTest extends TestCase
         $this->assertInstanceOf(Set::class, $this->set);
     }
 
-    public function testOf()
+    public function testImmutable()
     {
         $this->assertInstanceOf(
             Composite::class,
-            Composite::of(
+            Composite::immutable(
                 function() {},
                 FromGenerator::of(function() {
                     yield 'e';
@@ -64,7 +65,7 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = \iterator_to_array($this->set->take(2)->values());
+        $values = $this->unwrap($this->set->take(2)->values());
 
         $this->assertSame(
             [
@@ -90,13 +91,13 @@ class CompositeTest extends TestCase
                 'ebc',
                 'ebd',
             ],
-            \iterator_to_array($values->values()),
+            $this->unwrap($values->values()),
         );
     }
 
     public function testReduce()
     {
-        $values = \iterator_to_array($this->set->values());
+        $values = $this->unwrap($this->set->values());
 
         $this->assertSame(
             [
@@ -116,6 +117,82 @@ class CompositeTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values());
-        $this->assertCount(8, \iterator_to_array($this->set->values()));
+        $this->assertCount(8, $this->unwrap($this->set->values()));
+
+        foreach ($this->set->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
+    }
+
+    public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
+    {
+        $set = Composite::mutable(
+            function(string ...$args) {
+                $std = new \stdClass;
+                $std->prop = $args;
+
+                return $std;
+            },
+            FromGenerator::of(function() {
+                yield 'e';
+                yield 'f';
+            }),
+            FromGenerator::of(function() {
+                yield 'a';
+                yield 'b';
+            }),
+            FromGenerator::of(function() {
+                yield 'c';
+                yield 'd';
+            }),
+        );
+
+        foreach ($set->values() as $value) {
+            $this->assertFalse($value->isImmutable());
+            $this->assertNotSame($value->unwrap(), $value->unwrap());
+            $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
+        }
+    }
+
+    public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
+    {
+        $set = Composite::immutable(
+            function(object $value, string $char) {
+                $std = new \stdClass;
+                $std->prop = $value;
+                $std->char = $char;
+
+                return $std;
+            },
+            Decorate::mutable(
+                function(string $value) {
+                    $std = new \stdClass;
+                    $std->prop = $value;
+
+                    return $std;
+                },
+                FromGenerator::of(function() {
+                    yield 'ea';
+                    yield 'fb';
+                    yield 'gc';
+                    yield 'eb';
+                }),
+            ),
+            FromGenerator::of(function() {
+                yield 'c';
+                yield 'd';
+            }),
+        )->filter(fn($object) => $object->prop->prop[0] === 'e');
+
+        $this->assertCount(4, \iterator_to_array($set->values()));
+
+        foreach ($set->values() as $value) {
+            $this->assertFalse($value->isImmutable());
+            $this->assertNotSame($value->unwrap(), $value->unwrap());
+            $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
+            $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
+            $this->assertSame($value->unwrap()->char, $value->unwrap()->char);
+        }
     }
 }

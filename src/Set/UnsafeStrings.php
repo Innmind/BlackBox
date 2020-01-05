@@ -17,9 +17,7 @@ final class UnsafeStrings implements Set
     public function __construct()
     {
         $this->size = 100;
-        $this->predicate = static function(): bool {
-            return true;
-        };
+        $this->predicate = static fn(): bool => true;
     }
 
     public static function any(): self
@@ -39,9 +37,7 @@ final class UnsafeStrings implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         */
+        /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
@@ -53,6 +49,9 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
+    /**
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
     public function values(): \Generator
     {
         /** @var list<string> */
@@ -62,6 +61,8 @@ final class UnsafeStrings implements Set
         $values = \array_filter($values, $this->predicate);
         $values = \array_slice($values, 0, $this->size);
 
-        yield from $values;
+        foreach ($values as $value) {
+            yield Value::immutable($value);
+        }
     }
 }

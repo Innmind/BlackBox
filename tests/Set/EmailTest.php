@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Email,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class EmailTest extends TestCase
 {
@@ -19,8 +19,10 @@ class EmailTest extends TestCase
         $this->assertCount(100, \iterator_to_array($emails->values()));
 
         foreach ($emails->values() as $value) {
-            $this->assertIsString($value);
-            $this->assertNotFalse(filter_var($value, FILTER_VALIDATE_EMAIL));
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+            $this->assertIsString($value->unwrap());
+            $this->assertNotFalse(filter_var($value->unwrap(), FILTER_VALIDATE_EMAIL));
         }
     }
 }

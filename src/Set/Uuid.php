@@ -19,14 +19,12 @@ final class Uuid
         }
 
         /** @var Set<string> */
-        return Composite::of(
+        return Composite::immutable(
             static function(string ...$bits): string {
                 $chunks = \array_chunk($bits, 4);
                 $chunks = \array_map(
-                    static function(array $bits): string {
-                        return implode('', $bits);
-                    },
-                    $chunks
+                    static fn(array $bits): string => implode('', $bits),
+                    $chunks,
                 );
 
                 return "{$chunks[0]}{$chunks[1]}-{$chunks[2]}-{$chunks[3]}-{$chunks[4]}-{$chunks[5]}{$chunks[6]}{$chunks[7]}";

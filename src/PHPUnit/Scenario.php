@@ -15,23 +15,15 @@ final class Scenario
     public function __construct(Set $first , Set ...$sets)
     {
         if (\count($sets) === 0) {
-            $set = new Set\Decorate(
-                /**
-                 * @psalm-suppress MissingClosureParamType
-                 */
-                static function($value): array {
-                    return [$value];
-                },
+            $set = Set\Decorate::immutable(
+                /** @psalm-suppress MissingParamType */
+                static fn($value): array  => [$value],
                 $first,
             );
         } else {
-            $set = new Set\Composite(
-                /**
-                 * @psalm-suppress MissingClosureParamType
-                 */
-                static function(...$args): array {
-                    return $args;
-                },
+            $set = Set\Composite::immutable(
+                /** @psalm-suppress MissingParamType */
+                static fn(...$args): array => $args,
                 $first,
                 ...$sets,
             );
@@ -61,9 +53,8 @@ final class Scenario
 
     public function then(callable $test): void
     {
-        /** @var array $values */
         foreach ($this->set->values() as $values) {
-            $test(...$values);
+            $test(...$values->unwrap());
         }
     }
 }

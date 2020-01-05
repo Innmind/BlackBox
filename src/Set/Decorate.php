@@ -9,20 +9,25 @@ final class Decorate implements Set
 {
     private \Closure $decorate;
     private Set $set;
+    private \Closure $predicate;
+    private bool $immutable;
 
-    public function __construct(
-        callable $decorate,
-        Set $set
-    ) {
+    private function __construct(bool $immutable, callable $decorate, Set $set)
+    {
         $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
+        $this->immutable = $immutable;
+        $this->predicate = static fn(): bool => true;
     }
 
-    public static function of(
-        callable $decorate,
-        Set $set
-    ): self {
-        return new self($decorate, $set);
+    public static function immutable(callable $decorate, Set $set): self
+    {
+        return new self(true, $decorate, $set);
+    }
+
+    public static function mutable(callable $decorate, Set $set): self
+    {
+        return new self(false, $decorate, $set);
     }
 
     public function take(int $size): Set
@@ -35,17 +40,40 @@ final class Decorate implements Set
 
     public function filter(callable $predicate): Set
     {
+        $previous = $this->predicate;
         $self = clone $this;
-        $self->set = $this->set->filter($predicate);
+        /** @psalm-suppress MissingClosureParamType */
+        $self->predicate = static function($value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
+                return false;
+            }
+
+            return $predicate($value);
+        };
 
         return $self;
     }
 
     public function values(): \Generator
     {
-        /** @var mixed */
         foreach ($this->set->values() as $value) {
-            yield ($this->decorate)($value);
+            /** @var mixed */
+            $decorated = ($this->decorate)($value->unwrap());
+
+            if (!($this->predicate)($decorated)) {
+                continue;
+            }
+
+            if ($value->isImmutable() && $this->immutable) {
+                yield Value::immutable($decorated);
+            } else {
+                // we don't need to re-apply the predicate when we handle mutable
+                // data as the underlying data is already validated and the mutable
+                // nature is about the enclosing of the data and should not be part
+                // of the filtering process
+                /** @psalm-suppress MissingClosureReturnType */
+                yield Value::mutable(fn() => ($this->decorate)($value->unwrap()));
+            }
         }
     }
 }

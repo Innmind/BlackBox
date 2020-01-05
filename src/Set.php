@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
+use Innmind\BlackBox\Set\Value;
+
 /**
  * @template T The type of data being generated
  */
@@ -21,7 +23,7 @@ interface Set
     public function filter(callable $predicate): self;
 
     /**
-     * @return \Generator<T>
+     * @return \Generator<Value<T>>
      */
     public function values(): \Generator;
 }
