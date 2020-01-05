@@ -24,9 +24,7 @@ final class Either implements Set
     {
         $self = clone $this;
         $self->sets = \array_map(
-            static function(Set $set) use ($size): Set {
-                return $set->take($size);
-            },
+            static fn(Set $set): Set => $set->take($size),
             $this->sets,
         );
         $self->size = $size;

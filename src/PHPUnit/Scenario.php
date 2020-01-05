@@ -16,22 +16,14 @@ final class Scenario
     {
         if (\count($sets) === 0) {
             $set = Set\Decorate::immutable(
-                /**
-                 * @psalm-suppress MissingClosureParamType
-                 */
-                static function($value): array {
-                    return [$value];
-                },
+                /** @psalm-suppress MissingParamType */
+                static fn($value): array  => [$value],
                 $first,
             );
         } else {
             $set = Set\Composite::immutable(
-                /**
-                 * @psalm-suppress MissingClosureParamType
-                 */
-                static function(...$args): array {
-                    return $args;
-                },
+                /** @psalm-suppress MissingParamType */
+                static fn(...$args): array => $args,
                 $first,
                 ...$sets,
             );

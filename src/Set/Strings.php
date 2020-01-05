@@ -18,9 +18,7 @@ final class Strings implements Set
     {
         $this->maxLength = $maxLength;
         $this->size = 100;
-        $this->predicate = static function(): bool {
-            return true;
-        };
+        $this->predicate = static fn(): bool => true;
     }
 
     public static function any(int $maxLength = 128): self
@@ -40,9 +38,7 @@ final class Strings implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         */
+        /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
@@ -64,7 +60,7 @@ final class Strings implements Set
         do {
             $value = '';
 
-            foreach (range(1, \random_int(2, $this->maxLength)) as $_) {
+            foreach (\range(1, \random_int(2, $this->maxLength)) as $_) {
                 $value .= \chr(\random_int(33, 126));
             }
 

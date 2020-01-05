@@ -15,9 +15,7 @@ final class IntegersExceptZero implements Set
 
     public function __construct()
     {
-        $this->set = Integers::any()->filter(static function(int $value): bool {
-            return $value !== 0;
-        });
+        $this->set = Integers::any()->filter(static fn(int $value): bool => $value !== 0);
     }
 
     public static function any(): self

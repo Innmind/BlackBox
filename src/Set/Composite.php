@@ -30,9 +30,7 @@ final class Composite implements Set
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
-        $this->predicate = static function(): bool {
-            return true;
-        };
+        $this->predicate = static fn(): bool => true;
     }
 
     public static function immutable(
@@ -63,9 +61,7 @@ final class Composite implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         */
+        /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
@@ -84,13 +80,8 @@ final class Composite implements Set
         $second = \array_shift($sets);
         $matrix = \array_reduce(
             $sets,
-            static function(Matrix $matrix, Set $set): Matrix {
-                return $matrix->dot($set);
-            },
-            Matrix::of(
-                $second,
-                $first,
-            ),
+            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            Matrix::of($second, $first),
         );
         $matrix = $matrix->values();
         $iterations = 0;
