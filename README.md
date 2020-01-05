@@ -53,9 +53,9 @@ final class User
 
 class UserSet
 {
-    public static function some(): Set
+    public static function any(): Set
     {
-        return new Set\Composite(
+        return Set\Composite::immutable(
             function($firstName, $lastName): User {
                 return new User($firstName, $lastName);
             },
@@ -72,7 +72,7 @@ class UserTest extends \PHPUnit\Framework\TestCase
     public function testUserGreetsWithHisFirstName()
     {
         $this
-            ->forAll(UserSet::some())
+            ->forAll(UserSet::any())
             ->then(function(User $user) {
                 $this->assertSame(
                     "Hi, I'm {$user->firstName()}",
@@ -84,6 +84,8 @@ class UserTest extends \PHPUnit\Framework\TestCase
 ```
 
 This really simple example show how the test class is focused on the behaviour and not about the construction of the test data.
+
+**Note**: here the `User` class is not mutable, but in your application it's likely that such class (meaning an entity) would be mutable, in such case you MUST use `Composite::mutable()` otherwise a mutated object would bleed between the iterations of the test.
 
 The same example with `eris` would you like this:
 
