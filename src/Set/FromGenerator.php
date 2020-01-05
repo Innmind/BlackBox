@@ -6,6 +6,9 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set;
 
 /**
+ * This set can only contain immutable values as they're generated outside of the
+ * class, so it can't be re-generated on the fly
+ *
  * @template T
  */
 final class FromGenerator implements Set
