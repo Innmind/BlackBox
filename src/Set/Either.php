@@ -62,10 +62,9 @@ final class Either implements Set
 
         while ($iterations < $this->size) {
             $setToChoose = \random_int(0, \count($this->sets) - 1);
-            /** @var mixed */
             $value = $this->sets[$setToChoose]->values()->current();
 
-            if (($this->predicate)($value)) {
+            if (($this->predicate)($value->unwrap())) {
                 yield $value;
                 ++$iterations;
             }

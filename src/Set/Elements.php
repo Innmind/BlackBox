@@ -68,6 +68,9 @@ final class Elements implements Set
         $values = \array_filter($values, $this->predicate);
         \shuffle($values);
 
-        yield from $values;
+        /** @var mixed $value */
+        foreach ($values as $value) {
+            yield Value::immutable($value);
+        }
     }
 }

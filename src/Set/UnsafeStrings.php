@@ -53,6 +53,9 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
+    /**
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
     public function values(): \Generator
     {
         /** @var list<string> */
@@ -62,6 +65,8 @@ final class UnsafeStrings implements Set
         $values = \array_filter($values, $this->predicate);
         $values = \array_slice($values, 0, $this->size);
 
-        yield from $values;
+        foreach ($values as $value) {
+            yield Value::immutable($value);
+        }
     }
 }

@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Elements,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class ElementsTest extends TestCase
 {
@@ -24,7 +24,7 @@ class ElementsTest extends TestCase
     public function testTake100ValuesByDefault()
     {
         $elements = Elements::of(...range(0, 1000));
-        $values = \iterator_to_array($elements->values());
+        $values = $this->unwrap($elements->values());
 
         $this->assertCount(100, $values);
     }
@@ -33,8 +33,8 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...range(0, 1000));
         $elements2 = $elements->take(10);
-        $aValues = \iterator_to_array($elements->values());
-        $bValues = \iterator_to_array($elements2->values());
+        $aValues = $this->unwrap($elements->values());
+        $bValues = $this->unwrap($elements2->values());
 
         $this->assertInstanceOf(Elements::class, $elements2);
         $this->assertNotSame($elements, $elements2);
@@ -56,14 +56,14 @@ class ElementsTest extends TestCase
         $this->assertNotSame($elements, $elements2);
         $this->assertFalse(
             \array_reduce(
-                \iterator_to_array($elements2->values()),
+                $this->unwrap($elements2->values()),
                 $containsEvenInt,
                 false,
             ),
         );
         $this->assertTrue(
             \array_reduce(
-                \iterator_to_array($elements->values()),
+                $this->unwrap($elements->values()),
                 $containsEvenInt,
                 false,
             ),
@@ -75,6 +75,11 @@ class ElementsTest extends TestCase
         $elements = Elements::of(...range(0, 1000));
 
         $this->assertInstanceOf(\Generator::class, $elements->values());
-        $this->assertCount(100, \iterator_to_array($elements->values()));
+        $this->assertCount(100, $this->unwrap($elements->values()));
+
+        foreach ($elements->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

@@ -61,9 +61,8 @@ final class Scenario
 
     public function then(callable $test): void
     {
-        /** @var array $values */
         foreach ($this->set->values() as $values) {
-            $test(...$values);
+            $test(...$values->unwrap());
         }
     }
 }

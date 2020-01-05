@@ -88,7 +88,7 @@ final class Composite implements Set
             $value = ($this->aggregate)(...$matrix->current()->toArray());
 
             if (($this->predicate)($value)) {
-                yield $value;
+                yield Value::immutable($value);
                 ++$iterations;
             }
 

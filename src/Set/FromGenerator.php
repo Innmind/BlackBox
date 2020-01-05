@@ -74,7 +74,7 @@ final class FromGenerator implements Set
             $value = $generator->current();
 
             if (($this->predicate)($value)) {
-                yield $value;
+                yield Value::immutable($value);
 
                 ++$iterations;
             }

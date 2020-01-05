@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Strings,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class StringsTest extends TestCase
 {
@@ -23,7 +23,7 @@ class StringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = \iterator_to_array(Strings::any()->values());
+        $values = $this->unwrap(Strings::any()->values());
 
         $this->assertCount(100, $values);
     }
@@ -34,7 +34,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            \iterator_to_array(Strings::any()->values()),
+            $this->unwrap(Strings::any()->values()),
         );
 
         $this->assertTrue(128 >= \max($values));
@@ -46,7 +46,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            \iterator_to_array(Strings::any(256)->values()),
+            $this->unwrap(Strings::any(256)->values()),
         );
 
         $this->assertTrue(256 >= \max($values));
@@ -63,7 +63,7 @@ class StringsTest extends TestCase
         $this->assertInstanceOf(Strings::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            \iterator_to_array($values->values()),
+            $this->unwrap($values->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -72,7 +72,7 @@ class StringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            \iterator_to_array($others->values()),
+            $this->unwrap($others->values()),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -88,8 +88,8 @@ class StringsTest extends TestCase
 
         $this->assertInstanceOf(Strings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, \iterator_to_array($a->values()));
-        $this->assertCount(50, \iterator_to_array($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertCount(50, $this->unwrap($b->values()));
     }
 
     public function testValues()
@@ -97,6 +97,11 @@ class StringsTest extends TestCase
         $a = Strings::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+
+        foreach ($a->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Integers,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class IntegersTest extends TestCase
 {
@@ -23,7 +23,7 @@ class IntegersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(Integers::any()->values());
+        $values = $this->unwrap(Integers::any()->values());
 
         $this->assertCount(100, $values);
     }
@@ -33,7 +33,7 @@ class IntegersTest extends TestCase
         $values = Integers::between(-10, 10);
 
         $hasOutsideBounds = \array_reduce(
-            \iterator_to_array($values->values()),
+            $this->unwrap($values->values()),
             static function(bool $hasOutsideBounds, int $value): bool {
                 return $hasOutsideBounds || $value > 10 || $value < -10;
             },
@@ -48,10 +48,10 @@ class IntegersTest extends TestCase
         $values = Integers::above(10);
 
         $this->assertInstanceOf(Integers::class, $values);
-        $this->assertCount(100, \iterator_to_array($values->values()));
+        $this->assertCount(100, $this->unwrap($values->values()));
         $this->assertGreaterThanOrEqual(
             10,
-            \min(\iterator_to_array($values->values())),
+            \min($this->unwrap($values->values())),
         );
     }
 
@@ -60,10 +60,10 @@ class IntegersTest extends TestCase
         $values = Integers::below(10);
 
         $this->assertInstanceOf(Integers::class, $values);
-        $this->assertCount(100, \iterator_to_array($values->values()));
+        $this->assertCount(100, $this->unwrap($values->values()));
         $this->assertLessThanOrEqual(
             10,
-            \max(\iterator_to_array($values->values())),
+            \max($this->unwrap($values->values())),
         );
     }
 
@@ -77,7 +77,7 @@ class IntegersTest extends TestCase
         $this->assertInstanceOf(Integers::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            \iterator_to_array($integers->values()),
+            $this->unwrap($integers->values()),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -86,7 +86,7 @@ class IntegersTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            \iterator_to_array($even->values()),
+            $this->unwrap($even->values()),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -102,8 +102,8 @@ class IntegersTest extends TestCase
 
         $this->assertInstanceOf(Integers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, \iterator_to_array($a->values()));
-        $this->assertCount(50, \iterator_to_array($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertCount(50, $this->unwrap($b->values()));
     }
 
     public function testValues()
@@ -111,6 +111,11 @@ class IntegersTest extends TestCase
         $a = Integers::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+
+        foreach ($a->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

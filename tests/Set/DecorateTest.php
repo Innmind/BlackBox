@@ -7,8 +7,8 @@ use Innmind\BlackBox\{
     Set\Decorate,
     Set\FromGenerator,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class DecorateTest extends TestCase
 {
@@ -50,7 +50,7 @@ class DecorateTest extends TestCase
 
     public function testTake()
     {
-        $values = \iterator_to_array($this->set->take(2)->values());
+        $values = $this->unwrap($this->set->take(2)->values());
 
         $this->assertSame(
             [
@@ -74,13 +74,13 @@ class DecorateTest extends TestCase
                 ['ea'],
                 ['eb'],
             ],
-            \iterator_to_array($values->values()),
+            $this->unwrap($values->values()),
         );
     }
 
     public function testReduce()
     {
-        $values = \iterator_to_array($this->set->values());
+        $values = $this->unwrap($this->set->values());
 
         $this->assertSame(
             [
@@ -96,6 +96,11 @@ class DecorateTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values());
-        $this->assertCount(4, \iterator_to_array($this->set->values()));
+        $this->assertCount(4, $this->unwrap($this->set->values()));
+
+        foreach ($this->set->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

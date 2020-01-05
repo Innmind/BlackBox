@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\NaturalNumbers,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class NaturalNumbersTest extends TestCase
 {
@@ -23,7 +23,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = \iterator_to_array(NaturalNumbers::any()->values());
+        $values = $this->unwrap(NaturalNumbers::any()->values());
 
         $this->assertCount(100, $values);
 
@@ -42,7 +42,7 @@ class NaturalNumbersTest extends TestCase
         $this->assertInstanceOf(NaturalNumbers::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            \iterator_to_array($integers->values()),
+            $this->unwrap($integers->values()),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -51,7 +51,7 @@ class NaturalNumbersTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            \iterator_to_array($even->values()),
+            $this->unwrap($even->values()),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -67,8 +67,8 @@ class NaturalNumbersTest extends TestCase
 
         $this->assertInstanceOf(NaturalNumbers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, \iterator_to_array($a->values()));
-        $this->assertCount(50, \iterator_to_array($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertCount(50, $this->unwrap($b->values()));
     }
 
     public function testValues()
@@ -76,6 +76,11 @@ class NaturalNumbersTest extends TestCase
         $a = NaturalNumbers::any();
 
         $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, \iterator_to_array($a->values()));
+        $this->assertCount(100, $this->unwrap($a->values()));
+
+        foreach ($a->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

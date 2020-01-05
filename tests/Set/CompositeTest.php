@@ -7,8 +7,8 @@ use Innmind\BlackBox\{
     Set\Composite,
     Set\FromGenerator,
     Set,
+    Set\Value,
 };
-use PHPUnit\Framework\TestCase;
 
 class CompositeTest extends TestCase
 {
@@ -64,7 +64,7 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = \iterator_to_array($this->set->take(2)->values());
+        $values = $this->unwrap($this->set->take(2)->values());
 
         $this->assertSame(
             [
@@ -90,13 +90,13 @@ class CompositeTest extends TestCase
                 'ebc',
                 'ebd',
             ],
-            \iterator_to_array($values->values()),
+            $this->unwrap($values->values()),
         );
     }
 
     public function testReduce()
     {
-        $values = \iterator_to_array($this->set->values());
+        $values = $this->unwrap($this->set->values());
 
         $this->assertSame(
             [
@@ -116,6 +116,11 @@ class CompositeTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values());
-        $this->assertCount(8, \iterator_to_array($this->set->values()));
+        $this->assertCount(8, $this->unwrap($this->set->values()));
+
+        foreach ($this->set->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+            $this->assertTrue($value->isImmutable());
+        }
     }
 }

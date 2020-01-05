@@ -52,6 +52,9 @@ final class RealNumbers implements Set
         return $self;
     }
 
+    /**
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
     public function values(): \Generator
     {
         $iterations = 0;
@@ -63,7 +66,7 @@ final class RealNumbers implements Set
                 continue;
             }
 
-            yield $value;
+            yield Value::immutable($value);
             ++$iterations;
         } while ($iterations < $this->size);
     }

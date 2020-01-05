@@ -7,6 +7,7 @@ use Innmind\BlackBox\Set\{
     Composite\Matrix,
     Composite\Combination,
     FromGenerator,
+    Value,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -20,8 +21,8 @@ class MatrixTest extends TestCase
                 yield 'b';
             }),
             FromGenerator::of(function() {
-                yield new Combination('c');
-                yield new Combination('d');
+                yield new Combination(Value::immutable('c'));
+                yield new Combination(Value::immutable('d'));
             }),
         );
 
@@ -44,8 +45,8 @@ class MatrixTest extends TestCase
                 yield 'b';
             }),
             FromGenerator::of(function() {
-                yield new Combination('c');
-                yield new Combination('d');
+                yield new Combination(Value::immutable('c'));
+                yield new Combination(Value::immutable('d'));
             }),
         );
         $matrix2 = $matrix->dot(FromGenerator::of(function() {

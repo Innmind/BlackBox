@@ -43,9 +43,8 @@ final class Decorate implements Set
 
     public function values(): \Generator
     {
-        /** @var mixed */
         foreach ($this->set->values() as $value) {
-            yield ($this->decorate)($value);
+            yield Value::immutable(($this->decorate)($value->unwrap()));
         }
     }
 }
