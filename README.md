@@ -3,7 +3,7 @@
 | `develop` |
 |-----------|
 | [![codecov](https://codecov.io/gh/Innmind/BlackBox/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/BlackBox) |
-| [![Build Status](https://travis-ci.org/Innmind/BlackBox.svg?branch=develop)](https://travis-ci.org/Innmind/BlackBox) |
+| [![Build Status](https://github.com/Innmind/BlackBox/workflows/CI/badge.svg)](https://github.com/Innmind/BlackBox/actions?query=workflow%3ACI) |
 
 Contains an ensemble of sets to easily generate data for property based tests.
 
