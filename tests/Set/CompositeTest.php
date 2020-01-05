@@ -16,7 +16,7 @@ class CompositeTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = new Composite(
+        $this->set = Composite::of(
             function(string ...$args) {
                 return implode('', $args);
             },

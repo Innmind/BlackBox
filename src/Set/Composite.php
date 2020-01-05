@@ -16,7 +16,7 @@ final class Composite implements Set
     private ?int $size;
     private \Closure $predicate;
 
-    public function __construct(
+    private function __construct(
         callable $aggregate,
         Set $first,
         Set $second,

@@ -25,7 +25,7 @@ final class Scenario
                 $first,
             );
         } else {
-            $set = new Set\Composite(
+            $set = Set\Composite::of(
                 /**
                  * @psalm-suppress MissingClosureParamType
                  */
