@@ -62,7 +62,27 @@ final class UnsafeStrings implements Set
         $values = \array_slice($values, 0, $this->size);
 
         foreach ($values as $value) {
-            yield Value::immutable($value);
+            yield Value::immutable($value, $this->shrink($value));
         }
+    }
+
+    private function shrink(string $value): ?Dichotomy
+    {
+        if ($value === '') {
+            return null;
+        }
+
+        return new Dichotomy(
+            function() use ($value): Value { // remove trailing character
+                $shrinked = \mb_substr($value, 0, -1, 'ASCII');
+
+                return Value::immutable($shrinked, $this->shrink($shrinked));
+            },
+            function() use ($value): Value { // remove leading character
+                $shrinked = \mb_substr($value, 1, null, 'ASCII');
+
+                return Value::immutable($shrinked, $this->shrink($shrinked));
+            },
+        );
     }
 }

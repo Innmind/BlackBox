@@ -79,4 +79,52 @@ class UnsafeStringsTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testEmptyStringCannotBeShrinked()
+    {
+        $strings = UnsafeStrings::any()->filter(fn($string) => $string === '');
+
+        foreach ($strings->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
+
+    public function testNonEmptyStringsAreShrinkable()
+    {
+        $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
+
+        foreach ($strings->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
+
+    public function testShrinkedValuesAreImmutable()
+    {
+        $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertTrue($a->isImmutable());
+            $this->assertTrue($b->isImmutable());
+        }
+    }
+
+    public function testStringsAreShrinkedFromBothEnds()
+    {
+        $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertNotSame($a->unwrap(), $value->unwrap());
+            $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
+            $this->assertNotSame($b->unwrap(), $value->unwrap());
+            $this->assertStringEndsWith($b->unwrap(), $value->unwrap());
+        }
+    }
 }
