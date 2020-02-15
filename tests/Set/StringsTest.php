@@ -104,4 +104,59 @@ class StringsTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testEmptyStringCannotBeShrinked()
+    {
+        $strings = new Strings(2); // always generate string of length 2
+
+        foreach ($strings->values() as $value) {
+            $this->assertFalse(
+                $value
+                    ->shrink()
+                    ->a() // length of 1
+                    ->shrink()
+                    ->a() // length of 0
+                    ->shrinkable()
+            );
+        }
+    }
+
+    public function testNonEmptyStringsAreShrinkable()
+    {
+        $strings = Strings::any()->filter(fn($string) => $string !== '');
+
+        foreach ($strings->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
+
+    public function testShrinkedValuesAreImmutable()
+    {
+        $strings = Strings::any()->filter(fn($string) => $string !== '');
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertTrue($a->isImmutable());
+            $this->assertTrue($b->isImmutable());
+        }
+    }
+
+    public function testStringsAreShrinkedFromBothEnds()
+    {
+        $strings = Strings::any()->filter(fn($string) => $string !== '');
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertNotSame($a->unwrap(), $value->unwrap());
+            $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
+            $this->assertNotSame($b->unwrap(), $value->unwrap());
+            $this->assertStringEndsWith($b->unwrap(), $value->unwrap());
+        }
+    }
 }
