@@ -121,6 +121,15 @@ class UnsafeStringsTest extends TestCase
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
+            if (
+                $a->unwrap() === '' ||
+                $b->unwrap() === ''
+            ) {
+                // assertStringStartsWith and assertStringEndsWith doesn't
+                // accept empty strings as prefix/suffix
+                continue;
+            }
+
             $this->assertNotSame($a->unwrap(), $value->unwrap());
             $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
             $this->assertNotSame($b->unwrap(), $value->unwrap());
