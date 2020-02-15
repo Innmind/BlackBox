@@ -81,8 +81,30 @@ final class Integers implements Set
                 continue;
             }
 
-            yield Value::immutable($value);
+            yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
         } while ($iterations < $this->size);
+    }
+
+    private function shrink(int $value): ?Dichotomy
+    {
+        if ($value === 0) {
+            return null;
+        }
+
+        return new Dichotomy(
+            function() use ($value): Value {
+                $shrinked = (int) \floor($value / 2);
+
+                return Value::immutable($shrinked, $this->shrink($shrinked));
+            },
+            function() use ($value): Value {
+                // add one when the value is negative, otherwise subtract one
+                $reduce = ($value <=> 0) * -1;
+                $shrinked = $value + $reduce;
+
+                return Value::immutable($shrinked, $this->shrink($shrinked));
+            },
+        );
     }
 }
