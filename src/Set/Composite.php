@@ -33,6 +33,9 @@ final class Composite implements Set
         $this->predicate = static fn(): bool => true;
     }
 
+    /**
+     * @param callable $aggregate It must be a pure function (no randomness, no side effects)
+     */
     public static function immutable(
         callable $aggregate,
         Set $first,
@@ -41,6 +44,9 @@ final class Composite implements Set
         return new self(true, $aggregate, $first, ...$sets);
     }
 
+    /**
+     * @param callable $aggregate It must be a pure function (no randomness, no side effects)
+     */
     public static function mutable(
         callable $aggregate,
         Set $first,

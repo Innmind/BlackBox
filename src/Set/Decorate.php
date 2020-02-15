@@ -20,11 +20,17 @@ final class Decorate implements Set
         $this->predicate = static fn(): bool => true;
     }
 
+    /**
+     * @param callable $decorate It must be a pure function (no randomness, no side effects)
+     */
     public static function immutable(callable $decorate, Set $set): self
     {
         return new self(true, $decorate, $set);
     }
 
+    /**
+     * @param callable $decorate It must be a pure function (no randomness, no side effects)
+     */
     public static function mutable(callable $decorate, Set $set): self
     {
         return new self(false, $decorate, $set);
