@@ -23,7 +23,7 @@ final class Uuid
             static function(string ...$bits): string {
                 $chunks = \array_chunk($bits, 4);
                 $chunks = \array_map(
-                    static fn(array $bits): string => implode('', $bits),
+                    static fn(array $bits): string => \implode('', $bits),
                     $chunks,
                 );
 

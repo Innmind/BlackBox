@@ -56,11 +56,11 @@ final class Chars implements Set
         $values = \range(0, 255);
         \shuffle($values);
         $values = \array_map(
-            static fn(int $i): string => chr($i),
+            static fn(int $i): string => \chr($i),
             $values,
         );
 
-        $values = array_filter($values, $this->predicate);
+        $values = \array_filter($values, $this->predicate);
         $values = \array_slice($values, 0, $this->size);
 
         foreach ($values as $value) {
