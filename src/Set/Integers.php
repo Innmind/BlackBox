@@ -100,7 +100,7 @@ final class Integers implements Set
 
     private function divideByTwo(int $value): callable
     {
-        $shrinked = (int) \floor($value / 2);
+        $shrinked = (int) \round($value / 2, 0, \PHP_ROUND_HALF_DOWN);
 
         if (!($this->predicate)($shrinked)) {
             return $this->identity($value);

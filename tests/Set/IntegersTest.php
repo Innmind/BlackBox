@@ -209,4 +209,27 @@ class IntegersTest extends TestCase
             $this->assertSame(1, $dichotomy->b()->unwrap() % 2);
         }
     }
+
+    public function testShrinkingStrategiesNeverProduceTheSameResultTwice()
+    {
+        $integer = Integers::between(-1000, 1000)->values()->current();
+        $previous = $integer;
+        $integer = $integer->shrink()->a();
+
+        do {
+            $this->assertNotSame($previous->unwrap(), $integer->unwrap());
+            $previous = $integer;
+            $integer = $integer->shrink()->a();
+        } while ($integer->shrinkable());
+
+        $integer = Integers::between(-1000, 1000)->values()->current();
+        $previous = $integer;
+        $integer = $integer->shrink()->b();
+
+        do {
+            $this->assertNotSame($previous->unwrap(), $integer->unwrap());
+            $previous = $integer;
+            $integer = $integer->shrink()->b();
+        } while ($integer->shrinkable());
+    }
 }
