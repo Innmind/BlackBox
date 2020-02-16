@@ -21,6 +21,40 @@ class RealNumbersTest extends TestCase
         $this->assertInstanceOf(RealNumbers::class, RealNumbers::any());
     }
 
+    public function testBetween()
+    {
+        $numbers = RealNumbers::between(-100, 100);
+
+        $this->assertInstanceOf(RealNumbers::class, $numbers);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertGreaterThanOrEqual(-100, $value->unwrap());
+            $this->assertLessThanOrEqual(100, $value->unwrap());
+        }
+    }
+
+    public function testAbove()
+    {
+        $numbers = RealNumbers::above(0);
+
+        $this->assertInstanceOf(RealNumbers::class, $numbers);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertGreaterThanOrEqual(0, $value->unwrap());
+        }
+    }
+
+    public function testBelow()
+    {
+        $numbers = RealNumbers::below(0);
+
+        $this->assertInstanceOf(RealNumbers::class, $numbers);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertLessThanOrEqual(0, $value->unwrap());
+        }
+    }
+
     public function testByDefault100IntegersAreGenerated()
     {
         $values = $this->unwrap(RealNumbers::any()->values());
