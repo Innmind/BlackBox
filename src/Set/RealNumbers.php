@@ -81,8 +81,30 @@ final class RealNumbers implements Set
                 continue;
             }
 
-            yield Value::immutable($value);
+            yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
         } while ($iterations < $this->size);
+    }
+
+    private function shrink(float $value): ?Dichotomy
+    {
+        if (\round($value, 5) === 0.0) {
+            return null;
+        }
+
+        return new Dichotomy(
+            function() use ($value): Value {
+                $shrinked = $value / 2;
+
+                return Value::immutable($shrinked, $this->shrink($shrinked));
+            },
+            function() use ($value): Value {
+                // add one when the value is negative, otherwise subtract one
+                $reduce = ($value <=> 0) * -1;
+                $shrinked = $value + $reduce;
+
+                return Value::immutable($shrinked, $this->shrink($shrinked));
+            },
+        );
     }
 }

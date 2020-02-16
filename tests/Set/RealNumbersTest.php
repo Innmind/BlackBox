@@ -113,4 +113,58 @@ class RealNumbersTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testZeroCannotBeShrinked()
+    {
+        $numbers = RealNumbers::between(-1, 1)->filter(fn($i) => $i === 0.0);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
+
+    public function testRealNumbersCanBeShrinked()
+    {
+        $numbers = RealNumbers::any()->filter(fn($i) => $i !== 0.0);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
+
+    public function testShrinkedRealNumbersAreImmutable()
+    {
+        $numbers = RealNumbers::any()->filter(fn($i) => $i !== 0.0);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertTrue($value->isImmutable());
+        }
+    }
+
+    public function testRealNumbersAreShrinkedTowardZero()
+    {
+        $positive = RealNumbers::above(1);
+
+        foreach ($positive->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertLessThanOrEqual($value->unwrap(), $a->unwrap());
+            $this->assertLessThanOrEqual($value->unwrap(), $b->unwrap());
+            $this->assertNotSame($a->unwrap(), $b->unwrap());
+        }
+
+        $negative = RealNumbers::below(-1);
+
+        foreach ($negative->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertGreaterThanOrEqual($value->unwrap(), $a->unwrap());
+            $this->assertGreaterThanOrEqual($value->unwrap(), $b->unwrap());
+            $this->assertNotSame($a->unwrap(), $b->unwrap());
+        }
+    }
 }
