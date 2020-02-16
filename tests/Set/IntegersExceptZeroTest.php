@@ -80,4 +80,13 @@ class IntegersExceptZeroTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testShrinkable()
+    {
+        $integers = IntegersExceptZero::any();
+
+        foreach ($integers->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
 }
