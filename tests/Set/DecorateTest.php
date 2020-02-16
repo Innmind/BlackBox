@@ -162,4 +162,85 @@ class DecorateTest extends TestCase
             $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
         }
     }
+
+    public function testConserveUnderlyingSetShrinkability()
+    {
+        $nonShrinkable = Decorate::immutable(
+            function(string $value) {
+                return [$value];
+            },
+            FromGenerator::of(function() {
+                yield 'ea';
+                yield 'fb';
+                yield 'gc';
+                yield 'eb';
+            })
+        );
+
+        foreach ($nonShrinkable->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+
+        $shrinkable = Decorate::immutable(
+            function(int $value) {
+                return [$value];
+            },
+            Set\Integers::any(),
+        );
+
+        foreach ($shrinkable->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
+
+    public function testShrinkedValuesConserveMutability()
+    {
+        $mutable = Decorate::mutable(
+            function(int $value) {
+                $std = new \stdClass;
+                $std->prop = $value;
+
+                return $std;
+            },
+            Set\Integers::any(),
+        );
+
+        foreach ($mutable->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertFalse($dichotomy->a()->isImmutable());
+            $this->assertFalse($dichotomy->b()->isImmutable());
+        }
+
+        $immutable = Decorate::immutable(
+            function(int $value) {
+                return [$value];
+            },
+            Set\Integers::any(),
+        );
+
+        foreach ($immutable->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertTrue($dichotomy->a()->isImmutable());
+            $this->assertTrue($dichotomy->b()->isImmutable());
+        }
+    }
+
+    public function testShrinkedValuesAlwaysRespectTheSetPredicate()
+    {
+        $set = Decorate::immutable(
+            function(int $value) {
+                return [$value];
+            },
+            Set\Integers::any(),
+        )->filter(fn($v) => $v[0] % 2 === 0);
+
+        foreach ($set->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(0, $dichotomy->a()->unwrap()[0] % 2);
+            $this->assertSame(0, $dichotomy->b()->unwrap()[0] % 2);
+        }
+    }
 }

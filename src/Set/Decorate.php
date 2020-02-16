@@ -5,6 +5,10 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * @template D
+ * @implements Set<D>
+ */
 final class Decorate implements Set
 {
     private \Closure $decorate;
@@ -71,15 +75,72 @@ final class Decorate implements Set
             }
 
             if ($value->isImmutable() && $this->immutable) {
-                yield Value::immutable($decorated);
+                yield Value::immutable(
+                    $decorated,
+                    $this->shrink(false, $value),
+                );
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 /** @psalm-suppress MissingClosureReturnType */
-                yield Value::mutable(fn() => ($this->decorate)($value->unwrap()));
+                yield Value::mutable(
+                    fn() => ($this->decorate)($value->unwrap()),
+                    $this->shrink(true, $value),
+                );
             }
         }
+    }
+
+    private function shrink(bool $mutable, Value $value): ?Dichotomy
+    {
+        if (!$value->shrinkable()) {
+            return null;
+        }
+
+        $shrinked = $value->shrink();
+
+        return new Dichotomy(
+            $this->shrinkWithStrategy($mutable, $value, $shrinked->a()),
+            $this->shrinkWithStrategy($mutable, $value, $shrinked->b()),
+        );
+    }
+
+    private function shrinkWithStrategy(bool $mutable, Value $value, Value $strategy): callable
+    {
+        /** @var D */
+        $shrinked = ($this->decorate)($strategy->unwrap());
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($mutable, $value);
+        }
+
+        if ($mutable) {
+            /** @psalm-suppress MissingClosureReturnType */
+            return fn(): Value => Value::mutable(
+                fn() => ($this->decorate)($strategy->unwrap()),
+                $this->shrink(true, $strategy),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            ($this->decorate)($strategy->unwrap()),
+            $this->shrink(false, $strategy),
+        );
+    }
+
+    private function identity(bool $mutable, Value $value): callable
+    {
+        if ($mutable) {
+            /** @psalm-suppress MissingClosureReturnType */
+            return fn(): Value => Value::mutable(
+                fn() => ($this->decorate)($value->unwrap()),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            ($this->decorate)($value->unwrap()),
+        );
     }
 }
