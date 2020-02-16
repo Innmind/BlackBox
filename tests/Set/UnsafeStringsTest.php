@@ -114,19 +114,15 @@ class UnsafeStringsTest extends TestCase
 
     public function testStringsAreShrinkedFromBothEnds()
     {
-        $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
+        $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) > 1);
 
         foreach ($strings->values() as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
-            if (
-                $a->unwrap() === '' ||
-                $b->unwrap() === ''
-            ) {
-                // assertStringStartsWith and assertStringEndsWith doesn't
-                // accept empty strings as prefix/suffix
+            if (strlen($value->unwrap()) === 2) {
+                // we continue as the shrinked values won't match the set predicate
                 continue;
             }
 
@@ -134,6 +130,35 @@ class UnsafeStringsTest extends TestCase
             $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
             $this->assertNotSame($b->unwrap(), $value->unwrap());
             $this->assertStringEndsWith($b->unwrap(), $value->unwrap());
+        }
+    }
+
+    public function testStringsOfOneCharacterShrinkToThemselves()
+    {
+        // otherwise they won't match the given predicate
+        $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) === 1);
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertSame($a->unwrap(), $value->unwrap());
+            $this->assertSame($b->unwrap(), $value->unwrap());
+            $this->assertFalse($a->shrinkable());
+            $this->assertFalse($b->shrinkable());
+        }
+    }
+
+    public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
+    {
+        $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) > 20);
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
+            $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
         }
     }
 }

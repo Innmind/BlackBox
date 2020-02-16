@@ -73,16 +73,38 @@ final class UnsafeStrings implements Set
         }
 
         return new Dichotomy(
-            function() use ($value): Value { // remove trailing character
-                $shrinked = \mb_substr($value, 0, -1, 'ASCII');
-
-                return Value::immutable($shrinked, $this->shrink($shrinked));
-            },
-            function() use ($value): Value { // remove leading character
-                $shrinked = \mb_substr($value, 1, null, 'ASCII');
-
-                return Value::immutable($shrinked, $this->shrink($shrinked));
-            },
+            $this->removeTrailingCharacter($value),
+            $this->removeLeadingCharacter($value),
         );
+    }
+
+    private function removeTrailingCharacter(string $value): callable
+    {
+        $shrinked = \mb_substr($value, 0, -1, 'ASCII');
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    private function removeLeadingCharacter(string $value): callable
+    {
+        $shrinked = \mb_substr($value, 1, null, 'ASCII');
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    /**
+     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     */
+    private function identity(string $value): callable
+    {
+        return static fn(): Value => Value::immutable($value);
     }
 }

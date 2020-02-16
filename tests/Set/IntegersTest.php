@@ -188,4 +188,25 @@ class IntegersTest extends TestCase
             );
         }
     }
+
+    public function testShrinkedValuesAlwaysRespectThePredicate()
+    {
+        $even = Integers::any()->filter(fn($i) => $i !== 0 && ($i % 2) === 0);
+
+        foreach ($even->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(0, $dichotomy->a()->unwrap() % 2);
+            $this->assertSame(0, $dichotomy->b()->unwrap() % 2);
+        }
+
+        $odd = Integers::any()->filter(fn($i) => $i !== 0 && ($i % 2) === 1);
+
+        foreach ($odd->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(1, $dichotomy->a()->unwrap() % 2);
+            $this->assertSame(1, $dichotomy->b()->unwrap() % 2);
+        }
+    }
 }

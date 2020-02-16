@@ -168,4 +168,16 @@ class StringsTest extends TestCase
             $this->assertStringEndsWith($b->unwrap(), $value->unwrap());
         }
     }
+
+    public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
+    {
+        $strings = Strings::any()->filter(fn($string) => strlen($string) > 20);
+
+        foreach ($strings->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
+            $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
+        }
+    }
 }

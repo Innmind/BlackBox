@@ -93,18 +93,40 @@ final class Integers implements Set
         }
 
         return new Dichotomy(
-            function() use ($value): Value {
-                $shrinked = (int) \floor($value / 2);
-
-                return Value::immutable($shrinked, $this->shrink($shrinked));
-            },
-            function() use ($value): Value {
-                // add one when the value is negative, otherwise subtract one
-                $reduce = ($value <=> 0) * -1;
-                $shrinked = $value + $reduce;
-
-                return Value::immutable($shrinked, $this->shrink($shrinked));
-            },
+            $this->divideByTwo($value),
+            $this->reduceByOne($value),
         );
+    }
+
+    private function divideByTwo(int $value): callable
+    {
+        $shrinked = (int) \floor($value / 2);
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    private function reduceByOne(int $value): callable
+    {
+        // add one when the value is negative, otherwise subtract one
+        $reduce = ($value <=> 0) * -1;
+        $shrinked = $value + $reduce;
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    /**
+     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     */
+    private function identity(int $value): callable
+    {
+        return static fn(): Value => Value::immutable($value);
     }
 }

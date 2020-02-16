@@ -183,4 +183,25 @@ class RealNumbersTest extends TestCase
             );
         }
     }
+
+    public function testShrinkedValuesAlwaysRespectThePredicate()
+    {
+        $even = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 0);
+
+        foreach ($even->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(0, ((int) round($dichotomy->a()->unwrap())) % 2);
+            $this->assertSame(0, ((int) round($dichotomy->b()->unwrap())) % 2);
+        }
+
+        $odd = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 1);
+
+        foreach ($odd->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(1, ((int) round($dichotomy->a()->unwrap())) % 2);
+            $this->assertSame(1, ((int) round($dichotomy->b()->unwrap())) % 2);
+        }
+    }
 }
