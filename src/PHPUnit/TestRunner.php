@@ -40,6 +40,8 @@ final class TestRunner
         $this($test, $dichotomy->a());
         $this($test, $dichotomy->b());
 
+        ResultPrinterV8::record($parentFailure, $values);
+
         // if both strategies doesn't raise an exception then it means the smallest
         // failing strategy is the parent value so we throw the parent assertion
         // failure exception that wil bubble up to the PHPUnit runner

@@ -31,7 +31,10 @@ jobs:
       - name: Install Dependencies
         run: composer install
       - name: PHPUnit
-        run: vendor/bin/phpunit --coverage-clover=coverage.clover
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover --exclude-group failing-on-purpose
+      - name: PHPUnit Printer Class
+        run: vendor/bin/phpunit --group failing-on-purpose
+        continue-on-error: true
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
