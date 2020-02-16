@@ -6,10 +6,16 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Set\Composite\Matrix,
+    Set\Composite\Combination,
 };
 
+/**
+ * @template C
+ * @implements Set<C>
+ */
 final class Composite implements Set
 {
+    /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
     /** @var list<Set> */
     private array $sets;
@@ -27,6 +33,7 @@ final class Composite implements Set
         $sets = [$first, $second, ...$sets];
 
         $this->immutable = $immutable;
+        /** @var \Closure(mixed...): C */
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
@@ -34,7 +41,7 @@ final class Composite implements Set
     }
 
     /**
-     * @param callable $aggregate It must be a pure function (no randomness, no side effects)
+     * @param callable(mixed...): C $aggregate It must be a pure function (no randomness, no side effects)
      */
     public static function immutable(
         callable $aggregate,
@@ -45,7 +52,7 @@ final class Composite implements Set
     }
 
     /**
-     * @param callable $aggregate It must be a pure function (no randomness, no side effects)
+     * @param callable(mixed...): C $aggregate It must be a pure function (no randomness, no side effects)
      */
     public static function mutable(
         callable $aggregate,
@@ -103,14 +110,20 @@ final class Composite implements Set
             }
 
             if ($combination->immutable() && $this->immutable) {
-                yield Value::immutable($value);
+                yield Value::immutable(
+                    $value,
+                    $this->shrink(false, $combination),
+                );
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 /** @psalm-suppress MissingClosureReturnType */
-                yield Value::mutable(fn() => ($this->aggregate)(...$combination->unwrap()));
+                yield Value::mutable(
+                    fn() => ($this->aggregate)(...$combination->unwrap()),
+                    $this->shrink(true, $combination),
+                );
             }
 
             ++$iterations;
@@ -124,5 +137,58 @@ final class Composite implements Set
         }
 
         return $iterations < $this->size;
+    }
+
+    private function shrink(bool $mutable, Combination $combination): ?Dichotomy
+    {
+        if (!$combination->shrinkable()) {
+            return null;
+        }
+
+        $shrinked = $combination->shrink();
+
+        return new Dichotomy(
+            $this->shrinkWithStrategy($mutable, $combination, $shrinked['a']),
+            $this->shrinkWithStrategy($mutable, $combination, $shrinked['b']),
+        );
+    }
+
+    private function shrinkWithStrategy(
+        bool $mutable,
+        Combination $combination,
+        Combination $strategy
+    ): callable {
+        $shrinked = ($this->aggregate)(...$strategy->unwrap());
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($mutable, $combination);
+        }
+
+        if ($mutable) {
+            /** @psalm-suppress MissingClosureReturnType */
+            return fn(): Value => Value::mutable(
+                fn() => ($this->aggregate)(...$strategy->unwrap()),
+                $this->shrink(true, $strategy),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            $shrinked,
+            $this->shrink(false, $strategy),
+        );
+    }
+
+    private function identity(bool $mutable, Combination $combination): callable
+    {
+        if ($mutable) {
+            /** @psalm-suppress MissingClosureReturnType */
+            return fn(): Value => Value::mutable(
+                fn() => ($this->aggregate)(...$combination->unwrap()),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            ($this->aggregate)(...$combination->unwrap()),
+        );
     }
 }
