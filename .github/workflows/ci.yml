@@ -62,8 +62,6 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install
-      - name: PHPUnit
-        run: vendor/bin/phpunit --coverage-clover=coverage.clover --exclude-group failing-on-purpose
       - name: PHPUnit Printer Class
         run: vendor/bin/phpunit --group failing-on-purpose
         continue-on-error: true
