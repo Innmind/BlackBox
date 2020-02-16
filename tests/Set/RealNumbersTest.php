@@ -167,4 +167,20 @@ class RealNumbersTest extends TestCase
             $this->assertNotSame($a->unwrap(), $b->unwrap());
         }
     }
+
+    public function testShrinkedValuesNeverChangeSign()
+    {
+        $numbers = RealNumbers::any();
+
+        foreach ($numbers->values() as $value) {
+            $this->assertSame(
+                $value->unwrap() <=> 0,
+                $value->shrink()->a()->unwrap() <=> 0,
+            );
+            $this->assertSame(
+                $value->unwrap() <=> 0,
+                $value->shrink()->b()->unwrap() <=> 0,
+            );
+        }
+    }
 }
