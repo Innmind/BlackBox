@@ -82,4 +82,35 @@ class ScenarioTest extends TestCase
         $this->assertSame(1, max($additions1));
         $this->assertSame(0, max($additions2));
     }
+
+    public function testDisableShrinking()
+    {
+        $scenario = new Scenario(Integers::any());
+        $scenario2 = $scenario->disableShrinking();
+
+        $this->assertInstanceOf(Scenario::class, $scenario2);
+        $this->assertNotSame($scenario, $scenario2);
+
+        $runned = 0;
+
+        try {
+            $scenario->then(function() use (&$runned) {
+                ++$runned;
+                $this->assertTrue(false);
+            });
+        } catch (\Throwable $e) {
+            $this->assertGreaterThan(1, $runned);
+        }
+
+        $runned = 0;
+
+        try {
+            $scenario2->then(function() use (&$runned) {
+                ++$runned;
+                $this->assertTrue(false);
+            });
+        } catch (\Throwable $e) {
+            $this->assertSame(1, $runned);
+        }
+    }
 }

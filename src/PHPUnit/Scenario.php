@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
 final class Scenario
 {
     private Set $set;
+    private TestRunner $run;
 
     public function __construct(Set $first , Set ...$sets)
     {
@@ -30,12 +31,21 @@ final class Scenario
         }
 
         $this->set = $set->take(100);
+        $this->run = new TestRunner;
     }
 
     public function take(int $size): self
     {
         $self = clone $this;
         $self->set = $this->set->take($size);
+
+        return $self;
+    }
+
+    public function disableShrinking(): self
+    {
+        $self = clone $this;
+        $self->run = new TestRunner(true);
 
         return $self;
     }
@@ -54,7 +64,7 @@ final class Scenario
     public function then(callable $test): void
     {
         foreach ($this->set->values() as $values) {
-            $test(...$values->unwrap());
+            ($this->run)($test, $values);
         }
     }
 }
