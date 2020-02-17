@@ -144,29 +144,36 @@ final class Regex implements Set
             return null;
         }
 
+        $strategyA = $this->removeTrailingCharacter($value);
+        $strategyB = $this->removeLeadingCharacter($value);
+
+        if (\is_null($strategyA) && \is_null($strategyB)) {
+            return null;
+        }
+
         return new Dichotomy(
-            $this->removeTrailingCharacter($value),
-            $this->removeLeadingCharacter($value),
+            $strategyA ?? $this->identity($value),
+            $strategyB ?? $this->identity($value),
         );
     }
 
-    private function removeTrailingCharacter(string $value): callable
+    private function removeTrailingCharacter(string $value): ?callable
     {
         $shrinked = \mb_substr($value, 0, -1, 'ASCII');
 
         if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
+            return null;
         }
 
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
     }
 
-    private function removeLeadingCharacter(string $value): callable
+    private function removeLeadingCharacter(string $value): ?callable
     {
         $shrinked = \mb_substr($value, 1, null, 'ASCII');
 
         if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
+            return null;
         }
 
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));

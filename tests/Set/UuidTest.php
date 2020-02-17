@@ -29,4 +29,13 @@ class UuidTest extends TestCase
             $this->assertTrue(U::isValid($uuid->unwrap()));
         }
     }
+
+    public function testUuidsAreNotShrinkable()
+    {
+        $uuids = Uuid::any();
+
+        foreach ($uuids->values() as $uuid) {
+            $this->assertFalse($uuid->shrinkable());
+        }
+    }
 }

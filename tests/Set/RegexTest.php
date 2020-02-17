@@ -80,34 +80,32 @@ class RegexTest extends TestCase
         }
     }
 
-    public function testEmptyStringCannotBeShrinked()
-    {
-        $strings = Regex::for('[a-z]');
-
-        foreach ($strings->values() as $value) {
-            $this->assertFalse(
-                $value
-                    ->shrink()
-                    ->a() // length of 0
-                    ->shrinkable()
-            );
-        }
-    }
-
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = Regex::for('[a-z]');
+        $strings = Regex::for('[a-z]+');
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 1) {
+                // because they can't be shrinked as they would no longer match
+                // the pattern
+                continue;
+            }
+
             $this->assertTrue($value->shrinkable());
         }
     }
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = Regex::for('\d');
+        $strings = Regex::for('\d+');
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 1) {
+                // because they can't be shrinked as they would no longer match
+                // the pattern
+                continue;
+            }
+
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -122,15 +120,15 @@ class RegexTest extends TestCase
         $strings = Regex::for('[a-z][a-z]+');
 
         foreach ($strings->values() as $value) {
-            $dichotomy = $value->shrink();
-            $a = $dichotomy->a();
-            $b = $dichotomy->b();
-
             if (strlen($value->unwrap()) === 2) {
                 // as it will shrink to the identity value because a shorter value
                 // wouldn't match the expression
                 continue;
             }
+
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
 
             $this->assertNotSame($a->unwrap(), $value->unwrap());
             $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
@@ -144,6 +142,12 @@ class RegexTest extends TestCase
         $strings = Regex::for('[a-z]+')->filter(fn($string) => strlen($string) > 20);
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 21) {
+                // because they can't be shrinked as they would no longer match
+                // the pattern
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
@@ -161,6 +165,15 @@ class RegexTest extends TestCase
             $this->assertNotSame($previous->unwrap(), $chars->current()->unwrap());
             $previous = $chars->current();
             $chars->next();
+        }
+    }
+
+    public function testMinimumValueIsNotShrinkable()
+    {
+        $chars = Regex::for('[a-z]');
+
+        foreach ($chars->values() as $char) {
+            $this->assertFalse($char->shrinkable());
         }
     }
 }
