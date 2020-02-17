@@ -25,4 +25,13 @@ class EmailTest extends TestCase
             $this->assertNotFalse(filter_var($value->unwrap(), FILTER_VALIDATE_EMAIL));
         }
     }
+
+    public function testEmailsAreShrinkable()
+    {
+        $emails = Email::any();
+
+        foreach ($emails->values() as $email) {
+            $this->assertTrue($email->shrinkable());
+        }
+    }
 }
