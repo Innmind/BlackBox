@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
 };
+use Ramsey\Uuid\Uuid as U;
 
 class UuidTest extends TestCase
 {
@@ -25,6 +26,7 @@ class UuidTest extends TestCase
                 '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
                 $uuid->unwrap(),
             );
+            $this->assertTrue(U::isValid($uuid->unwrap()));
         }
     }
 }
