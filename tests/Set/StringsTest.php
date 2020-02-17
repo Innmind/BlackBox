@@ -52,11 +52,10 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::any(256)->values()),
+            $this->unwrap(Strings::atMost(256)->values()),
         );
 
         $this->assertLessThanOrEqual(256, \max($values));
-        $this->assertGreaterThan(128, \max($values));
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
@@ -179,6 +178,25 @@ class StringsTest extends TestCase
 
             $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
             $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
+        }
+    }
+
+    public function testBetween()
+    {
+        $strings = Strings::between(100, 200);
+
+        foreach ($strings->values() as $value) {
+            $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
+            $this->assertLessThanOrEqual(200, strlen($value->unwrap()));
+        }
+    }
+
+    public function testAtLeast()
+    {
+        $strings = Strings::atLeast(100);
+
+        foreach ($strings->values() as $value) {
+            $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
         }
     }
 }

@@ -11,19 +11,45 @@ use Innmind\BlackBox\Set;
 final class Strings implements Set
 {
     private int $maxLength;
+    private int $minLength;
     private int $size;
     private \Closure $predicate;
 
-    public function __construct(int $maxLength = 128)
+    public function __construct(int $boundA = null, int $boundB = null)
     {
-        $this->maxLength = $maxLength;
+        // this trick is here because historically only the maxLength was configurable
+        // with the first argument
+        $boundA ??= 128;
+        $boundB ??= 0;
+
+        $this->maxLength = \max($boundA, $boundB);
+        $this->minLength = \min($boundA, $boundB);
         $this->size = 100;
         $this->predicate = static fn(): bool => true;
     }
 
-    public static function any(int $maxLength = 128): self
+    public static function any(int $maxLength = null): self
     {
+        if (\is_int($maxLength)) {
+            \trigger_error('Use Strings::atMost() instead', \E_USER_DEPRECATED);
+        }
+
         return new self($maxLength);
+    }
+
+    public static function between(int $minLength, int $maxLength): self
+    {
+        return new self($minLength, $maxLength);
+    }
+
+    public static function atMost(int $maxLength): self
+    {
+        return new self(0, $maxLength);
+    }
+
+    public static function atLeast(int $minLength): self
+    {
+        return new self($minLength, $minLength + 128);
     }
 
     /**
@@ -67,7 +93,7 @@ final class Strings implements Set
 
         do {
             $value = '';
-            $maxLength = \random_int(1, $this->maxLength);
+            $maxLength = \random_int($this->minLength + 1, $this->maxLength);
 
             for ($i = 0; $i < $maxLength; $i++) {
                 $value .= \chr(\random_int(33, 126));
