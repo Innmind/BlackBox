@@ -18,7 +18,6 @@ use ReverseRegex\{
  */
 final class Regex implements Set
 {
-    private string $expression;
     private Parser $parser;
     private GeneratorInterface $random;
     private int $size;
@@ -27,7 +26,6 @@ final class Regex implements Set
     private function __construct(string $expression)
     {
         $lexer = new Lexer($expression);
-        $this->expression = $expression;
         $this->random = new class(new SimpleRandom) implements GeneratorInterface {
             private GeneratorInterface $random;
 
