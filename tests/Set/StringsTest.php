@@ -37,7 +37,7 @@ class StringsTest extends TestCase
             $this->unwrap(Strings::any()->values()),
         );
 
-        $this->assertTrue(128 >= \max($values));
+        $this->assertLessThanOrEqual(128, \max($values));
     }
 
     public function testMaxLengthIsParametrable()
@@ -49,8 +49,8 @@ class StringsTest extends TestCase
             $this->unwrap(Strings::any(256)->values()),
         );
 
-        $this->assertTrue(256 >= \max($values));
-        $this->assertTrue(\max($values) > 128);
+        $this->assertLessThanOrEqual(256, \max($values));
+        $this->assertGreaterThan(128, \max($values));
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
