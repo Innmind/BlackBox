@@ -26,6 +26,14 @@ final class Strings implements Set
         return new self($maxLength);
     }
 
+    /**
+     * @see https://github.com/icomefromthenet/ReverseRegex For the supported expressions
+     */
+    public static function matching(string $expression): Regex
+    {
+        return Regex::for($expression);
+    }
+
     public function take(int $size): Set
     {
         $self = clone $this;
