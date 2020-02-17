@@ -67,8 +67,9 @@ final class Strings implements Set
 
         do {
             $value = '';
+            $maxLength = \random_int(1, $this->maxLength);
 
-            foreach (\range(1, \random_int(2, $this->maxLength)) as $_) {
+            for ($i = 0; $i < $maxLength; $i++) {
                 $value .= \chr(\random_int(33, 126));
             }
 

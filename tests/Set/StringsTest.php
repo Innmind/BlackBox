@@ -113,13 +113,11 @@ class StringsTest extends TestCase
 
     public function testEmptyStringCannotBeShrinked()
     {
-        $strings = new Strings(2); // always generate string of length 2
+        $strings = new Strings(1); // always generate string of length 1
 
         foreach ($strings->values() as $value) {
             $this->assertFalse(
                 $value
-                    ->shrink()
-                    ->a() // length of 1
                     ->shrink()
                     ->a() // length of 0
                     ->shrinkable()
@@ -159,12 +157,9 @@ class StringsTest extends TestCase
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
-            if (
-                $a->unwrap() === '' ||
-                $b->unwrap() === ''
-            ) {
-                // assertStringStartsWith and assertStringEndsWith doesn't
-                // accept empty strings as prefix/suffix
+            if (strlen($value->unwrap()) === 1) {
+                // because it will shrink to the identity value because the shrunk
+                // empty string wouldn't match the predicate
                 continue;
             }
 
