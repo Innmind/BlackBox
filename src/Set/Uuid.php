@@ -35,8 +35,6 @@ final class Uuid
 
     private static function bit(): Set
     {
-        return Chars::any()->filter(static function(string $bit): bool {
-            return (bool) \preg_match('~^[a-f0-9]$~', $bit);
-        });
+        return Strings::matching('[a-f0-9]');
     }
 }
