@@ -150,4 +150,17 @@ class RegexTest extends TestCase
             $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
         }
     }
+
+    public function testNeverGeneratedSameValueTwiceInARow()
+    {
+        $chars = Regex::for('[a-z]+')->values();
+        $previous = $chars->current();
+        $chars->next();
+
+        while ($chars->valid()) {
+            $this->assertNotSame($previous->unwrap(), $chars->current()->unwrap());
+            $previous = $chars->current();
+            $chars->next();
+        }
+    }
 }

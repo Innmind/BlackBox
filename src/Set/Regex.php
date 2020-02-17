@@ -26,7 +26,8 @@ final class Regex implements Set
     private function __construct(string $expression)
     {
         $lexer = new Lexer($expression);
-        $this->random = new class(new SimpleRandom) implements GeneratorInterface {
+        $random = new SimpleRandom(\random_int(\PHP_INT_MIN, \PHP_INT_MAX));
+        $this->random = new class($random) implements GeneratorInterface {
             private GeneratorInterface $random;
 
             public function __construct(GeneratorInterface $random)
