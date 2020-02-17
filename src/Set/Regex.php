@@ -11,6 +11,7 @@ use ReverseRegex\{
     Random\SimpleRandom,
     Parser,
     Generator\Scope,
+    Exception,
 };
 
 /**
@@ -42,10 +43,18 @@ final class Regex implements Set
              */
             public function generate($min = 0,$max = null)
             {
-                // we force the max to 128 here so it never exceeds the hardocded
-                // max value in the SimpleRandom implementation and doesn't take
-                // too long to generate unbounded strings lengths
-                return $this->random->generate($min, 128);
+                // by default we try the default min/max strategy but in case it
+                // fails due to the maxx being too high (cf SimpleRandom hardcoded
+                // limit) we then try with a maximum of 128 so it doesn't take
+                // too long to generate the data
+                try {
+                    return $this->random->generate($min, $max);
+                } catch (Exception $e) {
+                    return $this->random->generate(
+                        $min,
+                        $max ? \min($max, 128) : null,
+                    );
+                }
             }
 
             /**
