@@ -81,8 +81,52 @@ final class Integers implements Set
                 continue;
             }
 
-            yield Value::immutable($value);
+            yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
         } while ($iterations < $this->size);
+    }
+
+    private function shrink(int $value): ?Dichotomy
+    {
+        if ($value === 0) {
+            return null;
+        }
+
+        return new Dichotomy(
+            $this->divideByTwo($value),
+            $this->reduceByOne($value),
+        );
+    }
+
+    private function divideByTwo(int $value): callable
+    {
+        $shrinked = (int) \round($value / 2, 0, \PHP_ROUND_HALF_DOWN);
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    private function reduceByOne(int $value): callable
+    {
+        // add one when the value is negative, otherwise subtract one
+        $reduce = ($value <=> 0) * -1;
+        $shrinked = $value + $reduce;
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    /**
+     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     */
+    private function identity(int $value): callable
+    {
+        return static fn(): Value => Value::immutable($value);
     }
 }

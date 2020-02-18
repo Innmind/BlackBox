@@ -21,6 +21,40 @@ class RealNumbersTest extends TestCase
         $this->assertInstanceOf(RealNumbers::class, RealNumbers::any());
     }
 
+    public function testBetween()
+    {
+        $numbers = RealNumbers::between(-100, 100);
+
+        $this->assertInstanceOf(RealNumbers::class, $numbers);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertGreaterThanOrEqual(-100, $value->unwrap());
+            $this->assertLessThanOrEqual(100, $value->unwrap());
+        }
+    }
+
+    public function testAbove()
+    {
+        $numbers = RealNumbers::above(0);
+
+        $this->assertInstanceOf(RealNumbers::class, $numbers);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertGreaterThanOrEqual(0, $value->unwrap());
+        }
+    }
+
+    public function testBelow()
+    {
+        $numbers = RealNumbers::below(0);
+
+        $this->assertInstanceOf(RealNumbers::class, $numbers);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertLessThanOrEqual(0, $value->unwrap());
+        }
+    }
+
     public function testByDefault100IntegersAreGenerated()
     {
         $values = $this->unwrap(RealNumbers::any()->values());
@@ -77,6 +111,97 @@ class RealNumbersTest extends TestCase
         foreach ($a->values() as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
+        }
+    }
+
+    public function testZeroCannotBeShrinked()
+    {
+        $numbers = RealNumbers::between(-1, 1)->filter(fn($i) => $i === 0.0);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
+
+    public function testRealNumbersCanBeShrinked()
+    {
+        $numbers = RealNumbers::any()->filter(fn($i) => $i !== 0.0);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
+
+    public function testShrinkedRealNumbersAreImmutable()
+    {
+        $numbers = RealNumbers::any()->filter(fn($i) => $i !== 0.0);
+
+        foreach ($numbers->values() as $value) {
+            $this->assertTrue($value->isImmutable());
+        }
+    }
+
+    public function testRealNumbersAreShrinkedTowardZero()
+    {
+        $positive = RealNumbers::above(1);
+
+        foreach ($positive->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertLessThanOrEqual($value->unwrap(), $a->unwrap());
+            $this->assertLessThanOrEqual($value->unwrap(), $b->unwrap());
+            $this->assertNotSame($a->unwrap(), $b->unwrap());
+        }
+
+        $negative = RealNumbers::below(-1);
+
+        foreach ($negative->values() as $value) {
+            $dichotomy = $value->shrink();
+            $a = $dichotomy->a();
+            $b = $dichotomy->b();
+
+            $this->assertGreaterThanOrEqual($value->unwrap(), $a->unwrap());
+            $this->assertGreaterThanOrEqual($value->unwrap(), $b->unwrap());
+            $this->assertNotSame($a->unwrap(), $b->unwrap());
+        }
+    }
+
+    public function testShrinkedValuesNeverChangeSign()
+    {
+        $numbers = RealNumbers::any();
+
+        foreach ($numbers->values() as $value) {
+            $this->assertSame(
+                $value->unwrap() <=> 0,
+                $value->shrink()->a()->unwrap() <=> 0,
+            );
+            $this->assertSame(
+                $value->unwrap() <=> 0,
+                $value->shrink()->b()->unwrap() <=> 0,
+            );
+        }
+    }
+
+    public function testShrinkedValuesAlwaysRespectThePredicate()
+    {
+        $even = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 0);
+
+        foreach ($even->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(0, ((int) round($dichotomy->a()->unwrap())) % 2);
+            $this->assertSame(0, ((int) round($dichotomy->b()->unwrap())) % 2);
+        }
+
+        $odd = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 1);
+
+        foreach ($odd->values() as $value) {
+            $dichotomy = $value->shrink();
+
+            $this->assertSame(1, ((int) round($dichotomy->a()->unwrap())) % 2);
+            $this->assertSame(1, ((int) round($dichotomy->b()->unwrap())) % 2);
         }
     }
 }

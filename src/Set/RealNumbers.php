@@ -10,11 +10,15 @@ use Innmind\BlackBox\Set;
  */
 final class RealNumbers implements Set
 {
+    private int $lowerBound;
+    private int $upperBound;
     private int $size;
     private \Closure $predicate;
 
-    public function __construct()
+    public function __construct(int $lowerBound = null, int $upperBound = null)
     {
+        $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
+        $this->upperBound = $upperBound ?? \PHP_INT_MAX;
         $this->size = 100;
         $this->predicate = static fn(): bool => true;
     }
@@ -22,6 +26,21 @@ final class RealNumbers implements Set
     public static function any(): self
     {
         return new self;
+    }
+
+    public static function between(int $lowerBound, int $upperBound): self
+    {
+        return new self($lowerBound, $upperBound);
+    }
+
+    public static function above(int $lowerBound): self
+    {
+        return new self($lowerBound);
+    }
+
+    public static function below(int $upperBound): self
+    {
+        return new self(null, $upperBound);
     }
 
     public function take(int $size): Set
@@ -56,14 +75,58 @@ final class RealNumbers implements Set
         $iterations = 0;
 
         do {
-            $value = \random_int(\PHP_INT_MIN, \PHP_INT_MAX) * \lcg_value();
+            $value = \random_int($this->lowerBound, $this->upperBound) * \lcg_value();
 
             if (!($this->predicate)($value)) {
                 continue;
             }
 
-            yield Value::immutable($value);
+            yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
         } while ($iterations < $this->size);
+    }
+
+    private function shrink(float $value): ?Dichotomy
+    {
+        if (\round($value, 5) === 0.0) {
+            return null;
+        }
+
+        return new Dichotomy(
+            $this->divideByTwo($value),
+            $this->reduceByOne($value),
+        );
+    }
+
+    private function divideByTwo(float $value): callable
+    {
+        $shrinked = $value / 2;
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    private function reduceByOne(float $value): callable
+    {
+        // add one when the value is negative, otherwise subtract one
+        $reduce = ($value <=> 0) * -1;
+        $shrinked = $value + $reduce;
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    /**
+     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     */
+    private function identity(float $value): callable
+    {
+        return static fn(): Value => Value::immutable($value);
     }
 }

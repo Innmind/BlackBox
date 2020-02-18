@@ -82,4 +82,13 @@ class ElementsTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testElementsAreNotShrinkable()
+    {
+        $elements = Elements::of(...range(0, 1000));
+
+        foreach ($elements->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
 }

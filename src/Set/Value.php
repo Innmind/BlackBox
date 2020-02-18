@@ -11,35 +11,56 @@ final class Value
     /** @var \Closure(): T */
     private \Closure $unwrap;
     private bool $immutable;
+    /** @var ?Dichotomy<T> */
+    private ?Dichotomy $dichotomy;
 
     /**
      * @param callable(): T $unwrap
+     * @param ?Dichotomy<T> $dichotomy
      */
-    private function __construct(bool $immutable, callable $unwrap)
-    {
+    private function __construct(
+        bool $immutable,
+        callable $unwrap,
+        ?Dichotomy $dichotomy
+    ) {
         $this->unwrap = \Closure::fromCallable($unwrap);
         $this->immutable = $immutable;
+        $this->dichotomy = $dichotomy;
     }
 
     /**
      * @param T $value
+     * @param Dichotomy<T>|null $dichotomy
      */
-    public static function immutable($value): self
+    public static function immutable($value, Dichotomy $dichotomy = null): self
     {
-        return new self(true, static fn() => $value);
+        return new self(true, static fn() => $value, $dichotomy);
     }
 
     /**
      * @param callable(): T $unwrap
+     * @param Dichotomy<T>|null $dichotomy
      */
-    public static function mutable(callable $unwrap): self
+    public static function mutable(callable $unwrap, Dichotomy $dichotomy = null): self
     {
-        return new self(false, $unwrap);
+        return new self(false, $unwrap, $dichotomy);
     }
 
     public function isImmutable(): bool
     {
         return $this->immutable;
+    }
+
+    public function shrinkable(): bool
+    {
+        return $this->dichotomy instanceof Dichotomy;
+    }
+
+    /** @psalm-suppress InvalidNullableReturnType */
+    public function shrink(): Dichotomy
+    {
+        /** @psalm-suppress NullableReturnStatement */
+        return $this->dichotomy;
     }
 
     /**

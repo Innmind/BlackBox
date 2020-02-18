@@ -62,7 +62,49 @@ final class UnsafeStrings implements Set
         $values = \array_slice($values, 0, $this->size);
 
         foreach ($values as $value) {
-            yield Value::immutable($value);
+            yield Value::immutable($value, $this->shrink($value));
         }
+    }
+
+    private function shrink(string $value): ?Dichotomy
+    {
+        if ($value === '') {
+            return null;
+        }
+
+        return new Dichotomy(
+            $this->removeTrailingCharacter($value),
+            $this->removeLeadingCharacter($value),
+        );
+    }
+
+    private function removeTrailingCharacter(string $value): callable
+    {
+        $shrinked = \mb_substr($value, 0, -1, 'ASCII');
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    private function removeLeadingCharacter(string $value): callable
+    {
+        $shrinked = \mb_substr($value, 1, null, 'ASCII');
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($value);
+        }
+
+        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+    }
+
+    /**
+     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     */
+    private function identity(string $value): callable
+    {
+        return static fn(): Value => Value::immutable($value);
     }
 }

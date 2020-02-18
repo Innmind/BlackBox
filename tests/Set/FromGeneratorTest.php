@@ -112,4 +112,17 @@ class FromGeneratorTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testGeneratedValuesAreNotShrinkable()
+    {
+        $generated = FromGenerator::of(function() {
+            foreach (\range(0, 100) as $i) {
+                yield $i;
+            }
+        });
+
+        foreach ($generated->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
 }

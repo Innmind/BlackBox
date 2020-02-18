@@ -7,10 +7,13 @@ use Innmind\BlackBox\{
     Set\Email,
     Set,
     Set\Value,
+    PHPUnit\BlackBox,
 };
 
 class EmailTest extends TestCase
 {
+    use BlackBox;
+
     public function testAny()
     {
         $emails = Email::any();
@@ -22,7 +25,24 @@ class EmailTest extends TestCase
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
             $this->assertIsString($value->unwrap());
-            $this->assertNotFalse(filter_var($value->unwrap(), FILTER_VALIDATE_EMAIL));
+        }
+    }
+
+    public function testEmailsAreValid()
+    {
+        $this
+            ->forAll(Email::any())
+            ->then(function($email) {
+                $this->assertNotFalse(filter_var($email, FILTER_VALIDATE_EMAIL));
+            });
+    }
+
+    public function testEmailsAreShrinkable()
+    {
+        $emails = Email::any();
+
+        foreach ($emails->values() as $email) {
+            $this->assertTrue($email->shrinkable());
         }
     }
 }

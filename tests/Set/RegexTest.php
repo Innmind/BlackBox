@@ -4,68 +4,38 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Strings,
     Set\Regex,
     Set,
     Set\Value,
 };
 
-class StringsTest extends TestCase
+class RegexTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new Strings);
+        $this->assertInstanceOf(Set::class, Regex::for('\d'));
     }
 
     public function testAny()
     {
-        $this->assertInstanceOf(Strings::class, Strings::any());
-    }
-
-    public function testMatching()
-    {
-        $this->assertInstanceOf(Regex::class, Strings::matching('\d'));
+        $this->assertInstanceOf(Regex::class, Regex::for('\d'));
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Strings::any()->values());
+        $values = $this->unwrap(Regex::for('\d')->values());
 
         $this->assertCount(100, $values);
     }
 
-    public function testByDefaultMaxLengthIs128()
-    {
-        $values = \array_map(
-            static function(string $value): int {
-                return \strlen($value);
-            },
-            $this->unwrap(Strings::any()->values()),
-        );
-
-        $this->assertLessThanOrEqual(128, \max($values));
-    }
-
-    public function testMaxLengthIsParametrable()
-    {
-        $values = \array_map(
-            static function(string $value): int {
-                return \strlen($value);
-            },
-            $this->unwrap(Strings::atMost(256)->values()),
-        );
-
-        $this->assertLessThanOrEqual(256, \max($values));
-    }
-
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Strings::any();
+        $values = Regex::for('[a-z]+');
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
 
-        $this->assertInstanceOf(Strings::class, $others);
+        $this->assertInstanceOf(Regex::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
             $this->unwrap($values->values()),
@@ -88,10 +58,10 @@ class StringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Strings::any();
+        $a = Regex::for('\d');
         $b = $a->take(50);
 
-        $this->assertInstanceOf(Strings::class, $b);
+        $this->assertInstanceOf(Regex::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $this->unwrap($a->values()));
         $this->assertCount(50, $this->unwrap($b->values()));
@@ -99,7 +69,7 @@ class StringsTest extends TestCase
 
     public function testValues()
     {
-        $a = Strings::any();
+        $a = Regex::for('\d');
 
         $this->assertInstanceOf(\Generator::class, $a->values());
         $this->assertCount(100, $this->unwrap($a->values()));
@@ -110,34 +80,32 @@ class StringsTest extends TestCase
         }
     }
 
-    public function testEmptyStringCannotBeShrinked()
-    {
-        $strings = new Strings(1); // always generate string of length 1
-
-        foreach ($strings->values() as $value) {
-            $this->assertFalse(
-                $value
-                    ->shrink()
-                    ->a() // length of 0
-                    ->shrinkable()
-            );
-        }
-    }
-
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = Strings::any()->filter(fn($string) => $string !== '');
+        $strings = Regex::for('[a-z]+');
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 1) {
+                // because they can't be shrinked as they would no longer match
+                // the pattern
+                continue;
+            }
+
             $this->assertTrue($value->shrinkable());
         }
     }
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = Strings::any()->filter(fn($string) => $string !== '');
+        $strings = Regex::for('\d+');
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 1) {
+                // because they can't be shrinked as they would no longer match
+                // the pattern
+                continue;
+            }
+
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -149,18 +117,18 @@ class StringsTest extends TestCase
 
     public function testStringsAreShrinkedFromBothEnds()
     {
-        $strings = Strings::any()->filter(fn($string) => $string !== '');
+        $strings = Regex::for('[a-z][a-z]+');
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 2) {
+                // as it will shrink to the identity value because a shorter value
+                // wouldn't match the expression
+                continue;
+            }
+
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
-
-            if (strlen($value->unwrap()) === 1) {
-                // because it will shrink to the identity value because the shrunk
-                // empty string wouldn't match the predicate
-                continue;
-            }
 
             $this->assertNotSame($a->unwrap(), $value->unwrap());
             $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
@@ -171,9 +139,15 @@ class StringsTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = Strings::any()->filter(fn($string) => strlen($string) > 20);
+        $strings = Regex::for('[a-z]+')->filter(fn($string) => strlen($string) > 20);
 
         foreach ($strings->values() as $value) {
+            if (strlen($value->unwrap()) === 21) {
+                // because they can't be shrinked as they would no longer match
+                // the pattern
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
@@ -181,22 +155,25 @@ class StringsTest extends TestCase
         }
     }
 
-    public function testBetween()
+    public function testNeverGeneratedSameValueTwiceInARow()
     {
-        $strings = Strings::between(100, 200);
+        $chars = Regex::for('[a-z]+')->values();
+        $previous = $chars->current();
+        $chars->next();
 
-        foreach ($strings->values() as $value) {
-            $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
-            $this->assertLessThanOrEqual(200, strlen($value->unwrap()));
+        while ($chars->valid()) {
+            $this->assertNotSame($previous->unwrap(), $chars->current()->unwrap());
+            $previous = $chars->current();
+            $chars->next();
         }
     }
 
-    public function testAtLeast()
+    public function testMinimumValueIsNotShrinkable()
     {
-        $strings = Strings::atLeast(100);
+        $chars = Regex::for('[a-z]');
 
-        foreach ($strings->values() as $value) {
-            $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
+        foreach ($chars->values() as $char) {
+            $this->assertFalse($char->shrinkable());
         }
     }
 }

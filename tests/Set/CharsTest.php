@@ -79,4 +79,13 @@ class CharsTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testCharsAreNotShrinkable()
+    {
+        $chars = Chars::any();
+
+        foreach ($chars->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
 }

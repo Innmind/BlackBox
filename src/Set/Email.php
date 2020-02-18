@@ -18,17 +18,13 @@ final class Email
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
             },
-            Strings::any()->filter(static function(string $string): bool {
-                return (bool) \preg_match('~^[a-zA-Z0-9][a-zA-Z0-9+\-\._]+[a-zA-Z0-9]$~', $string) &&
-                    !\preg_match('~\.\.~', $string);
+            Strings::matching('[a-zA-Z0-9][a-zA-Z0-9+\-\._]{1,64}[a-zA-Z0-9]')->filter(static function(string $string): bool {
+                return !\preg_match('~\.\.~', $string);
             }),
-            Strings::any()->filter(static function(string $string): bool {
-                return (bool) \preg_match('~^[a-zA-Z0-9][a-zA-Z0-9\-\.]+[a-zA-Z0-9]$~', $string) &&
-                    !\preg_match('~\.\.~', $string);
+            Strings::matching('[a-zA-Z0-9][a-zA-Z0-9\-\.]{1,63}[a-zA-Z0-9]')->filter(static function(string $string): bool {
+                return !\preg_match('~\.\.~', $string);
             }),
-            Strings::any()->filter(static function(string $string): bool {
-                return (bool) \preg_match('~^[a-zA-Z]+$~', $string);
-            }),
+            Strings::matching('[a-zA-Z]{1,63}'),
         )
             ->take(100)
             ->filter(static function(string $email): bool {

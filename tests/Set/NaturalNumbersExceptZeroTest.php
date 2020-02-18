@@ -83,4 +83,13 @@ class NaturalNumbersExceptZeroTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testShrinkable()
+    {
+        $integers = NaturalNumbersExceptZero::any();
+
+        foreach ($integers->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+    }
 }

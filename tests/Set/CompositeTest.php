@@ -195,4 +195,127 @@ class CompositeTest extends TestCase
             $this->assertSame($value->unwrap()->char, $value->unwrap()->char);
         }
     }
+
+    public function testConservesMutabilityFromUnderlyingSets()
+    {
+        $mutable = Composite::mutable(
+            function(string ...$args) {
+                $std = new \stdClass;
+                $std->prop = $args;
+
+                return $std;
+            },
+            FromGenerator::of(function() {
+                yield 'e';
+                yield 'f';
+            }),
+            FromGenerator::of(function() {
+                yield 'a';
+                yield 'b';
+            }),
+            FromGenerator::of(function() {
+                yield 'c';
+                yield 'd';
+            }),
+        );
+
+        foreach ($mutable->values() as $value) {
+            $this->assertFalse($value->isImmutable());
+        }
+
+        $immutable = Composite::immutable(
+            function(int ...$args) {
+                $std = new \stdClass;
+                $std->prop = $args;
+
+                return $std;
+            },
+            Set\Integers::any(),
+            Set\Integers::any(),
+            Set\Integers::any(),
+        );
+
+        foreach ($immutable->values() as $value) {
+            $this->assertTrue($value->isImmutable());
+        }
+    }
+
+    public function testShrinkableAsLongAsOneUnderlyingSetIs()
+    {
+        $shrinkable = Composite::immutable(
+            function(...$args) {
+                $std = new \stdClass;
+                $std->prop = $args;
+
+                return $std;
+            },
+            FromGenerator::of(function() {
+                yield 'e';
+                yield 'f';
+            }),
+            Set\Integers::any(),
+            FromGenerator::of(function() {
+                yield 'c';
+                yield 'd';
+            }),
+        );
+
+        foreach ($shrinkable->values() as $value) {
+            $this->assertTrue($value->shrinkable());
+        }
+
+        $nonShrinkable = Composite::immutable(
+            function(string ...$args) {
+                $std = new \stdClass;
+                $std->prop = $args;
+
+                return $std;
+            },
+            FromGenerator::of(function() {
+                yield 'e';
+                yield 'f';
+            }),
+            FromGenerator::of(function() {
+                yield 'a';
+                yield 'b';
+            }),
+            FromGenerator::of(function() {
+                yield 'c';
+                yield 'd';
+            }),
+        );
+
+        foreach ($nonShrinkable->values() as $value) {
+            $this->assertFalse($value->shrinkable());
+        }
+    }
+
+    public function testShrinkedValuesUseTheDifferentStrategiesFromTheUnderlyingSets()
+    {
+        $set = Composite::immutable(
+            function(...$args) {
+                $std = new \stdClass;
+                $std->prop = $args;
+
+                return $std;
+            },
+            Set\Integers::any(),
+            Set\Integers::any(),
+            Set\Integers::any(),
+        );
+
+        foreach ($set->values() as $value) {
+            $dichotomy = $value->shrink();
+            $value = $value->unwrap();
+            $a = $dichotomy->a()->unwrap();
+            $b = $dichotomy->b()->unwrap();
+
+            $this->assertNotSame($a, $value);
+            $this->assertNotSame($b, $value);
+            $this->assertNotSame($a, $b);
+            $this->assertNotSame($a->prop, $value->prop);
+            $this->assertNotSame($b->prop, $value->prop);
+            $this->assertNotSame($a->prop, $b->prop);
+        }
+    }
 }
