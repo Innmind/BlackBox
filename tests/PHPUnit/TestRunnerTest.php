@@ -44,6 +44,7 @@ class TestRunnerTest extends TestCase
                 },
                 $set->values()->current(),
             );
+            $this->fail('it should have thrown an exception');
         } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 'Failed asserting that false is true.',
@@ -70,6 +71,7 @@ class TestRunnerTest extends TestCase
                 },
                 $set->values()->current(),
             );
+            $this->fail('it should have thrown an exception');
         } catch (ExpectationFailedException $e) {
             $this->assertSame(1, $runned);
         }
