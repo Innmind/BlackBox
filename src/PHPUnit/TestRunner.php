@@ -21,13 +21,13 @@ final class TestRunner
             $test(...$values->unwrap());
         } catch (AssertionFailedError $e) {
             if ($this->shrinkingDisabled) {
-                throw $e;
+                $this->throw($e, $values);
             }
 
             if ($values->shrinkable()) {
                 $this->shrink($test, $values, $e);
             } else {
-                throw $e;
+                $this->throw($e, $values);
             }
         }
     }
@@ -42,11 +42,16 @@ final class TestRunner
         $this($test, $dichotomy->a());
         $this($test, $dichotomy->b());
 
-        ResultPrinterV8::record($parentFailure, $values);
-
         // if both strategies doesn't raise an exception then it means the smallest
         // failing strategy is the parent value so we throw the parent assertion
         // failure exception that wil bubble up to the PHPUnit runner
-        throw $parentFailure;
+        $this->throw($parentFailure, $values);
+    }
+
+    private function throw(\Throwable $e, Value $values): void
+    {
+        ResultPrinterV8::record($e, $values);
+
+        throw $e;
     }
 }
