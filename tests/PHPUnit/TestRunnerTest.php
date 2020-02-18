@@ -76,4 +76,24 @@ class TestRunnerTest extends TestCase
             $this->assertSame(1, $runned);
         }
     }
+
+    public function testThrowDirectlyWhenTheFirstFailingValueIsNotShrinkable()
+    {
+        $run = new TestRunner;
+
+        try {
+            $run(
+                function() {
+                    $this->assertTrue(false);
+                },
+                Value::immutable([0]),
+            );
+            $this->fail('it should have thrown an exception');
+        } catch (ExpectationFailedException $e) {
+            $this->assertSame(
+                'Failed asserting that false is true.',
+                $e->getMessage(),
+            );
+        }
+    }
 }

@@ -26,6 +26,8 @@ final class TestRunner
 
             if ($values->shrinkable()) {
                 $this->shrink($test, $values, $e);
+            } else {
+                throw $e;
             }
         }
     }
