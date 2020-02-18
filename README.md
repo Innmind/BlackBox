@@ -2,7 +2,7 @@
 
 [![codecov](https://codecov.io/gh/Innmind/BlackBox/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/BlackBox)
 [![Build Status](https://github.com/Innmind/BlackBox/workflows/CI/badge.svg)](https://github.com/Innmind/BlackBox/actions?query=workflow%3ACI)
-[![Type Coverage](https://shepherd.dev/github/Innmind/Filesystem/coverage.svg)](https://shepherd.dev/github/Innmind/Filesystem)
+[![Type Coverage](https://shepherd.dev/github/Innmind/BlackBox/coverage.svg)](https://shepherd.dev/github/Innmind/BlackBox)
 
 Contains an ensemble of sets to easily generate data for property based tests.
 
