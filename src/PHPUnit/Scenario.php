@@ -6,11 +6,14 @@ namespace Innmind\BlackBox\PHPUnit;
 use Innmind\BlackBox\{
     Set,
     Set\Composite,
+    Set\Randomize,
 };
 
 final class Scenario
 {
     private Set $set;
+    /** @var \Closure(Set): Set */
+    private \Closure $wrap;
     private TestRunner $run;
 
     public function __construct(Set $first , Set ...$sets)
@@ -31,13 +34,18 @@ final class Scenario
         }
 
         $this->set = $set->take(100);
+        $this->wrap = \Closure::fromCallable(static fn(Set $set): Set => new Randomize($set));
         $this->run = new TestRunner;
     }
 
     public function take(int $size): self
     {
+        $wrap = $this->wrap;
         $self = clone $this;
         $self->set = $this->set->take($size);
+        $self->wrap = \Closure::fromCallable(
+            static fn(Set $set): Set => $wrap($set)->take($size),
+        );
 
         return $self;
     }
@@ -63,7 +71,9 @@ final class Scenario
 
     public function then(callable $test): void
     {
-        foreach ($this->set->values() as $values) {
+        $set = ($this->wrap)($this->set);
+
+        foreach ($set->values() as $values) {
             ($this->run)($test, $values);
         }
     }
