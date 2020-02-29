@@ -21,7 +21,7 @@ final class Email
             Strings::matching('[a-zA-Z0-9][a-zA-Z0-9+\-\._]{1,62}[a-zA-Z0-9]')->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
             }),
-            Strings::matching('[a-zA-Z0-9][a-zA-Z0-9\-\.]{1,62}[a-zA-Z0-9]')->filter(static function(string $string): bool {
+            Strings::matching('[a-zA-Z0-9][a-zA-Z0-9\-\.]{1,61}[a-zA-Z0-9]')->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
             }),
             Strings::matching('[a-zA-Z]{1,63}'),
