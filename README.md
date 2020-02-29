@@ -91,3 +91,13 @@ By default the library supports the shrinking of data to help you find the small
 ![](printer.png)
 
 **Important**: shrinking use recursion to find the smallest value thus generating deep call stacks, so you may need to disable the xdebug `Maximum function nesting level` option.
+
+## Configuration
+
+### Set size
+
+By default it will run 100 iterations of different values to test your properties. You can manually change this value in each test by calling `$this->forAll(/** $set */)->take($somethingOtherThan100)`.
+
+Specifying a different value can be repetitive if you want all your tests to run the same number of iterations, with this in mind you can specify an [env variable](https://phpunit.readthedocs.io/en/8.5/configuration.html#the-env-element) named `BLACKBOX_SET_SIZE` in your `phpunit.xml.dist` set to the number of iterations you want for all your tests.
+
+**Note**: of course you can override this value locally in each tests.

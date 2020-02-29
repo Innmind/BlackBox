@@ -29,6 +29,7 @@ class BlackBoxTest extends TestCase
             }
         };
 
-        $this->assertSame(100, $class->assert());
+        // 200 because it reads the `BLACKBOX_SET_SIZE` env var
+        $this->assertSame(200, $class->assert());
     }
 }

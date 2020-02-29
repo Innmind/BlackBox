@@ -9,6 +9,13 @@ trait BlackBox
 {
     protected function forAll(Set $first, Set ...$sets): Scenario
     {
-        return new Scenario($first, ...$sets);
+        $scenario = new Scenario($first, ...$sets);
+        $size = \getenv('BLACKBOX_SET_SIZE');
+
+        if ($size !== false) {
+            $scenario = $scenario->take((int) $size);
+        }
+
+        return $scenario;
     }
 }
