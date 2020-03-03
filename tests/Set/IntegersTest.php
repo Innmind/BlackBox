@@ -232,4 +232,22 @@ class IntegersTest extends TestCase
             $integer = $integer->shrink()->b();
         } while ($integer->shrinkable());
     }
+
+    public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
+    {
+        $integers = Integers::between(1000, 2000);
+
+        $assertInBounds = function(Value $value, string $strategy) {
+            while ($value->shrinkable()) {
+                $this->assertGreaterThanOrEqual(1000, $value->unwrap());
+                $this->assertLessThanOrEqual(2000, $value->unwrap());
+                $value = $value->shrink()->$strategy();
+            }
+        };
+
+        foreach ($integers->values() as $value) {
+            $assertInBounds($value, 'a');
+            $assertInBounds($value, 'b');
+        }
+    }
 }

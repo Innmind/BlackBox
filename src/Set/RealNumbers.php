@@ -20,7 +20,7 @@ final class RealNumbers implements Set
         $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
         $this->upperBound = $upperBound ?? \PHP_INT_MAX;
         $this->size = 100;
-        $this->predicate = static fn(): bool => true;
+        $this->predicate = fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
     public static function any(): self
