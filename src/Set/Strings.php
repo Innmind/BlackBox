@@ -25,7 +25,7 @@ final class Strings implements Set
         $this->maxLength = \max($boundA, $boundB);
         $this->minLength = \min($boundA, $boundB);
         $this->size = 100;
-        $this->predicate = static fn(): bool => true;
+        $this->predicate = fn(string $value): bool => mb_strlen($value) >= $this->minLength && mb_strlen($value) <= $this->maxLength;
     }
 
     public static function any(int $maxLength = null): self

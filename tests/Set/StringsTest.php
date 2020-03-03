@@ -199,4 +199,22 @@ class StringsTest extends TestCase
             $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
         }
     }
+
+    public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
+    {
+        $integers = Strings::between(20, 80);
+
+        $assertInBounds = function(Value $value, string $strategy) {
+            while ($value->shrinkable()) {
+                $this->assertGreaterThanOrEqual(20, mb_strlen($value->unwrap()));
+                $this->assertLessThanOrEqual(80, mb_strlen($value->unwrap()));
+                $value = $value->shrink()->$strategy();
+            }
+        };
+
+        foreach ($integers->values() as $value) {
+            $assertInBounds($value, 'a');
+            $assertInBounds($value, 'b');
+        }
+    }
 }

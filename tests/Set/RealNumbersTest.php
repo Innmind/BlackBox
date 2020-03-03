@@ -204,4 +204,22 @@ class RealNumbersTest extends TestCase
             $this->assertSame(1, ((int) round($dichotomy->b()->unwrap())) % 2);
         }
     }
+
+    public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
+    {
+        $integers = RealNumbers::between(1000, 2000);
+
+        $assertInBounds = function(Value $value, string $strategy) {
+            while ($value->shrinkable()) {
+                $this->assertGreaterThanOrEqual(1000, $value->unwrap());
+                $this->assertLessThanOrEqual(2000, $value->unwrap());
+                $value = $value->shrink()->$strategy();
+            }
+        };
+
+        foreach ($integers->values() as $value) {
+            $assertInBounds($value, 'a');
+            $assertInBounds($value, 'b');
+        }
+    }
 }
