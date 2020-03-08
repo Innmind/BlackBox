@@ -29,8 +29,12 @@ final class Value
     }
 
     /**
-     * @param T $value
-     * @param Dichotomy<T>|null $dichotomy
+     * @template V
+     *
+     * @param V $value
+     * @param Dichotomy<V>|null $dichotomy
+     *
+     * @return self<V>
      */
     public static function immutable($value, Dichotomy $dichotomy = null): self
     {
@@ -38,8 +42,12 @@ final class Value
     }
 
     /**
-     * @param callable(): T $unwrap
-     * @param Dichotomy<T>|null $dichotomy
+     * @template V
+     *
+     * @param callable(): V $unwrap
+     * @param Dichotomy<V>|null $dichotomy
+     *
+     * @return self<V>
      */
     public static function mutable(callable $unwrap, Dichotomy $dichotomy = null): self
     {

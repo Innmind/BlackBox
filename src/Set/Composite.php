@@ -17,7 +17,7 @@ final class Composite implements Set
 {
     /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
-    /** @var list<Set> */
+    /** @var list<Set<mixed>> */
     private array $sets;
     private ?int $size;
     private \Closure $predicate;
@@ -41,7 +41,11 @@ final class Composite implements Set
     }
 
     /**
-     * @param callable(mixed...): C $aggregate It must be a pure function (no randomness, no side effects)
+     * @template T
+     *
+     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
+     *
+     * @return self<T>
      */
     public static function immutable(
         callable $aggregate,
@@ -52,7 +56,11 @@ final class Composite implements Set
     }
 
     /**
-     * @param callable(mixed...): C $aggregate It must be a pure function (no randomness, no side effects)
+     * @template T
+     *
+     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
+     *
+     * @return self<T>
      */
     public static function mutable(
         callable $aggregate,
@@ -76,6 +84,9 @@ final class Composite implements Set
         $self = clone $this;
         /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
+            /** @var C */
+            $value = $value;
+
             if (!$previous($value)) {
                 return false;
             }
@@ -139,6 +150,9 @@ final class Composite implements Set
         return $iterations < $this->size;
     }
 
+    /**
+     * @return Dichotomy<C>|null
+     */
     private function shrink(bool $mutable, Combination $combination): ?Dichotomy
     {
         if (!$combination->shrinkable()) {
@@ -153,6 +167,9 @@ final class Composite implements Set
         );
     }
 
+    /**
+     * @return callable(): Value<C>
+     */
     private function shrinkWithStrategy(
         bool $mutable,
         Combination $combination,
@@ -178,6 +195,9 @@ final class Composite implements Set
         );
     }
 
+    /**
+     * @return callable(): Value<C>
+     */
     private function identity(bool $mutable, Combination $combination): callable
     {
         if ($mutable) {

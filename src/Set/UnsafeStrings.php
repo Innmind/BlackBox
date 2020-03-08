@@ -37,8 +37,7 @@ final class UnsafeStrings implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
             }
@@ -66,6 +65,9 @@ final class UnsafeStrings implements Set
         }
     }
 
+    /**
+     * @return Dichotomy<string>|null
+     */
     private function shrink(string $value): ?Dichotomy
     {
         if ($value === '') {
@@ -78,8 +80,12 @@ final class UnsafeStrings implements Set
         );
     }
 
+    /**
+     * @return callable(): Value<string>
+     */
     private function removeTrailingCharacter(string $value): callable
     {
+        /** @var string */
         $shrinked = \mb_substr($value, 0, -1, 'ASCII');
 
         if (!($this->predicate)($shrinked)) {
@@ -89,8 +95,12 @@ final class UnsafeStrings implements Set
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
     }
 
+    /**
+     * @return callable(): Value<string>
+     */
     private function removeLeadingCharacter(string $value): callable
     {
+        /** @var string */
         $shrinked = \mb_substr($value, 1, null, 'ASCII');
 
         if (!($this->predicate)($shrinked)) {
@@ -102,6 +112,8 @@ final class UnsafeStrings implements Set
 
     /**
      * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     *
+     * @return callable(): Value<string>
      */
     private function identity(string $value): callable
     {

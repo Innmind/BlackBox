@@ -318,4 +318,31 @@ class CompositeTest extends TestCase
             $this->assertNotSame($a->prop, $b->prop);
         }
     }
+
+    public function testShrinkAllValuesToTheirMinimumPossible()
+    {
+        $set = Composite::immutable(
+            function(string ...$args) {
+                return implode('', $args);
+            },
+            Set\Strings::between(0, 5),
+            Set\Strings::between(0, 5),
+        );
+
+        foreach ($set->values() as $value) {
+            $a = $value;
+            while ($a->shrinkable()) {
+                $a = $a->shrink()->a();
+            }
+
+            $this->assertSame('', $a->unwrap());
+
+            $b = $value;
+            while ($b->shrinkable()) {
+                $b = $b->shrink()->b();
+            }
+
+            $this->assertSame('', $b->unwrap());
+        }
+    }
 }

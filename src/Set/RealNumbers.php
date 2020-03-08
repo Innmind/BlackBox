@@ -55,8 +55,7 @@ final class RealNumbers implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(float $value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
             }
@@ -86,6 +85,9 @@ final class RealNumbers implements Set
         } while ($iterations < $this->size);
     }
 
+    /**
+     * @return Dichotomy<float>|null
+     */
     private function shrink(float $value): ?Dichotomy
     {
         if (\round($value, 5) === 0.0) {
@@ -98,6 +100,9 @@ final class RealNumbers implements Set
         );
     }
 
+    /**
+     * @return callable(): Value<float>
+     */
     private function divideByTwo(float $value): callable
     {
         $shrinked = $value / 2;
@@ -109,6 +114,9 @@ final class RealNumbers implements Set
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
     }
 
+    /**
+     * @return callable(): Value<float>
+     */
     private function reduceByOne(float $value): callable
     {
         // add one when the value is negative, otherwise subtract one
@@ -124,6 +132,8 @@ final class RealNumbers implements Set
 
     /**
      * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     *
+     * @return callable(): Value<float>
      */
     private function identity(float $value): callable
     {
