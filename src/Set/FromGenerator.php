@@ -14,7 +14,9 @@ use Innmind\BlackBox\Set;
 final class FromGenerator implements Set
 {
     private int $size;
+    /** @var \Closure(): \Generator<T> */
     private \Closure $generatorFactory;
+    /** @var \Closure(T): bool */
     private \Closure $predicate;
 
     /**
@@ -32,7 +34,11 @@ final class FromGenerator implements Set
     }
 
     /**
-     * @param callable(): \Generator<T> $generatorFactory
+     * @template V
+     *
+     * @param callable(): \Generator<V> $generatorFactory
+     *
+     * @return self<V>
      */
     public static function of(callable $generatorFactory): self
     {
@@ -53,6 +59,9 @@ final class FromGenerator implements Set
         $self = clone $this;
         /** @psalm-suppress MissingClosureParamType */
         $self->predicate = static function($value) use ($previous, $predicate): bool {
+            /** @var T */
+            $value = $value;
+
             if (!$previous($value)) {
                 return false;
             }

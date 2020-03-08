@@ -16,7 +16,7 @@ interface Set
     public function take(int $size): self;
 
     /**
-     * @param callable(mixed): bool $predicate
+     * @param callable(T): bool $predicate
      *
      * @return self<T>
      */

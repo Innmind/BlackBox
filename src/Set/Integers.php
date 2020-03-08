@@ -55,8 +55,7 @@ final class Integers implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(int $value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
             }
@@ -86,6 +85,9 @@ final class Integers implements Set
         } while ($iterations < $this->size);
     }
 
+    /**
+     * @return Dichotomy<int>|null
+     */
     private function shrink(int $value): ?Dichotomy
     {
         if ($value === 0) {
@@ -98,6 +100,9 @@ final class Integers implements Set
         );
     }
 
+    /**
+     * @return callable(): Value<int>
+     */
     private function divideByTwo(int $value): callable
     {
         $shrinked = (int) \round($value / 2, 0, \PHP_ROUND_HALF_DOWN);
@@ -109,6 +114,9 @@ final class Integers implements Set
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
     }
 
+    /**
+     * @return callable(): Value<int>
+     */
     private function reduceByOne(int $value): callable
     {
         // add one when the value is negative, otherwise subtract one
@@ -124,6 +132,8 @@ final class Integers implements Set
 
     /**
      * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     *
+     * @return callable(): Value<int>
      */
     private function identity(int $value): callable
     {

@@ -36,8 +36,7 @@ final class Chars implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
             if (!$previous($value)) {
                 return false;
             }
