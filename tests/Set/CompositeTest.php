@@ -325,9 +325,8 @@ class CompositeTest extends TestCase
             function(string ...$args) {
                 return implode('', $args);
             },
-            Set\Strings::between(0, 10),
-            Set\Strings::between(0, 10),
-            Set\Strings::between(0, 10),
+            Set\Strings::between(0, 5),
+            Set\Strings::between(0, 5),
         );
 
         foreach ($set->values() as $value) {
