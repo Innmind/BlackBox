@@ -77,4 +77,17 @@ class RandomizeTest extends TestCase
             $this->assertSame($expected, $value);
         }
     }
+
+    public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
+    {
+        $set = new Randomize(Set\FromGenerator::of(function() {
+            if (mt_rand(0, 1) === 1) {
+                yield mt_rand();
+            }
+        }));
+
+        foreach ($set->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+        }
+    }
 }
