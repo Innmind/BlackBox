@@ -59,7 +59,7 @@ final class Scenario
     }
 
     /**
-     * @param callable(): bool $predicate
+     * @param callable(mixed...): bool $predicate
      */
     public function filter(callable $predicate): self
     {
