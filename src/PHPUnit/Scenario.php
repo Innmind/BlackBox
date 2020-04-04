@@ -64,7 +64,9 @@ final class Scenario
     public function filter(callable $predicate): self
     {
         $self = clone $this;
-        $self->set = $this->set->filter($predicate);
+        $self->set = $this->set->filter(
+            static fn(array $args): bool => $predicate(...$args),
+        );
 
         return $self;
     }

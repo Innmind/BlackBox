@@ -59,8 +59,8 @@ class ScenarioTest extends TestCase
     public function testAllowAFilterCanBeAppliedOnTheScenario()
     {
         $scenario1 = new Scenario(Integers::any(), Integers::any());
-        $scenario2 = $scenario1->filter(static function($value): bool {
-            return ($value[0] + $value[1]) % 2 === 0;
+        $scenario2 = $scenario1->filter(static function($a, $b): bool {
+            return ($a + $b) % 2 === 0;
         });
 
         $this->assertNotSame($scenario1, $scenario2);
