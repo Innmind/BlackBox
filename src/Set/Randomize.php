@@ -36,8 +36,23 @@ final class Randomize implements Set
 
     public function values(): \Generator
     {
-        for ($i = 0; $i < $this->size; $i++) {
-            yield $this->set->values()->current();
+        $iterations = 0;
+
+        while ($iterations < $this->size) {
+            $value = $this->set->values()->current();
+
+            /**
+             * $value can be sometime null when the underlying set generate an
+             * empty set, it may be the case when someones an aggressive filter
+             * leading the system having a hard time generating values
+             * @psalm-suppress DocblockTypeContradiction
+             */
+            if (!$value instanceof Value) {
+                continue;
+            }
+
+            yield $value;
+            ++$iterations;
         }
     }
 }

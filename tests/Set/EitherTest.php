@@ -79,4 +79,20 @@ class EitherTest extends TestCase
             $this->assertTrue($value->isImmutable());
         }
     }
+
+    public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
+    {
+        $set = new Either(
+            Set\FromGenerator::of(function() {
+                if (mt_rand(0, 1) === 1) {
+                    yield mt_rand();
+                }
+            }),
+            Set\Elements::of(2),
+        );
+
+        foreach ($set->values() as $value) {
+            $this->assertInstanceOf(Value::class, $value);
+        }
+    }
 }

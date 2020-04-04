@@ -44,7 +44,19 @@ final class Either implements Set
         while ($iterations < $this->size) {
             $setToChoose = \random_int(0, \count($this->sets) - 1);
 
-            yield $this->sets[$setToChoose]->values()->current();
+            $value = $this->sets[$setToChoose]->values()->current();
+
+            /**
+             * $value can be sometime null when the underlying set generate an
+             * empty set, it may be the case when someones an aggressive filter
+             * leading the system having a hard time generating values
+             * @psalm-suppress DocblockTypeContradiction
+             */
+            if (!$value instanceof Value) {
+                continue;
+            }
+
+            yield $value;
             ++$iterations;
         }
     }
