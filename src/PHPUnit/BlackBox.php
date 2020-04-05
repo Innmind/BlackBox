@@ -11,6 +11,9 @@ trait BlackBox
     protected function forAll(Set $first, Set ...$sets): Scenario
     {
         $expectsException = static fn(\Throwable $e): bool => false;
+        $recordFailure = static function(\Throwable $e, Set\Value $values): void {
+            ResultPrinterV8::record($e, $values);
+        };
 
         if ($this instanceof TestCase) {
             $expectsException = function(\Throwable $e): bool {
@@ -42,7 +45,12 @@ trait BlackBox
             };
         }
 
-        $scenario = new Scenario($expectsException, $first, ...$sets);
+        $scenario = new Scenario(
+            $recordFailure,
+            $expectsException,
+            $first,
+            ...$sets,
+        );
         $size = \getenv('BLACKBOX_SET_SIZE');
 
         if ($size !== false) {

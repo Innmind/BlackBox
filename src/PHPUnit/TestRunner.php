@@ -8,6 +8,7 @@ use PHPUnit\Framework\AssertionFailedError;
 
 final class TestRunner
 {
+    private \Closure $recordFailure;
     private \Closure $expectsException;
     private bool $shrinkingDisabled;
 
@@ -15,9 +16,11 @@ final class TestRunner
      * @param callable(\Throwable): bool $expectsException
      */
     public function __construct(
+        callable $recordFailure,
         callable $expectsException,
         bool $disableShrinking = false
     ) {
+        $this->recordFailure = \Closure::fromCallable($recordFailure);
         $this->expectsException = \Closure::fromCallable($expectsException);
         $this->shrinkingDisabled = $disableShrinking;
     }
@@ -71,7 +74,7 @@ final class TestRunner
 
     private function throw(\Throwable $e, Value $values): void
     {
-        ResultPrinterV8::record($e, $values);
+        ($this->recordFailure)($e, $values);
 
         throw $e;
     }

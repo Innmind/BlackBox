@@ -18,7 +18,10 @@ class TestRunnerTest extends TestCase
 {
     public function testRunTheTest()
     {
-        $run = new TestRunner(fn() => false);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
 
         $this->assertNull($run(
             fn($a, $b) => $this->assertSame([24, 42], [$a, $b]),
@@ -28,7 +31,10 @@ class TestRunnerTest extends TestCase
 
     public function testShrinkUpToFindSmallestPossibleFailingValue()
     {
-        $run = new TestRunner(fn() => false);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
         $smallest = null;
         $set = Decorate::immutable(
             fn($i) => [$i],
@@ -56,7 +62,11 @@ class TestRunnerTest extends TestCase
 
     public function testShrinkingCanBeDisabled()
     {
-        $run = new TestRunner(fn() => false, true);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+            true,
+        );
         $set = Decorate::immutable(
             fn($i) => [$i],
             Integers::any(),
@@ -79,7 +89,10 @@ class TestRunnerTest extends TestCase
 
     public function testThrowDirectlyWhenTheFirstFailingValueIsNotShrinkable()
     {
-        $run = new TestRunner(fn() => false);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
 
         try {
             $run(
@@ -99,7 +112,10 @@ class TestRunnerTest extends TestCase
 
     public function testExpectedExceptionThrownInTestDoesntTriggerShrinking()
     {
-        $run = new TestRunner(fn() => true);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => true,
+        );
         $set = Decorate::immutable(
             fn($int) => [$int],
             Integers::any(),
@@ -125,7 +141,11 @@ class TestRunnerTest extends TestCase
 
     public function testExpectedExceptionThrownInTestDoesntTriggerShrinkingWhenShrinkingDisabled()
     {
-        $run = new TestRunner(fn() => true, true);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => true,
+            true,
+        );
         $set = Decorate::immutable(
             fn($int) => [$int],
             Integers::any(),
@@ -151,7 +171,11 @@ class TestRunnerTest extends TestCase
 
     public function testUnexpectedExceptionThrownInTestDoesntTriggerShrinkingWhenShrinkingDisabled()
     {
-        $run = new TestRunner(fn() => false, true);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+            true,
+        );
         $set = Decorate::immutable(
             fn($int) => [$int],
             Integers::any(),
@@ -177,7 +201,10 @@ class TestRunnerTest extends TestCase
 
     public function testUnexpectedExceptionThrownInTestDoesntTriggerShrinkingWhenValueIsNotShrinkable()
     {
-        $run = new TestRunner(fn() => false);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
 
         foreach (Integers::any()->values() as $value) {
             try {
@@ -199,7 +226,10 @@ class TestRunnerTest extends TestCase
 
     public function testUnexpectedExceptionThrownInTestIsShrunkToSmallestFailingValue()
     {
-        $run = new TestRunner(fn() => false);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
         $set = Decorate::immutable(
             fn($int) => [$int],
             Integers::above(0),
