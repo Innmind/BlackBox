@@ -8,11 +8,18 @@ use PHPUnit\Framework\AssertionFailedError;
 
 final class TestRunner
 {
+    private \Closure $expectsException;
     private bool $shrinkingDisabled;
 
-    public function __construct(bool $disableShrinking = false)
-    {
-        return $this->shrinkingDisabled = $disableShrinking;
+    /**
+     * @param callable(\Throwable): bool $expectsException
+     */
+    public function __construct(
+        callable $expectsException,
+        bool $disableShrinking = false
+    ) {
+        $this->expectsException = \Closure::fromCallable($expectsException);
+        $this->shrinkingDisabled = $disableShrinking;
     }
 
     public function __invoke(callable $test, Value $values): void
@@ -20,22 +27,36 @@ final class TestRunner
         try {
             $test(...$values->unwrap());
         } catch (AssertionFailedError $e) {
-            if ($this->shrinkingDisabled) {
-                $this->throw($e, $values);
+            $this->tryToShrink($test, $values, $e);
+        } catch (\Throwable $e) {
+            if (($this->expectsException)($e)) {
+                throw $e;
             }
 
-            if ($values->shrinkable()) {
-                $this->shrink($test, $values, $e);
-            } else {
-                $this->throw($e, $values);
-            }
+            $this->tryToShrink($test, $values, $e);
         }
+    }
+
+    private function tryToShrink(
+        callable $test,
+        Value $values,
+        \Throwable $parentFailure
+    ): void {
+        if ($this->shrinkingDisabled) {
+            $this->throw($parentFailure, $values);
+        }
+
+        if ($values->shrinkable()) {
+            $this->shrink($test, $values, $parentFailure);
+        }
+
+        $this->throw($parentFailure, $values);
     }
 
     private function shrink(
         callable $test,
         Value $values,
-        AssertionFailedError $parentFailure
+        \Throwable $parentFailure
     ): void {
         $dichotomy = $values->shrink();
 

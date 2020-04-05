@@ -11,12 +11,16 @@ use Innmind\BlackBox\{
 
 final class Scenario
 {
+    private \Closure $expectsException;
     private Set $set;
     /** @var \Closure(Set): Set */
     private \Closure $wrap;
     private TestRunner $run;
 
-    public function __construct(Set $first , Set ...$sets)
+    /**
+     * @param callable(\Throwable): bool $expectsException
+     */
+    public function __construct(callable $expectsException, Set $first , Set ...$sets)
     {
         if (\count($sets) === 0) {
             $set = Set\Decorate::immutable(
@@ -33,9 +37,10 @@ final class Scenario
             );
         }
 
+        $this->expectsException = \Closure::fromCallable($expectsException);
         $this->set = $set->take(100);
         $this->wrap = \Closure::fromCallable(static fn(Set $set): Set => new Randomize($set));
-        $this->run = new TestRunner;
+        $this->run = new TestRunner($expectsException);
     }
 
     public function take(int $size): self
@@ -53,7 +58,7 @@ final class Scenario
     public function disableShrinking(): self
     {
         $self = clone $this;
-        $self->run = new TestRunner(true);
+        $self->run = new TestRunner($this->expectsException, true);
 
         return $self;
     }

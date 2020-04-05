@@ -5,7 +5,10 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\Set\Value;
 use PHPUnit\TextUI\ResultPrinter;
-use PHPUnit\Framework\TestFailure;
+use PHPUnit\Framework\{
+    TestFailure,
+    ExceptionWrapper,
+};
 use Symfony\Component\VarDumper\{
     Dumper\CliDumper,
     Cloner\VarCloner,
@@ -52,8 +55,7 @@ final class ResultPrinterV8 extends ResultPrinter
     {
         /** @psalm-suppress InternalMethod */
         $this->printDefectHeader($defect, $count);
-        /** @psalm-suppress InternalMethod */
-        $this->printDataSet($defect->thrownException());
+        $this->printDataSet($this->exceptionFrom($defect));
         /** @psalm-suppress InternalMethod */
         $this->printDefectTrace($defect);
     }
@@ -105,5 +107,22 @@ final class ResultPrinterV8 extends ResultPrinter
     private function hash(\Throwable $e): string
     {
         return \spl_object_hash($e);
+    }
+
+    private function exceptionFrom(TestFailure $defect): \Throwable
+    {
+        /** @psalm-suppress InternalMethod */
+        $thrownException = $defect->thrownException();
+
+        if ($thrownException instanceof ExceptionWrapper) {
+            /** @psalm-suppress InternalMethod */
+            $originalException = $thrownException->getOriginalException();
+
+            if ($originalException instanceof \Throwable) {
+                return $originalException;
+            }
+        }
+
+        return $thrownException;
     }
 }
