@@ -21,9 +21,6 @@ class ResultPrinterV8Test extends TestCase
     /** @group failing-on-purpose */
     public function testPrintDataSet()
     {
-        $result = new TestResult;
-        $test = $this->createMock(Test::class);
-
         $this
             ->forAll(
                 Set\Integers::any(),
