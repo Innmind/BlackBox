@@ -42,7 +42,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4']
-        ini-values: xdebug.max_nesting_level=2048
     name: 'PHPUnit Printer Class - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
     steps:
       - name: Checkout
@@ -53,6 +52,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
+          ini-values: xdebug.max_nesting_level=2048
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
