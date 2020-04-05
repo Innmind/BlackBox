@@ -21,9 +21,6 @@ class ResultPrinterV8Test extends TestCase
     /** @group failing-on-purpose */
     public function testPrintDataSet()
     {
-        $result = new TestResult;
-        $test = $this->createMock(Test::class);
-
         $this
             ->forAll(
                 Set\Integers::any(),
@@ -39,6 +36,56 @@ class ResultPrinterV8Test extends TestCase
             )
             ->then(function() {
                 $this->assertTrue(false);
+            });
+    }
+
+    /** @group failing-on-purpose */
+    public function testPrintDataSetWhenUnexpectedExceptionIsThrown()
+    {
+        $this
+            ->forAll(Set\Strings::any())
+            ->then(function($string) {
+                throw new \LogicException($string);
+            });
+    }
+
+    /** @group failing-on-purpose */
+    public function testPrintDataSetWhenExceptionIsDifferentThanTheExpectedOne()
+    {
+        $this
+            ->forAll(Set\Strings::any())
+            ->then(function($string) {
+                $this->expectException(\RuntimeException::class);
+                $this->expectExceptionMessage($string);
+
+                throw new \LogicException($string);
+            });
+    }
+
+    /** @group failing-on-purpose */
+    public function testPrintDataSetWhenExceptionMessageIsDifferentThanTheExpectedOne()
+    {
+        $this
+            ->forAll(Set\Strings::any())
+            ->then(function($string) {
+                $this->expectException(\LogicException::class);
+                $this->expectExceptionMessage('foo');
+
+                throw new \LogicException($string);
+            });
+    }
+
+    /** @group failing-on-purpose */
+    public function testPrintDataSetWhenExceptionCodeIsDifferentThanTheExpectedOne()
+    {
+        $this
+            ->forAll(Set\Strings::any(), Set\Integers::above(0))
+            ->then(function($string, $code) {
+                $this->expectException(\LogicException::class);
+                $this->expectExceptionMessage($string);
+                $this->expectExceptionCode(42);
+
+                throw new \LogicException($string, $code);
             });
     }
 }

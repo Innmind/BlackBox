@@ -18,7 +18,10 @@ class TestRunnerTest extends TestCase
 {
     public function testRunTheTest()
     {
-        $run = new TestRunner;
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
 
         $this->assertNull($run(
             fn($a, $b) => $this->assertSame([24, 42], [$a, $b]),
@@ -28,7 +31,10 @@ class TestRunnerTest extends TestCase
 
     public function testShrinkUpToFindSmallestPossibleFailingValue()
     {
-        $run = new TestRunner;
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
         $smallest = null;
         $set = Decorate::immutable(
             fn($i) => [$i],
@@ -56,7 +62,11 @@ class TestRunnerTest extends TestCase
 
     public function testShrinkingCanBeDisabled()
     {
-        $run = new TestRunner(true);
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+            true,
+        );
         $set = Decorate::immutable(
             fn($i) => [$i],
             Integers::any(),
@@ -79,7 +89,10 @@ class TestRunnerTest extends TestCase
 
     public function testThrowDirectlyWhenTheFirstFailingValueIsNotShrinkable()
     {
-        $run = new TestRunner;
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
 
         try {
             $run(
@@ -94,6 +107,151 @@ class TestRunnerTest extends TestCase
                 'Failed asserting that false is true.',
                 $e->getMessage(),
             );
+        }
+    }
+
+    public function testExpectedExceptionThrownInTestDoesntTriggerShrinking()
+    {
+        $run = new TestRunner(
+            fn() => null,
+            fn() => true,
+        );
+        $set = Decorate::immutable(
+            fn($int) => [$int],
+            Integers::any(),
+        );
+
+        foreach ($set->values() as $value) {
+            try {
+                $run(
+                    function($int) {
+                        throw new \LogicException((string) $int);
+                    },
+                    $value,
+                );
+                $this->fail('it should throw');
+            } catch (\LogicException $e) {
+                $this->assertSame(
+                    (string) $value->unwrap()[0],
+                    $e->getMessage(),
+                );
+            }
+        }
+    }
+
+    public function testExpectedExceptionThrownInTestDoesntTriggerShrinkingWhenShrinkingDisabled()
+    {
+        $run = new TestRunner(
+            fn() => null,
+            fn() => true,
+            true,
+        );
+        $set = Decorate::immutable(
+            fn($int) => [$int],
+            Integers::any(),
+        );
+
+        foreach ($set->values() as $value) {
+            try {
+                $run(
+                    function($int) {
+                        throw new \LogicException((string) $int);
+                    },
+                    $value,
+                );
+                $this->fail('it should throw');
+            } catch (\LogicException $e) {
+                $this->assertSame(
+                    (string) $value->unwrap()[0],
+                    $e->getMessage(),
+                );
+            }
+        }
+    }
+
+    public function testUnexpectedExceptionThrownInTestDoesntTriggerShrinkingWhenShrinkingDisabled()
+    {
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+            true,
+        );
+        $set = Decorate::immutable(
+            fn($int) => [$int],
+            Integers::any(),
+        );
+
+        foreach ($set->values() as $value) {
+            try {
+                $run(
+                    function($int) {
+                        throw new \LogicException((string) $int);
+                    },
+                    $value,
+                );
+                $this->fail('it should throw');
+            } catch (\LogicException $e) {
+                $this->assertSame(
+                    (string) $value->unwrap()[0],
+                    $e->getMessage(),
+                );
+            }
+        }
+    }
+
+    public function testUnexpectedExceptionThrownInTestDoesntTriggerShrinkingWhenValueIsNotShrinkable()
+    {
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
+
+        foreach (Integers::any()->values() as $value) {
+            try {
+                $run(
+                    function($int) {
+                        throw new \LogicException((string) $int);
+                    },
+                    Value::immutable([$value->unwrap()]),
+                );
+                $this->fail('it should throw');
+            } catch (\LogicException $e) {
+                $this->assertSame(
+                    (string) $value->unwrap(),
+                    $e->getMessage(),
+                );
+            }
+        }
+    }
+
+    public function testUnexpectedExceptionThrownInTestIsShrunkToSmallestFailingValue()
+    {
+        $run = new TestRunner(
+            fn() => null,
+            fn() => false,
+        );
+        $set = Decorate::immutable(
+            fn($int) => [$int],
+            Integers::above(0),
+        );
+
+        foreach ($set->values() as $value) {
+            try {
+                $run(
+                    function($int) {
+                        if ($int > 42) {
+                            throw new \LogicException((string) $int);
+                        }
+                    },
+                    $value,
+                );
+                $this->fail('it should throw');
+            } catch (\LogicException $e) {
+                $this->assertSame(
+                    '43',
+                    $e->getMessage(),
+                );
+            }
         }
     }
 }

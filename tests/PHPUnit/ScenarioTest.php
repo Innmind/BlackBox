@@ -13,7 +13,11 @@ class ScenarioTest extends TestCase
 {
     public function testCallingWithOnlyOneSet()
     {
-        $scenario = new Scenario(Integers::any());
+        $scenario = new Scenario(
+            fn() => null,
+            fn() => false,
+            Integers::any(),
+        );
 
         $called = 0;
         $scenario->then(static function(int $foo) use (&$called): void {
@@ -25,7 +29,12 @@ class ScenarioTest extends TestCase
 
     public function testCallingWithMultipleSets()
     {
-        $scenario = new Scenario(Integers::any(), Integers::any());
+        $scenario = new Scenario(
+            fn() => null,
+            fn() => false,
+            Integers::any(),
+            Integers::any(),
+        );
 
         $called = 0;
         $scenario->then(static function(int $a, $b) use (&$called): void {
@@ -37,7 +46,12 @@ class ScenarioTest extends TestCase
 
     public function testAllowToOnlyTakeACertainNumberOfScenarios()
     {
-        $scenario1 = new Scenario(Integers::any(), Integers::any());
+        $scenario1 = new Scenario(
+            fn() => null,
+            fn() => false,
+            Integers::any(),
+            Integers::any(),
+        );
         $scenario2 = $scenario1->take(10);
 
         $this->assertNotSame($scenario1, $scenario2);
@@ -58,7 +72,12 @@ class ScenarioTest extends TestCase
 
     public function testAllowAFilterCanBeAppliedOnTheScenario()
     {
-        $scenario1 = new Scenario(Integers::any(), Integers::any());
+        $scenario1 = new Scenario(
+            fn() => null,
+            fn() => false,
+            Integers::any(),
+            Integers::any(),
+        );
         $scenario2 = $scenario1->filter(static function($a, $b): bool {
             return ($a + $b) % 2 === 0;
         });
@@ -85,7 +104,11 @@ class ScenarioTest extends TestCase
 
     public function testDisableShrinking()
     {
-        $scenario = new Scenario(Integers::any());
+        $scenario = new Scenario(
+            fn() => null,
+            fn() => false,
+            Integers::any(),
+        );
         $scenario2 = $scenario->disableShrinking();
 
         $this->assertInstanceOf(Scenario::class, $scenario2);

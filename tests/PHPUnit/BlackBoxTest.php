@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 class BlackBoxTest extends TestCase
 {
+    use BlackBox;
+
     public function testTrait()
     {
         $class = new class() {
@@ -31,5 +33,20 @@ class BlackBoxTest extends TestCase
 
         // 200 because it reads the `BLACKBOX_SET_SIZE` env var
         $this->assertSame(200, $class->assert());
+    }
+
+    public function testDoesntFailWhenTheExceptionIsExpected()
+    {
+        $this
+            ->forAll(Set\Strings::any(), Set\Integers::above(0))
+            ->then(function($message, $code) {
+                $exception = new class($message, $code) extends \Exception{};
+
+                $this->expectException(get_class($exception));
+                $this->expectExceptionMessage($message);
+                $this->expectExceptionCode($code);
+
+                throw $exception;
+            });
     }
 }
