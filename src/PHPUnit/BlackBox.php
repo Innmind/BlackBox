@@ -11,8 +11,8 @@ trait BlackBox
     protected function forAll(Set $first, Set ...$sets): Scenario
     {
         $expectsException = static fn(\Throwable $e): bool => false;
-        $recordFailure = static function(\Throwable $e, Set\Value $values): void {
-            ResultPrinterV8::record($e, $values);
+        $recordFailure = function(\Throwable $e, Set\Value $values): void {
+            ResultPrinterV8::record($this, $e, $values);
         };
 
         if ($this instanceof TestCase) {

@@ -7,6 +7,7 @@ use Innmind\BlackBox\Set\Value;
 use PHPUnit\TextUI\ResultPrinter;
 use PHPUnit\Framework\{
     TestFailure,
+    SelfDescribing,
     ExceptionWrapper,
 };
 use Symfony\Component\VarDumper\{
@@ -41,13 +42,13 @@ final class ResultPrinterV8 extends ResultPrinter
         self::$currentInstance = $this;
     }
 
-    public static function record(\Throwable $e, Value $value): void
+    public static function record(object $test, \Throwable $e, Value $value): void
     {
         if (\is_null(self::$currentInstance)) {
             return;
         }
 
-        $hash = self::$currentInstance->hash($e);
+        $hash = self::$currentInstance->hash($test, $e);
         self::$currentInstance->dataSets[$hash] = $value;
     }
 
@@ -55,14 +56,16 @@ final class ResultPrinterV8 extends ResultPrinter
     {
         /** @psalm-suppress InternalMethod */
         $this->printDefectHeader($defect, $count);
-        $this->printDataSet($this->exceptionFrom($defect));
+        $this->printDataSet($defect);
         /** @psalm-suppress InternalMethod */
         $this->printDefectTrace($defect);
     }
 
-    private function printDataSet(\Throwable $e): void
+    private function printDataSet(TestFailure $defect): void
     {
-        if (!\array_key_exists($this->hash($e), $this->dataSets)) {
+        $values = $this->findFailingValues($defect);
+
+        if (\is_null($values)) {
             return;
         }
 
@@ -70,7 +73,7 @@ final class ResultPrinterV8 extends ResultPrinter
         $this->write("Test failing with the following set of values : \n");
 
         /** @psalm-suppress MixedAssignment */
-        foreach ($this->dataSets[$this->hash($e)]->unwrap() as $value) {
+        foreach ($values->unwrap() as $value) {
             $this->dump($value);
         }
 
@@ -104,9 +107,29 @@ final class ResultPrinterV8 extends ResultPrinter
         $this->dumper->dump($this->cloner->cloneVar($var));
     }
 
-    private function hash(\Throwable $e): string
+    private function hash(object $test, \Throwable $e): string
     {
+        if ($test instanceof SelfDescribing) {
+            return $test->toString();
+        }
+
         return \spl_object_hash($e);
+    }
+
+    private function findFailingValues(TestFailure $defect): ?Value
+    {
+        /** @psalm-suppress InternalMethod */
+        $test = $defect->failedTest() ?: new \stdClass;
+        $hash = $this->hash(
+            $test,
+            $this->exceptionFrom($defect),
+        );
+
+        if (!\array_key_exists($hash, $this->dataSets)) {
+            return null;
+        }
+
+        return $this->dataSets[$hash];
     }
 
     private function exceptionFrom(TestFailure $defect): \Throwable
