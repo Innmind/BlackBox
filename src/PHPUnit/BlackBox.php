@@ -37,7 +37,7 @@ trait BlackBox
                     return false;
                 }
 
-                if (\is_string($expectedExceptionCode) && $expectedExceptionCode !== $e->getCode()) {
+                if (!\is_null($expectedExceptionCode) && ((string) $expectedExceptionCode !== (string) $e->getCode())) {
                     return false;
                 }
 
