@@ -13,6 +13,7 @@ final class Scenario
 {
     private \Closure $recordFailure;
     private \Closure $expectsException;
+    /** @var Set<array<mixed>> */
     private Set $set;
     /** @var \Closure(Set): Set */
     private \Closure $wrap;
@@ -29,12 +30,14 @@ final class Scenario
         Set ...$sets
     ) {
         if (\count($sets) === 0) {
+            /** @var Set<array<mixed>> */
             $set = Set\Decorate::immutable(
                 /** @psalm-suppress MissingParamType */
                 static fn($value): array  => [$value],
                 $first,
             );
         } else {
+            /** @var Set<array<mixed>> */
             $set = Set\Composite::immutable(
                 /** @psalm-suppress MissingParamType */
                 static fn(...$args): array => $args,
