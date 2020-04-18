@@ -88,7 +88,7 @@ final class ResultPrinterV8 extends ResultPrinter
         $trace = \explode("\n", (string) $e);
         $trace = \array_filter(
             $trace,
-            fn(string $line): bool => \strpos($line, 'innmind/black-box/src/PHPUnit/TestRunner.php') === false,
+            fn(string $line): bool => \strpos($line, 'innmind/black-box/src/PHPUnit/') === false,
         );
         $trace = \array_filter(
             $trace,
