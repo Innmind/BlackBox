@@ -43,6 +43,11 @@ final class Integers implements Set
         return new self(null, $upperBound);
     }
 
+    public function lowerBound(): int
+    {
+        return $this->lowerBound;
+    }
+
     public function take(int $size): Set
     {
         $self = clone $this;

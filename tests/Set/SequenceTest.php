@@ -101,6 +101,11 @@ class SequenceTest extends TestCase
         $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(1, 100));
 
         foreach ($sequences->values() as $value) {
+            if (\count($value->unwrap()) === 1) {
+                // as it can generate sequences of 1 element
+                continue;
+            }
+
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -124,6 +129,11 @@ class SequenceTest extends TestCase
         $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
 
         foreach ($sequences->values() as $value) {
+            if (\count($value->unwrap()) === 3) {
+                // when generating the lower bound it will shrink identity values
+                continue;
+            }
+
             $dichotomy = $value->shrink();
             $initialSize = \count($value->unwrap());
             $this->assertNotSame(
@@ -139,6 +149,13 @@ class SequenceTest extends TestCase
         $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(2, 100));
 
         foreach ($sequences->values() as $value) {
+            if (\count($value->unwrap()) < 4) {
+                // otherwise strategy A will return it's identity since 3/2 won't
+                // match the predicate of minimum size 2, so strategy will return
+                // an identity value
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertLessThan(\count($value->unwrap()), \count($dichotomy->a()->unwrap()));
@@ -151,6 +168,13 @@ class SequenceTest extends TestCase
         $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
 
         foreach ($sequences->values() as $value) {
+            if (\count($value->unwrap()) < 6) {
+                // otherwise strategy A will return it's identity since 5/2 won't
+                // match the predicate of minimum size 3, so strategy will return
+                // an identity value so it will always be greater than stragey B
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertLessThan(
@@ -180,10 +204,28 @@ class SequenceTest extends TestCase
         );
 
         foreach ($sequences->values() as $value) {
+            if (\count($value->unwrap()) === 1) {
+                // lower bound is not shrinkable
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertFalse($dichotomy->a()->isImmutable());
             $this->assertFalse($dichotomy->b()->isImmutable());
+        }
+    }
+
+    public function testSequenceIsNeverShrunkBelowTheSpecifiedLowerBound()
+    {
+        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(10, 50));
+
+        foreach ($sequences->values() as $sequence) {
+            while ($sequence->shrinkable()) {
+                $sequence = $sequence->shrink()->b();
+            }
+
+            $this->assertCount(10, $sequence->unwrap());
         }
     }
 }

@@ -14,14 +14,17 @@ final class Sequence implements Set
     private Set $set;
     /** @var Set<int> */
     private Set $sizes;
+    private \Closure $predicate;
 
     /**
      * @param Set<I> $set
      */
-    private function __construct(Set $set, Set\Integers $sizes = null)
+    private function __construct(Set $set, Integers $sizes = null)
     {
+        $sizes ??= $sizes ?? Integers::between(0, 100);
         $this->set = $set;
-        $this->sizes = ($sizes ?? Set\Integers::between(0, 100))->take(100);
+        $this->sizes = $sizes->take(100);
+        $this->predicate = static fn(array $sequence): bool => \count($sequence) >= $sizes->lowerBound();
     }
 
     /**
@@ -31,7 +34,7 @@ final class Sequence implements Set
      *
      * @return self<U>
      */
-    public static function of(Set $set, Set\Integers $sizes = null): self
+    public static function of(Set $set, Integers $sizes = null): self
     {
         return new self($set, $sizes);
     }
@@ -108,6 +111,10 @@ final class Sequence implements Set
             return null;
         }
 
+        if (!($this->predicate)($sequence)) {
+            return null;
+        }
+
         return new Dichotomy(
             $this->removeHalfTheStructure($mutable, $sequence),
             $this->removeTailElement($mutable, $sequence),
@@ -125,6 +132,10 @@ final class Sequence implements Set
         // to a sequence of 1 element resulting in a infinite recursion
         $numberToKeep = (int) \round(\count($sequence) / 2, 0, \PHP_ROUND_HALF_DOWN);
         $shrinked = \array_slice($sequence, 0, $numberToKeep);
+
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($mutable, $sequence);
+        }
 
         if ($mutable) {
             return fn(): Value => Value::mutable(
@@ -149,6 +160,10 @@ final class Sequence implements Set
         $shrinked = $sequence;
         \array_pop($shrinked);
 
+        if (!($this->predicate)($shrinked)) {
+            return $this->identity($mutable, $sequence);
+        }
+
         if ($mutable) {
             return fn(): Value => Value::mutable(
                 fn() => $shrinked,
@@ -160,5 +175,19 @@ final class Sequence implements Set
             $shrinked,
             $this->shrink(false, $shrinked),
         );
+    }
+
+    /**
+     * @param list<I> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
+    private function identity(bool $mutable, array $sequence): callable
+    {
+        if ($mutable) {
+            return fn(): Value => Value::mutable(fn() => $sequence);
+        }
+
+        return fn(): Value => Value::immutable($sequence);
     }
 }

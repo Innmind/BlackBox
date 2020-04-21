@@ -19,6 +19,7 @@ class IntegersTest extends TestCase
     public function testAny()
     {
         $this->assertInstanceOf(Integers::class, Integers::any());
+        $this->assertSame(\PHP_INT_MIN, Integers::any()->lowerBound());
     }
 
     public function testByDefault100IntegersAreGenerated()
@@ -40,6 +41,7 @@ class IntegersTest extends TestCase
             false,
         );
 
+        $this->assertSame(-10, $values->lowerBound());
         $this->assertFalse($hasOutsideBounds);
     }
 
