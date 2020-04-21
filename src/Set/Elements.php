@@ -64,13 +64,20 @@ final class Elements implements Set
 
     public function values(): \Generator
     {
-        $values = \array_slice($this->elements, 0, $this->size);
-        $values = \array_filter($values, $this->predicate);
-        \shuffle($values);
+        $iterations = 0;
+        $max = \count($this->elements) - 1;
 
-        /** @var mixed $value */
-        foreach ($values as $value) {
+        do {
+            $index = \random_int(0, $max);
+            /** @var mixed */
+            $value = $this->elements[$index];
+
+            if (!($this->predicate)($value)) {
+                continue;
+            }
+
             yield Value::immutable($value);
-        }
+            ++$iterations;
+        } while ($iterations < $this->size);
     }
 }
