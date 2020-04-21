@@ -12,6 +12,7 @@ use Innmind\BlackBox\Set;
 final class Sequence implements Set
 {
     private Set $set;
+    /** @var Set<int> */
     private Set $sizes;
 
     /**
@@ -24,9 +25,11 @@ final class Sequence implements Set
     }
 
     /**
-     * @param Set<I> $set
+     * @template U
      *
-     * @return Set<list<I>>
+     * @param Set<U> $set
+     *
+     * @return self<U>
      */
     public static function of(Set $set, Set\Integers $sizes = null): self
     {
@@ -50,7 +53,7 @@ final class Sequence implements Set
     }
 
     /**
-     * @return \Generator<Set\Value<Structure<I>>>
+     * @return \Generator<Set\Value<list<I>>>
      */
     public function values(): \Generator
     {
@@ -78,6 +81,7 @@ final class Sequence implements Set
      */
     private function generate(int $size): array
     {
+        /** @var list<Value> */
         return \iterator_to_array($this->set->take($size)->values());
     }
 
@@ -88,12 +92,16 @@ final class Sequence implements Set
      */
     private function wrap(array $values): array
     {
+        /** @psalm-suppress MissingClosureReturnType */
         return \array_map(
             static fn(Value $value) => $value->unwrap(),
             $values,
         );
     }
 
+    /**
+     * @param list<I> $sequence
+     */
     private function shrink(bool $mutable, array $sequence): ?Dichotomy
     {
         if (\count($sequence) === 0) {
@@ -106,6 +114,11 @@ final class Sequence implements Set
         );
     }
 
+    /**
+     * @param list<I> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
     private function removeHalfTheStructure(bool $mutable, array $sequence): callable
     {
         // we round half down otherwise a sequence of 1 element would be shrunk
@@ -126,6 +139,11 @@ final class Sequence implements Set
         );
     }
 
+    /**
+     * @param list<I> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
     private function removeTailElement(bool $mutable, array $sequence): callable
     {
         $shrinked = $sequence;
