@@ -14,6 +14,7 @@ final class Sequence implements Set
     private Set $set;
     /** @var Set<int> */
     private Set $sizes;
+    /** @var callable(list<I>): bool */
     private \Closure $predicate;
 
     /**
@@ -55,6 +56,7 @@ final class Sequence implements Set
         $previous = $this->predicate;
         $self = clone $this;
         $self->predicate = function(array $value) use ($previous, $predicate): bool {
+            /** @psalm-suppress MixedArgumentTypeCoercion */
             if (!$previous($value)) {
                 return false;
             }
@@ -75,7 +77,7 @@ final class Sequence implements Set
         foreach ($this->sizes->values() as $size) {
             $values = $this->generate($size->unwrap());
 
-            if (!($this->predicate)($values)) {
+            if (!($this->predicate)($this->wrap($values))) {
                 continue;
             }
 
