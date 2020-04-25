@@ -90,8 +90,6 @@ By default the library supports the shrinking of data to help you find the small
 
 ![](printer.png)
 
-**Important**: shrinking use recursion to find the smallest value thus generating deep call stacks, so you may need to disable the xdebug `Maximum function nesting level` option.
-
 ## Configuration
 
 ### Set size
