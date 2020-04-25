@@ -6,6 +6,7 @@ namespace Innmind\BlackBox;
 use Innmind\BlackBox\Set\Value;
 
 /**
+ * @internal End users mustn't create implementations of this interface (BC breaks may be introduced)
  * @template T The type of data being generated
  */
 interface Set
