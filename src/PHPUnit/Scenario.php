@@ -20,7 +20,7 @@ final class Scenario
     private TestRunner $run;
 
     /**
-     * @param callable(\Throwable, Set\Value): void $recordFailure
+     * @param callable(\Throwable, Set\Value, callable): void $recordFailure
      * @param callable(\Throwable): bool $expectsException
      */
     public function __construct(

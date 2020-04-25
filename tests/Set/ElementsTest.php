@@ -91,4 +91,19 @@ class ElementsTest extends TestCase
             $this->assertFalse($value->shrinkable());
         }
     }
+
+    public function testThereIsAlwaysTheSpecifiedNumberOfElementsReturnedEvenThoughLessInjected()
+    {
+        $elements = Elements::of('foo', 'bar', 'baz');
+        $values = \iterator_to_array($elements->values());
+
+        $this->assertCount(100, $values);
+
+        $values = \array_map(fn($v) => $v->unwrap(), $values);
+        $frequency = \array_count_values($values);
+
+        $this->assertGreaterThan(1, $frequency['foo']);
+        $this->assertGreaterThan(1, $frequency['bar']);
+        $this->assertGreaterThan(1, $frequency['baz']);
+    }
 }

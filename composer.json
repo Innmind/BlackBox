@@ -28,7 +28,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Innmind\\BlackBox\\": "tests/"
+            "Tests\\Innmind\\BlackBox\\": "tests/",
+            "Fixtures\\Innmind\\BlackBox\\": "fixtures/"
         }
     },
     "require-dev": {

@@ -46,14 +46,14 @@ final class TestRunner
         \Throwable $parentFailure
     ): void {
         if ($this->shrinkingDisabled) {
-            $this->throw($parentFailure, $values);
+            $this->throw($parentFailure, $values, $test);
         }
 
         if ($values->shrinkable()) {
             $this->shrink($test, $values, $parentFailure);
         }
 
-        $this->throw($parentFailure, $values);
+        $this->throw($parentFailure, $values, $test);
     }
 
     private function shrink(
@@ -61,6 +61,7 @@ final class TestRunner
         Value $values,
         \Throwable $previousFailure
     ): void {
+        $previousStrategy = $values;
         $dichotomy = $values->shrink();
 
         do {
@@ -70,21 +71,18 @@ final class TestRunner
                 $test(...$currentStrategy->unwrap());
                 $currentStrategy = $dichotomy->b();
                 $test(...$currentStrategy->unwrap());
-
-                // when a and b work then the previous failure has been generated
-                // with the smallest values possible
-                throw $previousFailure;
             } catch (AssertionFailedError $e) {
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
+                    $previousStrategy = $currentStrategy;
                     continue;
                 }
 
                 // current strategy no longer shrinkable so it means we reached
                 // a leaf of our search tree meaning the current exception is the
                 // last one we can obtain
-                $this->throw($e, $currentStrategy);
+                $this->throw($e, $currentStrategy, $test);
             } catch (\Throwable $e) {
                 if (($this->expectsException)($e)) {
                     // when inside the process of shrinking we reach a case where
@@ -92,27 +90,32 @@ final class TestRunner
                     // previous case was a special one making the test fail,
                     // otherwise if we rethrow this exception $e it will flag the
                     // test as green even though we found a failing case
-                    $this->throw($previousFailure, $currentStrategy);
+                    $this->throw($previousFailure, $previousStrategy, $test);
                 }
 
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
+                    $previousStrategy = $currentStrategy;
                     continue;
                 }
 
                 // current strategy no longer shrinkable so it means we reached
                 // a leaf of our search tree meaning the current exception is the
                 // last one we can obtain
-                $this->throw($e, $currentStrategy);
+                $this->throw($e, $currentStrategy, $test);
             }
+
+            // when a and b work then the previous failure has been generated
+            // with the smallest values possible
+            $this->throw($previousFailure, $previousStrategy, $test);
         // we can use an infinite condition here since all exits are covered
         } while (true);
     }
 
-    private function throw(\Throwable $e, Value $values): void
+    private function throw(\Throwable $e, Value $values, callable $test): void
     {
-        ($this->recordFailure)($e, $values);
+        ($this->recordFailure)($e, $values, $test);
 
         throw $e;
     }
