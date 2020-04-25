@@ -61,6 +61,7 @@ final class TestRunner
         Value $values,
         \Throwable $previousFailure
     ): void {
+        $previousStrategy = $values;
         $dichotomy = $values->shrink();
 
         do {
@@ -70,14 +71,11 @@ final class TestRunner
                 $test(...$currentStrategy->unwrap());
                 $currentStrategy = $dichotomy->b();
                 $test(...$currentStrategy->unwrap());
-
-                // when a and b work then the previous failure has been generated
-                // with the smallest values possible
-                throw $previousFailure;
             } catch (AssertionFailedError $e) {
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
+                    $previousStrategy = $currentStrategy;
                     continue;
                 }
 
@@ -92,12 +90,13 @@ final class TestRunner
                     // previous case was a special one making the test fail,
                     // otherwise if we rethrow this exception $e it will flag the
                     // test as green even though we found a failing case
-                    $this->throw($previousFailure, $currentStrategy);
+                    $this->throw($previousFailure, $previousStrategy);
                 }
 
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
+                    $previousStrategy = $currentStrategy;
                     continue;
                 }
 
@@ -106,6 +105,10 @@ final class TestRunner
                 // last one we can obtain
                 $this->throw($e, $currentStrategy);
             }
+
+            // when a and b work then the previous failure has been generated
+            // with the smallest values possible
+            $this->throw($previousFailure, $previousStrategy);
         // we can use an infinite condition here since all exits are covered
         } while (true);
     }
