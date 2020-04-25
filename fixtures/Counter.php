@@ -6,15 +6,24 @@ namespace Fixtures\Innmind\BlackBox;
 final class Counter
 {
     private int $value;
+    private bool $correct = true;
 
     public function __construct(int $initial = 0)
     {
         $this->value = $initial;
     }
 
+    public static function failOnPurpose(): self
+    {
+        $self = new self;
+        $self->correct = false;
+
+        return $self;
+    }
+
     public function down(): void
     {
-        if ($this->value === 0) {
+        if ($this->correct && $this->value === 0) {
             return;
         }
 
@@ -23,7 +32,7 @@ final class Counter
 
     public function up(): void
     {
-        if ($this->value === 100) {
+        if ($this->correct && $this->value === 100) {
             return;
         }
 
