@@ -29,6 +29,8 @@ final class ResultPrinterV8 extends ResultPrinter
     private static ?self $currentInstance = null;
     /** @var array<string, Value> */
     private array $dataSets = [];
+    /** @var \SplObjectStorage<Value, list<string>> */
+    private \SplObjectStorage $arguments;
     private VarCloner $cloner;
     private CliDumper $dumper;
 
@@ -41,19 +43,36 @@ final class ResultPrinterV8 extends ResultPrinter
     public function __construct($out, ...$args)
     {
         parent::__construct($out, ...$args);
+        /** @var \SplObjectStorage<Value, list<string>> */
+        $this->arguments = new \SplObjectStorage;
         $this->cloner = new VarCloner;
         $this->dumper = new CliDumper($out);
         self::$currentInstance = $this;
     }
 
-    public static function record(object $test, \Throwable $e, Value $value): void
-    {
+    public static function record(
+        object $testCase,
+        \Throwable $e,
+        Value $value,
+        callable $test
+    ): void {
         if (\is_null(self::$currentInstance)) {
             return;
         }
 
-        $hash = self::$currentInstance->hash($test, $e);
+        $hash = self::$currentInstance->hash($testCase, $e);
         self::$currentInstance->dataSets[$hash] = $value;
+
+        $test = \Closure::fromCallable($test);
+        $reflection = new \ReflectionObject($test);
+        $reflection = $reflection->getMethod('__invoke');
+        self::$currentInstance->arguments->attach(
+            $value,
+            \array_map(
+                static fn(\ReflectionParameter $parameter): string => $parameter->getName(),
+                $reflection->getParameters(),
+            ),
+        );
     }
 
     protected function printDefect(TestFailure $defect, int $count): void
@@ -73,12 +92,16 @@ final class ResultPrinterV8 extends ResultPrinter
             return;
         }
 
+        $arguments = $this->arguments[$values];
+        \reset($arguments);
+
         /** @psalm-suppress InternalMethod */
         $this->write("Test failing with the following set of values : \n");
 
         /** @psalm-suppress MixedAssignment */
         foreach ($values->unwrap() as $value) {
-            $this->dump($value);
+            $this->dump(\current($arguments) ?: 'undefined', $value);
+            \next($arguments);
         }
 
         /** @psalm-suppress InternalMethod */
@@ -110,17 +133,17 @@ final class ResultPrinterV8 extends ResultPrinter
     }
 
     /** @psalm-suppress MissingParamType */
-    private function dump($var): void
+    private function dump(string $argument, $var): void
     {
         if ($var instanceof Properties) {
-            /** @psalm-suppress InternalMethod */
-            $this->write('list<Property>: ');
             $var = \array_map(
                 static fn(Property $property): string => $property->name(),
                 $var->properties(),
             );
         }
 
+        /** @psalm-suppress InternalMethod */
+        $this->write('$'.$argument.' = ');
         $this->dumper->dump($this->cloner->cloneVar($var));
     }
 
