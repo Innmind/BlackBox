@@ -13,21 +13,21 @@ When I run tests I need some data to assert the validity of my code, the first a
 The goal of this library is to help build higher order sets to facilitate the understanding of tests.
 
 `BlackBox` comes with the `Set`s of primitives:
-- `Integers` -> `int`
-- `RealNumbers` -> `float`
-- `Strings` -> `string`
-- `UnsafeStrings` -> `string` (found [here](https://github.com/minimaxir/big-list-of-naughty-strings))
-- `Regex` -> `string`
+- [`Integers`](src/Set/Integers.php) -> `int`
+- [`RealNumbers`](src/Set/RealNumbers.php) -> `float`
+- [`Strings`](src/Set/Strings.php) -> `string`
+- [`UnsafeStrings`](src/Set/UnsafeStrings.php) -> `string` (found [here](https://github.com/minimaxir/big-list-of-naughty-strings))
+- [`Regex`](src/Set/Regex.php) -> `string`
 
 User defined elements `Set`s can be defined with:
-- `Elements`
-- `FromGenerator`
+- [`Elements`](src/Set/Elements.php)
+- [`FromGenerator`](src/Set/FromGenerator.php)
 
 Higher order `Set`s allows you create structures:
-- `Decorate` -> map a type `A` to a type `B`, ie an `int` to an object `Age`
-- `Composite` -> map many types to another unique type, ie `string $firstname` and `string $lastname` to an object `User($firstname, $lastname)`
-- `Sequence` -> create an `array` containing multiple elements of the same type
-- `Either` -> will generate either a type `A` or `B`, ie to create nullable `int`s via `Either(Integers::any(), Elements::of(null))`
+- [`Decorate`](src/Set/Decorate.php) -> map a type `A` to a type `B`, ie an `int` to an object `Age`
+- [`Composite`](src/Set/Composite.php) -> map many types to another unique type, ie `string $firstname` and `string $lastname` to an object `User($firstname, $lastname)`
+- [`Sequence`](src/Set/Sequence.php) -> create an `array` containing multiple elements of the same type
+- [`Either`](src/Set/Either.php) -> will generate either a type `A` or `B`, ie to create nullable `int`s via `Either(Integers::any(), Elements::of(null))`
 
 ## Installation
 
