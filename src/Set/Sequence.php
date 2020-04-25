@@ -84,12 +84,12 @@ final class Sequence implements Set
             if ($immutable) {
                 yield Set\Value::immutable(
                     $this->wrap($values),
-                    $this->shrink(false, $this->wrap($values)),
+                    $this->shrink(false, $values),
                 );
             } else {
                 yield Set\Value::mutable(
                     fn() => $this->wrap($values),
-                    $this->shrink(true, $this->wrap($values)),
+                    $this->shrink(true, $values),
                 );
             }
         }
@@ -119,7 +119,7 @@ final class Sequence implements Set
     }
 
     /**
-     * @param list<I> $sequence
+     * @param list<Value<I>> $sequence
      */
     private function shrink(bool $mutable, array $sequence): ?Dichotomy
     {
@@ -127,7 +127,7 @@ final class Sequence implements Set
             return null;
         }
 
-        if (!($this->predicate)($sequence)) {
+        if (!($this->predicate)($this->wrap($sequence))) {
             return null;
         }
 
@@ -138,7 +138,7 @@ final class Sequence implements Set
     }
 
     /**
-     * @param list<I> $sequence
+     * @param list<Value<I>> $sequence
      *
      * @return callable(): Value<list<I>>
      */
@@ -149,25 +149,25 @@ final class Sequence implements Set
         $numberToKeep = (int) \round(\count($sequence) / 2, 0, \PHP_ROUND_HALF_DOWN);
         $shrinked = \array_slice($sequence, 0, $numberToKeep);
 
-        if (!($this->predicate)($shrinked)) {
+        if (!($this->predicate)($this->wrap($shrinked))) {
             return $this->identity($mutable, $sequence);
         }
 
         if ($mutable) {
             return fn(): Value => Value::mutable(
-                fn() => $shrinked,
+                fn() => $this->wrap($shrinked),
                 $this->shrink(true, $shrinked),
             );
         }
 
         return fn(): Value => Value::immutable(
-            $shrinked,
+            $this->wrap($shrinked),
             $this->shrink(false, $shrinked),
         );
     }
 
     /**
-     * @param list<I> $sequence
+     * @param list<Value<I>> $sequence
      *
      * @return callable(): Value<list<I>>
      */
@@ -176,34 +176,34 @@ final class Sequence implements Set
         $shrinked = $sequence;
         \array_pop($shrinked);
 
-        if (!($this->predicate)($shrinked)) {
+        if (!($this->predicate)($this->wrap($shrinked))) {
             return $this->identity($mutable, $sequence);
         }
 
         if ($mutable) {
             return fn(): Value => Value::mutable(
-                fn() => $shrinked,
+                fn() => $this->wrap($shrinked),
                 $this->shrink(true, $shrinked),
             );
         }
 
         return fn(): Value => Value::immutable(
-            $shrinked,
+            $this->wrap($shrinked),
             $this->shrink(false, $shrinked),
         );
     }
 
     /**
-     * @param list<I> $sequence
+     * @param list<Value<I>> $sequence
      *
      * @return callable(): Value<list<I>>
      */
     private function identity(bool $mutable, array $sequence): callable
     {
         if ($mutable) {
-            return fn(): Value => Value::mutable(fn() => $sequence);
+            return fn(): Value => Value::mutable(fn() => $this->wrap($sequence));
         }
 
-        return fn(): Value => Value::immutable($sequence);
+        return fn(): Value => Value::immutable($this->wrap($sequence));
     }
 }

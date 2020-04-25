@@ -242,4 +242,34 @@ class SequenceTest extends TestCase
             $this->assertCount(10, $sequence->unwrap());
         }
     }
+
+    public function testShrunkMutableDataIsRebuiltEverytime()
+    {
+        $sequences = Sequence::of(
+            Set\Decorate::mutable(
+                function() {
+                    $s = new \stdClass;
+                    $s->mutated = false;
+
+                    return $s;
+                },
+                Set\Integers::any(),
+            ),
+            Set\Integers::between(1, 20),
+        );
+
+        foreach ($sequences->values() as $value) {
+            if (!$value->shrinkable()) {
+                continue;
+            }
+
+            $a = $value->shrink()->a()->unwrap();
+            $a[0]->mutated = true;
+            $this->assertFalse($value->shrink()->a()->unwrap()[0]->mutated);
+
+            $b = $value->shrink()->b()->unwrap();
+            $b[0]->mutated = true;
+            $this->assertFalse($value->shrink()->b()->unwrap()[0]->mutated);
+        }
+    }
 }
