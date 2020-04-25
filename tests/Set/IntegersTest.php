@@ -218,11 +218,11 @@ class IntegersTest extends TestCase
         $previous = $integer;
         $integer = $integer->shrink()->a();
 
-        do {
+        while ($integer->shrinkable()) {
             $this->assertNotSame($previous->unwrap(), $integer->unwrap());
             $previous = $integer;
             $integer = $integer->shrink()->a();
-        } while ($integer->shrinkable());
+        }
 
         $integer = Integers::between(-1000, 1000)->values()->current();
         $previous = $integer;
