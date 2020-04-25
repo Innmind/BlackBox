@@ -12,7 +12,22 @@ When I run tests I need some data to assert the validity of my code, the first a
 
 The goal of this library is to help build higher order sets to facilitate the understanding of tests.
 
-**Note**: the library only generates primitives types, any user defined type set must be declared in its dedicated package.
+`BlackBox` comes with the `Set`s of primitives:
+- `Integers` -> `int`
+- `RealNumbers` -> `float`
+- `Strings` -> `string`
+- `UnsafeStrings` -> `string` (found [here](https://github.com/minimaxir/big-list-of-naughty-strings))
+- `Regex` -> `string`
+
+User defined elements `Set`s can be defined with:
+- `Elements`
+- `FromGenerator`
+
+Higher order `Set`s allows you create structures:
+- `Decorate` -> map a type `A` to a type `B`, ie an `int` to an object `Age`
+- `Composite` -> map many types to another unique type, ie `string $firstname` and `string $lastname` to an object `User($firstname, $lastname)`
+- `Sequence` -> create an `array` containing multiple elements of the same type
+- `Either` -> will generate either a type `A` or `B`, ie to create nullable `int`s via `Either(Integers::any(), Elements::of(null))`
 
 ## Installation
 
@@ -28,55 +43,54 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
 };
 
-final class User
+final class Counter
 {
-    private $firstName;
-    private $lastName;
+    private int $current;
 
-    public function __construct(string $firstName, string $lastName)
+    public function __construct(int $initial = 0)
     {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
+        $this->current = $initial;
     }
 
-    public function firstName(): string
+    public function up(): void
     {
-        return $this->firstName;
+        if ($this->current === 100) {
+            return;
+        }
+
+        ++$this->current;
     }
 
-    public function greet(): string
+    public function down(): void
     {
-        return "Hi, I'm {$this->firstName}";
+        if ($this->current === 0) {
+            return;
+        }
+
+        --$this->current;
+    }
+
+    public function current(): int
+    {
+        return $this->current;
     }
 }
 
-class UserSet
-{
-    public static function any(): Set
-    {
-        return Set\Composite::immutable(
-            function($firstName, $lastName): User {
-                return new User($firstName, $lastName);
-            },
-            Set\Strings::any(), // firstNames
-            Set\Strings::any() // lastNames
-        );
-    }
-}
-
-class UserTest extends \PHPUnit\Framework\TestCase
+class CounterTest extends \PHPUnit\Framework\TestCase
 {
     use BlackBox;
 
-    public function testUserGreetsWithHisFirstName()
+    public function testCounterValueIsAlwaysHigherAfterCoutningUp()
     {
         $this
-            ->forAll(UserSet::any())
-            ->then(function(User $user) {
-                $this->assertSame(
-                    "Hi, I'm {$user->firstName()}",
-                    $user->greet()
-                );
+            ->forAll(
+                Set\Integers::between(0, 100), // counter bounds
+            )
+            ->then(function(int $initial) {
+                $counter = new Counter($initial);
+                $counter->up();
+
+                $this->assertGreaterThan($initial, $counter->value());
             });
     }
 }
@@ -84,11 +98,79 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
 This really simple example show how the test class is focused on the behaviour and not about the construction of the test data.
 
-**Note**: here the `User` class is not mutable, but in your application it's likely that such class (meaning an entity) would be mutable, in such case you MUST use `Composite::mutable()` otherwise a mutated object would bleed between the iterations of the test.
-
 By default the library supports the shrinking of data to help you find the smallest possible set of values that makes your test fail. To help you ease the debugging of the code you can use the printer class `Innmind\BlackBox\PHPUnit\ResultPrinterV8` that will print the set of generated data that made your test fail.
 
 ![](printer.png)
+
+### Stateful testing
+
+When we write tests we tend to focus on evaluating the behaviour when doing one action (like in our counter example above). This technique help us cover most of our code, but when we deal we stateful systems (such as a counter, an entity or a daemon) it becomes harder to make sure all succession of mutations will always result in a coherent new state.
+
+Once again Property Based Testing can help us improve the coverage of behaviours. Instead of describing the initial test to the framework and manually do one action, we describe to the framework all the properties that our system must hold and the framework will try to find a succession of actions that will break our properties.
+
+If we reuse the counter example from above, the property would be written like this:
+
+```php
+use Innmind\BlackBox\Property;
+use PHPUnit\Framework\Assert;
+
+final class CountingUpAlwaysEndInAHigherCount implements Property
+{
+    public function name(): string
+    {
+        return 'Counting up always end in a higher count';
+    }
+
+    public function applicableTo(object $counter): bool
+    {
+        return $counter->current() < 100; // since upper bound is 100
+    }
+
+    public function ensureHelBy(object $counter): object
+    {
+        $initial = $counter->current();
+        $counter->up();
+
+        Assert::assertGreaterThan($initial, $counter->current());
+
+        return $counter;
+    }
+}
+```
+
+We could also write the inverse property `CountingDownAlwaysEndInALowerCount`, the test in phpunit would then look like this:
+
+```php
+class CounterTest extends \PHPUnit\Framework\TestCase
+{
+    use BlackBox;
+
+    public function testProperties()
+    {
+        $this
+            ->forAll(
+                Set\Properties::of(
+                    new CountingUpAlwaysEndInAHigherCount,
+                    new CountingDownAlwaysEndInALowerCount,
+                ),
+                Set\Integers::between(0, 100), // counter bounds
+            )
+            ->then(function($scenario, $initial) {
+                $scenario->ensureHelBy(new Counter($initial));
+            });
+    }
+}
+```
+
+**Note**: you should declare the properties as the first set of `forAll` to make sure it is shrunk first.
+
+The above example would generate multiple scenarii of counting up and down (it tries to apply up to 100 properties per scenario). In the case it found a failing scenario, it would be displayed as follow in your terminal:
+
+![](state_error.png)
+
+**Note**: this counter example is used as the test process of this framework, all properties to prove the behaviour of the counter can be found in the [`fixtures/`](fixtures/) folder.
+
+**Note 2**: this example was taken from an article by [Johannes Link](https://twitter.com/johanneslink) on [Model-based Testing](https://johanneslink.net/model-based-testing/).
 
 ## Configuration
 
