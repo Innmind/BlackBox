@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit;
 
-use Innmind\BlackBox\Set\Value;
+use Innmind\BlackBox\{
+    Set\Value,
+    Properties,
+    Property,
+};
 use PHPUnit\TextUI\ResultPrinter;
 use PHPUnit\Framework\{
     TestFailure,
@@ -108,6 +112,15 @@ final class ResultPrinterV8 extends ResultPrinter
     /** @psalm-suppress MissingParamType */
     private function dump($var): void
     {
+        if ($var instanceof Properties) {
+            /** @psalm-suppress InternalMethod */
+            $this->write('list<Property>: ');
+            $var = \array_map(
+                static fn(Property $property): string => $property->name(),
+                $var->properties(),
+            );
+        }
+
         $this->dumper->dump($this->cloner->cloneVar($var));
     }
 
