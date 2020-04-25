@@ -52,7 +52,17 @@ final class Sequence implements Set
      */
     public function filter(callable $predicate): Set
     {
-        throw new \LogicException('Sequence set can\'t be filtered, underlying set must be filtered beforehand');
+        $previous = $this->predicate;
+        $self = clone $this;
+        $self->predicate = function(array $value) use ($previous, $predicate): bool {
+            if (!$previous($value)) {
+                return false;
+            }
+
+            return $predicate($value);
+        };
+
+        return $self;
     }
 
     /**
@@ -64,6 +74,10 @@ final class Sequence implements Set
 
         foreach ($this->sizes->values() as $size) {
             $values = $this->generate($size->unwrap());
+
+            if (!($this->predicate)($values)) {
+                continue;
+            }
 
             if ($immutable) {
                 yield Set\Value::immutable(

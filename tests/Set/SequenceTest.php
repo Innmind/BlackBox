@@ -61,13 +61,27 @@ class SequenceTest extends TestCase
     public function testFilter()
     {
         $sequences = Sequence::of(Set\Chars::any());
+        $sequences2 = $sequences->filter(fn($sequence) => \count($sequence) % 2 === 0);
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Sequence set can\'t be filtered, underlying set must be filtered beforehand');
+        $this->assertInstanceOf(Sequence::class, $sequences2);
+        $this->assertNotSame($sequences, $sequences2);
 
-        $sequences->filter(static function($sequence): bool {
-            return $sequence->size() % 2 === 0;
-        });
+        $hasOddSequence = fn(bool $hasOddSequence, $sequence) => $hasOddSequence || \count($sequence->unwrap()) % 2 === 1;
+
+        $this->assertTrue(
+            \array_reduce(
+                \iterator_to_array($sequences->values()),
+                $hasOddSequence,
+                false,
+            ),
+        );
+        $this->assertFalse(
+            \array_reduce(
+                \iterator_to_array($sequences2->values()),
+                $hasOddSequence,
+                false,
+            ),
+        );
     }
 
     public function testFlagStructureAsMutableWhenUnderlyingSetValuesAreMutable()
