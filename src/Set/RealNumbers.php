@@ -74,7 +74,9 @@ final class RealNumbers implements Set
         $iterations = 0;
 
         do {
-            $value = \random_int($this->lowerBound, $this->upperBound) * \lcg_value();
+            // simulate the function lcg_value()
+            $lcg = (\random_int(0, 100) / 100);
+            $value = \random_int($this->lowerBound, $this->upperBound) * $lcg;
 
             if (!($this->predicate)($value)) {
                 continue;

@@ -173,6 +173,11 @@ class RealNumbersTest extends TestCase
         $numbers = RealNumbers::any();
 
         foreach ($numbers->values() as $value) {
+            if (!$value->shrinkable()) {
+                // as 0 may be generated
+                continue;
+            }
+
             $this->assertSame(
                 $value->unwrap() <=> 0,
                 $value->shrink()->a()->unwrap() <=> 0,
@@ -189,6 +194,10 @@ class RealNumbersTest extends TestCase
         $even = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 0);
 
         foreach ($even->values() as $value) {
+            if (!$value->shrinkable()) {
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertSame(0, ((int) round($dichotomy->a()->unwrap())) % 2);
