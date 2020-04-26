@@ -107,4 +107,14 @@ class ElementsTest extends TestCase
         $this->assertGreaterThan(1, $frequency['bar']);
         $this->assertGreaterThan(1, $frequency['baz']);
     }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            Elements::of(1, 2, 3)
+                ->take(0)
+                ->values(new MtRand)
+        );
+    }
 }

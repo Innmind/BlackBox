@@ -70,7 +70,7 @@ final class Elements implements Set
         $iterations = 0;
         $max = \count($this->elements) - 1;
 
-        do {
+        while ($iterations < $this->size) {
             $index = $rand(0, $max);
             /** @var mixed */
             $value = $this->elements[$index];
@@ -81,6 +81,6 @@ final class Elements implements Set
 
             yield Value::immutable($value);
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 }

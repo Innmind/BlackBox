@@ -177,4 +177,14 @@ class RegexTest extends TestCase
             $this->assertFalse($char->shrinkable());
         }
     }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            Regex::for('[a-z]')
+                ->take(0)
+                ->values(new MtRand)
+        );
+    }
 }

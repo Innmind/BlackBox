@@ -76,7 +76,7 @@ final class RealNumbers implements Set
     {
         $iterations = 0;
 
-        do {
+        while ($iterations < $this->size) {
             // simulate the function lcg_value()
             $lcg = ($rand(0, 100) / 100);
             $value = $rand($this->lowerBound, $this->upperBound) * $lcg;
@@ -87,7 +87,7 @@ final class RealNumbers implements Set
 
             yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**

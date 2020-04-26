@@ -81,7 +81,7 @@ final class Integers implements Set
     {
         $iterations = 0;
 
-        do {
+        while ($iterations < $this->size) {
             $value = $rand($this->lowerBound, $this->upperBound);
 
             if (!($this->predicate)($value)) {
@@ -90,7 +90,7 @@ final class Integers implements Set
 
             yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**

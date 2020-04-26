@@ -232,4 +232,14 @@ class RealNumbersTest extends TestCase
             $assertInBounds($value, 'b');
         }
     }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            RealNumbers::any()
+                ->take(0)
+                ->values(new MtRand)
+        );
+    }
 }

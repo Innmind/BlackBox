@@ -253,4 +253,14 @@ class IntegersTest extends TestCase
             $assertInBounds($value, 'b');
         }
     }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            Integers::any()
+                ->take(0)
+                ->values(new MtRand)
+        );
+    }
 }

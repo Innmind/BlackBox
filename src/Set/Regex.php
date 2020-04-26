@@ -72,7 +72,7 @@ final class Regex implements Set
     {
         $iterations = 0;
 
-        do {
+        while ($iterations < $this->size){
             $value = '';
             /** @var Parser */
             $parser = $this->parser->parse();
@@ -90,7 +90,7 @@ final class Regex implements Set
                 $this->shrink($value),
             );
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**

@@ -93,7 +93,7 @@ final class Strings implements Set
     {
         $iterations = 0;
 
-        do {
+        while ($iterations < $this->size) {
             $value = '';
             $maxLength = $rand($this->minLength + 1, $this->maxLength);
 
@@ -110,7 +110,7 @@ final class Strings implements Set
                 $this->shrink($value),
             );
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**

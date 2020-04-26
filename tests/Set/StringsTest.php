@@ -218,4 +218,14 @@ class StringsTest extends TestCase
             $assertInBounds($value, 'b');
         }
     }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            Strings::any()
+                ->take(0)
+                ->values(new MtRand)
+        );
+    }
 }
