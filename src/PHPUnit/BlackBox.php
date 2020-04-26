@@ -5,7 +5,7 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     Set,
-    Random\MtRand,
+    Random\RandomInt,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -49,7 +49,7 @@ trait BlackBox
         }
 
         $scenario = new Scenario(
-            new MtRand,
+            new RandomInt,
             $recordFailure,
             $expectsException,
             $first,
