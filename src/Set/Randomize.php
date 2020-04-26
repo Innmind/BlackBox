@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * Use this set to prevent iterating over all possible combinations of a composite set
@@ -34,12 +37,12 @@ final class Randomize implements Set
         return new self($this->set->filter($predicate));
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $value = $this->set->values()->current();
+            $value = $this->set->values($rand)->current();
 
             /**
              * $value can be sometime null when the underlying set generate an

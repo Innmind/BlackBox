@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Either,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class EitherTest extends TestCase
@@ -29,9 +30,9 @@ class EitherTest extends TestCase
             Set\Elements::of(2),
         );
 
-        $this->assertInstanceOf(\Generator::class, $either->values());
-        $this->assertCount(100, $this->unwrap($either->values()));
-        $values = \array_values(\array_unique($this->unwrap($either->values())));
+        $this->assertInstanceOf(\Generator::class, $either->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($either->values(new MtRand)));
+        $values = \array_values(\array_unique($this->unwrap($either->values(new MtRand))));
         \sort($values);
         $this->assertSame([1, 2], $values);
     }
@@ -46,8 +47,8 @@ class EitherTest extends TestCase
 
         $this->assertNotSame($either1, $either2);
         $this->assertInstanceOf(Either::class, $either2);
-        $this->assertCount(100, $this->unwrap($either1->values()));
-        $this->assertCount(50, $this->unwrap($either2->values()));
+        $this->assertCount(100, $this->unwrap($either1->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($either2->values(new MtRand)));
     }
 
     public function testFilter()
@@ -74,7 +75,7 @@ class EitherTest extends TestCase
             Set\Elements::of(2),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -91,7 +92,7 @@ class EitherTest extends TestCase
             Set\Elements::of(2),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
         }
     }

@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Regex,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class RegexTest extends TestCase
@@ -23,7 +24,7 @@ class RegexTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Regex::for('\d')->values());
+        $values = $this->unwrap(Regex::for('\d')->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -38,7 +39,7 @@ class RegexTest extends TestCase
         $this->assertInstanceOf(Regex::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -47,7 +48,7 @@ class RegexTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($others->values()),
+            $this->unwrap($others->values(new MtRand)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -63,18 +64,18 @@ class RegexTest extends TestCase
 
         $this->assertInstanceOf(Regex::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = Regex::for('\d');
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -84,7 +85,7 @@ class RegexTest extends TestCase
     {
         $strings = Regex::for('[a-z]+');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             if (strlen($value->unwrap()) === 1) {
                 // because they can't be shrinked as they would no longer match
                 // the pattern
@@ -99,7 +100,7 @@ class RegexTest extends TestCase
     {
         $strings = Regex::for('\d+');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             if (strlen($value->unwrap()) === 1) {
                 // because they can't be shrinked as they would no longer match
                 // the pattern
@@ -119,7 +120,7 @@ class RegexTest extends TestCase
     {
         $strings = Regex::for('[a-z][a-z]+');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             if (strlen($value->unwrap()) === 2) {
                 // as it will shrink to the identity value because a shorter value
                 // wouldn't match the expression
@@ -141,7 +142,7 @@ class RegexTest extends TestCase
     {
         $strings = Regex::for('[a-z]+')->filter(fn($string) => strlen($string) > 20);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             if (strlen($value->unwrap()) === 21) {
                 // because they can't be shrinked as they would no longer match
                 // the pattern
@@ -157,7 +158,7 @@ class RegexTest extends TestCase
 
     public function testNeverGeneratedSameValueTwiceInARow()
     {
-        $chars = Regex::for('[a-z]+')->values();
+        $chars = Regex::for('[a-z]+')->values(new MtRand);
         $previous = $chars->current();
         $chars->next();
 
@@ -172,7 +173,7 @@ class RegexTest extends TestCase
     {
         $chars = Regex::for('[a-z]');
 
-        foreach ($chars->values() as $char) {
+        foreach ($chars->values(new MtRand) as $char) {
             $this->assertFalse($char->shrinkable());
         }
     }

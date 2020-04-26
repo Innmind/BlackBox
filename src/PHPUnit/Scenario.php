@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Composite,
     Set\Randomize,
+    Random\MtRand,
 };
 
 final class Scenario
@@ -97,7 +98,7 @@ final class Scenario
     {
         $set = ($this->wrap)($this->set);
 
-        foreach ($set->values() as $values) {
+        foreach ($set->values(new MtRand) as $values) {
             ($this->run)($test, $values);
         }
     }

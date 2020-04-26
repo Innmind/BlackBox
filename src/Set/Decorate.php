@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @template D
@@ -88,9 +91,9 @@ final class Decorate implements Set
         return $self;
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
-        foreach ($this->set->values() as $value) {
+        foreach ($this->set->values($rand) as $value) {
             /** @var D */
             $decorated = ($this->decorate)($value->unwrap());
 

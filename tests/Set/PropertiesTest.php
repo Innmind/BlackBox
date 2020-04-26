@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Property,
     Properties as PropertiesModel,
+    Random\MtRand,
 };
 
 class PropertiesTest extends TestCase
@@ -28,7 +29,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        $this->assertCount(100, $properties->values());
+        $this->assertCount(100, $properties->values(new MtRand));
     }
 
     public function testGeneratePropertiesModel()
@@ -37,7 +38,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        foreach ($properties->values() as $scenario) {
+        foreach ($properties->values(new MtRand) as $scenario) {
             $this->assertInstanceOf(PropertiesModel::class, $scenario->unwrap());
         }
     }
@@ -48,7 +49,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        foreach ($properties->values() as $scenario) {
+        foreach ($properties->values(new MtRand) as $scenario) {
             $this->assertTrue($scenario->isImmutable());
         }
     }
@@ -60,7 +61,7 @@ class PropertiesTest extends TestCase
         );
         $sizes = [];
 
-        foreach ($properties->values() as $scenario) {
+        foreach ($properties->values(new MtRand) as $scenario) {
             $sizes[] = \count($scenario->unwrap()->properties());
         }
 
@@ -76,8 +77,8 @@ class PropertiesTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $properties2);
         $this->assertNotSame($properties, $properties2);
-        $this->assertCount(100, $properties->values());
-        $this->assertCount(50, $properties2->values());
+        $this->assertCount(100, $properties->values(new MtRand));
+        $this->assertCount(50, $properties2->values(new MtRand));
     }
 
     public function testFilter()
@@ -94,14 +95,14 @@ class PropertiesTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($properties->values()),
+                $this->unwrap($properties->values(new MtRand)),
                 $hasUnder50Properties,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($properties2->values()),
+                $this->unwrap($properties2->values(new MtRand)),
                 $hasUnder50Properties,
                 false,
             ),

@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Set<float>
@@ -69,14 +72,14 @@ final class RealNumbers implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
 
         do {
             // simulate the function lcg_value()
-            $lcg = (\random_int(0, 100) / 100);
-            $value = \random_int($this->lowerBound, $this->upperBound) * $lcg;
+            $lcg = ($rand(0, 100) / 100);
+            $value = $rand($this->lowerBound, $this->upperBound) * $lcg;
 
             if (!($this->predicate)($value)) {
                 continue;

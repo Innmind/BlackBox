@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Set<int>
@@ -39,8 +42,8 @@ final class IntegersExceptZero implements Set
         return $self;
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
-        yield from $this->set->values();
+        yield from $this->set->values($rand);
     }
 }

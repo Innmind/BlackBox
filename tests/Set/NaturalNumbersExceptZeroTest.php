@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\NaturalNumbersExceptZero,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class NaturalNumbersExceptZeroTest extends TestCase
@@ -23,7 +24,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(NaturalNumbersExceptZero::any()->values());
+        $values = $this->unwrap(NaturalNumbersExceptZero::any()->values(new MtRand));
 
         $this->assertCount(100, $values);
 
@@ -42,7 +43,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
         $this->assertInstanceOf(NaturalNumbersExceptZero::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            $this->unwrap($integers->values()),
+            $this->unwrap($integers->values(new MtRand)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -51,7 +52,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            $this->unwrap($even->values()),
+            $this->unwrap($even->values(new MtRand)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -67,18 +68,18 @@ class NaturalNumbersExceptZeroTest extends TestCase
 
         $this->assertInstanceOf(NaturalNumbersExceptZero::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = NaturalNumbersExceptZero::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -88,7 +89,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
     {
         $integers = NaturalNumbersExceptZero::any();
 
-        foreach ($integers->values() as $value) {
+        foreach ($integers->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }

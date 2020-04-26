@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * {@inheritdoc}
@@ -70,12 +73,12 @@ final class Sequence implements Set
     /**
      * @return \Generator<Set\Value<list<I>>>
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
-        $immutable = $this->set->values()->current()->isImmutable();
+        $immutable = $this->set->values($rand)->current()->isImmutable();
 
-        foreach ($this->sizes->values() as $size) {
-            $values = $this->generate($size->unwrap());
+        foreach ($this->sizes->values($rand) as $size) {
+            $values = $this->generate($size->unwrap(), $rand);
 
             if (!($this->predicate)($this->wrap($values))) {
                 continue;
@@ -98,10 +101,10 @@ final class Sequence implements Set
     /**
      * @return list<Value>
      */
-    private function generate(int $size): array
+    private function generate(int $size, Random $rand): array
     {
         /** @var list<Value> */
-        return \iterator_to_array($this->set->take($size)->values());
+        return \iterator_to_array($this->set->take($size)->values($rand));
     }
 
     /**

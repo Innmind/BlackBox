@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Integers,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class IntegersTest extends TestCase
@@ -24,7 +25,7 @@ class IntegersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(Integers::any()->values());
+        $values = $this->unwrap(Integers::any()->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -34,7 +35,7 @@ class IntegersTest extends TestCase
         $values = Integers::between(-10, 10);
 
         $hasOutsideBounds = \array_reduce(
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
             static function(bool $hasOutsideBounds, int $value): bool {
                 return $hasOutsideBounds || $value > 10 || $value < -10;
             },
@@ -50,10 +51,10 @@ class IntegersTest extends TestCase
         $values = Integers::above(10);
 
         $this->assertInstanceOf(Integers::class, $values);
-        $this->assertCount(100, $this->unwrap($values->values()));
+        $this->assertCount(100, $this->unwrap($values->values(new MtRand)));
         $this->assertGreaterThanOrEqual(
             10,
-            \min($this->unwrap($values->values())),
+            \min($this->unwrap($values->values(new MtRand))),
         );
     }
 
@@ -62,10 +63,10 @@ class IntegersTest extends TestCase
         $values = Integers::below(10);
 
         $this->assertInstanceOf(Integers::class, $values);
-        $this->assertCount(100, $this->unwrap($values->values()));
+        $this->assertCount(100, $this->unwrap($values->values(new MtRand)));
         $this->assertLessThanOrEqual(
             10,
-            \max($this->unwrap($values->values())),
+            \max($this->unwrap($values->values(new MtRand))),
         );
     }
 
@@ -79,7 +80,7 @@ class IntegersTest extends TestCase
         $this->assertInstanceOf(Integers::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            $this->unwrap($integers->values()),
+            $this->unwrap($integers->values(new MtRand)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -88,7 +89,7 @@ class IntegersTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            $this->unwrap($even->values()),
+            $this->unwrap($even->values(new MtRand)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -104,18 +105,18 @@ class IntegersTest extends TestCase
 
         $this->assertInstanceOf(Integers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = Integers::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -125,7 +126,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::between(-1, 1)->filter(fn($i) => $i === 0);
 
-        foreach ($ints->values() as $value) {
+        foreach ($ints->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -134,7 +135,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::any()->filter(fn($i) => $i !== 0);
 
-        foreach ($ints->values() as $value) {
+        foreach ($ints->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -143,7 +144,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::any()->filter(fn($i) => $i !== 0);
 
-        foreach ($ints->values() as $value) {
+        foreach ($ints->values(new MtRand) as $value) {
             $this->assertTrue($value->isImmutable());
         }
     }
@@ -152,7 +153,7 @@ class IntegersTest extends TestCase
     {
         $positive = Integers::above(1);
 
-        foreach ($positive->values() as $value) {
+        foreach ($positive->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -164,7 +165,7 @@ class IntegersTest extends TestCase
 
         $negative = Integers::below(-1);
 
-        foreach ($negative->values() as $value) {
+        foreach ($negative->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -179,7 +180,7 @@ class IntegersTest extends TestCase
     {
         $integers = Integers::any();
 
-        foreach ($integers->values() as $value) {
+        foreach ($integers->values(new MtRand) as $value) {
             $this->assertSame(
                 $value->unwrap() <=> 0,
                 $value->shrink()->a()->unwrap() <=> 0,
@@ -195,7 +196,7 @@ class IntegersTest extends TestCase
     {
         $even = Integers::any()->filter(fn($i) => $i !== 0 && ($i % 2) === 0);
 
-        foreach ($even->values() as $value) {
+        foreach ($even->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertSame(0, $dichotomy->a()->unwrap() % 2);
@@ -204,7 +205,7 @@ class IntegersTest extends TestCase
 
         $odd = Integers::any()->filter(fn($i) => $i !== 0 && ($i % 2) === 1);
 
-        foreach ($odd->values() as $value) {
+        foreach ($odd->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertSame(1, $dichotomy->a()->unwrap() % 2);
@@ -214,7 +215,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkingStrategiesNeverProduceTheSameResultTwice()
     {
-        $integer = Integers::between(-1000, 1000)->values()->current();
+        $integer = Integers::between(-1000, 1000)->values(new MtRand)->current();
         $previous = $integer;
         $integer = $integer->shrink()->a();
 
@@ -224,7 +225,7 @@ class IntegersTest extends TestCase
             $integer = $integer->shrink()->a();
         }
 
-        $integer = Integers::between(-1000, 1000)->values()->current();
+        $integer = Integers::between(-1000, 1000)->values(new MtRand)->current();
         $previous = $integer;
         $integer = $integer->shrink()->b();
 
@@ -247,7 +248,7 @@ class IntegersTest extends TestCase
             }
         };
 
-        foreach ($integers->values() as $value) {
+        foreach ($integers->values(new MtRand) as $value) {
             $assertInBounds($value, 'a');
             $assertInBounds($value, 'b');
         }

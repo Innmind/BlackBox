@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * This set can only contain immutable values as they're generated outside of the
@@ -62,13 +65,13 @@ final class Elements implements Set
         return $self;
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
         $max = \count($this->elements) - 1;
 
         do {
-            $index = \random_int(0, $max);
+            $index = $rand(0, $max);
             /** @var mixed */
             $value = $this->elements[$index];
 

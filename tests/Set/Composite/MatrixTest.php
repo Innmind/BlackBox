@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\BlackBox\Set\Composite;
 
-use Innmind\BlackBox\Set\{
-    Composite\Matrix,
-    Composite\Combination,
-    FromGenerator,
-    Value,
+use Innmind\BlackBox\{
+    Set\Composite\Matrix,
+    Set\Composite\Combination,
+    Set\FromGenerator,
+    Set\Value,
+    Random\MtRand,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -86,7 +87,7 @@ class MatrixTest extends TestCase
             function($combination) {
                 return $combination->unwrap();
             },
-            \iterator_to_array($matrix->values()),
+            \iterator_to_array($matrix->values(new MtRand)),
         );
     }
 }
