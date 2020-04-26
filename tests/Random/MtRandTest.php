@@ -43,4 +43,46 @@ class MtRandTest extends TestCase
                 );
             });
     }
+
+    public function testUnseededGeneratorNeverReturnTheSameValueTwice()
+    {
+        $rand = new MtRand;
+
+        $this->assertNotSame(
+            $rand(\PHP_INT_MIN, \PHP_INT_MAX),
+            $rand(\PHP_INT_MIN, \PHP_INT_MAX),
+        );
+    }
+
+    public function testSeededGeneratorAlwaysReturnTheSameValue()
+    {
+        $this
+            ->forAll(Set\Integers::any())
+            ->then(function($seed) {
+                $rand = MtRand::seed($seed);
+
+                $this->assertSame(
+                    $rand(\PHP_INT_MIN, \PHP_INT_MAX),
+                    $rand(\PHP_INT_MIN, \PHP_INT_MAX),
+                );
+            });
+    }
+
+    public function testMtRandFunctionIsNotAffectedByTheSeeding()
+    {
+        $this
+            ->forAll(Set\Integers::any())
+            ->then(function($seed) {
+                $rand = MtRand::seed($seed);
+
+                $this->assertNotSame(
+                    $rand(\PHP_INT_MIN, \PHP_INT_MAX),
+                    \mt_rand(\PHP_INT_MIN, \PHP_INT_MAX),
+                );
+                $this->assertNotSame(
+                    \mt_rand(\PHP_INT_MIN, \PHP_INT_MAX),
+                    \mt_rand(\PHP_INT_MIN, \PHP_INT_MAX),
+                );
+            });
+    }
 }
