@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 use ReverseRegex\{
     Lexer,
     Random\GeneratorInterface,
@@ -20,68 +23,12 @@ use ReverseRegex\{
 final class Regex implements Set
 {
     private Parser $parser;
-    private GeneratorInterface $random;
     private int $size;
     private \Closure $predicate;
 
     private function __construct(string $expression)
     {
         $lexer = new Lexer($expression);
-        $random = new SimpleRandom(\random_int(\PHP_INT_MIN, \PHP_INT_MAX));
-        $this->random = new class($random) implements GeneratorInterface {
-            private GeneratorInterface $random;
-
-            public function __construct(GeneratorInterface $random)
-            {
-                $this->random = $random;
-            }
-
-            /**
-             * @psalm-suppress MissingReturnType
-             * @param int $min
-             * @param int|null $max
-             */
-            public function generate($min = 0,$max = null)
-            {
-                // by default we try the default min/max strategy but in case it
-                // fails due to the maxx being too high (cf SimpleRandom hardcoded
-                // limit) we then try with a maximum of 128 so it doesn't take
-                // too long to generate the data
-                try {
-                    return $this->random->generate($min, $max);
-                } catch (Exception $e) {
-                    return $this->random->generate(
-                        $min,
-                        $max ? \min($max, 128) : null,
-                    );
-                }
-            }
-
-            /**
-             * @psalm-suppress MissingReturnType
-             * @param int $seed
-             */
-            public function seed($seed = null)
-            {
-                return $this->random->seed($seed);
-            }
-
-            /**
-             * @param int|null $value
-             *
-             * @return float
-             */
-            public function max($value = null)
-            {
-                // even though the interface doesn't describe an expected argument
-                // the SimpleRandom implementation has one
-                /**
-                 * @psalm-suppress TooManyArguments
-                 * @var float
-                 */
-                return $this->random->max($value);
-            }
-        };
         $this->parser = new Parser($lexer, new Scope, new Scope);
         $this->size = 100;
         $this->predicate = static fn(string $str): bool => \preg_match("~^$expression$~", $str) === 1;
@@ -121,17 +68,17 @@ final class Regex implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
 
-        do {
+        while ($iterations < $this->size){
             $value = '';
             /** @var Parser */
             $parser = $this->parser->parse();
             /** @var Scope */
             $scope = $parser->getResult();
-            $scope->generate($value, $this->random);
+            $scope->generate($value, $this->random($rand));
 
             if (!($this->predicate)($value)) {
                 continue ;
@@ -143,7 +90,7 @@ final class Regex implements Set
                 $this->shrink($value),
             );
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**
@@ -206,5 +153,65 @@ final class Regex implements Set
     private function identity(string $value): callable
     {
         return static fn(): Value => Value::immutable($value);
+    }
+
+    private function random(Random $rand): GeneratorInterface
+    {
+        $random = new SimpleRandom($rand(\PHP_INT_MIN, \PHP_INT_MAX));
+
+        return new class($random) implements GeneratorInterface {
+            private GeneratorInterface $random;
+
+            public function __construct(GeneratorInterface $random)
+            {
+                $this->random = $random;
+            }
+
+            /**
+             * @psalm-suppress MissingReturnType
+             * @param int $min
+             * @param int|null $max
+             */
+            public function generate($min = 0,$max = null)
+            {
+                // by default we try the default min/max strategy but in case it
+                // fails due to the maxx being too high (cf SimpleRandom hardcoded
+                // limit) we then try with a maximum of 128 so it doesn't take
+                // too long to generate the data
+                try {
+                    return $this->random->generate($min, $max);
+                } catch (Exception $e) {
+                    return $this->random->generate(
+                        $min,
+                        $max ? \min($max, 128) : null,
+                    );
+                }
+            }
+
+            /**
+             * @psalm-suppress MissingReturnType
+             * @param int $seed
+             */
+            public function seed($seed = null)
+            {
+                return $this->random->seed($seed);
+            }
+
+            /**
+             * @param int|null $value
+             *
+             * @return float
+             */
+            public function max($value = null)
+            {
+                // even though the interface doesn't describe an expected argument
+                // the SimpleRandom implementation has one
+                /**
+                 * @psalm-suppress TooManyArguments
+                 * @var float
+                 */
+                return $this->random->max($value);
+            }
+        };
     }
 }

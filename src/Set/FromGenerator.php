@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * This set can only contain immutable values as they're generated outside of the
@@ -14,17 +17,17 @@ use Innmind\BlackBox\Set;
 final class FromGenerator implements Set
 {
     private int $size;
-    /** @var \Closure(): \Generator<T> */
+    /** @var \Closure(Random): \Generator<T> */
     private \Closure $generatorFactory;
     /** @var \Closure(T): bool */
     private \Closure $predicate;
 
     /**
-     * @param callable(): \Generator<T> $generatorFactory
+     * @param callable(Random): \Generator<T> $generatorFactory
      */
     public function __construct(callable $generatorFactory)
     {
-        if (!$generatorFactory() instanceof \Generator) {
+        if (!$generatorFactory(new Random\MtRand) instanceof \Generator) {
             throw new \TypeError('Argument 1 must be of type callable(): \Generator');
         }
 
@@ -36,7 +39,7 @@ final class FromGenerator implements Set
     /**
      * @template V
      *
-     * @param callable(): \Generator<V> $generatorFactory
+     * @param callable(Random): \Generator<V> $generatorFactory
      *
      * @return self<V>
      */
@@ -72,10 +75,10 @@ final class FromGenerator implements Set
         return $self;
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         /** @var \Generator<T> */
-        $generator = ($this->generatorFactory)();
+        $generator = ($this->generatorFactory)($rand);
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {

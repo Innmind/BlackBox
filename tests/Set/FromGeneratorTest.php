@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\FromGenerator,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class FromGeneratorTest extends TestCase
@@ -46,10 +47,10 @@ class FromGeneratorTest extends TestCase
                 yield $i;
             }
         });
-        $aValues = $this->unwrap($a->values());
+        $aValues = $this->unwrap($a->values(new MtRand));
 
         $b = $a->take(50);
-        $bValues = $this->unwrap($b->values());
+        $bValues = $this->unwrap($b->values(new MtRand));
 
         $this->assertInstanceOf(FromGenerator::class, $b);
         $this->assertNotSame($a, $b);
@@ -66,12 +67,12 @@ class FromGeneratorTest extends TestCase
         })->filter(static function(int $value): bool {
             return $value > 50;
         });
-        $aValues = $this->unwrap($a->values());
+        $aValues = $this->unwrap($a->values(new MtRand));
 
         $b = $a->filter(static function(int $value): bool {
             return $value <= 100;
         });
-        $bValues = $this->unwrap($b->values());
+        $bValues = $this->unwrap($b->values(new MtRand));
 
         $this->assertInstanceOf(FromGenerator::class, $a);
         $this->assertInstanceOf(FromGenerator::class, $b);
@@ -91,7 +92,7 @@ class FromGeneratorTest extends TestCase
                 yield $i;
             }
         });
-        $aValues = $this->unwrap($a->values());
+        $aValues = $this->unwrap($a->values(new MtRand));
 
         $this->assertCount(11, $aValues);
     }
@@ -104,10 +105,10 @@ class FromGeneratorTest extends TestCase
             }
         });
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertSame(\range(0, 10), $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertSame(\range(0, 10), $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -121,7 +122,7 @@ class FromGeneratorTest extends TestCase
             }
         });
 
-        foreach ($generated->values() as $value) {
+        foreach ($generated->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }

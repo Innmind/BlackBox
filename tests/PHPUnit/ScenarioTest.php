@@ -6,6 +6,7 @@ namespace Tests\Innmind\BlackBox\PHPUnit;
 use Innmind\BlackBox\{
     PHPUnit\Scenario,
     Set\Integers,
+    Random\MtRand,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -14,6 +15,7 @@ class ScenarioTest extends TestCase
     public function testCallingWithOnlyOneSet()
     {
         $scenario = new Scenario(
+            new MtRand,
             fn() => null,
             fn() => false,
             Integers::any(),
@@ -30,6 +32,7 @@ class ScenarioTest extends TestCase
     public function testCallingWithMultipleSets()
     {
         $scenario = new Scenario(
+            new MtRand,
             fn() => null,
             fn() => false,
             Integers::any(),
@@ -47,6 +50,7 @@ class ScenarioTest extends TestCase
     public function testAllowToOnlyTakeACertainNumberOfScenarios()
     {
         $scenario1 = new Scenario(
+            new MtRand,
             fn() => null,
             fn() => false,
             Integers::any(),
@@ -73,6 +77,7 @@ class ScenarioTest extends TestCase
     public function testAllowAFilterCanBeAppliedOnTheScenario()
     {
         $scenario1 = new Scenario(
+            new MtRand,
             fn() => null,
             fn() => false,
             Integers::any(),
@@ -105,6 +110,7 @@ class ScenarioTest extends TestCase
     public function testDisableShrinking()
     {
         $scenario = new Scenario(
+            new MtRand,
             fn() => null,
             fn() => false,
             Integers::any(),

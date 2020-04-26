@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Chars,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class CharsTest extends TestCase
@@ -23,7 +24,7 @@ class CharsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Chars::any()->values());
+        $values = $this->unwrap(Chars::any()->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -38,7 +39,7 @@ class CharsTest extends TestCase
         $this->assertInstanceOf(Chars::class, $even);
         $this->assertNotSame($values, $even);
         $hasOddChar = \array_reduce(
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || ord($value) % 2 === 1;
             },
@@ -47,7 +48,7 @@ class CharsTest extends TestCase
         $this->assertTrue($hasOddChar);
 
         $hasOddChar = \array_reduce(
-            $this->unwrap($even->values()),
+            $this->unwrap($even->values(new MtRand)),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || ord($value) % 2 === 1;
             },
@@ -63,18 +64,18 @@ class CharsTest extends TestCase
 
         $this->assertInstanceOf(Chars::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = Chars::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -84,7 +85,7 @@ class CharsTest extends TestCase
     {
         $chars = Chars::any();
 
-        foreach ($chars->values() as $value) {
+        foreach ($chars->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }

@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Elements,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class ElementsTest extends TestCase
@@ -24,7 +25,7 @@ class ElementsTest extends TestCase
     public function testTake100ValuesByDefault()
     {
         $elements = Elements::of(...range(0, 1000));
-        $values = $this->unwrap($elements->values());
+        $values = $this->unwrap($elements->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -33,8 +34,8 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...range(0, 1000));
         $elements2 = $elements->take(10);
-        $aValues = $this->unwrap($elements->values());
-        $bValues = $this->unwrap($elements2->values());
+        $aValues = $this->unwrap($elements->values(new MtRand));
+        $bValues = $this->unwrap($elements2->values(new MtRand));
 
         $this->assertInstanceOf(Elements::class, $elements2);
         $this->assertNotSame($elements, $elements2);
@@ -56,14 +57,14 @@ class ElementsTest extends TestCase
         $this->assertNotSame($elements, $elements2);
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($elements2->values()),
+                $this->unwrap($elements2->values(new MtRand)),
                 $containsEvenInt,
                 false,
             ),
         );
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($elements->values()),
+                $this->unwrap($elements->values(new MtRand)),
                 $containsEvenInt,
                 false,
             ),
@@ -74,10 +75,10 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...range(0, 1000));
 
-        $this->assertInstanceOf(\Generator::class, $elements->values());
-        $this->assertCount(100, $this->unwrap($elements->values()));
+        $this->assertInstanceOf(\Generator::class, $elements->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($elements->values(new MtRand)));
 
-        foreach ($elements->values() as $value) {
+        foreach ($elements->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -87,7 +88,7 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...range(0, 1000));
 
-        foreach ($elements->values() as $value) {
+        foreach ($elements->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -95,7 +96,7 @@ class ElementsTest extends TestCase
     public function testThereIsAlwaysTheSpecifiedNumberOfElementsReturnedEvenThoughLessInjected()
     {
         $elements = Elements::of('foo', 'bar', 'baz');
-        $values = \iterator_to_array($elements->values());
+        $values = \iterator_to_array($elements->values(new MtRand));
 
         $this->assertCount(100, $values);
 
@@ -105,5 +106,15 @@ class ElementsTest extends TestCase
         $this->assertGreaterThan(1, $frequency['foo']);
         $this->assertGreaterThan(1, $frequency['bar']);
         $this->assertGreaterThan(1, $frequency['baz']);
+    }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            Elements::of(1, 2, 3)
+                ->take(0)
+                ->values(new MtRand)
+        );
     }
 }

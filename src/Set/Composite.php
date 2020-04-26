@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Composite\Matrix,
     Set\Composite\Combination,
+    Random,
 };
 
 /**
@@ -97,7 +98,7 @@ final class Composite implements Set
         return $self;
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $sets = $this->sets;
         $first = \array_shift($sets);
@@ -107,7 +108,7 @@ final class Composite implements Set
             static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
             Matrix::of($second, $first),
         );
-        $matrix = $matrix->values();
+        $matrix = $matrix->values($rand);
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {

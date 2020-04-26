@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     Set\Decorate,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class CompositeTest extends TestCase
@@ -65,7 +66,7 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = $this->unwrap($this->set->take(2)->values());
+        $values = $this->unwrap($this->set->take(2)->values(new MtRand));
 
         $this->assertSame(
             [
@@ -91,13 +92,13 @@ class CompositeTest extends TestCase
                 'ebc',
                 'ebd',
             ],
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
         );
     }
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->values());
+        $values = $this->unwrap($this->set->values(new MtRand));
 
         $this->assertSame(
             [
@@ -116,10 +117,10 @@ class CompositeTest extends TestCase
 
     public function testValues()
     {
-        $this->assertInstanceOf(\Generator::class, $this->set->values());
-        $this->assertCount(8, $this->unwrap($this->set->values()));
+        $this->assertInstanceOf(\Generator::class, $this->set->values(new MtRand));
+        $this->assertCount(8, $this->unwrap($this->set->values(new MtRand)));
 
-        foreach ($this->set->values() as $value) {
+        foreach ($this->set->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -148,7 +149,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $this->assertFalse($value->isImmutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
@@ -185,9 +186,9 @@ class CompositeTest extends TestCase
             }),
         )->filter(fn($object) => $object->prop->prop[0] === 'e');
 
-        $this->assertCount(4, \iterator_to_array($set->values()));
+        $this->assertCount(4, \iterator_to_array($set->values(new MtRand)));
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $this->assertFalse($value->isImmutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
@@ -219,7 +220,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($mutable->values() as $value) {
+        foreach ($mutable->values(new MtRand) as $value) {
             $this->assertFalse($value->isImmutable());
         }
 
@@ -235,7 +236,7 @@ class CompositeTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($immutable->values() as $value) {
+        foreach ($immutable->values(new MtRand) as $value) {
             $this->assertTrue($value->isImmutable());
         }
     }
@@ -260,7 +261,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($shrinkable->values() as $value) {
+        foreach ($shrinkable->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
 
@@ -285,7 +286,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($nonShrinkable->values() as $value) {
+        foreach ($nonShrinkable->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -304,7 +305,7 @@ class CompositeTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $value = $value->unwrap();
             $a = $dichotomy->a()->unwrap();
@@ -329,7 +330,7 @@ class CompositeTest extends TestCase
             Set\Strings::between(0, 5),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $a = $value;
             while ($a->shrinkable()) {
                 $a = $a->shrink()->a();

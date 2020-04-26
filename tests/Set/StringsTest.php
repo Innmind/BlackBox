@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set\Regex,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class StringsTest extends TestCase
@@ -29,7 +30,7 @@ class StringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Strings::any()->values());
+        $values = $this->unwrap(Strings::any()->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -40,7 +41,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::any()->values()),
+            $this->unwrap(Strings::any()->values(new MtRand)),
         );
 
         $this->assertLessThanOrEqual(128, \max($values));
@@ -52,7 +53,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::atMost(256)->values()),
+            $this->unwrap(Strings::atMost(256)->values(new MtRand)),
         );
 
         $this->assertLessThanOrEqual(256, \max($values));
@@ -68,7 +69,7 @@ class StringsTest extends TestCase
         $this->assertInstanceOf(Strings::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -77,7 +78,7 @@ class StringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($others->values()),
+            $this->unwrap($others->values(new MtRand)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -93,18 +94,18 @@ class StringsTest extends TestCase
 
         $this->assertInstanceOf(Strings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = Strings::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -114,7 +115,7 @@ class StringsTest extends TestCase
     {
         $strings = new Strings(1); // always generate string of length 1
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $this->assertFalse(
                 $value
                     ->shrink()
@@ -128,7 +129,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(fn($string) => $string !== '');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -137,7 +138,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(fn($string) => $string !== '');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -151,7 +152,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(fn($string) => $string !== '');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -173,7 +174,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(fn($string) => strlen($string) > 20);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
@@ -185,7 +186,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::between(100, 200);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
             $this->assertLessThanOrEqual(200, strlen($value->unwrap()));
         }
@@ -195,7 +196,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::atLeast(100);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
         }
     }
@@ -212,9 +213,19 @@ class StringsTest extends TestCase
             }
         };
 
-        foreach ($integers->values() as $value) {
+        foreach ($integers->values(new MtRand) as $value) {
             $assertInBounds($value, 'a');
             $assertInBounds($value, 'b');
         }
+    }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            Strings::any()
+                ->take(0)
+                ->values(new MtRand)
+        );
     }
 }

@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\RealNumbers,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class RealNumbersTest extends TestCase
@@ -27,7 +28,7 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(RealNumbers::class, $numbers);
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
             $this->assertGreaterThanOrEqual(-100, $value->unwrap());
             $this->assertLessThanOrEqual(100, $value->unwrap());
         }
@@ -39,7 +40,7 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(RealNumbers::class, $numbers);
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
             $this->assertGreaterThanOrEqual(0, $value->unwrap());
         }
     }
@@ -50,14 +51,14 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(RealNumbers::class, $numbers);
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
             $this->assertLessThanOrEqual(0, $value->unwrap());
         }
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(RealNumbers::any()->values());
+        $values = $this->unwrap(RealNumbers::any()->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -72,7 +73,7 @@ class RealNumbersTest extends TestCase
         $this->assertInstanceOf(RealNumbers::class, $positive);
         $this->assertNotSame($values, $positive);
         $hasNegative = \array_reduce(
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <=0;
             },
@@ -81,7 +82,7 @@ class RealNumbersTest extends TestCase
         $this->assertTrue($hasNegative);
 
         $hasNegative = \array_reduce(
-            $this->unwrap($positive->values()),
+            $this->unwrap($positive->values(new MtRand)),
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <= 0;
             },
@@ -97,18 +98,18 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(RealNumbers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = RealNumbers::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -118,7 +119,7 @@ class RealNumbersTest extends TestCase
     {
         $numbers = RealNumbers::between(-1, 1)->filter(fn($i) => $i === 0.0);
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -127,7 +128,7 @@ class RealNumbersTest extends TestCase
     {
         $numbers = RealNumbers::any()->filter(fn($i) => $i !== 0.0);
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -136,7 +137,7 @@ class RealNumbersTest extends TestCase
     {
         $numbers = RealNumbers::any()->filter(fn($i) => $i !== 0.0);
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
             $this->assertTrue($value->isImmutable());
         }
     }
@@ -145,7 +146,7 @@ class RealNumbersTest extends TestCase
     {
         $positive = RealNumbers::above(1);
 
-        foreach ($positive->values() as $value) {
+        foreach ($positive->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -157,7 +158,7 @@ class RealNumbersTest extends TestCase
 
         $negative = RealNumbers::below(-1);
 
-        foreach ($negative->values() as $value) {
+        foreach ($negative->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -172,7 +173,12 @@ class RealNumbersTest extends TestCase
     {
         $numbers = RealNumbers::any();
 
-        foreach ($numbers->values() as $value) {
+        foreach ($numbers->values(new MtRand) as $value) {
+            if (!$value->shrinkable()) {
+                // as 0 may be generated
+                continue;
+            }
+
             $this->assertSame(
                 $value->unwrap() <=> 0,
                 $value->shrink()->a()->unwrap() <=> 0,
@@ -188,7 +194,11 @@ class RealNumbersTest extends TestCase
     {
         $even = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 0);
 
-        foreach ($even->values() as $value) {
+        foreach ($even->values(new MtRand) as $value) {
+            if (!$value->shrinkable()) {
+                continue;
+            }
+
             $dichotomy = $value->shrink();
 
             $this->assertSame(0, ((int) round($dichotomy->a()->unwrap())) % 2);
@@ -197,7 +207,7 @@ class RealNumbersTest extends TestCase
 
         $odd = RealNumbers::any()->filter(fn($i) => $i !== 0 && (((int) round($i)) % 2) === 1);
 
-        foreach ($odd->values() as $value) {
+        foreach ($odd->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertSame(1, ((int) round($dichotomy->a()->unwrap())) % 2);
@@ -217,9 +227,19 @@ class RealNumbersTest extends TestCase
             }
         };
 
-        foreach ($integers->values() as $value) {
+        foreach ($integers->values(new MtRand) as $value) {
             $assertInBounds($value, 'a');
             $assertInBounds($value, 'b');
         }
+    }
+
+    public function testTakeNoElement()
+    {
+        $this->assertCount(
+            0,
+            RealNumbers::any()
+                ->take(0)
+                ->values(new MtRand)
+        );
     }
 }

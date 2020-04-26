@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set\Integers,
     Set\Decorate,
     Set\Value,
+    Random\MtRand,
 };
 use PHPUnit\Framework\{
     TestCase,
@@ -48,7 +49,7 @@ class TestRunnerTest extends TestCase
 
                     $this->assertTrue(false); // to trigger shrinking
                 },
-                $set->values()->current(),
+                $set->values(new MtRand)->current(),
             );
             $this->fail('it should have thrown an exception');
         } catch (ExpectationFailedException $e) {
@@ -79,7 +80,7 @@ class TestRunnerTest extends TestCase
                     ++$runned;
                     $this->assertTrue(false);
                 },
-                $set->values()->current(),
+                $set->values(new MtRand)->current(),
             );
             $this->fail('it should have thrown an exception');
         } catch (ExpectationFailedException $e) {
@@ -121,7 +122,7 @@ class TestRunnerTest extends TestCase
             Integers::any(),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             try {
                 $run(
                     function($int) {
@@ -151,7 +152,7 @@ class TestRunnerTest extends TestCase
             Integers::any(),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             try {
                 $run(
                     function($int) {
@@ -181,7 +182,7 @@ class TestRunnerTest extends TestCase
             Integers::any(),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             try {
                 $run(
                     function($int) {
@@ -206,7 +207,7 @@ class TestRunnerTest extends TestCase
             fn() => false,
         );
 
-        foreach (Integers::any()->values() as $value) {
+        foreach (Integers::any()->values(new MtRand) as $value) {
             try {
                 $run(
                     function($int) {
@@ -235,7 +236,7 @@ class TestRunnerTest extends TestCase
             Integers::above(0),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             try {
                 $run(
                     function($int) {

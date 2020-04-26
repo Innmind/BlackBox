@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Set<int>
@@ -74,12 +77,12 @@ final class Integers implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
 
-        do {
-            $value = \random_int($this->lowerBound, $this->upperBound);
+        while ($iterations < $this->size) {
+            $value = $rand($this->lowerBound, $this->upperBound);
 
             if (!($this->predicate)($value)) {
                 continue;
@@ -87,7 +90,7 @@ final class Integers implements Set
 
             yield Value::immutable($value, $this->shrink($value));
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**

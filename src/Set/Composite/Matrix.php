@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Composite;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 final class Matrix
 {
@@ -24,8 +27,8 @@ final class Matrix
     public static function of(Set $a, Set $b): self
     {
         /** @var Set<Combination> */
-        $combinations = Set\FromGenerator::of(static function() use ($b): \Generator {
-            foreach ($b->values() as $value) {
+        $combinations = Set\FromGenerator::of(static function(Random $rand) use ($b): \Generator {
+            foreach ($b->values($rand) as $value) {
                 yield new Combination($value);
             }
         });
@@ -36,8 +39,8 @@ final class Matrix
     public function dot(Set $set): self
     {
         /** @var Set<Combination> */
-        $combinations = Set\FromGenerator::of(function(): \Generator {
-            yield from $this->values();
+        $combinations = Set\FromGenerator::of(function(Random $rand): \Generator {
+            yield from $this->values($rand);
         });
 
         return new self($set, $combinations);
@@ -46,10 +49,10 @@ final class Matrix
     /**
      * @return \Generator<Combination>
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
-        foreach ($this->a->values() as $a) {
-            foreach ($this->combinations->values() as $combination) {
+        foreach ($this->a->values($rand) as $a) {
+            foreach ($this->combinations->values($rand) as $combination) {
                 yield $combination->unwrap()->add($a);
             }
         }

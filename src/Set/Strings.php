@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Set<string>
@@ -86,16 +89,16 @@ final class Strings implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
 
-        do {
+        while ($iterations < $this->size) {
             $value = '';
-            $maxLength = \random_int($this->minLength + 1, $this->maxLength);
+            $maxLength = $rand($this->minLength + 1, $this->maxLength);
 
             for ($i = 0; $i < $maxLength; $i++) {
-                $value .= \chr(\random_int(33, 126));
+                $value .= \chr($rand(33, 126));
             }
 
             if (!($this->predicate)($value)) {
@@ -107,7 +110,7 @@ final class Strings implements Set
                 $this->shrink($value),
             );
             ++$iterations;
-        } while ($iterations < $this->size);
+        }
     }
 
     /**

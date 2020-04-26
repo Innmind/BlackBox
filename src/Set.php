@@ -26,5 +26,5 @@ interface Set
     /**
      * @return \Generator<Value<T>>
      */
-    public function values(): \Generator;
+    public function values(Random $rand): \Generator;
 }

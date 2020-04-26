@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Set<mixed>
@@ -37,14 +40,14 @@ final class Either implements Set
         throw new \LogicException('Either set can\'t be filtered, underlying data must be filtered beforehand');
     }
 
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $setToChoose = \random_int(0, \count($this->sets) - 1);
+            $setToChoose = $rand(0, \count($this->sets) - 1);
 
-            $value = $this->sets[$setToChoose]->values()->current();
+            $value = $this->sets[$setToChoose]->values($rand)->current();
 
             /**
              * $value can be sometime null when the underlying set generate an

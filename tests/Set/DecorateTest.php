@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set\FromGenerator,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class DecorateTest extends TestCase
@@ -50,7 +51,7 @@ class DecorateTest extends TestCase
 
     public function testTake()
     {
-        $values = $this->unwrap($this->set->take(2)->values());
+        $values = $this->unwrap($this->set->take(2)->values(new MtRand));
 
         $this->assertSame(
             [
@@ -74,13 +75,13 @@ class DecorateTest extends TestCase
                 ['ea'],
                 ['eb'],
             ],
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
         );
     }
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->values());
+        $values = $this->unwrap($this->set->values(new MtRand));
 
         $this->assertSame(
             [
@@ -95,10 +96,10 @@ class DecorateTest extends TestCase
 
     public function testValues()
     {
-        $this->assertInstanceOf(\Generator::class, $this->set->values());
-        $this->assertCount(4, $this->unwrap($this->set->values()));
+        $this->assertInstanceOf(\Generator::class, $this->set->values(new MtRand));
+        $this->assertCount(4, $this->unwrap($this->set->values(new MtRand)));
 
-        foreach ($this->set->values() as $value) {
+        foreach ($this->set->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -121,7 +122,7 @@ class DecorateTest extends TestCase
             }),
         );
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $this->assertFalse($value->isImmutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
@@ -153,9 +154,9 @@ class DecorateTest extends TestCase
             )
         )->filter(fn($object) => $object->prop->prop[0] === 'e');
 
-        $this->assertCount(2, \iterator_to_array($set->values()));
+        $this->assertCount(2, \iterator_to_array($set->values(new MtRand)));
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $this->assertFalse($value->isImmutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
@@ -177,7 +178,7 @@ class DecorateTest extends TestCase
             })
         );
 
-        foreach ($nonShrinkable->values() as $value) {
+        foreach ($nonShrinkable->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
 
@@ -188,7 +189,7 @@ class DecorateTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($shrinkable->values() as $value) {
+        foreach ($shrinkable->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -205,7 +206,7 @@ class DecorateTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($mutable->values() as $value) {
+        foreach ($mutable->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertFalse($dichotomy->a()->isImmutable());
@@ -219,7 +220,7 @@ class DecorateTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($immutable->values() as $value) {
+        foreach ($immutable->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertTrue($dichotomy->a()->isImmutable());
@@ -236,7 +237,7 @@ class DecorateTest extends TestCase
             Set\Integers::any(),
         )->filter(fn($v) => $v[0] % 2 === 0);
 
-        foreach ($set->values() as $value) {
+        foreach ($set->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertSame(0, $dichotomy->a()->unwrap()[0] % 2);

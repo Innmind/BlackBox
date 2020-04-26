@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 use Innmind\Json\Json;
 
 /**
@@ -51,17 +54,23 @@ final class UnsafeStrings implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
         /** @var list<string> */
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
-        \shuffle($values);
+        $size = \count($values) - 1;
+        $iterations = 0;
 
-        $values = \array_filter($values, $this->predicate);
-        $values = \array_slice($values, 0, $this->size);
+        while ($iterations < $this->size) {
+            $index = $rand(0, $size);
+            $value = $values[$index];
 
-        foreach ($values as $value) {
+            if (!($this->predicate)($value)) {
+                continue;
+            }
+
             yield Value::immutable($value, $this->shrink($value));
+            ++$iterations;
         }
     }
 

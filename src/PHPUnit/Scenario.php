@@ -7,10 +7,12 @@ use Innmind\BlackBox\{
     Set,
     Set\Composite,
     Set\Randomize,
+    Random,
 };
 
 final class Scenario
 {
+    private Random $rand;
     private \Closure $recordFailure;
     private \Closure $expectsException;
     /** @var Set<array<mixed>> */
@@ -24,6 +26,7 @@ final class Scenario
      * @param callable(\Throwable): bool $expectsException
      */
     public function __construct(
+        Random $rand,
         callable $recordFailure,
         callable $expectsException,
         Set $first,
@@ -46,6 +49,7 @@ final class Scenario
             );
         }
 
+        $this->rand = $rand;
         $this->recordFailure = \Closure::fromCallable($recordFailure);
         $this->expectsException = \Closure::fromCallable($expectsException);
         $this->set = $set->take(100);
@@ -97,7 +101,7 @@ final class Scenario
     {
         $set = ($this->wrap)($this->set);
 
-        foreach ($set->values() as $values) {
+        foreach ($set->values($this->rand) as $values) {
             ($this->run)($test, $values);
         }
     }

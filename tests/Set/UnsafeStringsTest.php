@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\UnsafeStrings,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 
 class UnsafeStringsTest extends TestCase
@@ -23,7 +24,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(UnsafeStrings::any()->values());
+        $values = $this->unwrap(UnsafeStrings::any()->values(new MtRand));
 
         $this->assertCount(100, $values);
     }
@@ -38,7 +39,7 @@ class UnsafeStringsTest extends TestCase
         $this->assertInstanceOf(UnsafeStrings::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($values->values()),
+            $this->unwrap($values->values(new MtRand)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -47,7 +48,7 @@ class UnsafeStringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($others->values()),
+            $this->unwrap($others->values(new MtRand)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -63,18 +64,18 @@ class UnsafeStringsTest extends TestCase
 
         $this->assertInstanceOf(UnsafeStrings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values()));
-        $this->assertCount(50, $this->unwrap($b->values()));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
     }
 
     public function testValues()
     {
         $a = UnsafeStrings::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values());
-        $this->assertCount(100, $this->unwrap($a->values()));
+        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
+        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
 
-        foreach ($a->values() as $value) {
+        foreach ($a->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -84,7 +85,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(fn($string) => $string === '');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -93,7 +94,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -102,7 +103,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -116,7 +117,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) > 1);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -138,7 +139,7 @@ class UnsafeStringsTest extends TestCase
         // otherwise they won't match the given predicate
         $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) === 1);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -154,7 +155,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) > 20);
 
-        foreach ($strings->values() as $value) {
+        foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);

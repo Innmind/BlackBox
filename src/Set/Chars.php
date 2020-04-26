@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Set<string>
@@ -50,20 +53,19 @@ final class Chars implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(): \Generator
+    public function values(Random $rand): \Generator
     {
-        $values = \range(0, 255);
-        \shuffle($values);
-        $values = \array_map(
-            static fn(int $i): string => \chr($i),
-            $values,
-        );
+        $iterations = 0;
 
-        $values = \array_filter($values, $this->predicate);
-        $values = \array_slice($values, 0, $this->size);
+        while ($iterations < $this->size) {
+            $value = \chr($rand(0, 255));
 
-        foreach ($values as $value) {
+            if (!($this->predicate)($value)) {
+                continue;
+            }
+
             yield Value::immutable($value);
+            ++$iterations;
         }
     }
 }

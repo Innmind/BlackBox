@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Uuid,
     Set,
     Set\Value,
+    Random\MtRand,
 };
 use Ramsey\Uuid\Uuid as U;
 
@@ -17,9 +18,9 @@ class UuidTest extends TestCase
         $uuids = Uuid::any();
 
         $this->assertInstanceOf(Set::class, $uuids);
-        $this->assertCount(100, \iterator_to_array($uuids->values()));
+        $this->assertCount(100, \iterator_to_array($uuids->values(new MtRand)));
 
-        foreach ($uuids->values() as $uuid) {
+        foreach ($uuids->values(new MtRand) as $uuid) {
             $this->assertInstanceOf(Value::class, $uuid);
             $this->assertTrue($uuid->isImmutable());
             $this->assertRegExp(
@@ -34,7 +35,7 @@ class UuidTest extends TestCase
     {
         $uuids = Uuid::any();
 
-        foreach ($uuids->values() as $uuid) {
+        foreach ($uuids->values(new MtRand) as $uuid) {
             $this->assertFalse($uuid->shrinkable());
         }
     }
