@@ -80,7 +80,7 @@ class CounterTest extends \PHPUnit\Framework\TestCase
 {
     use BlackBox;
 
-    public function testCounterValueIsAlwaysHigherAfterCoutningUp()
+    public function testCounterValueIsAlwaysHigherAfterCountingUp()
     {
         $this
             ->forAll(
@@ -104,7 +104,7 @@ By default the library supports the shrinking of data to help you find the small
 
 ### Stateful testing
 
-When we write tests we tend to focus on evaluating the behaviour when doing one action (like in our counter example above). This technique help us cover most of our code, but when we deal we stateful systems (such as a counter, an entity or a daemon) it becomes harder to make sure all succession of mutations will always result in a coherent new state.
+When we write tests we tend to focus on evaluating the behaviour when doing one action (like in our counter example above). This technique help us cover most of our code, but when we deal with stateful systems (such as a counter, an entity or a daemon) it becomes harder to make sure all succession of mutations will always result in a coherent new state.
 
 Once again Property Based Testing can help us improve the coverage of behaviours. Instead of describing the initial test to the framework and manually do one action, we describe to the framework all the properties that our system must hold and the framework will try to find a succession of actions that will break our properties.
 
@@ -126,7 +126,7 @@ final class CountingUpAlwaysEndInAHigherCount implements Property
         return $counter->current() < 100; // since upper bound is 100
     }
 
-    public function ensureHelBy(object $counter): object
+    public function ensureHeldBy(object $counter): object
     {
         $initial = $counter->current();
         $counter->up();
