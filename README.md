@@ -80,7 +80,7 @@ class CounterTest extends \PHPUnit\Framework\TestCase
 {
     use BlackBox;
 
-    public function testCounterValueIsAlwaysHigherAfterCoutningUp()
+    public function testCounterValueIsAlwaysHigherAfterCountingUp()
     {
         $this
             ->forAll(
@@ -104,7 +104,7 @@ By default the library supports the shrinking of data to help you find the small
 
 ### Stateful testing
 
-When we write tests we tend to focus on evaluating the behaviour when doing one action (like in our counter example above). This technique help us cover most of our code, but when we deal we stateful systems (such as a counter, an entity or a daemon) it becomes harder to make sure all succession of mutations will always result in a coherent new state.
+When we write tests we tend to focus on evaluating the behaviour when doing one action (like in our counter example above). This technique help us cover most of our code, but when we deal with stateful systems (such as a counter, an entity or a daemon) it becomes harder to make sure all succession of mutations will always result in a coherent new state.
 
 Once again Property Based Testing can help us improve the coverage of behaviours. Instead of describing the initial test to the framework and manually do one action, we describe to the framework all the properties that our system must hold and the framework will try to find a succession of actions that will break our properties.
 
@@ -126,7 +126,7 @@ final class CountingUpAlwaysEndInAHigherCount implements Property
         return $counter->current() < 100; // since upper bound is 100
     }
 
-    public function ensureHelBy(object $counter): object
+    public function ensureHeldBy(object $counter): object
     {
         $initial = $counter->current();
         $counter->up();
@@ -171,6 +171,8 @@ The above example would generate multiple scenarii of counting up and down (it t
 **Note**: this counter example is used as the test process of this framework, all properties to prove the behaviour of the counter can be found in the [`fixtures/`](fixtures/) folder.
 
 **Note 2**: this example was taken from an article by [Johannes Link](https://twitter.com/johanneslink) on [Model-based Testing](https://johanneslink.net/model-based-testing/).
+
+**Note 3**: to help randomize your properties you may want to inject some data in them. If we reuse the example property `RaiseValueAction` from the [article by Johannes Link](https://johanneslink.net/model-based-testing/) we could seed it with `new RaiseValueAction($this->seeder()(Set\Integers::between(1, 99)))`, this example would instantiate the property with an `int` between `1` and `99` as argument. Note that the seed is done once for the whole test unlike the values injected in the `then` callback that change at every call.
 
 ## Configuration
 

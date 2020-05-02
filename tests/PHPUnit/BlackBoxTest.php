@@ -5,6 +5,7 @@ namespace Tests\Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
+    PHPUnit\Seeder,
     Set,
 };
 use PHPUnit\Framework\TestCase;
@@ -48,5 +49,10 @@ class BlackBoxTest extends TestCase
 
                 throw $exception;
             });
+    }
+
+    public function testSeederIsAccessible()
+    {
+        $this->assertInstanceOf(Seeder::class, $this->seeder());
     }
 }
