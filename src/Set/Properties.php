@@ -5,7 +5,7 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
     Set,
-    Property,
+    Property as Concrete,
     Properties as Ensure,
 };
 
@@ -14,11 +14,38 @@ final class Properties
     /**
      * @return Set<Ensure>
      */
-    public static function of(Property $first, Property ...$properties): Set
+    public static function of(Concrete $first, Concrete ...$properties): Set
     {
-        /** @var Set<list<Property>> */
-        $sequences = Sequence::of(
+        return self::chooseFrom(
             Elements::of($first, ...$properties),
+        );
+    }
+
+    /**
+     * @param Set<Concrete> $first
+     * @param Set<Concrete> $properties
+     *
+     * @return Set<Ensure>
+     */
+    public static function any(Set $first, Set ...$properties): Set
+    {
+        if (\count($properties) === 0) {
+            $set = $first;
+        } else {
+            $set = new Either($first, ...$properties);
+        }
+
+        return self::chooseFrom($set);
+    }
+
+    /**
+     * @return Set<Ensure>
+     */
+    private static function chooseFrom(Set $set): Set
+    {
+        /** @var Set<list<Concrete>> */
+        $sequences = Sequence::of(
+            $set,
             Integers::between(1, 100), // at least one property must be chosen
         );
 
