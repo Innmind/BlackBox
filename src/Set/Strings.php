@@ -98,7 +98,7 @@ final class Strings implements Set
             $maxLength = $rand($this->minLength + 1, $this->maxLength);
 
             for ($i = 0; $i < $maxLength; $i++) {
-                $value .= \chr($rand(33, 126));
+                $value .= \chr($rand(0, 255));
             }
 
             if (!($this->predicate)($value)) {
