@@ -11,6 +11,7 @@ use Fixtures\Innmind\BlackBox\{
     DownAndUpIsAnIdentityFunction,
     DownChangeState,
     UpChangeState,
+    RaiseBy,
 };
 use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
@@ -72,6 +73,23 @@ class CounterTest extends TestCase
             ))
             ->then(function($properties) {
                 $properties->ensureHeldBy(Counter::failOnPurpose());
+            });
+    }
+
+    public function testParameterizedProperties()
+    {
+        $this
+            ->forAll(Set\Properties::any(
+                Set\Property::of(LowerBoundAtZero::class),
+                Set\Property::of(UpperBoundAtHundred::class),
+                Set\Property::of(UpAndDownIsAnIdentityFunction::class),
+                Set\Property::of(DownAndUpIsAnIdentityFunction::class),
+                Set\Property::of(DownChangeState::class),
+                Set\Property::of(UpChangeState::class),
+                Set\Property::of(RaiseBy::class, Set\Integers::between(1, 99)),
+            ))
+            ->then(function($properties) {
+                $properties->ensureHeldBy(new Counter);
             });
     }
 }
