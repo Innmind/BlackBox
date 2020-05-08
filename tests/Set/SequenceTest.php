@@ -144,8 +144,9 @@ class SequenceTest extends TestCase
         $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
 
         foreach ($sequences->values(new MtRand) as $value) {
-            if (\count($value->unwrap()) === 3) {
-                // when generating the lower bound it will shrink identity values
+            if (\count($value->unwrap()) < 6) {
+                // when less than the double of the lower limit strategy A will
+                // fallback to strategy B
                 continue;
             }
 
