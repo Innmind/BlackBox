@@ -116,7 +116,7 @@ final class Integers implements Set
         $shrinked = (int) \round($value / 2, 0, \PHP_ROUND_HALF_DOWN);
 
         if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
+            return $this->reduceByOne($value);
         }
 
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));

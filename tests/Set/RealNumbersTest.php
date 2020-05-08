@@ -242,4 +242,17 @@ class RealNumbersTest extends TestCase
                 ->values(new MtRand)
         );
     }
+
+    public function testStrategyAAlwaysLeadToSmallestValuePossible()
+    {
+        $floats = RealNumbers::above(43);
+
+        foreach ($floats->values(new MtRand) as $float) {
+            while ($float->shrinkable()) {
+                $float = $float->shrink()->a();
+            }
+
+            $this->assertSame(43, (int) $float->unwrap());
+        }
+    }
 }

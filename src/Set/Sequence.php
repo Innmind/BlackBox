@@ -153,20 +153,10 @@ final class Sequence implements Set
         $shrinked = \array_slice($sequence, 0, $numberToKeep);
 
         if (!($this->predicate)($this->wrap($shrinked))) {
-            return $this->identity($mutable, $sequence);
+            return $this->removeTailElement($mutable, $sequence);
         }
 
-        if ($mutable) {
-            return fn(): Value => Value::mutable(
-                fn() => $this->wrap($shrinked),
-                $this->shrink(true, $shrinked),
-            );
-        }
-
-        return fn(): Value => Value::immutable(
-            $this->wrap($shrinked),
-            $this->shrink(false, $shrinked),
-        );
+        return $this->strategy($mutable, $shrinked);
     }
 
     /**
@@ -180,19 +170,95 @@ final class Sequence implements Set
         \array_pop($shrinked);
 
         if (!($this->predicate)($this->wrap($shrinked))) {
+            return $this->shrinkValuesWithStrategyA($mutable, $sequence);
+        }
+
+        return $this->strategy($mutable, $shrinked);
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
+    private function shrinkValuesWithStrategyA(bool $mutable, array $sequence): callable
+    {
+        $reversed = \array_reverse($sequence);
+        $shrinked = [];
+        $shrinkedOne = false;
+
+        foreach ($reversed as $value) {
+            if (!$shrinkedOne && $value->shrinkable()) {
+                $shrinked[] = $value->shrink()->a();
+                $shrinkedOne = true;
+            } else {
+                $shrinked[] = $value;
+            }
+        }
+
+        if (!$shrinkedOne) {
             return $this->identity($mutable, $sequence);
         }
 
+        $shrinked = \array_reverse($shrinked);
+
+        if (!($this->predicate)($this->wrap($shrinked))) {
+            return $this->shrinkValuesWithStrategyB($mutable, $sequence);
+        }
+
+        return $this->strategy($mutable, $shrinked);
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
+    private function shrinkValuesWithStrategyB(bool $mutable, array $sequence): callable
+    {
+        $reversed = \array_reverse($sequence);
+        $shrinked = [];
+        $shrinkedOne = false;
+
+        foreach ($reversed as $value) {
+            if (!$shrinkedOne && $value->shrinkable()) {
+                $shrinked[] = $value->shrink()->a();
+                $shrinkedOne = true;
+            } else {
+                $shrinked[] = $value;
+            }
+        }
+
+        if (!$shrinkedOne) {
+            return $this->identity($mutable, $sequence);
+        }
+
+        $shrinked = \array_reverse($shrinked);
+
+        if (!($this->predicate)($this->wrap($shrinked))) {
+            return $this->identity($mutable, $sequence);
+        }
+
+        return $this->strategy($mutable, $shrinked);
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
+    private function strategy(bool $mutable, array $sequence): callable
+    {
         if ($mutable) {
             return fn(): Value => Value::mutable(
-                fn() => $this->wrap($shrinked),
-                $this->shrink(true, $shrinked),
+                fn() => $this->wrap($sequence),
+                $this->shrink(true, $sequence),
             );
         }
 
         return fn(): Value => Value::immutable(
-            $this->wrap($shrinked),
-            $this->shrink(false, $shrinked),
+            $this->wrap($sequence),
+            $this->shrink(false, $sequence),
         );
     }
 

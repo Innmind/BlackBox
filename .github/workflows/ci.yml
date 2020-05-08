@@ -41,7 +41,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4']
-    name: 'PHPUnit Printer Class - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
+        detailed-properties: [1, 0]
+    name: 'PHPUnit Printer Class - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -65,6 +66,8 @@ jobs:
       - name: PHPUnit Printer Class
         run: vendor/bin/phpunit --group failing-on-purpose
         continue-on-error: true
+        env:
+          BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}
   psalm:
     runs-on: ubuntu-latest
     strategy:

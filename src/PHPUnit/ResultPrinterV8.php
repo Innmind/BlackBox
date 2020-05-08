@@ -135,7 +135,7 @@ final class ResultPrinterV8 extends ResultPrinter
     /** @psalm-suppress MissingParamType */
     private function dump(string $argument, $var): void
     {
-        if ($var instanceof Properties) {
+        if (!getenv('BLACKBOX_DETAILED_PROPERTIES') && $var instanceof Properties) {
             $var = \array_map(
                 static fn(Property $property): string => $property->name(),
                 $var->properties(),

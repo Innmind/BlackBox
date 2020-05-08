@@ -144,8 +144,9 @@ class SequenceTest extends TestCase
         $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
 
         foreach ($sequences->values(new MtRand) as $value) {
-            if (\count($value->unwrap()) === 3) {
-                // when generating the lower bound it will shrink identity values
+            if (\count($value->unwrap()) < 6) {
+                // when less than the double of the lower limit strategy A will
+                // fallback to strategy B
                 continue;
             }
 
@@ -271,6 +272,22 @@ class SequenceTest extends TestCase
             $b = $value->shrink()->b()->unwrap();
             $b[0]->mutated = true;
             $this->assertFalse($value->shrink()->b()->unwrap()[0]->mutated);
+        }
+    }
+
+    public function testStrategyAAlwaysLeadToSmallestValuePossible()
+    {
+        $sequences = Sequence::of(
+            Set\Integers::any(),
+            Set\Integers::between(1, 100),
+        );
+
+        foreach ($sequences->values(new MtRand) as $sequence) {
+            while ($sequence->shrinkable()) {
+                $sequence = $sequence->shrink()->a();
+            }
+
+            $this->assertSame([0], $sequence->unwrap());
         }
     }
 }
