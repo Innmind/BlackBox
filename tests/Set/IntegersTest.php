@@ -263,4 +263,17 @@ class IntegersTest extends TestCase
                 ->values(new MtRand)
         );
     }
+
+    public function testStrategyAAlwaysLeadToSmallestValuePossible()
+    {
+        $ints = Integers::above(43);
+
+        foreach ($ints->values(new MtRand) as $int) {
+            while ($int->shrinkable()) {
+                $int = $int->shrink()->a();
+            }
+
+            $this->assertSame(43, $int->unwrap());
+        }
+    }
 }

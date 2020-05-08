@@ -113,7 +113,7 @@ final class RealNumbers implements Set
         $shrinked = $value / 2;
 
         if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
+            return $this->reduceByOne($value);
         }
 
         return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
