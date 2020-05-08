@@ -185,3 +185,7 @@ By default it will run 100 iterations of different values to test your propertie
 Specifying a different value can be repetitive if you want all your tests to run the same number of iterations, with this in mind you can specify an [env variable](https://phpunit.readthedocs.io/en/8.5/configuration.html#the-env-element) named `BLACKBOX_SET_SIZE` in your `phpunit.xml.dist` set to the number of iterations you want for all your tests.
 
 **Note**: of course you can override this value locally in each tests.
+
+### Properties informations
+
+By default when a set of properties fail the printer will only display the named of each property to have a more digest information. However in some cases (like paramaterized properties) you may want to have the whole property object displayed to help debug complex scenarii, for such case you can use the environment variable `BLACKBOX_DETAILED_PROPERTIES` with a value set to `1`.
