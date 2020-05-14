@@ -160,7 +160,7 @@ class CounterTest extends \PHPUnit\Framework\TestCase
                 Set\Integers::between(0, 100), // counter bounds
             )
             ->then(function($scenario, $initial) {
-                $scenario->ensureHelBy(new Counter($initial));
+                $scenario->ensureHeldBy(new Counter($initial));
             });
     }
 }
