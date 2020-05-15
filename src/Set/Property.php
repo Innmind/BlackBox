@@ -24,7 +24,7 @@ final class Property
         }
 
         if ($count === 1) {
-            /** @psalm-suppress MissingParamType */
+            /** @psalm-suppress MissingClosureParamType */
             return Decorate::immutable(
                 static fn($input): Concrete => new $property($input),
                 \reset($inputs),
