@@ -19,8 +19,6 @@ final class Decorate implements Set
     private \Closure $decorate;
     /** @var Set<I> */
     private Set $set;
-    /** @var \Closure(D): bool */
-    private \Closure $predicate;
     private bool $immutable;
 
     /**
@@ -33,7 +31,6 @@ final class Decorate implements Set
         $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
         $this->immutable = $immutable;
-        $this->predicate = static fn(): bool => true;
     }
 
     /**
@@ -74,19 +71,12 @@ final class Decorate implements Set
 
     public function filter(callable $predicate): Set
     {
-        $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
-            /** @var D */
-            $value = $value;
-
-            if (!$previous($value)) {
-                return false;
-            }
-
-            return $predicate($value);
-        };
+        /**
+         * @psalm-suppress MissingClosureParamType
+         * @psalm-suppress MixedArgument
+         */
+        $self->set = $this->set->filter(fn($value): bool => $predicate(($this->decorate)($value)));
 
         return $self;
     }
@@ -94,14 +84,10 @@ final class Decorate implements Set
     public function values(Random $rand): \Generator
     {
         foreach ($this->set->values($rand) as $value) {
-            /** @var D */
-            $decorated = ($this->decorate)($value->unwrap());
-
-            if (!($this->predicate)($decorated)) {
-                continue;
-            }
-
             if ($value->isImmutable() && $this->immutable) {
+                /** @var D */
+                $decorated = ($this->decorate)($value->unwrap());
+
                 yield Value::immutable(
                     $decorated,
                     $this->shrink(false, $value),
@@ -147,12 +133,6 @@ final class Decorate implements Set
      */
     private function shrinkWithStrategy(bool $mutable, Value $value, Value $strategy): callable
     {
-        $shrinked = ($this->decorate)($strategy->unwrap());
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($mutable, $value);
-        }
-
         if ($mutable) {
             /** @psalm-suppress MissingClosureReturnType */
             return fn(): Value => Value::mutable(
@@ -164,25 +144,6 @@ final class Decorate implements Set
         return fn(): Value => Value::immutable(
             ($this->decorate)($strategy->unwrap()),
             $this->shrink(false, $strategy),
-        );
-    }
-
-    /**
-     * @param Value<I> $value
-     *
-     * @return callable(): Value<D>
-     */
-    private function identity(bool $mutable, Value $value): callable
-    {
-        if ($mutable) {
-            /** @psalm-suppress MissingClosureReturnType */
-            return fn(): Value => Value::mutable(
-                fn() => ($this->decorate)($value->unwrap()),
-            );
-        }
-
-        return fn(): Value => Value::immutable(
-            ($this->decorate)($value->unwrap()),
         );
     }
 }

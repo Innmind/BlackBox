@@ -79,6 +79,22 @@ class DecorateTest extends TestCase
         );
     }
 
+    public function testFilteringDecoratedDecoratorIsAppliedCorrectly()
+    {
+        $values = Decorate::immutable(
+            static fn($value) => [$value],
+            $this->set,
+        )->filter(static fn($value) => $value[0][0][0] === 'e');
+
+        $this->assertSame(
+            [
+                [['ea']],
+                [['eb']],
+            ],
+            $this->unwrap($values->values(new MtRand)),
+        );
+    }
+
     public function testReduce()
     {
         $values = $this->unwrap($this->set->values(new MtRand));
