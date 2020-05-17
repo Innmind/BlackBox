@@ -35,14 +35,14 @@ final class Scenario
         if (\count($sets) === 0) {
             /** @var Set<array<mixed>> */
             $set = Set\Decorate::immutable(
-                /** @psalm-suppress MissingParamType */
+                /** @psalm-suppress MissingClosureParamType */
                 static fn($value): array  => [$value],
                 $first,
             );
         } else {
             /** @var Set<array<mixed>> */
             $set = Set\Composite::immutable(
-                /** @psalm-suppress MissingParamType */
+                /** @psalm-suppress MissingClosureParamType */
                 static fn(...$args): array => $args,
                 $first,
                 ...$sets,

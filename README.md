@@ -15,6 +15,7 @@ The goal of this library is to help build higher order sets to facilitate the un
 `BlackBox` comes with the `Set`s of primitives:
 - [`Integers`](src/Set/Integers.php) -> `int`
 - [`RealNumbers`](src/Set/RealNumbers.php) -> `float`
+- [`Unicode`](src/Set/Unicode.php) -> `string`
 - [`Strings`](src/Set/Strings.php) -> `string`
 - [`UnsafeStrings`](src/Set/UnsafeStrings.php) -> `string` (found [here](https://github.com/minimaxir/big-list-of-naughty-strings))
 - [`Regex`](src/Set/Regex.php) -> `string`
@@ -160,7 +161,7 @@ class CounterTest extends \PHPUnit\Framework\TestCase
                 Set\Integers::between(0, 100), // counter bounds
             )
             ->then(function($scenario, $initial) {
-                $scenario->ensureHelBy(new Counter($initial));
+                $scenario->ensureHeldBy(new Counter($initial));
             });
     }
 }
