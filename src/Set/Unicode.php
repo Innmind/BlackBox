@@ -25,6 +25,7 @@ final class Unicode
      */
     public static function lengthBetween(int $min, int $max): Set
     {
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         return Set\Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
             Set\Sequence::of(
@@ -44,6 +45,11 @@ final class Unicode
             $methods,
             static fn(string $method): bool => !\in_array($method, ['any', 'between', 'strings', 'lengthBetween'], true),
         );
+        /**
+         * @psalm-suppress MixedReturnStatement
+         * @psalm-suppress MixedInferredReturnType
+         * @var list<Set<string>>
+         */
         $sets = \array_map(
             static fn(string $method): Set => self::{$method}(),
             $methods,
