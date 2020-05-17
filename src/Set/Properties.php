@@ -39,9 +39,11 @@ final class Properties
     }
 
     /**
+     * @param Set<Concrete> $set
+     *
      * @return Set<Ensure>
      */
-    private static function chooseFrom(Set $set): Set
+    public static function chooseFrom(Set $set): Set
     {
         /** @var Set<list<Concrete>> */
         $sequences = Sequence::of(
