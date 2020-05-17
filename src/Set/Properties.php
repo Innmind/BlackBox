@@ -43,13 +43,16 @@ final class Properties
      *
      * @return Set<Ensure>
      */
-    public static function chooseFrom(Set $set): Set
+    public static function chooseFrom(Set $set, Integers $range = null): Set
     {
+        $range ??= Integers::between(1, 100);
+
+        if ($range->lowerBound() < 1) {
+            throw new \LogicException('At least one property is required');
+        }
+
         /** @var Set<list<Concrete>> */
-        $sequences = Sequence::of(
-            $set,
-            Integers::between(1, 100), // at least one property must be chosen
-        );
+        $sequences = Sequence::of($set, $range);
 
         /** @psalm-suppress MixedArgument */
         return Decorate::immutable(

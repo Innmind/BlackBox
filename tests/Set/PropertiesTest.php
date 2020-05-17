@@ -9,10 +9,13 @@ use Innmind\BlackBox\{
     Property,
     Properties as PropertiesModel,
     Random\MtRand,
+    PHPUnit\BlackBox,
 };
 
 class PropertiesTest extends TestCase
 {
+    use BlackBox;
+
     public function testInterface()
     {
         $this->assertInstanceOf(
@@ -107,5 +110,41 @@ class PropertiesTest extends TestCase
                 false,
             ),
         );
+    }
+
+    public function testAtLeastOnePropertyIsEnforced()
+    {
+        $this
+            ->forAll(
+                Set\Integers::below(0),
+                Set\Integers::above(1),
+            )
+            ->then(function($lowerBound, $upperBound) {
+                $this->expectException(\LogicException::class);
+
+                Properties::chooseFrom(
+                    Set\Elements::of($this->createMock(Property::class)),
+                    Set\Integers::between($lowerBound, $upperBound),
+                );
+            });
+    }
+
+    public function testAnyLowerBoundAbove1IsAccepted()
+    {
+        $this
+            ->forAll(
+                Set\Integers::above(1),
+                Set\Integers::above(1),
+            )
+            ->filter(fn($lowerBound, $upperBound) => $upperBound > $lowerBound)
+            ->then(function($lowerBound, $upperBound) {
+                $this->assertInstanceOf(
+                    Set::class,
+                    Properties::chooseFrom(
+                        Set\Elements::of($this->createMock(Property::class)),
+                        Set\Integers::between($lowerBound, $upperBound),
+                    ),
+                );
+            });
     }
 }
