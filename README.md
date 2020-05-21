@@ -99,7 +99,7 @@ class CounterTest extends \PHPUnit\Framework\TestCase
 
 This really simple example show how the test class is focused on the behaviour and not about the construction of the test data.
 
-By default the library supports the shrinking of data to help you find the smallest possible set of values that makes your test fail. To help you ease the debugging of the code you can use the printer class `Innmind\BlackBox\PHPUnit\ResultPrinterV8` that will print the set of generated data that made your test fail.
+By default the library supports the shrinking of data to help you find the smallest possible set of values that makes your test fail. To help you ease the debugging of the code you can use the printer class `Innmind\BlackBox\PHPUnit\ResultPrinterV9` that will print the set of generated data that made your test fail.
 
 ![](printer.png)
 
