@@ -24,7 +24,6 @@ class SeederTest extends TestCase
                 Set\Chars::any(),
                 Set\Email::any(),
                 Set\Strings::any(),
-                Set\UnsafeStrings::any(),
                 Set\Uuid::any(),
             ))
             ->then(function($set) {
