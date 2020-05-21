@@ -13,6 +13,9 @@ use Ramsey\Uuid\Uuid as U;
 
 class UuidTest extends TestCase
 {
+    /**
+     * @group only-latest
+     */
     public function testAny()
     {
         $uuids = Uuid::any();
@@ -23,7 +26,7 @@ class UuidTest extends TestCase
         foreach ($uuids->values(new MtRand) as $uuid) {
             $this->assertInstanceOf(Value::class, $uuid);
             $this->assertTrue($uuid->isImmutable());
-            $this->assertRegExp(
+            $this->assertMatchesRegularExpression(
                 '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
                 $uuid->unwrap(),
             );

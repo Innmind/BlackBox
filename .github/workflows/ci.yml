@@ -3,13 +3,13 @@ name: CI
 on: [push]
 
 jobs:
-  phpunit:
+  phpunit_latest:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4']
-    name: 'PHPUnit - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
+    name: 'PHPUnit Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -35,14 +35,49 @@ jobs:
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-  phpunit_printer_class:
+  phpunit_old:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        php-version: ['7.4']
+        phpunit-version: ['8']
+    name: 'PHPUnit ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl
+          coverage: xdebug
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Dependencies
+        run: composer install
+      - name: Install PHPUnit ${{ matrix.phpunit-version }}
+        run: composer remove phpunit/phpunit && composer require sebastian/diff '~3.0' && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
+      - name: PHPUnit
+        run: vendor/bin/phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose,only-latest
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+  phpunit_printer_class_latest:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4']
         detailed-properties: [1, 0]
-    name: 'PHPUnit Printer Class - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
+    name: 'PHPUnit Printer Class Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -65,6 +100,42 @@ jobs:
         run: composer install
       - name: PHPUnit Printer Class
         run: vendor/bin/phpunit --group failing-on-purpose
+        continue-on-error: true
+        env:
+          BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}
+  phpunit_printer_class_old:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        php-version: ['7.4']
+        phpunit-version: ['8']
+        detailed-properties: [1, 0]
+    name: 'PHPUnit Printer Class ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl
+          coverage: none
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Dependencies
+        run: composer install
+      - name: Install PHPUnit ${{ matrix.phpunit-version }}
+        run: composer remove phpunit/phpunit && composer require sebastian/diff '~3.0' && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
+      - name: PHPUnit Printer Class
+        run: vendor/bin/phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --group failing-on-purpose --exclude-group only-latest
         continue-on-error: true
         env:
           BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}

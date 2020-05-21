@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit colors="true" bootstrap="vendor/autoload.php" printerClass="Innmind\BlackBox\PHPUnit\ResultPrinterV9">
+<phpunit colors="true" bootstrap="vendor/autoload.php" printerClass="Innmind\BlackBox\PHPUnit\ResultPrinterV8">
     <php>
         <env name="BLACKBOX_SET_SIZE" value="200" />
     </php>

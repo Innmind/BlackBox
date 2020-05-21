@@ -8,7 +8,7 @@ use Innmind\BlackBox\{
     Properties,
     Property,
 };
-use PHPUnit\TextUI\ResultPrinter;
+use PHPUnit\TextUI\DefaultResultPrinter;
 use PHPUnit\Framework\{
     TestFailure,
     SelfDescribing,
@@ -23,9 +23,8 @@ use Symfony\Component\VarDumper\{
  * @psalm-suppress PropertyNotSetInConstructor
  * @psalm-suppress DeprecatedInterface
  * @psalm-suppress InternalClass
- * @psalm-suppress UndefinedClass No longer a class in PHPUnit 9
  */
-final class ResultPrinterV8 extends ResultPrinter
+final class ResultPrinterV9 extends DefaultResultPrinter
 {
     private static ?self $currentInstance = null;
     /** @var array<string, Value> */
@@ -40,7 +39,6 @@ final class ResultPrinterV8 extends ResultPrinter
      * @psalm-suppress InternalMethod
      * @psalm-suppress MissingParamType
      * @psalm-suppress MixedArgument
-     * @psalm-suppress UndefinedMethod Due to PHPUnit 9
      */
     public function __construct($out, ...$args)
     {
@@ -79,10 +77,7 @@ final class ResultPrinterV8 extends ResultPrinter
 
     protected function printDefect(TestFailure $defect, int $count): void
     {
-        /**
-         * @psalm-suppress InternalMethod
-         * @psalm-suppress UndefinedMethod Due to PHPUnit 9
-         */
+        /** @psalm-suppress InternalMethod */
         $this->printDefectHeader($defect, $count);
         $this->printDataSet($defect);
         /** @psalm-suppress InternalMethod */

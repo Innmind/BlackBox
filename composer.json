@@ -18,7 +18,7 @@
         "php": "~7.4",
         "innmind/json": "^1.1",
         "symfony/var-dumper": "~4.0|~5.0",
-        "phpunit/phpunit": "~8.0",
+        "phpunit/phpunit": "~8.0 || ~9.0",
         "icomefromthenet/reverse-regex": "^0.1.0"
     },
     "autoload": {
