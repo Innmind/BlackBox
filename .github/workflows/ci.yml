@@ -61,10 +61,10 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
-      - name: Install PHPUnit ${{ matrix.phpunit-version }}
-        run: composer remove phpunit/phpunit && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: Install Dependencies
         run: composer install
+      - name: Install PHPUnit ${{ matrix.phpunit-version }}
+        run: composer remove phpunit/phpunit && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit
         run: vendor/bin/phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
       - uses: codecov/codecov-action@v1
@@ -130,10 +130,10 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
-      - name: Install PHPUnit ${{ matrix.phpunit-version }}
-        run: composer remove phpunit/phpunit && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: Install Dependencies
         run: composer install
+      - name: Install PHPUnit ${{ matrix.phpunit-version }}
+        run: composer remove phpunit/phpunit && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit Printer Class
         run: vendor/bin/phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --group failing-on-purpose
         continue-on-error: true
