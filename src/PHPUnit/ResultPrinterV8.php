@@ -23,6 +23,7 @@ use Symfony\Component\VarDumper\{
  * @psalm-suppress PropertyNotSetInConstructor
  * @psalm-suppress DeprecatedInterface
  * @psalm-suppress InternalClass
+ * @psalm-suppress UndefinedClass No longer a class in PHPUnit 9
  */
 final class ResultPrinterV8 extends ResultPrinter
 {
@@ -39,6 +40,7 @@ final class ResultPrinterV8 extends ResultPrinter
      * @psalm-suppress InternalMethod
      * @psalm-suppress MissingParamType
      * @psalm-suppress MixedArgument
+     * @psalm-suppress UndefinedMethod Due to PHPUnit 9
      */
     public function __construct($out, ...$args)
     {
@@ -77,7 +79,10 @@ final class ResultPrinterV8 extends ResultPrinter
 
     protected function printDefect(TestFailure $defect, int $count): void
     {
-        /** @psalm-suppress InternalMethod */
+        /**
+         * @psalm-suppress InternalMethod
+         * @psalm-suppress UndefinedMethod Due to PHPUnit 9
+         */
         $this->printDefectHeader($defect, $count);
         $this->printDataSet($defect);
         /** @psalm-suppress InternalMethod */
