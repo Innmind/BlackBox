@@ -64,9 +64,9 @@ jobs:
       - name: Install Dependencies
         run: composer install
       - name: Install PHPUnit ${{ matrix.phpunit-version }}
-        run: composer global require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
+        run: composer remove phpunit/phpunit && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit
-        run: phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
+        run: vendor/bin/phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -133,9 +133,9 @@ jobs:
       - name: Install Dependencies
         run: composer install
       - name: Install PHPUnit ${{ matrix.phpunit-version }}
-        run: composer global require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
+        run: composer remove phpunit/phpunit && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit Printer Class
-        run: phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --group failing-on-purpose
+        run: vendor/bin/phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --group failing-on-purpose
         continue-on-error: true
         env:
           BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}
