@@ -13,6 +13,9 @@ use Ramsey\Uuid\Uuid as U;
 
 class UuidTest extends TestCase
 {
+    /**
+     * @group only-latest
+     */
     public function testAny()
     {
         $uuids = Uuid::any();
