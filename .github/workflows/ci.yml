@@ -63,10 +63,10 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install
-      - name: Install PHPUnit ${{ phpunit-version }}
-        run: composer global require phpunit/phpunit '~${{ phpunit-version }}.0'
+      - name: Install PHPUnit ${{ matrix.phpunit-version }}
+        run: composer global require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit
-        run: phpunit -c phpunit-${{ phpunit-version }}.xml.dist --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
+        run: phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -111,7 +111,7 @@ jobs:
         php-version: ['7.4']
         phpunit-version: ['8']
         detailed-properties: [1, 0]
-    name: 'PHPUnit Printer Class ${{ phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
+    name: 'PHPUnit Printer Class ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -132,10 +132,10 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install
-      - name: Install PHPUnit ${{ phpunit-version }}
-        run: composer global require phpunit/phpunit '~${{ phpunit-version }}.0'
+      - name: Install PHPUnit ${{ matrix.phpunit-version }}
+        run: composer global require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit Printer Class
-        run: phpunit -c phpunit-${{ phpunit-version }}.xml.dist --group failing-on-purpose
+        run: phpunit -c phpunit-${{ matrix.phpunit-version }}.xml.dist --group failing-on-purpose
         continue-on-error: true
         env:
           BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}
