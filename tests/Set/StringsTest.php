@@ -66,7 +66,6 @@ class StringsTest extends TestCase
             return \strlen($value) < 10;
         });
 
-        $this->assertInstanceOf(Strings::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
             $this->unwrap($values->values(new MtRand)),
@@ -92,7 +91,6 @@ class StringsTest extends TestCase
         $a = Strings::any();
         $b = $a->take(50);
 
-        $this->assertInstanceOf(Strings::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
         $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
@@ -116,6 +114,10 @@ class StringsTest extends TestCase
         $strings = new Strings(1); // always generate string of length 1
 
         foreach ($strings->values(new MtRand) as $value) {
+            if (!$value->shrinkable()) {
+                continue;
+            }
+
             $this->assertFalse(
                 $value
                     ->shrink()
@@ -145,28 +147,6 @@ class StringsTest extends TestCase
 
             $this->assertTrue($a->isImmutable());
             $this->assertTrue($b->isImmutable());
-        }
-    }
-
-    public function testStringsAreShrinkedFromBothEnds()
-    {
-        $strings = Strings::any()->filter(fn($string) => $string !== '');
-
-        foreach ($strings->values(new MtRand) as $value) {
-            $dichotomy = $value->shrink();
-            $a = $dichotomy->a();
-            $b = $dichotomy->b();
-
-            if (strlen($value->unwrap()) === 1) {
-                // because it will shrink to the identity value because the shrunk
-                // empty string wouldn't match the predicate
-                continue;
-            }
-
-            $this->assertNotSame($a->unwrap(), $value->unwrap());
-            $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
-            $this->assertNotSame($b->unwrap(), $value->unwrap());
-            $this->assertStringEndsWith($b->unwrap(), $value->unwrap());
         }
     }
 
@@ -207,8 +187,8 @@ class StringsTest extends TestCase
 
         $assertInBounds = function(Value $value, string $strategy) {
             while ($value->shrinkable()) {
-                $this->assertGreaterThanOrEqual(20, mb_strlen($value->unwrap()));
-                $this->assertLessThanOrEqual(80, mb_strlen($value->unwrap()));
+                $this->assertGreaterThanOrEqual(20, strlen($value->unwrap()));
+                $this->assertLessThanOrEqual(80, strlen($value->unwrap()));
                 $value = $value->shrink()->$strategy();
             }
         };

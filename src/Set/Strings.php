@@ -13,10 +13,8 @@ use Innmind\BlackBox\{
  */
 final class Strings implements Set
 {
-    private int $maxLength;
-    private int $minLength;
-    private int $size;
-    private \Closure $predicate;
+    /** @var Set<string> */
+    private Set $set;
 
     public function __construct(int $boundA = null, int $boundB = null)
     {
@@ -25,10 +23,14 @@ final class Strings implements Set
         $boundA ??= 128;
         $boundB ??= 0;
 
-        $this->maxLength = \max($boundA, $boundB);
-        $this->minLength = \min($boundA, $boundB);
-        $this->size = 100;
-        $this->predicate = fn(string $value): bool => mb_strlen($value) >= $this->minLength && mb_strlen($value) <= $this->maxLength;
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        $this->set = Decorate::immutable(
+            static fn(array $chars): string => \implode('', $chars),
+            Sequence::of(
+                Chars::any(),
+                Integers::between(\min($boundA, $boundB), \max($boundA, $boundB)),
+            ),
+        );
     }
 
     public static function any(int $maxLength = null): self
@@ -65,25 +67,12 @@ final class Strings implements Set
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return $this->set->take($size);
     }
 
     public function filter(callable $predicate): Set
     {
-        $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
-
-            return $predicate($value);
-        };
-
-        return $self;
+        return $this->set->filter($predicate);
     }
 
     /**
@@ -91,80 +80,6 @@ final class Strings implements Set
      */
     public function values(Random $rand): \Generator
     {
-        $iterations = 0;
-
-        while ($iterations < $this->size) {
-            $value = '';
-            $maxLength = $rand($this->minLength + 1, $this->maxLength);
-
-            for ($i = 0; $i < $maxLength; $i++) {
-                $value .= \chr($rand(0, 255));
-            }
-
-            if (!($this->predicate)($value)) {
-                continue ;
-            }
-
-            yield Value::immutable(
-                $value,
-                $this->shrink($value),
-            );
-            ++$iterations;
-        }
-    }
-
-    /**
-     * @return Dichotomy<string>|null
-     */
-    private function shrink(string $value): ?Dichotomy
-    {
-        if ($value === '') {
-            return null;
-        }
-
-        return new Dichotomy(
-            $this->removeTrailingCharacter($value),
-            $this->removeLeadingCharacter($value),
-        );
-    }
-
-    /**
-     * @return callable(): Value<string>
-     */
-    private function removeTrailingCharacter(string $value): callable
-    {
-        /** @var string */
-        $shrinked = \mb_substr($value, 0, -1, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<string>
-     */
-    private function removeLeadingCharacter(string $value): callable
-    {
-        /** @var string */
-        $shrinked = \mb_substr($value, 1, null, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
-     *
-     * @return callable(): Value<string>
-     */
-    private function identity(string $value): callable
-    {
-        return static fn(): Value => Value::immutable($value);
+        yield from $this->set->values($rand);
     }
 }

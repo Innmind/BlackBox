@@ -238,7 +238,7 @@ class SequenceTest extends TestCase
 
         foreach ($sequences->values(new MtRand) as $sequence) {
             while ($sequence->shrinkable()) {
-                $sequence = $sequence->shrink()->b();
+                $sequence = $sequence->shrink()->a();
             }
 
             $this->assertCount(10, $sequence->unwrap());
