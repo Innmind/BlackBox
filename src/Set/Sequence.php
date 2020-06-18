@@ -87,12 +87,12 @@ final class Sequence implements Set
             if ($immutable) {
                 yield Set\Value::immutable(
                     $this->wrap($values),
-                    $this->shrink(false, $values),
+                    $this->shrinkFast(false, $values),
                 );
             } else {
                 yield Set\Value::mutable(
                     fn() => $this->wrap($values),
-                    $this->shrink(true, $values),
+                    $this->shrinkFast(true, $values),
                 );
             }
         }
@@ -122,9 +122,16 @@ final class Sequence implements Set
     }
 
     /**
+     * The shrinking starts here and recursively will do:
+     * - remove the half end of the sequence (while it breaks the test)
+     * - remove the last element (while it breaks the test)
+     * - remove the head element (while it breaks the test)
+     * - shrink elements with their A strategy (while it breaks the test)
+     * - shrink elements with their B strategy (while it breaks the test)
+     *
      * @param list<Value<I>> $sequence
      */
-    private function shrink(bool $mutable, array $sequence): ?Dichotomy
+    private function shrinkFast(bool $mutable, array $sequence): ?Dichotomy
     {
         if (\count($sequence) === 0) {
             return null;
@@ -137,6 +144,63 @@ final class Sequence implements Set
         return new Dichotomy(
             $this->removeHalfTheStructure($mutable, $sequence),
             $this->removeTailElement($mutable, $sequence),
+        );
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     */
+    private function shrinkEnds(bool $mutable, array $sequence): ?Dichotomy
+    {
+        if (\count($sequence) === 0) {
+            return null;
+        }
+
+        if (!($this->predicate)($this->wrap($sequence))) {
+            return null;
+        }
+
+        return new Dichotomy(
+            $this->removeTailElement($mutable, $sequence),
+            $this->removeHeadElement($mutable, $sequence),
+        );
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     */
+    private function shrinkDecoratedWithStrategyA(bool $mutable, array $sequence): ?Dichotomy
+    {
+        if (\count($sequence) === 0) {
+            return null;
+        }
+
+        if (!($this->predicate)($this->wrap($sequence))) {
+            return null;
+        }
+
+        return new Dichotomy(
+            $this->removeHeadElement($mutable, $sequence),
+            $this->shrinkValuesWithStrategyA($mutable, $sequence),
+        );
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     */
+    private function shrinkDecoratedWithStrategyB(bool $mutable, array $sequence): ?Dichotomy
+    {
+        if (\count($sequence) === 0) {
+            return null;
+        }
+
+        if (!($this->predicate)($this->wrap($sequence))) {
+            return null;
+        }
+
+        return new Dichotomy(
+            $this->shrinkValuesWithStrategyA($mutable, $sequence),
+            $this->shrinkValuesWithStrategyB($mutable, $sequence),
         );
     }
 
@@ -156,7 +220,17 @@ final class Sequence implements Set
             return $this->removeTailElement($mutable, $sequence);
         }
 
-        return $this->strategy($mutable, $shrinked);
+        if ($mutable) {
+            return fn(): Value => Value::mutable(
+                fn() => $this->wrap($shrinked),
+                $this->shrinkFast(true, $shrinked),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            $this->wrap($shrinked),
+            $this->shrinkFast(false, $shrinked),
+        );
     }
 
     /**
@@ -170,10 +244,47 @@ final class Sequence implements Set
         \array_pop($shrinked);
 
         if (!($this->predicate)($this->wrap($shrinked))) {
+            return $this->removeHeadElement($mutable, $sequence);
+        }
+
+        if ($mutable) {
+            return fn(): Value => Value::mutable(
+                fn() => $this->wrap($shrinked),
+                $this->shrinkEnds(true, $shrinked),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            $this->wrap($shrinked),
+            $this->shrinkEnds(false, $shrinked),
+        );
+    }
+
+    /**
+     * @param list<Value<I>> $sequence
+     *
+     * @return callable(): Value<list<I>>
+     */
+    private function removeHeadElement(bool $mutable, array $sequence): callable
+    {
+        $shrinked = $sequence;
+        \array_shift($shrinked);
+
+        if (!($this->predicate)($this->wrap($shrinked))) {
             return $this->shrinkValuesWithStrategyA($mutable, $sequence);
         }
 
-        return $this->strategy($mutable, $shrinked);
+        if ($mutable) {
+            return fn(): Value => Value::mutable(
+                fn() => $this->wrap($shrinked),
+                $this->shrinkDecoratedWithStrategyA(true, $shrinked),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            $this->wrap($shrinked),
+            $this->shrinkDecoratedWithStrategyA(false, $shrinked),
+        );
     }
 
     /**
@@ -206,7 +317,17 @@ final class Sequence implements Set
             return $this->shrinkValuesWithStrategyB($mutable, $sequence);
         }
 
-        return $this->strategy($mutable, $shrinked);
+        if ($mutable) {
+            return fn(): Value => Value::mutable(
+                fn() => $this->wrap($shrinked),
+                $this->shrinkDecoratedWithStrategyB(true, $shrinked),
+            );
+        }
+
+        return fn(): Value => Value::immutable(
+            $this->wrap($shrinked),
+            $this->shrinkDecoratedWithStrategyB(false, $shrinked),
+        );
     }
 
     /**
@@ -239,26 +360,16 @@ final class Sequence implements Set
             return $this->identity($mutable, $sequence);
         }
 
-        return $this->strategy($mutable, $shrinked);
-    }
-
-    /**
-     * @param list<Value<I>> $sequence
-     *
-     * @return callable(): Value<list<I>>
-     */
-    private function strategy(bool $mutable, array $sequence): callable
-    {
         if ($mutable) {
             return fn(): Value => Value::mutable(
-                fn() => $this->wrap($sequence),
-                $this->shrink(true, $sequence),
+                fn() => $this->wrap($shrinked),
+                $this->shrinkEnds(true, $shrinked),
             );
         }
 
         return fn(): Value => Value::immutable(
-            $this->wrap($sequence),
-            $this->shrink(false, $sequence),
+            $this->wrap($shrinked),
+            $this->shrinkEnds(false, $shrinked),
         );
     }
 
