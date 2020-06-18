@@ -21,7 +21,7 @@ class SeederTest extends TestCase
     {
         $this
             ->forAll(Set\Elements::of(
-                Set\Chars::any(),
+                Set\Unicode::strings(),
                 Set\Email::any(),
                 Set\Strings::any(),
                 Set\Uuid::any(),
