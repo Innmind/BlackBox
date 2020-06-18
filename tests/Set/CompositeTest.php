@@ -337,13 +337,6 @@ class CompositeTest extends TestCase
             }
 
             $this->assertSame('', $a->unwrap());
-
-            $b = $value;
-            while ($b->shrinkable()) {
-                $b = $b->shrink()->b();
-            }
-
-            $this->assertSame('', $b->unwrap());
         }
     }
 }
