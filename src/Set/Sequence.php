@@ -83,6 +83,10 @@ final class Sequence implements Set
 
         do {
             foreach ($this->sizes->values($rand) as $size) {
+                if ($yielded === $this->size) {
+                    return;
+                }
+
                 $values = $this->generate($size->unwrap(), $rand);
 
                 if (!($this->predicate)($this->wrap($values))) {
