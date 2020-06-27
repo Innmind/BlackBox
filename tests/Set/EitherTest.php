@@ -96,4 +96,16 @@ class EitherTest extends TestCase
             $this->assertInstanceOf(Value::class, $value);
         }
     }
+
+    public function testAlwaysUseAnotherSetWhenOneIsAnEmptySet()
+    {
+        $set = new Either(
+            Set\Elements::of(1)->filter(fn() => false),
+            Set\Elements::of(2),
+        );
+
+        foreach ($set->values(new MtRand) as $value) {
+            $this->assertSame(2, $value->unwrap());
+        }
+    }
 }

@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
-use Innmind\BlackBox\Set\Value;
+use Innmind\BlackBox\{
+    Set\Value,
+    Exception\EmptySet,
+};
 
 /**
  * @template T The type of data being generated
@@ -24,6 +27,8 @@ interface Set
 
     /**
      * @internal End users mustn't use this method directly (BC breaks may be introduced)
+     *
+     * @throws EmptySet When no value can be generated
      *
      * @return \Generator<Value<T>>
      */

@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
+    Exception\EmptySet,
 };
 
 /**
@@ -68,16 +69,21 @@ final class Elements implements Set
     public function values(Random $rand): \Generator
     {
         $iterations = 0;
-        $max = \count($this->elements) - 1;
+        $elements = \array_values(\array_filter(
+            $this->elements,
+            $this->predicate,
+        ));
+
+        if (\count($elements) === 0) {
+            throw new EmptySet;
+        }
+
+        $max = \count($elements) - 1;
 
         while ($iterations < $this->size) {
             $index = $rand(0, $max);
             /** @var mixed */
-            $value = $this->elements[$index];
-
-            if (!($this->predicate)($value)) {
-                continue;
-            }
+            $value = $elements[$index];
 
             yield Value::immutable($value);
             ++$iterations;

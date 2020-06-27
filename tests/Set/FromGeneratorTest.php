@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random\MtRand,
+    Exception\EmptySet,
 };
 
 class FromGeneratorTest extends TestCase
@@ -125,5 +126,18 @@ class FromGeneratorTest extends TestCase
         foreach ($generated->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
         }
+    }
+
+    public function testThrowWhenCannotFindAValue()
+    {
+        $generated = FromGenerator::of(function() {
+            foreach (\range(0, 100) as $i) {
+                yield $i;
+            }
+        })->filter(fn() => false);
+
+        $this->expectException(EmptySet::class);
+
+        $generated->values(new MtRand)->current();
     }
 }

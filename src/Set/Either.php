@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
+    Exception\EmptySet,
 };
 
 /**
@@ -47,7 +48,11 @@ final class Either implements Set
         while ($iterations < $this->size) {
             $setToChoose = $rand(0, \count($this->sets) - 1);
 
-            $value = $this->sets[$setToChoose]->values($rand)->current();
+            try {
+                $value = $this->sets[$setToChoose]->values($rand)->current();
+            } catch (EmptySet $e) {
+                continue;
+            }
 
             /**
              * $value can be sometime null when the underlying set generate an

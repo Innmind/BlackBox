@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random\MtRand,
+    Exception\EmptySet,
 };
 
 class UnsafeStringsTest extends TestCase
@@ -161,5 +162,15 @@ class UnsafeStringsTest extends TestCase
             $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
             $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
         }
+    }
+
+    public function testThrowWhenCannotFindAValue()
+    {
+        $this->expectException(EmptySet::class);
+
+        UnsafeStrings::any()
+            ->filter(fn() => false)
+            ->values(new MtRand)
+            ->current();
     }
 }

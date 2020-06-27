@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
+    Exception\EmptySet,
 };
 use Innmind\Json\Json;
 
@@ -58,16 +59,21 @@ final class UnsafeStrings implements Set
     {
         /** @var list<string> */
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
+        $values = \array_values(\array_filter(
+            $values,
+            $this->predicate,
+        ));
+
+        if (\count($values) === 0) {
+            throw new EmptySet;
+        }
+
         $size = \count($values) - 1;
         $iterations = 0;
 
         while ($iterations < $this->size) {
             $index = $rand(0, $size);
             $value = $values[$index];
-
-            if (!($this->predicate)($value)) {
-                continue;
-            }
 
             yield Value::immutable($value, $this->shrink($value));
             ++$iterations;

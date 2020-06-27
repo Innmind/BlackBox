@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random\MtRand,
+    Exception\EmptySet,
 };
 
 class ElementsTest extends TestCase
@@ -116,5 +117,15 @@ class ElementsTest extends TestCase
                 ->take(0)
                 ->values(new MtRand)
         );
+    }
+
+    public function testThrowWhenCannotFindAValue()
+    {
+        $this->expectException(EmptySet::class);
+
+        Elements::of(1)
+            ->filter(fn() => false)
+            ->values(new MtRand)
+            ->current();
     }
 }
