@@ -83,6 +83,8 @@ class SequenceTest extends TestCase
                 false,
             ),
         );
+        $this->assertCount(100, \iterator_to_array($sequences->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($sequences2->values(new MtRand)));
     }
 
     public function testFlagStructureAsMutableWhenUnderlyingSetValuesAreMutable()
