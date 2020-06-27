@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random\MtRand,
+    Exception\EmptySet,
 };
 
 class CompositeTest extends TestCase
@@ -338,5 +339,16 @@ class CompositeTest extends TestCase
 
             $this->assertSame('', $a->unwrap());
         }
+    }
+
+    public function testThrowWhenUnableToGenerateValues()
+    {
+        $this->expectException(EmptySet::class);
+
+        $this
+            ->set
+            ->filter(fn() => false)
+            ->values(new MtRand)
+            ->current();
     }
 }

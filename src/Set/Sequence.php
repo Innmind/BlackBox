@@ -17,6 +17,7 @@ final class Sequence implements Set
     private Set $set;
     /** @var Set<int> */
     private Set $sizes;
+    private int $size;
     /** @var callable(list<I>): bool */
     private \Closure $predicate;
 
@@ -25,9 +26,10 @@ final class Sequence implements Set
      */
     private function __construct(Set $set, Integers $sizes = null)
     {
-        $sizes ??= $sizes ?? Integers::between(0, 100);
+        $sizes ??= Integers::between(0, 100);
         $this->set = $set;
-        $this->sizes = $sizes->take(100);
+        $this->sizes = $sizes;
+        $this->size = 100;
         $this->predicate = static fn(array $sequence): bool => \count($sequence) >= $sizes->lowerBound();
     }
 
@@ -47,6 +49,7 @@ final class Sequence implements Set
     {
         $self = clone $this;
         $self->sizes = $this->sizes->take($size);
+        $self->size = $size;
 
         return $self;
     }
@@ -76,26 +79,35 @@ final class Sequence implements Set
     public function values(Random $rand): \Generator
     {
         $immutable = $this->set->values($rand)->current()->isImmutable();
+        $yielded = 0;
 
-        foreach ($this->sizes->values($rand) as $size) {
-            $values = $this->generate($size->unwrap(), $rand);
+        do {
+            foreach ($this->sizes->values($rand) as $size) {
+                if ($yielded === $this->size) {
+                    return;
+                }
 
-            if (!($this->predicate)($this->wrap($values))) {
-                continue;
+                $values = $this->generate($size->unwrap(), $rand);
+
+                if (!($this->predicate)($this->wrap($values))) {
+                    continue;
+                }
+
+                if ($immutable) {
+                    yield Set\Value::immutable(
+                        $this->wrap($values),
+                        $this->shrinkFast(false, $values),
+                    );
+                } else {
+                    yield Set\Value::mutable(
+                        fn() => $this->wrap($values),
+                        $this->shrinkFast(true, $values),
+                    );
+                }
+
+                ++$yielded;
             }
-
-            if ($immutable) {
-                yield Set\Value::immutable(
-                    $this->wrap($values),
-                    $this->shrinkFast(false, $values),
-                );
-            } else {
-                yield Set\Value::mutable(
-                    fn() => $this->wrap($values),
-                    $this->shrinkFast(true, $values),
-                );
-            }
-        }
+        } while ($yielded < $this->size);
     }
 
     /**

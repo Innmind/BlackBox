@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set\Composite\Matrix,
     Set\Composite\Combination,
     Random,
+    Exception\EmptySet,
 };
 
 /**
@@ -139,6 +140,10 @@ final class Composite implements Set
             }
 
             ++$iterations;
+        }
+
+        if ($iterations === 0) {
+            throw new EmptySet;
         }
     }
 

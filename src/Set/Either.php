@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
+    Exception\EmptySet,
 };
 
 /**
@@ -37,25 +38,32 @@ final class Either implements Set
 
     public function filter(callable $predicate): Set
     {
-        throw new \LogicException('Either set can\'t be filtered, underlying data must be filtered beforehand');
+        $self = clone $this;
+        $self->sets = \array_map(
+            static fn(Set $set): Set => $set->filter($predicate),
+            $this->sets,
+        );
+
+        return $self;
     }
 
     public function values(Random $rand): \Generator
     {
         $iterations = 0;
+        $emptySets = [];
 
         while ($iterations < $this->size) {
             $setToChoose = $rand(0, \count($this->sets) - 1);
 
-            $value = $this->sets[$setToChoose]->values($rand)->current();
+            try {
+                $value = $this->sets[$setToChoose]->values($rand)->current();
+            } catch (EmptySet $e) {
+                $emptySets[$setToChoose] = null;
 
-            /**
-             * $value can be sometime null when the underlying set generate an
-             * empty set, it may be the case when someones an aggressive filter
-             * leading the system having a hard time generating values
-             * @psalm-suppress DocblockTypeContradiction
-             */
-            if (!$value instanceof Value) {
+                if (\count($emptySets) === \count($this->sets)) {
+                    throw new EmptySet;
+                }
+
                 continue;
             }
 

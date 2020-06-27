@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
+    Exception\EmptySet,
 };
 
 /**
@@ -42,15 +43,9 @@ final class Randomize implements Set
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $value = $this->set->values($rand)->current();
-
-            /**
-             * $value can be sometime null when the underlying set generate an
-             * empty set, it may be the case when someones an aggressive filter
-             * leading the system having a hard time generating values
-             * @psalm-suppress DocblockTypeContradiction
-             */
-            if (!$value instanceof Value) {
+            try {
+                $value = $this->set->values($rand)->current();
+            } catch (EmptySet $e) {
                 continue;
             }
 

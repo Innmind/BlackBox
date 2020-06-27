@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random\MtRand,
+    Exception\EmptySet,
 };
 
 class EitherTest extends TestCase
@@ -59,12 +60,17 @@ class EitherTest extends TestCase
             Set\Elements::of(2),
         );
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Either set can\'t be filtered, underlying data must be filtered beforehand');
-
-        $either->filter(static function(?int $value): bool {
+        $either2 = $either->filter(static function(?int $value): bool {
             return $value === 1;
         });
+
+        $this->assertNotSame($either, $either2);
+        $this->assertInstanceOf(Either::class, $either2);
+
+        $this->assertSame([1], \array_unique($this->unwrap($either2->values(new MtRand))));
+        $unique = \array_unique($this->unwrap($either->values(new MtRand)));
+        \sort($unique);
+        $this->assertSame([null, 1, 2], $unique);
     }
 
     public function testValues()
@@ -95,5 +101,32 @@ class EitherTest extends TestCase
         foreach ($set->values(new MtRand) as $value) {
             $this->assertInstanceOf(Value::class, $value);
         }
+    }
+
+    public function testAlwaysUseAnotherSetWhenOneIsAnEmptySet()
+    {
+        $set = new Either(
+            Set\Elements::of(1)->filter(fn() => false),
+            Set\Elements::of(2),
+        );
+
+        foreach ($set->values(new MtRand) as $value) {
+            $this->assertSame(2, $value->unwrap());
+        }
+    }
+
+    public function testThrowWhenNoValueCanBeGenerated()
+    {
+        $set = new Either(
+            Set\Elements::of(1)->filter(fn() => false),
+            Set\Elements::of(2),
+        );
+
+        $this->expectException(EmptySet::class);
+
+        $set
+            ->filter(fn() => false)
+            ->values(new MtRand)
+            ->current();
     }
 }
