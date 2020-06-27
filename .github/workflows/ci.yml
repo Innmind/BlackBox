@@ -8,13 +8,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        php-version: ['7.4']
+        php-version: ['7.4', '8.0']
     name: 'PHPUnit Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
@@ -40,14 +40,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        php-version: ['7.4']
+        php-version: ['7.4', '8.0']
         phpunit-version: ['8']
     name: 'PHPUnit ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
@@ -75,14 +75,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        php-version: ['7.4']
+        php-version: ['7.4', '8.0']
         detailed-properties: [1, 0]
     name: 'PHPUnit Printer Class Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
@@ -108,7 +108,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        php-version: ['7.4']
+        php-version: ['7.4', '8.0']
         phpunit-version: ['8']
         detailed-properties: [1, 0]
     name: 'PHPUnit Printer Class ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
@@ -116,7 +116,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
@@ -143,13 +143,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['7.4']
+        php-version: ['7.4', '8.0']
     name: 'Psalm - PHP/${{ matrix.php-version }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
