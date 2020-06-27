@@ -38,12 +38,19 @@ final class Either implements Set
 
     public function filter(callable $predicate): Set
     {
-        throw new \LogicException('Either set can\'t be filtered, underlying data must be filtered beforehand');
+        $self = clone $this;
+        $self->sets = \array_map(
+            static fn(Set $set): Set => $set->filter($predicate),
+            $this->sets,
+        );
+
+        return $self;
     }
 
     public function values(Random $rand): \Generator
     {
         $iterations = 0;
+        $emptySets = [];
 
         while ($iterations < $this->size) {
             $setToChoose = $rand(0, \count($this->sets) - 1);
@@ -51,6 +58,12 @@ final class Either implements Set
             try {
                 $value = $this->sets[$setToChoose]->values($rand)->current();
             } catch (EmptySet $e) {
+                $emptySets[$setToChoose] = null;
+
+                if (\count($emptySets) === \count($this->sets)) {
+                    throw new EmptySet;
+                }
+
                 continue;
             }
 
