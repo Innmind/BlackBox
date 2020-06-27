@@ -54,16 +54,6 @@ final class Either implements Set
                 continue;
             }
 
-            /**
-             * $value can be sometime null when the underlying set generate an
-             * empty set, it may be the case when someones an aggressive filter
-             * leading the system having a hard time generating values
-             * @psalm-suppress DocblockTypeContradiction
-             */
-            if (!$value instanceof Value) {
-                continue;
-            }
-
             yield $value;
             ++$iterations;
         }
