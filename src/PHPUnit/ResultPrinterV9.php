@@ -150,6 +150,7 @@ final class ResultPrinterV9 extends DefaultResultPrinter
     private function hash(object $test, \Throwable $e): string
     {
         if ($test instanceof SelfDescribing) {
+            /** @psalm-suppress InternalMethod */
             return $test->toString();
         }
 
