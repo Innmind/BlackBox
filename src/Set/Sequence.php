@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
 /**
  * {@inheritdoc}
  * @template I
+ * @implements Set<list<I>>
  */
 final class Sequence implements Set
 {
@@ -67,6 +68,7 @@ final class Sequence implements Set
                 return false;
             }
 
+            /** @psalm-suppress MixedArgumentTypeCoercion */
             return $predicate($value);
         };
 
@@ -74,7 +76,7 @@ final class Sequence implements Set
     }
 
     /**
-     * @return \Generator<Set\Value<list<I>>>
+     * {@inheritdoc}
      */
     public function values(Random $rand): \Generator
     {
