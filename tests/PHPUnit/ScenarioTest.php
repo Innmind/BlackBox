@@ -142,4 +142,24 @@ class ScenarioTest extends TestCase
             $this->assertSame(1, $runned);
         }
     }
+
+
+    public function testReturnTheLastValueReturnedByTheTestCallback()
+    {
+        $scenario = new Scenario(
+            new MtRand,
+            fn() => null,
+            fn() => false,
+            Integers::any(),
+        );
+
+        $expected = null;
+        $returned = $scenario->then(static function(int $value) use (&$expected) {
+            $expected = $value;
+
+            return $value;
+        });
+
+        $this->assertSame($expected, $returned);
+    }
 }
