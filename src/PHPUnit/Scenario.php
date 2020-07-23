@@ -15,9 +15,9 @@ final class Scenario
     private Random $rand;
     private \Closure $recordFailure;
     private \Closure $expectsException;
-    /** @var Set<array<mixed>> */
+    /** @var Set<list<mixed>> */
     private Set $set;
-    /** @var \Closure(Set): Set */
+    /** @var \Closure(Set<list<mixed>>): Set<list<mixed>> */
     private \Closure $wrap;
     private TestRunner $run;
 
@@ -33,14 +33,14 @@ final class Scenario
         Set ...$sets
     ) {
         if (\count($sets) === 0) {
-            /** @var Set<array<mixed>> */
+            /** @var Set<list<mixed>> */
             $set = Set\Decorate::immutable(
                 /** @psalm-suppress MissingClosureParamType */
                 static fn($value): array  => [$value],
                 $first,
             );
         } else {
-            /** @var Set<array<mixed>> */
+            /** @var Set<list<mixed>> */
             $set = Set\Composite::immutable(
                 /** @psalm-suppress MissingClosureParamType */
                 static fn(...$args): array => $args,
@@ -53,6 +53,7 @@ final class Scenario
         $this->recordFailure = \Closure::fromCallable($recordFailure);
         $this->expectsException = \Closure::fromCallable($expectsException);
         $this->set = $set->take(100);
+        /** @var \Closure(Set<list<mixed>>): Set<list<mixed>> */
         $this->wrap = \Closure::fromCallable(static fn(Set $set): Set => new Randomize($set));
         $this->run = new TestRunner(
             $recordFailure,
@@ -65,6 +66,7 @@ final class Scenario
         $wrap = $this->wrap;
         $self = clone $this;
         $self->set = $this->set->take($size);
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         $self->wrap = \Closure::fromCallable(
             static fn(Set $set): Set => $wrap($set)->take($size),
         );
@@ -97,12 +99,26 @@ final class Scenario
         return $self;
     }
 
-    public function then(callable $test): void
+    /**
+     * @template R
+     *
+     * @param callable(mixed...): R $test
+     *
+     * @return R The last value returned by the test callback (useful to create dependencies between tests)
+     */
+    public function then(callable $test)
     {
         $set = ($this->wrap)($this->set);
+        $return = null;
 
+        /**
+         * @var Set\Value<list<mixed>> $values
+         */
         foreach ($set->values($this->rand) as $values) {
-            ($this->run)($test, $values);
+            /** @var R */
+            $return = ($this->run)($test, $values);
         }
+
+        return $return;
     }
 }

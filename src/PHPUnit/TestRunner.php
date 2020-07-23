@@ -25,10 +25,18 @@ final class TestRunner
         $this->shrinkingDisabled = $disableShrinking;
     }
 
-    public function __invoke(callable $test, Value $values): void
+    /**
+     * @template R
+     *
+     * @param callable(mixed...): R $test
+     * @param Value<list<mixed>> $values
+     *
+     * @return R
+     */
+    public function __invoke(callable $test, Value $values)
     {
         try {
-            $test(...$values->unwrap());
+            return $test(...$values->unwrap());
         } catch (AssertionFailedError $e) {
             $this->tryToShrink($test, $values, $e);
         } catch (\Throwable $e) {
