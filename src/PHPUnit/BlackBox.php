@@ -66,9 +66,14 @@ trait BlackBox
             ...$sets,
         );
         $size = \getenv('BLACKBOX_SET_SIZE');
+        $disableShrinking = (bool) \getenv('BLACKBOX_DISABLE_SHRINKING');
 
         if ($size !== false) {
             $scenario = $scenario->take((int) $size);
+        }
+
+        if ($disableShrinking) {
+            $scenario = $scenario->disableShrinking();
         }
 
         return $scenario;

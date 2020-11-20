@@ -14,7 +14,7 @@ use Innmind\BlackBox\{
  */
 final class Either implements Set
 {
-    /** @var list<Set> */
+    /** @var list<Set<mixed>> */
     private array $sets;
     private int $size;
 
@@ -57,6 +57,8 @@ final class Either implements Set
 
             try {
                 $value = $this->sets[$setToChoose]->values($rand)->current();
+
+                yield $value;
             } catch (EmptySet $e) {
                 $emptySets[$setToChoose] = null;
 
@@ -67,7 +69,6 @@ final class Either implements Set
                 continue;
             }
 
-            yield $value;
             ++$iterations;
         }
     }

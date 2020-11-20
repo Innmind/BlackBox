@@ -190,3 +190,9 @@ Specifying a different value can be repetitive if you want all your tests to run
 ### Properties informations
 
 By default when a set of properties fail the printer will only display the named of each property to have a more digest information. However in some cases (like paramaterized properties) you may want to have the whole property object displayed to help debug complex scenarii, for such case you can use the environment variable `BLACKBOX_DETAILED_PROPERTIES` with a value set to `1`.
+
+### Shrinking
+
+By default black box will try to find the minimum test case data that make the test fail to help you better understand the problem at hand. In certain cases, like tests relying on many generators, this shrinking process can take too much time meaning it does more harm than good to the developer experience.
+
+You can disable the shrinking process on a specific test via the method `->disableShrinking()` or for the whole test suite with the environment variable `BLACKBOX_DISABLE_SHRINKING=1`.

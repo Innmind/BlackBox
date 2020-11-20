@@ -33,7 +33,7 @@
         }
     },
     "require-dev": {
-        "vimeo/psalm": "~3.7",
+        "vimeo/psalm": "~4.1",
         "ramsey/uuid": "^3.9"
     }
 }
