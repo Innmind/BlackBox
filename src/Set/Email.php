@@ -28,7 +28,7 @@ final class Email
         )
             ->take(100)
             ->filter(static function(string $email): bool {
-                return (bool) !\preg_match('~(\-.|\.\-)~', $email);
+                return !\preg_match('~(\-.|\.\-)~', $email);
             });
     }
 }
