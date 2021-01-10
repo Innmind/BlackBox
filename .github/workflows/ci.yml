@@ -32,7 +32,7 @@ jobs:
       - name: Install Dependencies
         run: composer install
       - name: Install icomefromthenet/reverse-regex
-        if: ${{ matix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
+        if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
         run: composer require icomefromthenet/reverse-regex
       - name: PHPUnit
         run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
@@ -69,7 +69,7 @@ jobs:
       - name: Install Dependencies
         run: composer install
       - name: Install icomefromthenet/reverse-regex
-        if: ${{ matix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
+        if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
         run: composer require icomefromthenet/reverse-regex
       - name: Install PHPUnit ${{ matrix.phpunit-version }}
         run: composer remove phpunit/phpunit && composer require sebastian/diff '~3.0' && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
