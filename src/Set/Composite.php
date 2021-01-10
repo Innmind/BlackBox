@@ -19,8 +19,7 @@ final class Composite implements Set
 {
     /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
-    /** @var list<Set<mixed>> */
-    private array $sets;
+    private Matrix $matrix;
     private ?int $size;
     private \Closure $predicate;
     private bool $immutable;
@@ -32,14 +31,22 @@ final class Composite implements Set
         Set $second,
         Set ...$sets
     ) {
-        $sets = [$first, $second, ...$sets];
-
         $this->immutable = $immutable;
         /** @var \Closure(mixed...): C */
         $this->aggregate = \Closure::fromCallable($aggregate);
-        $this->sets = \array_reverse($sets);
         $this->size = null; // by default allow all combinations
         $this->predicate = static fn(): bool => true;
+
+        $sets = [$first, $second, ...$sets];
+        $sets = \array_reverse($sets);
+        $first = \array_shift($sets);
+        $second = \array_shift($sets);
+
+        $this->matrix = \array_reduce(
+            $sets,
+            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            Matrix::of($second, $first),
+        );
     }
 
     /**
@@ -101,15 +108,7 @@ final class Composite implements Set
 
     public function values(Random $rand): \Generator
     {
-        $sets = $this->sets;
-        $first = \array_shift($sets);
-        $second = \array_shift($sets);
-        $matrix = \array_reduce(
-            $sets,
-            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
-            Matrix::of($second, $first),
-        );
-        $matrix = $matrix->values($rand);
+        $matrix = $this->matrix->values($rand);
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
