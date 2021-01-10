@@ -28,6 +28,10 @@ final class Regex implements Set
 
     private function __construct(string $expression)
     {
+        // At the time of writing this comment the library used here seems to no
+        // longer be maintained and doesn't support php 8, so it is needed to
+        // make this dependency optional so users that do not rely on this set
+        // can upgrade to php 8
         if (!\class_exists(Lexer::class)) {
             throw new \LogicException('Install the icomefromthenet/reverse-regex package in order to use this set');
         }
