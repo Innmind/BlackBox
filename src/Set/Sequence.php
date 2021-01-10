@@ -19,7 +19,7 @@ final class Sequence implements Set
     /** @var Set<int> */
     private Set $sizes;
     private int $size;
-    /** @var callable(list<I>): bool */
+    /** @var \Closure(list<I>): bool */
     private \Closure $predicate;
 
     /**
