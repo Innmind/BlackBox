@@ -9,21 +9,28 @@ use Innmind\BlackBox\{
     Set\Value,
     Random\MtRand,
 };
+use ReverseRegex\Lexer;
 
 class RegexTest extends TestCase
 {
     public function testInterface()
     {
+        $this->skipIfUninstalled();
+
         $this->assertInstanceOf(Set::class, Regex::for('\d'));
     }
 
     public function testAny()
     {
+        $this->skipIfUninstalled();
+
         $this->assertInstanceOf(Regex::class, Regex::for('\d'));
     }
 
     public function testByDefault100ValuesAreGenerated()
     {
+        $this->skipIfUninstalled();
+
         $values = $this->unwrap(Regex::for('\d')->values(new MtRand));
 
         $this->assertCount(100, $values);
@@ -31,6 +38,8 @@ class RegexTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
+        $this->skipIfUninstalled();
+
         $values = Regex::for('[a-z]+');
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
@@ -59,6 +68,8 @@ class RegexTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
+        $this->skipIfUninstalled();
+
         $a = Regex::for('\d');
         $b = $a->take(50);
 
@@ -70,6 +81,8 @@ class RegexTest extends TestCase
 
     public function testValues()
     {
+        $this->skipIfUninstalled();
+
         $a = Regex::for('\d');
 
         $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
@@ -83,6 +96,8 @@ class RegexTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
+        $this->skipIfUninstalled();
+
         $strings = Regex::for('[a-z]+');
 
         foreach ($strings->values(new MtRand) as $value) {
@@ -98,6 +113,8 @@ class RegexTest extends TestCase
 
     public function testShrinkedValuesAreImmutable()
     {
+        $this->skipIfUninstalled();
+
         $strings = Regex::for('\d+');
 
         foreach ($strings->values(new MtRand) as $value) {
@@ -118,6 +135,8 @@ class RegexTest extends TestCase
 
     public function testStringsAreShrinkedFromBothEnds()
     {
+        $this->skipIfUninstalled();
+
         $strings = Regex::for('[a-z][a-z]+');
 
         foreach ($strings->values(new MtRand) as $value) {
@@ -140,6 +159,8 @@ class RegexTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
+        $this->skipIfUninstalled();
+
         $strings = Regex::for('[a-z]+')->filter(static fn($string) => \strlen($string) > 20);
 
         foreach ($strings->values(new MtRand) as $value) {
@@ -158,6 +179,8 @@ class RegexTest extends TestCase
 
     public function testNeverGeneratedSameValueTwiceInARow()
     {
+        $this->skipIfUninstalled();
+
         $chars = Regex::for('[a-z]+')->values(new MtRand);
         $previous = $chars->current();
         $chars->next();
@@ -171,6 +194,8 @@ class RegexTest extends TestCase
 
     public function testMinimumValueIsNotShrinkable()
     {
+        $this->skipIfUninstalled();
+
         $chars = Regex::for('[a-z]');
 
         foreach ($chars->values(new MtRand) as $char) {
@@ -180,11 +205,31 @@ class RegexTest extends TestCase
 
     public function testTakeNoElement()
     {
+        $this->skipIfUninstalled();
+
         $this->assertCount(
             0,
             Regex::for('[a-z]')
                 ->take(0)
                 ->values(new MtRand)
         );
+    }
+
+    public function testThrowWhenNotInstalled()
+    {
+        if (\class_exists(Lexer::class)) {
+            $this->markTestSkipped();
+        }
+
+        $this->expectException(\LogicException::class);
+
+        Regex::for('[a-z]');
+    }
+
+    private function skipIfUninstalled()
+    {
+        if (!\class_exists(Lexer::class)) {
+            $this->markTestSkipped();
+        }
     }
 }

@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     Set\Value,
     Random\MtRand,
 };
+use ReverseRegex\Lexer;
 
 class StringsTest extends TestCase
 {
@@ -25,6 +26,10 @@ class StringsTest extends TestCase
 
     public function testMatching()
     {
+        if (!\class_exists(Lexer::class)) {
+            $this->markTestSkipped();
+        }
+
         $this->assertInstanceOf(Regex::class, Strings::matching('\d'));
     }
 

@@ -9,6 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4']
+        with-reverse-regex: ['yes', 'no']
     name: 'PHPUnit Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
     steps:
       - name: Checkout
@@ -30,6 +31,9 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install
+      - name: Install icomefromthenet/reverse-regex
+        if: ${{ matix.with-reverse-regex == 'yes' }}
+        run: composer require icomefromthenet/reverse-regex
       - name: PHPUnit
         run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
       - uses: codecov/codecov-action@v1
@@ -42,6 +46,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4']
         phpunit-version: ['8']
+        with-reverse-regex: ['yes', 'no']
     name: 'PHPUnit ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
     steps:
       - name: Checkout
@@ -63,6 +68,9 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install
+      - name: Install icomefromthenet/reverse-regex
+        if: ${{ matix.with-reverse-regex == 'yes' }}
+        run: composer require icomefromthenet/reverse-regex
       - name: Install PHPUnit ${{ matrix.phpunit-version }}
         run: composer remove phpunit/phpunit && composer require sebastian/diff '~3.0' && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit
@@ -164,6 +172,8 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install
+      - name: Install icomefromthenet/reverse-regex
+        run: composer require icomefromthenet/reverse-regex
       - name: Psalm
         run: vendor/bin/psalm --shepherd
   cs:

@@ -28,6 +28,10 @@ final class Regex implements Set
 
     private function __construct(string $expression)
     {
+        if (!\class_exists(Lexer::class)) {
+            throw new \LogicException('Install the icomefromthenet/reverse-regex package in order to use this set');
+        }
+
         $lexer = new Lexer($expression);
         $this->parser = new Parser($lexer, new Scope, new Scope);
         $this->size = 100;
