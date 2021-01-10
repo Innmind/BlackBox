@@ -17,11 +17,11 @@ class MatrixTest extends TestCase
     public function testInterface()
     {
         $matrix = new Matrix(
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield new Combination(Value::immutable('c'));
                 yield new Combination(Value::immutable('d'));
             }),
@@ -41,16 +41,16 @@ class MatrixTest extends TestCase
     public function testDot()
     {
         $matrix = new Matrix(
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield new Combination(Value::immutable('c'));
                 yield new Combination(Value::immutable('d'));
             }),
         );
-        $matrix2 = $matrix->dot(FromGenerator::of(function() {
+        $matrix2 = $matrix->dot(FromGenerator::of(static function() {
             yield 'e';
             yield 'f';
         }));
@@ -84,7 +84,7 @@ class MatrixTest extends TestCase
     public function toArray(Matrix $matrix): array
     {
         return \array_map(
-            function($combination) {
+            static function($combination) {
                 return $combination->unwrap();
             },
             \iterator_to_array($matrix->values(new MtRand)),

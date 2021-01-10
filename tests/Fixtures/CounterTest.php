@@ -35,7 +35,7 @@ class CounterTest extends TestCase
                 new DownChangeState,
                 new UpChangeState,
             ))
-            ->then(function($properties) {
+            ->then(static function($properties) {
                 $properties->ensureHeldBy(new Counter);
             });
     }
@@ -54,7 +54,7 @@ class CounterTest extends TestCase
                 ),
                 Set\Integers::between(0, 100),
             )
-            ->then(function($scenario, $initial) {
+            ->then(static function($scenario, $initial) {
                 $scenario->ensureHeldBy(new Counter($initial));
             });
     }
@@ -71,7 +71,7 @@ class CounterTest extends TestCase
                 new DownChangeState,
                 new UpChangeState,
             ))
-            ->then(function($properties) {
+            ->then(static function($properties) {
                 $properties->ensureHeldBy(Counter::failOnPurpose());
             });
     }
@@ -88,7 +88,7 @@ class CounterTest extends TestCase
                 Set\Property::of(UpChangeState::class),
                 Set\Property::of(RaiseBy::class, Set\Integers::between(1, 99)),
             ))
-            ->then(function($properties) {
+            ->then(static function($properties) {
                 $properties->ensureHeldBy(new Counter);
             });
     }

@@ -124,7 +124,7 @@ class IntegersTest extends TestCase
 
     public function testZeroCannotBeShrinked()
     {
-        $ints = Integers::between(-1, 1)->filter(fn($i) => $i === 0);
+        $ints = Integers::between(-1, 1)->filter(static fn($i) => $i === 0);
 
         foreach ($ints->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
@@ -133,7 +133,7 @@ class IntegersTest extends TestCase
 
     public function testIntegersCanBeShrinked()
     {
-        $ints = Integers::any()->filter(fn($i) => $i !== 0);
+        $ints = Integers::any()->filter(static fn($i) => $i !== 0);
 
         foreach ($ints->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
@@ -142,7 +142,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkedIntegersAreImmutable()
     {
-        $ints = Integers::any()->filter(fn($i) => $i !== 0);
+        $ints = Integers::any()->filter(static fn($i) => $i !== 0);
 
         foreach ($ints->values(new MtRand) as $value) {
             $this->assertTrue($value->isImmutable());
@@ -194,7 +194,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkedValuesAlwaysRespectThePredicate()
     {
-        $even = Integers::any()->filter(fn($i) => $i !== 0 && ($i % 2) === 0);
+        $even = Integers::any()->filter(static fn($i) => $i !== 0 && ($i % 2) === 0);
 
         foreach ($even->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
@@ -203,7 +203,7 @@ class IntegersTest extends TestCase
             $this->assertSame(0, $dichotomy->b()->unwrap() % 2);
         }
 
-        $odd = Integers::any()->filter(fn($i) => $i !== 0 && ($i % 2) === 1);
+        $odd = Integers::any()->filter(static fn($i) => $i !== 0 && ($i % 2) === 1);
 
         foreach ($odd->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();

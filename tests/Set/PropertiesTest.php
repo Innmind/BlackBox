@@ -89,12 +89,12 @@ class PropertiesTest extends TestCase
         $properties = Properties::of(
             $this->createMock(Property::class),
         );
-        $properties2 = $properties->filter(fn($scenario) => \count($scenario->properties()) > 50);
+        $properties2 = $properties->filter(static fn($scenario) => \count($scenario->properties()) > 50);
 
         $this->assertInstanceOf(Set::class, $properties2);
         $this->assertNotSame($properties, $properties2);
 
-        $hasUnder50Properties = fn(bool $hasUnder50Properties, $scenario) => $hasUnder50Properties || \count($scenario->properties()) < 50;
+        $hasUnder50Properties = static fn(bool $hasUnder50Properties, $scenario) => $hasUnder50Properties || \count($scenario->properties()) < 50;
 
         $this->assertTrue(
             \array_reduce(

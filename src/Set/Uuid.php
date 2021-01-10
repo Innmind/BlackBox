@@ -12,6 +12,22 @@ final class Uuid
      */
     public static function any(): Set
     {
-        return Strings::matching('[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}');
+        $chars = Set\Elements::of(...\range('a', 'f'), ...\range(0, 9));
+        $part = static fn(int $length): Set => Set\Decorate::immutable(
+            static fn(array $chars): string => \implode('', $chars),
+            Sequence::of(
+                $chars,
+                Integers::between($length, $length),
+            ),
+        );
+
+        return Set\Composite::immutable(
+            static fn(string ...$parts): string => \implode('-', $parts),
+            $part(8),
+            $part(4),
+            $part(4),
+            $part(4),
+            $part(12),
+        )->take(100);
     }
 }

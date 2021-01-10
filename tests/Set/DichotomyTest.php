@@ -35,8 +35,8 @@ class DichotomyTest extends TestCase
                 $expectedB = Value::immutable($b);
 
                 $dichotomy = new Dichotomy(
-                    fn() => $expectedA,
-                    fn() => $expectedB,
+                    static fn() => $expectedA,
+                    static fn() => $expectedB,
                 );
 
                 $this->assertSame($expectedA, $dichotomy->a());

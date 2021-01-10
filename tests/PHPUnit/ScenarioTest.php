@@ -16,8 +16,8 @@ class ScenarioTest extends TestCase
     {
         $scenario = new Scenario(
             new MtRand,
-            fn() => null,
-            fn() => false,
+            static fn() => null,
+            static fn() => false,
             Integers::any(),
         );
 
@@ -33,8 +33,8 @@ class ScenarioTest extends TestCase
     {
         $scenario = new Scenario(
             new MtRand,
-            fn() => null,
-            fn() => false,
+            static fn() => null,
+            static fn() => false,
             Integers::any(),
             Integers::any(),
         );
@@ -51,8 +51,8 @@ class ScenarioTest extends TestCase
     {
         $scenario1 = new Scenario(
             new MtRand,
-            fn() => null,
-            fn() => false,
+            static fn() => null,
+            static fn() => false,
             Integers::any(),
             Integers::any(),
         );
@@ -78,8 +78,8 @@ class ScenarioTest extends TestCase
     {
         $scenario1 = new Scenario(
             new MtRand,
-            fn() => null,
-            fn() => false,
+            static fn() => null,
+            static fn() => false,
             Integers::any(),
             Integers::any(),
         );
@@ -103,16 +103,16 @@ class ScenarioTest extends TestCase
         // less because the composite is at max 100 and the filter is applied
         // after the generation so it can only be lower
         $this->assertLessThanOrEqual(100, \count($additions2));
-        $this->assertSame(1, max($additions1));
-        $this->assertSame(0, max($additions2));
+        $this->assertSame(1, \max($additions1));
+        $this->assertSame(0, \max($additions2));
     }
 
     public function testDisableShrinking()
     {
         $scenario = new Scenario(
             new MtRand,
-            fn() => null,
-            fn() => false,
+            static fn() => null,
+            static fn() => false,
             Integers::any(),
         );
         $scenario2 = $scenario->disableShrinking();
@@ -143,13 +143,12 @@ class ScenarioTest extends TestCase
         }
     }
 
-
     public function testReturnTheLastValueReturnedByTheTestCallback()
     {
         $scenario = new Scenario(
             new MtRand,
-            fn() => null,
-            fn() => false,
+            static fn() => null,
+            static fn() => false,
             Integers::any(),
         );
 

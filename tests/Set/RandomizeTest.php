@@ -47,7 +47,7 @@ class RandomizeTest extends TestCase
         $set1 = new Randomize(
             Set\Elements::of('foo', 42),
         );
-        $set2 = $set1->filter(fn($v) => \is_int($v));
+        $set2 = $set1->filter(static fn($v) => \is_int($v));
 
         $this->assertInstanceOf(Set::class, $set2);
         $this->assertNotSame($set2, $set1);
@@ -72,7 +72,7 @@ class RandomizeTest extends TestCase
         $inner
             ->expects($this->exactly(100))
             ->method('values')
-            ->willReturn((fn() => yield $expected)());
+            ->willReturn((static fn() => yield $expected)());
 
         foreach ($set->values(new MtRand) as $value) {
             $this->assertSame($expected, $value);
@@ -81,9 +81,9 @@ class RandomizeTest extends TestCase
 
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
-        $set = new Randomize(Set\FromGenerator::of(function() {
-            if (mt_rand(0, 1) === 1) {
-                yield mt_rand();
+        $set = new Randomize(Set\FromGenerator::of(static function() {
+            if (\mt_rand(0, 1) === 1) {
+                yield \mt_rand();
             }
         }));
 

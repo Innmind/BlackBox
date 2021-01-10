@@ -12,6 +12,6 @@ class TestCase extends BaseTestCase
     {
         $values = \iterator_to_array($values);
 
-        return \array_map(fn(Value $value) => $value->unwrap(), $values);
+        return \array_map(static fn(Value $value) => $value->unwrap(), $values);
     }
 }

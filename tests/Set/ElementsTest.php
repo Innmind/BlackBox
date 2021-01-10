@@ -25,7 +25,7 @@ class ElementsTest extends TestCase
 
     public function testTake100ValuesByDefault()
     {
-        $elements = Elements::of(...range(0, 1000));
+        $elements = Elements::of(...\range(0, 1000));
         $values = $this->unwrap($elements->values(new MtRand));
 
         $this->assertCount(100, $values);
@@ -33,7 +33,7 @@ class ElementsTest extends TestCase
 
     public function testTake()
     {
-        $elements = Elements::of(...range(0, 1000));
+        $elements = Elements::of(...\range(0, 1000));
         $elements2 = $elements->take(10);
         $aValues = $this->unwrap($elements->values(new MtRand));
         $bValues = $this->unwrap($elements2->values(new MtRand));
@@ -46,7 +46,7 @@ class ElementsTest extends TestCase
 
     public function testFilter()
     {
-        $elements = Elements::of(...range(0, 1000));
+        $elements = Elements::of(...\range(0, 1000));
         $elements2 = $elements->filter(static function(int $value): bool {
             return $value % 2 === 0;
         });
@@ -74,7 +74,7 @@ class ElementsTest extends TestCase
 
     public function testValues()
     {
-        $elements = Elements::of(...range(0, 1000));
+        $elements = Elements::of(...\range(0, 1000));
 
         $this->assertInstanceOf(\Generator::class, $elements->values(new MtRand));
         $this->assertCount(100, $this->unwrap($elements->values(new MtRand)));
@@ -87,7 +87,7 @@ class ElementsTest extends TestCase
 
     public function testElementsAreNotShrinkable()
     {
-        $elements = Elements::of(...range(0, 1000));
+        $elements = Elements::of(...\range(0, 1000));
 
         foreach ($elements->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
@@ -101,7 +101,7 @@ class ElementsTest extends TestCase
 
         $this->assertCount(100, $values);
 
-        $values = \array_map(fn($v) => $v->unwrap(), $values);
+        $values = \array_map(static fn($v) => $v->unwrap(), $values);
         $frequency = \array_count_values($values);
 
         $this->assertGreaterThan(1, $frequency['foo']);
@@ -124,7 +124,7 @@ class ElementsTest extends TestCase
         $this->expectException(EmptySet::class);
 
         Elements::of(1)
-            ->filter(fn() => false)
+            ->filter(static fn() => false)
             ->values(new MtRand)
             ->current();
     }

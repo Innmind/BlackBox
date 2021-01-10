@@ -62,12 +62,12 @@ class SequenceTest extends TestCase
     public function testFilter()
     {
         $sequences = Sequence::of(Set\Chars::any());
-        $sequences2 = $sequences->filter(fn($sequence) => \count($sequence) % 2 === 0);
+        $sequences2 = $sequences->filter(static fn($sequence) => \count($sequence) % 2 === 0);
 
         $this->assertInstanceOf(Sequence::class, $sequences2);
         $this->assertNotSame($sequences, $sequences2);
 
-        $hasOddSequence = fn(bool $hasOddSequence, $sequence) => $hasOddSequence || \count($sequence->unwrap()) % 2 === 1;
+        $hasOddSequence = static fn(bool $hasOddSequence, $sequence) => $hasOddSequence || \count($sequence->unwrap()) % 2 === 1;
 
         $this->assertTrue(
             \array_reduce(
@@ -91,7 +91,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Sequence::of(
             Set\Decorate::mutable(
-                fn() => new \stdClass,
+                static fn() => new \stdClass,
                 Set\Chars::any(),
             ),
         );
@@ -215,7 +215,7 @@ class SequenceTest extends TestCase
 
         $sequences = Sequence::of(
             Set\Decorate::mutable(
-                fn() => new \stdClass,
+                static fn() => new \stdClass,
                 Set\Chars::any(),
             ),
             Set\Integers::between(1, 100),
@@ -251,7 +251,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Sequence::of(
             Set\Decorate::mutable(
-                function() {
+                static function() {
                     $s = new \stdClass;
                     $s->mutated = false;
 

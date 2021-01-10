@@ -90,9 +90,9 @@ class EitherTest extends TestCase
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
         $set = new Either(
-            Set\FromGenerator::of(function() {
-                if (mt_rand(0, 1) === 1) {
-                    yield mt_rand();
+            Set\FromGenerator::of(static function() {
+                if (\mt_rand(0, 1) === 1) {
+                    yield \mt_rand();
                 }
             }),
             Set\Elements::of(2),
@@ -106,7 +106,7 @@ class EitherTest extends TestCase
     public function testAlwaysUseAnotherSetWhenOneIsAnEmptySet()
     {
         $set = new Either(
-            Set\Elements::of(1)->filter(fn() => false),
+            Set\Elements::of(1)->filter(static fn() => false),
             Set\Elements::of(2),
         );
 
@@ -118,14 +118,14 @@ class EitherTest extends TestCase
     public function testThrowWhenNoValueCanBeGenerated()
     {
         $set = new Either(
-            Set\Elements::of(1)->filter(fn() => false),
+            Set\Elements::of(1)->filter(static fn() => false),
             Set\Elements::of(2),
         );
 
         $this->expectException(EmptySet::class);
 
         $set
-            ->filter(fn() => false)
+            ->filter(static fn() => false)
             ->values(new MtRand)
             ->current();
     }

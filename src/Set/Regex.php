@@ -28,6 +28,14 @@ final class Regex implements Set
 
     private function __construct(string $expression)
     {
+        // At the time of writing this comment the library used here seems to no
+        // longer be maintained and doesn't support php 8, so it is needed to
+        // make this dependency optional so users that do not rely on this set
+        // can upgrade to php 8
+        if (!\class_exists(Lexer::class)) {
+            throw new \LogicException('Install the icomefromthenet/reverse-regex package in order to use this set');
+        }
+
         $lexer = new Lexer($expression);
         $this->parser = new Parser($lexer, new Scope, new Scope);
         $this->size = 100;
@@ -72,7 +80,7 @@ final class Regex implements Set
     {
         $iterations = 0;
 
-        while ($iterations < $this->size){
+        while ($iterations < $this->size) {
             $value = '';
             /** @var Parser */
             $parser = $this->parser->parse();
@@ -81,7 +89,7 @@ final class Regex implements Set
             $scope->generate($value, $this->random($rand));
 
             if (!($this->predicate)($value)) {
-                continue ;
+                continue;
             }
 
             /** @psalm-suppress MixedArgument because of the reference in the generate method */
@@ -172,7 +180,7 @@ final class Regex implements Set
              * @param int $min
              * @param int|null $max
              */
-            public function generate($min = 0,$max = null)
+            public function generate($min = 0, $max = null)
             {
                 // by default we try the default min/max strategy but in case it
                 // fails due to the maxx being too high (cf SimpleRandom hardcoded

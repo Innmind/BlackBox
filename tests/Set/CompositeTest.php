@@ -20,18 +20,18 @@ class CompositeTest extends TestCase
     public function setUp(): void
     {
         $this->set = Composite::immutable(
-            function(string ...$args) {
-                return implode('', $args);
+            static function(string ...$args) {
+                return \implode('', $args);
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'c';
                 yield 'd';
             }),
@@ -48,16 +48,16 @@ class CompositeTest extends TestCase
         $this->assertInstanceOf(
             Composite::class,
             Composite::immutable(
-                function() {},
-                FromGenerator::of(function() {
+                static function() {},
+                FromGenerator::of(static function() {
                     yield 'e';
                     yield 'f';
                 }),
-                FromGenerator::of(function() {
+                FromGenerator::of(static function() {
                     yield 'a';
                     yield 'b';
                 }),
-                FromGenerator::of(function() {
+                FromGenerator::of(static function() {
                     yield 'c';
                     yield 'd';
                 }),
@@ -130,21 +130,21 @@ class CompositeTest extends TestCase
     public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
     {
         $set = Composite::mutable(
-            function(string ...$args) {
+            static function(string ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'c';
                 yield 'd';
             }),
@@ -160,7 +160,7 @@ class CompositeTest extends TestCase
     public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
     {
         $set = Composite::immutable(
-            function(object $value, string $char) {
+            static function(object $value, string $char) {
                 $std = new \stdClass;
                 $std->prop = $value;
                 $std->char = $char;
@@ -168,24 +168,24 @@ class CompositeTest extends TestCase
                 return $std;
             },
             Decorate::mutable(
-                function(string $value) {
+                static function(string $value) {
                     $std = new \stdClass;
                     $std->prop = $value;
 
                     return $std;
                 },
-                FromGenerator::of(function() {
+                FromGenerator::of(static function() {
                     yield 'ea';
                     yield 'fb';
                     yield 'gc';
                     yield 'eb';
                 }),
             ),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'c';
                 yield 'd';
             }),
-        )->filter(fn($object) => $object->prop->prop[0] === 'e');
+        )->filter(static fn($object) => $object->prop->prop[0] === 'e');
 
         $this->assertCount(4, \iterator_to_array($set->values(new MtRand)));
 
@@ -201,21 +201,21 @@ class CompositeTest extends TestCase
     public function testConservesMutabilityFromUnderlyingSets()
     {
         $mutable = Composite::mutable(
-            function(string ...$args) {
+            static function(string ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'c';
                 yield 'd';
             }),
@@ -226,7 +226,7 @@ class CompositeTest extends TestCase
         }
 
         $immutable = Composite::immutable(
-            function(int ...$args) {
+            static function(int ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
@@ -245,18 +245,18 @@ class CompositeTest extends TestCase
     public function testShrinkableAsLongAsOneUnderlyingSetIs()
     {
         $shrinkable = Composite::immutable(
-            function(...$args) {
+            static function(...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'e';
                 yield 'f';
             }),
             Set\Integers::any(),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'c';
                 yield 'd';
             }),
@@ -267,21 +267,21 @@ class CompositeTest extends TestCase
         }
 
         $nonShrinkable = Composite::immutable(
-            function(string ...$args) {
+            static function(string ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'c';
                 yield 'd';
             }),
@@ -295,7 +295,7 @@ class CompositeTest extends TestCase
     public function testShrinkedValuesUseTheDifferentStrategiesFromTheUnderlyingSets()
     {
         $set = Composite::immutable(
-            function(...$args) {
+            static function(...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
@@ -324,8 +324,8 @@ class CompositeTest extends TestCase
     public function testShrinkAllValuesToTheirMinimumPossible()
     {
         $set = Composite::immutable(
-            function(string ...$args) {
-                return implode('', $args);
+            static function(string ...$args) {
+                return \implode('', $args);
             },
             Set\Strings::between(0, 5),
             Set\Strings::between(0, 5),
@@ -333,6 +333,7 @@ class CompositeTest extends TestCase
 
         foreach ($set->values(new MtRand) as $value) {
             $a = $value;
+
             while ($a->shrinkable()) {
                 $a = $a->shrink()->a();
             }
@@ -347,7 +348,7 @@ class CompositeTest extends TestCase
 
         $this
             ->set
-            ->filter(fn() => false)
+            ->filter(static fn() => false)
             ->values(new MtRand)
             ->current();
     }

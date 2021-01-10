@@ -36,7 +36,7 @@ final class Scenario
             /** @var Set<list<mixed>> */
             $set = Set\Decorate::immutable(
                 /** @psalm-suppress MissingClosureParamType */
-                static fn($value): array  => [$value],
+                static fn($value): array => [$value],
                 $first,
             );
         } else {

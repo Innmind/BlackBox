@@ -34,7 +34,7 @@ class CombinationTest extends TestCase
     {
         $immutable = new Combination(Value::immutable(42));
         $immutable = $immutable->add(Value::immutable(24));
-        $mutable = $immutable->add(Value::mutable(fn() => new \stdClass));
+        $mutable = $immutable->add(Value::mutable(static fn() => new \stdClass));
         $immutable = $immutable->add(Value::immutable(66));
 
         $this->assertTrue($immutable->immutable());
@@ -53,8 +53,8 @@ class CombinationTest extends TestCase
         $shrinkable = $shrinkable->add(Value::immutable(
             24,
             new Dichotomy(
-                fn() => Value::immutable(12),
-                fn() => Value::immutable(23),
+                static fn() => Value::immutable(12),
+                static fn() => Value::immutable(23),
             ),
         ));
         $shrinkable = $shrinkable->add(Value::immutable(66));
@@ -67,15 +67,15 @@ class CombinationTest extends TestCase
         $combination = new Combination(Value::immutable(
             66,
             new Dichotomy(
-                fn() => Value::immutable(33),
-                fn() => Value::immutable(65),
+                static fn() => Value::immutable(33),
+                static fn() => Value::immutable(65),
             ),
         ));
         $combination = $combination->add(Value::immutable(
             24,
             new Dichotomy(
-                fn() => Value::immutable(12),
-                fn() => Value::immutable(23),
+                static fn() => Value::immutable(12),
+                static fn() => Value::immutable(23),
             ),
         ));
         $combination = $combination->add(Value::immutable(42));

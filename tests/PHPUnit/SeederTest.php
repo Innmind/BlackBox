@@ -12,6 +12,7 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     Set,
 };
+use ReverseRegex\Lexer;
 
 class SeederTest extends TestCase
 {
@@ -19,6 +20,10 @@ class SeederTest extends TestCase
 
     public function testAlwaysReturnADifferentValue()
     {
+        if (!\class_exists(Lexer::class)) {
+            $this->markTestSkipped();
+        }
+
         $this
             ->forAll(Set\Elements::of(
                 Set\Unicode::strings(),

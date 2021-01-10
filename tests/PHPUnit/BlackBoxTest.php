@@ -41,9 +41,10 @@ class BlackBoxTest extends TestCase
         $this
             ->forAll(Set\Strings::any(), Set\Integers::above(0))
             ->then(function($message, $code) {
-                $exception = new class($message, $code) extends \Exception{};
+                $exception = new class($message, $code) extends \Exception {
+                };
 
-                $this->expectException(get_class($exception));
+                $this->expectException(\get_class($exception));
                 $this->expectExceptionMessage($message);
                 $this->expectExceptionCode($code);
 

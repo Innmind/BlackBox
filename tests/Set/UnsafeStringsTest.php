@@ -84,7 +84,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testEmptyStringCannotBeShrinked()
     {
-        $strings = UnsafeStrings::any()->filter(fn($string) => $string === '');
+        $strings = UnsafeStrings::any()->filter(static fn($string) => $string === '');
 
         foreach ($strings->values(new MtRand) as $value) {
             $this->assertFalse($value->shrinkable());
@@ -93,7 +93,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
+        $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
 
         foreach ($strings->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
@@ -102,7 +102,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = UnsafeStrings::any()->filter(fn($string) => $string !== '');
+        $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
 
         foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
@@ -116,14 +116,14 @@ class UnsafeStringsTest extends TestCase
 
     public function testStringsAreShrinkedFromBothEnds()
     {
-        $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) > 1);
+        $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 1);
 
         foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
-            if (strlen($value->unwrap()) === 2) {
+            if (\strlen($value->unwrap()) === 2) {
                 // we continue as the shrinked values won't match the set predicate
                 continue;
             }
@@ -138,7 +138,7 @@ class UnsafeStringsTest extends TestCase
     public function testStringsOfOneCharacterShrinkToThemselves()
     {
         // otherwise they won't match the given predicate
-        $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) === 1);
+        $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) === 1);
 
         foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
@@ -154,13 +154,13 @@ class UnsafeStringsTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = UnsafeStrings::any()->filter(fn($string) => strlen($string) > 20);
+        $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 20);
 
         foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
-            $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
-            $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
+            $this->assertTrue(\strlen($dichotomy->a()->unwrap()) > 20);
+            $this->assertTrue(\strlen($dichotomy->b()->unwrap()) > 20);
         }
     }
 
@@ -169,7 +169,7 @@ class UnsafeStringsTest extends TestCase
         $this->expectException(EmptySet::class);
 
         UnsafeStrings::any()
-            ->filter(fn() => false)
+            ->filter(static fn() => false)
             ->values(new MtRand)
             ->current();
     }

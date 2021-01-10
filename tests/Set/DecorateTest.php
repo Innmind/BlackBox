@@ -18,10 +18,10 @@ class DecorateTest extends TestCase
     public function setUp(): void
     {
         $this->set = Decorate::immutable(
-            function(string $value) {
+            static function(string $value) {
                 return [$value];
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'ea';
                 yield 'fb';
                 yield 'gc';
@@ -40,8 +40,8 @@ class DecorateTest extends TestCase
         $this->assertInstanceOf(
             Decorate::class,
             Decorate::immutable(
-                function() {},
-                FromGenerator::of(function() {
+                static function() {},
+                FromGenerator::of(static function() {
                     yield 'e';
                     yield 'f';
                 }),
@@ -124,13 +124,13 @@ class DecorateTest extends TestCase
     public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
     {
         $set = Decorate::mutable(
-            function(string $value) {
+            static function(string $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'ea';
                 yield 'fb';
                 yield 'gc';
@@ -148,27 +148,27 @@ class DecorateTest extends TestCase
     public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
     {
         $set = Decorate::immutable(
-            function(object $value) {
+            static function(object $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
             },
             Decorate::mutable(
-                function(string $value) {
+                static function(string $value) {
                     $std = new \stdClass;
                     $std->prop = $value;
 
                     return $std;
                 },
-                FromGenerator::of(function() {
+                FromGenerator::of(static function() {
                     yield 'ea';
                     yield 'fb';
                     yield 'gc';
                     yield 'eb';
                 }),
             )
-        )->filter(fn($object) => $object->prop->prop[0] === 'e');
+        )->filter(static fn($object) => $object->prop->prop[0] === 'e');
 
         $this->assertCount(2, \iterator_to_array($set->values(new MtRand)));
 
@@ -183,10 +183,10 @@ class DecorateTest extends TestCase
     public function testConserveUnderlyingSetShrinkability()
     {
         $nonShrinkable = Decorate::immutable(
-            function(string $value) {
+            static function(string $value) {
                 return [$value];
             },
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 'ea';
                 yield 'fb';
                 yield 'gc';
@@ -199,7 +199,7 @@ class DecorateTest extends TestCase
         }
 
         $shrinkable = Decorate::immutable(
-            function(int $value) {
+            static function(int $value) {
                 return [$value];
             },
             Set\Integers::any(),
@@ -213,7 +213,7 @@ class DecorateTest extends TestCase
     public function testShrinkedValuesConserveMutability()
     {
         $mutable = Decorate::mutable(
-            function(int $value) {
+            static function(int $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
@@ -230,7 +230,7 @@ class DecorateTest extends TestCase
         }
 
         $immutable = Decorate::immutable(
-            function(int $value) {
+            static function(int $value) {
                 return [$value];
             },
             Set\Integers::any(),
@@ -247,11 +247,11 @@ class DecorateTest extends TestCase
     public function testShrinkedValuesAlwaysRespectTheSetPredicate()
     {
         $set = Decorate::immutable(
-            function(int $value) {
+            static function(int $value) {
                 return [$value];
             },
             Set\Integers::any(),
-        )->filter(fn($v) => $v[0] % 2 === 0);
+        )->filter(static fn($v) => $v[0] % 2 === 0);
 
         foreach ($set->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
