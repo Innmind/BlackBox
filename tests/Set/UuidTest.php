@@ -38,8 +38,13 @@ class UuidTest extends TestCase
     {
         $uuids = Uuid::any();
 
+        $min = static function($value, $type) use (&$min) {
+            return $value->shrinkable() ? $min($value->shrink()->{$type}(), $type) : $value->unwrap();
+        };
+
         foreach ($uuids->values(new MtRand) as $uuid) {
-            $this->assertFalse($uuid->shrinkable());
+            $this->assertSame($uuid->unwrap(), $min($uuid, 'a'));
+            $this->assertSame($uuid->unwrap(), $min($uuid, 'b'));
         }
     }
 }
