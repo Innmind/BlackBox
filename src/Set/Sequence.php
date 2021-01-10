@@ -9,7 +9,7 @@ use Innmind\BlackBox\{
 };
 
 /**
- * {@inheritdoc}
+ *
  * @template I
  * @implements Set<list<I>>
  */
@@ -55,14 +55,11 @@ final class Sequence implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = function(array $value) use ($previous, $predicate): bool {
+        $self->predicate = static function(array $value) use ($previous, $predicate): bool {
             /** @psalm-suppress MixedArgumentTypeCoercion */
             if (!$previous($value)) {
                 return false;
@@ -75,9 +72,6 @@ final class Sequence implements Set
         return $self;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function values(Random $rand): \Generator
     {
         $immutable = $this->set->values($rand)->current()->isImmutable();

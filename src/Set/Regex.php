@@ -72,7 +72,7 @@ final class Regex implements Set
     {
         $iterations = 0;
 
-        while ($iterations < $this->size){
+        while ($iterations < $this->size) {
             $value = '';
             /** @var Parser */
             $parser = $this->parser->parse();
@@ -81,7 +81,7 @@ final class Regex implements Set
             $scope->generate($value, $this->random($rand));
 
             if (!($this->predicate)($value)) {
-                continue ;
+                continue;
             }
 
             /** @psalm-suppress MixedArgument because of the reference in the generate method */
@@ -172,7 +172,7 @@ final class Regex implements Set
              * @param int $min
              * @param int|null $max
              */
-            public function generate($min = 0,$max = null)
+            public function generate($min = 0, $max = null)
             {
                 // by default we try the default min/max strategy but in case it
                 // fails due to the maxx being too high (cf SimpleRandom hardcoded

@@ -89,6 +89,30 @@ final class ResultPrinterV8 extends ResultPrinter
         $this->printDefectTrace($defect);
     }
 
+    protected function printDefectTrace(TestFailure $defect): void
+    {
+        /** @psalm-suppress InternalMethod */
+        $e = $defect->thrownException();
+        $trace = \explode("\n", (string) $e);
+        $trace = \array_filter(
+            $trace,
+            static fn(string $line): bool => \strpos($line, 'innmind/black-box/src/PHPUnit/') === false,
+        );
+        $trace = \array_filter(
+            $trace,
+            static fn(string $line): bool => \strpos($line, '/home/runner/work/BlackBox/BlackBox/src/PHPUnit/TestRunner.php') === false,
+        );
+        $trace = \implode("\n", $trace);
+
+        /** @psalm-suppress InternalMethod */
+        $this->write($trace);
+
+        while ($e = $e->getPrevious()) {
+            /** @psalm-suppress InternalMethod */
+            $this->write("\nCaused by\n" . $e);
+        }
+    }
+
     private function printDataSet(TestFailure $defect): void
     {
         $values = $this->findFailingValues($defect);
@@ -113,34 +137,10 @@ final class ResultPrinterV8 extends ResultPrinter
         $this->write("\n");
     }
 
-    protected function printDefectTrace(TestFailure $defect): void
-    {
-        /** @psalm-suppress InternalMethod */
-        $e = $defect->thrownException();
-        $trace = \explode("\n", (string) $e);
-        $trace = \array_filter(
-            $trace,
-            fn(string $line): bool => \strpos($line, 'innmind/black-box/src/PHPUnit/') === false,
-        );
-        $trace = \array_filter(
-            $trace,
-            fn(string $line): bool => \strpos($line, '/home/runner/work/BlackBox/BlackBox/src/PHPUnit/TestRunner.php') === false,
-        );
-        $trace = \implode("\n", $trace);
-
-        /** @psalm-suppress InternalMethod */
-        $this->write($trace);
-
-        while ($e = $e->getPrevious()) {
-            /** @psalm-suppress InternalMethod */
-            $this->write("\nCaused by\n" . $e);
-        }
-    }
-
     /** @psalm-suppress MissingParamType */
     private function dump(string $argument, $var): void
     {
-        if (!getenv('BLACKBOX_DETAILED_PROPERTIES') && $var instanceof Properties) {
+        if (!\getenv('BLACKBOX_DETAILED_PROPERTIES') && $var instanceof Properties) {
             $var = \array_map(
                 static fn(Property $property): string => $property->name(),
                 $var->properties(),

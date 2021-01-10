@@ -129,7 +129,7 @@ class StringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = Strings::any()->filter(fn($string) => $string !== '');
+        $strings = Strings::any()->filter(static fn($string) => $string !== '');
 
         foreach ($strings->values(new MtRand) as $value) {
             $this->assertTrue($value->shrinkable());
@@ -138,7 +138,7 @@ class StringsTest extends TestCase
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = Strings::any()->filter(fn($string) => $string !== '');
+        $strings = Strings::any()->filter(static fn($string) => $string !== '');
 
         foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
@@ -152,13 +152,13 @@ class StringsTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = Strings::any()->filter(fn($string) => strlen($string) > 20);
+        $strings = Strings::any()->filter(static fn($string) => \strlen($string) > 20);
 
         foreach ($strings->values(new MtRand) as $value) {
             $dichotomy = $value->shrink();
 
-            $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
-            $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
+            $this->assertTrue(\strlen($dichotomy->a()->unwrap()) > 20);
+            $this->assertTrue(\strlen($dichotomy->b()->unwrap()) > 20);
         }
     }
 
@@ -167,8 +167,8 @@ class StringsTest extends TestCase
         $strings = Strings::between(100, 200);
 
         foreach ($strings->values(new MtRand) as $value) {
-            $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
-            $this->assertLessThanOrEqual(200, strlen($value->unwrap()));
+            $this->assertGreaterThanOrEqual(100, \strlen($value->unwrap()));
+            $this->assertLessThanOrEqual(200, \strlen($value->unwrap()));
         }
     }
 
@@ -177,7 +177,7 @@ class StringsTest extends TestCase
         $strings = Strings::atLeast(100);
 
         foreach ($strings->values(new MtRand) as $value) {
-            $this->assertGreaterThanOrEqual(100, strlen($value->unwrap()));
+            $this->assertGreaterThanOrEqual(100, \strlen($value->unwrap()));
         }
     }
 
@@ -187,8 +187,8 @@ class StringsTest extends TestCase
 
         $assertInBounds = function(Value $value, string $strategy) {
             while ($value->shrinkable()) {
-                $this->assertGreaterThanOrEqual(20, strlen($value->unwrap()));
-                $this->assertLessThanOrEqual(80, strlen($value->unwrap()));
+                $this->assertGreaterThanOrEqual(20, \strlen($value->unwrap()));
+                $this->assertLessThanOrEqual(80, \strlen($value->unwrap()));
                 $value = $value->shrink()->$strategy();
             }
         };

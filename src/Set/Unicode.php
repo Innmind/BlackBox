@@ -2178,7 +2178,6 @@ final class Unicode
         return self::between(0x1F780, 0x1F7FF);
     }
 
-
     /**
      * @return Set<string>
      */

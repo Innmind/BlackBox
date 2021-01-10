@@ -17,7 +17,7 @@ class FromGeneratorTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new FromGenerator(function(){
+            new FromGenerator(static function() {
                 yield 42;
             }),
         );
@@ -27,7 +27,7 @@ class FromGeneratorTest extends TestCase
     {
         $this->assertInstanceOf(
             FromGenerator::class,
-            FromGenerator::of(function() {
+            FromGenerator::of(static function() {
                 yield 42;
             }),
         );
@@ -38,13 +38,13 @@ class FromGeneratorTest extends TestCase
         $this->expectException(\TypeError::class);
         $this->expectExceptionMessage('Argument 1 must be of type callable(): \Generator');
 
-        new FromGenerator(function(){});
+        new FromGenerator(static function() {});
     }
 
     public function testTake()
     {
-        $a = FromGenerator::of(function() {
-            foreach (range(0, 1000) as $i) {
+        $a = FromGenerator::of(static function() {
+            foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
         });
@@ -61,8 +61,8 @@ class FromGeneratorTest extends TestCase
 
     public function testFilter()
     {
-        $a = FromGenerator::of(function() {
-            foreach (range(0, 1000) as $i) {
+        $a = FromGenerator::of(static function() {
+            foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
         })->filter(static function(int $value): bool {
@@ -80,16 +80,16 @@ class FromGeneratorTest extends TestCase
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $aValues);
         $this->assertCount(50, $bValues);
-        $this->assertSame(51, min($aValues));
-        $this->assertSame(150, max($aValues));
-        $this->assertSame(51, min($bValues));
-        $this->assertSame(100, max($bValues));
+        $this->assertSame(51, \min($aValues));
+        $this->assertSame(150, \max($aValues));
+        $this->assertSame(51, \min($bValues));
+        $this->assertSame(100, \max($bValues));
     }
 
     public function testStopsGeneratingValueWhenGeneratorRunsOut()
     {
-        $a = FromGenerator::of(function() {
-            foreach (range(0, 10) as $i) {
+        $a = FromGenerator::of(static function() {
+            foreach (\range(0, 10) as $i) {
                 yield $i;
             }
         });
@@ -100,7 +100,7 @@ class FromGeneratorTest extends TestCase
 
     public function testValues()
     {
-        $a = FromGenerator::of(function() {
+        $a = FromGenerator::of(static function() {
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
@@ -117,7 +117,7 @@ class FromGeneratorTest extends TestCase
 
     public function testGeneratedValuesAreNotShrinkable()
     {
-        $generated = FromGenerator::of(function() {
+        $generated = FromGenerator::of(static function() {
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
@@ -130,11 +130,11 @@ class FromGeneratorTest extends TestCase
 
     public function testThrowWhenCannotFindAValue()
     {
-        $generated = FromGenerator::of(function() {
+        $generated = FromGenerator::of(static function() {
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
-        })->filter(fn() => false);
+        })->filter(static fn() => false);
 
         $this->expectException(EmptySet::class);
 

@@ -34,7 +34,7 @@ class EmailTest extends TestCase
         $this
             ->forAll(Email::any())
             ->then(function($email) {
-                $this->assertNotFalse(filter_var($email, FILTER_VALIDATE_EMAIL));
+                $this->assertNotFalse(\filter_var($email, \FILTER_VALIDATE_EMAIL));
             });
     }
 

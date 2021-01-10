@@ -41,7 +41,7 @@ class CharsTest extends TestCase
         $hasOddChar = \array_reduce(
             $this->unwrap($values->values(new MtRand)),
             static function(bool $hasOddChar, string $value): bool {
-                return $hasOddChar || ord($value) % 2 === 1;
+                return $hasOddChar || \ord($value) % 2 === 1;
             },
             false,
         );
@@ -50,7 +50,7 @@ class CharsTest extends TestCase
         $hasOddChar = \array_reduce(
             $this->unwrap($even->values(new MtRand)),
             static function(bool $hasOddChar, string $value): bool {
-                return $hasOddChar || ord($value) % 2 === 1;
+                return $hasOddChar || \ord($value) % 2 === 1;
             },
             false,
         );

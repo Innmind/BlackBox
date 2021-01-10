@@ -84,6 +84,7 @@ final class TestRunner
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
                     $previousStrategy = $currentStrategy;
+
                     continue;
                 }
 
@@ -105,6 +106,7 @@ final class TestRunner
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
                     $previousStrategy = $currentStrategy;
+
                     continue;
                 }
 
@@ -117,7 +119,7 @@ final class TestRunner
             // when a and b work then the previous failure has been generated
             // with the smallest values possible
             $this->throw($previousFailure, $previousStrategy, $test);
-        // we can use an infinite condition here since all exits are covered
+            // we can use an infinite condition here since all exits are covered
         } while (true);
     }
 

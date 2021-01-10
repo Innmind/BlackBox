@@ -41,7 +41,7 @@ class PropertiesTest extends TestCase
         $nonApplicable
             ->expects($this->atLeast(1))
             ->method('applicableTo')
-            ->with($this->callback(fn($systemUnderTest) => $systemUnderTest instanceof \stdClass))
+            ->with($this->callback(static fn($systemUnderTest) => $systemUnderTest instanceof \stdClass))
             ->WillReturn(false);
         $nonApplicable
             ->expects($this->never())
@@ -50,12 +50,12 @@ class PropertiesTest extends TestCase
         $applicable
             ->expects($this->atLeast(1))
             ->method('applicableTo')
-            ->with($this->callback(fn($systemUnderTest) => $systemUnderTest instanceof \stdClass))
+            ->with($this->callback(static fn($systemUnderTest) => $systemUnderTest instanceof \stdClass))
             ->WillReturn(true);
         $applicable
             ->expects($this->atLeast(1))
             ->method('ensureHeldBy')
-            ->with($this->callback(fn($systemUnderTest) => $systemUnderTest instanceof \stdClass))
+            ->with($this->callback(static fn($systemUnderTest) => $systemUnderTest instanceof \stdClass))
             ->willReturn($expected = clone $systemUnderTest);
 
         $this

@@ -9,14 +9,6 @@ final class MtRand implements Random
 {
     private ?int $seed = null;
 
-    public static function seed(int $seed): self
-    {
-        $self = new self;
-        $self->seed = $seed;
-
-        return $self;
-    }
-
     public function __invoke(int $min, int $max): int
     {
         if (\is_int($this->seed)) {
@@ -27,5 +19,13 @@ final class MtRand implements Random
         \mt_rand();
 
         return $value;
+    }
+
+    public static function seed(int $seed): self
+    {
+        $self = new self;
+        $self->seed = $seed;
+
+        return $self;
     }
 }

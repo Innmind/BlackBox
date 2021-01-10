@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\BlackBox\PHPUnit;
 
-use Innmind\BlackBox\PHPUnit\ResultPrinterV8;
 use PHPUnit\Framework\{
     TestCase,
     TestResult,
@@ -25,7 +24,7 @@ class ResultPrinterV8Test extends TestCase
             ->forAll(
                 Set\Integers::any(),
                 Set\Decorate::immutable(
-                    function($i) {
+                    static function($i) {
                         $std = new \stdClass;
                         $std->prop = $i;
 
@@ -44,7 +43,7 @@ class ResultPrinterV8Test extends TestCase
     {
         $this
             ->forAll(Set\Strings::any())
-            ->then(function($string) {
+            ->then(static function($string) {
                 throw new \LogicException($string);
             });
     }

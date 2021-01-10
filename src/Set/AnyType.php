@@ -43,18 +43,21 @@ final class AnyType
             Integers::any(),
             RealNumbers::any(),
             Unicode::strings(),
-            FromGenerator::of(function() { // objects
-                while (true) {
-                    yield new class {};
-                }
-            }),
-            FromGenerator::of(function() { // callables
+            FromGenerator::of(static function() { // objects
                 while (true) {
                     yield new class {
-                        public function __invoke() {}
+                    };
+                }
+            }),
+            FromGenerator::of(static function() { // callables
+                while (true) {
+                    yield new class {
+                        public function __invoke()
+                        {
+                        }
                     };
                     yield static fn() => null;
-                    yield fn() => null;
+                    yield static fn() => null;
                 }
             }),
         );

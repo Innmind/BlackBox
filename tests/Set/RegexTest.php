@@ -86,7 +86,7 @@ class RegexTest extends TestCase
         $strings = Regex::for('[a-z]+');
 
         foreach ($strings->values(new MtRand) as $value) {
-            if (strlen($value->unwrap()) === 1) {
+            if (\strlen($value->unwrap()) === 1) {
                 // because they can't be shrinked as they would no longer match
                 // the pattern
                 continue;
@@ -101,7 +101,7 @@ class RegexTest extends TestCase
         $strings = Regex::for('\d+');
 
         foreach ($strings->values(new MtRand) as $value) {
-            if (strlen($value->unwrap()) === 1) {
+            if (\strlen($value->unwrap()) === 1) {
                 // because they can't be shrinked as they would no longer match
                 // the pattern
                 continue;
@@ -121,7 +121,7 @@ class RegexTest extends TestCase
         $strings = Regex::for('[a-z][a-z]+');
 
         foreach ($strings->values(new MtRand) as $value) {
-            if (strlen($value->unwrap()) === 2) {
+            if (\strlen($value->unwrap()) === 2) {
                 // as it will shrink to the identity value because a shorter value
                 // wouldn't match the expression
                 continue;
@@ -140,10 +140,10 @@ class RegexTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = Regex::for('[a-z]+')->filter(fn($string) => strlen($string) > 20);
+        $strings = Regex::for('[a-z]+')->filter(static fn($string) => \strlen($string) > 20);
 
         foreach ($strings->values(new MtRand) as $value) {
-            if (strlen($value->unwrap()) === 21) {
+            if (\strlen($value->unwrap()) === 21) {
                 // because they can't be shrinked as they would no longer match
                 // the pattern
                 continue;
@@ -151,8 +151,8 @@ class RegexTest extends TestCase
 
             $dichotomy = $value->shrink();
 
-            $this->assertTrue(strlen($dichotomy->a()->unwrap()) > 20);
-            $this->assertTrue(strlen($dichotomy->b()->unwrap()) > 20);
+            $this->assertTrue(\strlen($dichotomy->a()->unwrap()) > 20);
+            $this->assertTrue(\strlen($dichotomy->b()->unwrap()) > 20);
         }
     }
 
