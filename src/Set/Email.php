@@ -8,7 +8,6 @@ use Innmind\BlackBox\Set;
 final class Email
 {
     /**
-     *
      * @return Set<string>
      */
     public static function any(): Set
