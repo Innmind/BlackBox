@@ -10,7 +10,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4', '8.0']
         with-reverse-regex: ['yes', 'no']
-    name: 'PHPUnit Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
+    name: 'PHPUnit Latest'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -47,7 +47,7 @@ jobs:
         php-version: ['7.4', '8.0']
         phpunit-version: ['8']
         with-reverse-regex: ['yes', 'no']
-    name: 'PHPUnit ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }}'
+    name: 'PHPUnit'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -85,7 +85,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4', '8.0']
         detailed-properties: [1, 0]
-    name: 'PHPUnit Printer Class Latest - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
+    name: 'PHPUnit Printer Class Latest'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -119,7 +119,7 @@ jobs:
         php-version: ['7.4', '8.0']
         phpunit-version: ['8']
         detailed-properties: [1, 0]
-    name: 'PHPUnit Printer Class ${{ matrix.phpunit-version }} - PHP/${{ matrix.php-version }} - OS/${{ matrix.os }} - Detailed properties: ${{ matrix.detailed-properties }}'
+    name: 'PHPUnit Printer Class'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -152,7 +152,7 @@ jobs:
     strategy:
       matrix:
         php-version: ['7.4']
-    name: 'Psalm - PHP/${{ matrix.php-version }}'
+    name: 'Psalm'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
