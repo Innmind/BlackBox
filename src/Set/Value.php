@@ -64,7 +64,11 @@ final class Value
         return $this->dichotomy instanceof Dichotomy;
     }
 
-    /** @psalm-suppress InvalidNullableReturnType */
+    /**
+     * @psalm-suppress InvalidNullableReturnType
+     *
+     * @return Dichotomy<T>
+     */
     public function shrink(): Dichotomy
     {
         /** @psalm-suppress NullableReturnStatement */

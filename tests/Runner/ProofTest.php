@@ -132,4 +132,27 @@ class ProofTest extends TestCase
                 $proof(1, new RandomInt, static fn() => null, $fail);
             });
     }
+
+    public function testShrinksToTheSmallestPossibleValue()
+    {
+        $proof = new Proof(
+            'shrink to the smallest possible value',
+            new Given(Set\Strings::any()),
+            new When(static function($string) {
+                throw new \Exception($string);
+            }),
+            new Then(new Hold(static function($pass, $fail, $result, $string) {
+                $fail($string);
+            })),
+        );
+
+        $thrown = false;
+        $fail = function($name, $reason) use (&$thrown) {
+            $this->assertSame('', $reason);
+            $thrown = true;
+        };
+        $proof(1, new RandomInt, static fn() => null, $fail);
+
+        $this->assertTrue($thrown);
+    }
 }
