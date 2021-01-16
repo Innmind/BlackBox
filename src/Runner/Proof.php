@@ -30,14 +30,14 @@ final class Proof
 
     /**
      * @param callable(): void $pass
-     * @param callable(string): void $fail
+     * @param callable(string, string): void $fail
      */
     public function __invoke(int $tests, Random $rand, callable $pass, callable $fail): void
     {
         /** @psalm-suppress MissingClosureParamType */
         ($this->given)($tests, $rand, fn(...$args) => ($this->then)(
             $pass,
-            $fail,
+            fn(string $reason) => $fail($this->name, $reason),
             ($this->when)(...$args),
             ...$args,
         ));

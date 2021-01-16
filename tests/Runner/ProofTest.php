@@ -61,7 +61,7 @@ class ProofTest extends TestCase
                         $this->assertTrue($result->thrown());
                         $this->assertInstanceOf(\Exception::class, $result->value());
                         $this->assertSame($string, $result->value()->getMessage());
-                        $fail();
+                        $fail('watever');
                     })),
                 );
 
@@ -87,7 +87,7 @@ class ProofTest extends TestCase
                         throw new \Exception($string);
                     }),
                     new Then(new Hold(static function($pass, $fail) {
-                        $fail();
+                        $fail('watever');
                     })),
                 );
 
@@ -100,6 +100,36 @@ class ProofTest extends TestCase
                 } catch (Failure $e) {
                     $this->fail('The failure mechanism should not be exposed outside of the proof');
                 }
+            });
+    }
+
+    public function testFailureCallbackContainsTheProofName()
+    {
+        $this
+            ->forAll(
+                Set\Strings::any(),
+                Set\Strings::any(),
+            )
+            ->then(function($name, $reason) {
+                $proof = new Proof(
+                    $name,
+                    new Given(Set\Strings::any()),
+                    new When(static function($string) {
+                        throw new \Exception($string);
+                    }),
+                    new Then(new Hold(static function($pass, $fail) use ($reason) {
+                        $fail($reason);
+                    })),
+                );
+
+                $fail = function($a, $b) use ($name, $reason) {
+                    $this->assertSame($name, $a);
+                    $this->assertSame($reason, $b);
+
+                    throw new Failure;
+                };
+
+                $proof(1, new RandomInt, static fn() => null, $fail);
             });
     }
 }
