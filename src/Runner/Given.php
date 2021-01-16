@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Runner;
 use Innmind\BlackBox\{
     Random,
     Set,
+    Exception\Failure,
 };
 
 final class Given
@@ -42,7 +43,11 @@ final class Given
     public function __invoke(int $tests, Random $rand, callable $prove): void
     {
         foreach ($this->set->take($tests)->values($rand) as $value) {
-            $prove(...$value->unwrap());
+            try {
+                $prove(...$value->unwrap());
+            } catch (Failure $e) {
+                // TODO shrink
+            }
         }
     }
 }

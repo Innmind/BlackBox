@@ -12,6 +12,7 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     Set,
     Random\RandomInt,
+    Exception\Failure,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -71,6 +72,34 @@ class ProofTest extends TestCase
                 $proof($iterations, new RandomInt, static fn() => null, $fail);
 
                 $this->assertSame($iterations, $count);
+            });
+    }
+
+    public function testFailuresAreContainedToTheProof()
+    {
+        $this
+            ->forAll(Set\Integers::between(1, 10))
+            ->then(function($iterations) {
+                $proof = new Proof(
+                    'failures are detected',
+                    new Given(Set\Strings::any()),
+                    new When(static function($string) {
+                        throw new \Exception($string);
+                    }),
+                    new Then(new Hold(static function($pass, $fail) {
+                        $fail();
+                    })),
+                );
+
+                $fail = static function() {
+                    throw new Failure;
+                };
+
+                try {
+                    $this->assertNull($proof($iterations, new RandomInt, static fn() => null, $fail));
+                } catch (Failure $e) {
+                    $this->fail('The failure mechanism should not be exposed outside of the proof');
+                }
             });
     }
 }
