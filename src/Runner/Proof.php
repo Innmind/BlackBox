@@ -38,13 +38,17 @@ final class Proof
         callable $pass,
         callable $fail
     ): void {
-        /** @psalm-suppress MissingClosureParamType */
+        /**
+         * @psalm-suppress MissingClosureParamType
+         * @psalm-suppress MixedArgumentTypeCoercion
+         */
         ($this->given)(
             $tests,
             $rand,
-            fn(...$args) => ($this->then)(
+            fn(string $reason) => $fail($this->name, $reason),
+            fn(callable $fail, ...$args) => ($this->then)(
                 $pass,
-                fn(string $reason) => $fail($this->name, $reason),
+                $fail,
                 ($this->when)(...$args),
                 ...$args,
             ),

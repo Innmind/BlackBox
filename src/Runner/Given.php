@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Runner;
 use Innmind\BlackBox\{
     Random,
     Set,
+    Set\Value,
     Exception\Failure,
 };
 
@@ -38,16 +39,49 @@ final class Given
     }
 
     /**
+     * @param callable(string): void $fail
      * @param callable(...mixed): void $prove
      */
-    public function __invoke(int $tests, Random $rand, callable $prove): void
-    {
+    public function __invoke(
+        int $tests,
+        Random $rand,
+        callable $fail,
+        callable $prove
+    ): void {
         foreach ($this->set->take($tests)->values($rand) as $value) {
             try {
-                $prove(...$value->unwrap());
+                $this->test($fail, $prove, $value);
             } catch (Failure $e) {
-                // TODO shrink
+                // no need to run more test cases
+                return;
             }
+        }
+    }
+
+    /**
+     * @param callable(string): void $fail
+     * @param callable(callable(string): void, ...mixed): void $prove
+     * @param Value<list<mixed>> $value
+     *
+     * @throws Failure When the test case failed
+     */
+    private function test(callable $fail, callable $prove, Value $value): void
+    {
+        try {
+            $prove(
+                static function(string $reason): void {
+                    // we hijack the failure system here to prevent displaying
+                    // the symbol that a test case has failed as first we are
+                    // going to attempt to shrink the test case
+                    throw new Failure($reason);
+                },
+                ...$value->unwrap(),
+            );
+        } catch (Failure $e) {
+            // TODO shrink
+            $fail($e->getMessage());
+
+            throw $e;
         }
     }
 }

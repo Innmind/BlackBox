@@ -71,7 +71,7 @@ class ProofTest extends TestCase
                 };
                 $proof($iterations, new RandomInt, static fn() => null, $fail);
 
-                $this->assertSame($iterations, $count);
+                $this->assertSame(1, $count, 'Test cases should stop once a failure case has been detected');
             });
     }
 
