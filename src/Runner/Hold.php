@@ -17,17 +17,17 @@ final class Hold
     }
 
     /**
-     * @param callable(): void $pass
+     * @param callable(): void $held To count the number of assertions
      * @param callable(string): void $fail
      * @param mixed $args
      */
     public function __invoke(
-        callable $pass,
+        callable $held,
         callable $fail,
         TestResult $result,
         ...$args
     ): void {
-        ($this->assertion)($pass, $fail, $result, ...$args);
+        ($this->assertion)($held, $fail, $result, ...$args);
     }
 
     public static function all(self $hold, self ...$rest): self
@@ -36,14 +36,14 @@ final class Hold
 
         /** @psalm-suppress MissingClosureParamType */
         return new self(static function(
-                callable $pass,
+                callable $held,
                 callable $fail,
                 TestResult $result,
                 ...$args
             ) use ($rest): void {
             foreach ($rest as $hold) {
                 /** @psalm-suppress MixedArgumentTypeCoercion */
-                $hold($pass, $fail, $result, ...$args);
+                $hold($held, $fail, $result, ...$args);
             }
         });
     }

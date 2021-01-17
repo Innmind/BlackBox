@@ -29,13 +29,13 @@ final class Proof
     }
 
     /**
-     * @param callable(): void $pass
+     * @param callable(): void $held To count the number of assertions
      * @param callable(string, string): void $fail
      */
     public function __invoke(
         int $tests,
         Random $rand,
-        callable $pass,
+        callable $held,
         callable $fail
     ): void {
         /**
@@ -47,7 +47,7 @@ final class Proof
             $rand,
             fn(string $reason) => $fail($this->name, $reason),
             fn(callable $fail, ...$args) => ($this->then)(
-                $pass,
+                $held,
                 $fail,
                 ($this->when)(...$args),
                 ...$args,

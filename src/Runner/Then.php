@@ -13,16 +13,16 @@ final class Then
     }
 
     /**
-     * @param callable(): void $pass
+     * @param callable(): void $held To count the number of assertions
      * @param callable(string): void $fail
      * @param mixed $args
      */
     public function __invoke(
-        callable $pass,
+        callable $held,
         callable $fail,
         TestResult $result,
         ...$args
     ): void {
-        ($this->hold)($pass, $fail, $result, ...$args);
+        ($this->hold)($held, $fail, $result, ...$args);
     }
 }
