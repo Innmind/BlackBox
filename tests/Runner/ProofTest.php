@@ -29,10 +29,68 @@ class ProofTest extends TestCase
                     'run the number of given test iterations',
                     new Given(Set\Strings::any()),
                     new When(static fn($string) => $string),
-                    new Then(new Hold(function($pass, $fail, $result, $string) {
+                    new Then(new Hold(function($held, $fail, $result, $string) {
                         $this->assertFalse($result->thrown());
                         $this->assertSame($string, $result->value());
-                        $pass();
+                        $held();
+                    })),
+                );
+
+                $count = 0;
+                $held = static function() use (&$count) {
+                    $count++;
+                };
+                $proof(
+                    $iterations,
+                    new RandomInt,
+                    static fn() => null,
+                    $held,
+                    static fn() => null,
+                );
+
+                $this->assertSame($iterations, $count);
+            });
+    }
+
+    public function testCallsThePassCallbackWhenATestIsSuccesful()
+    {
+        $this
+            ->forAll(Set\Integers::between(1, 10))
+            ->then(function($iterations) {
+                $proof = new Proof(
+                    'run the number of given test iterations',
+                    new Given(Set\Strings::any()),
+                    new When(static fn($string) => $string),
+                    new Then(new Hold(static function($held, $fail, $result, $string) {})),
+                );
+
+                $count = 0;
+                $pass = static function() use (&$count) {
+                    $count++;
+                };
+                $proof(
+                    $iterations,
+                    new RandomInt,
+                    $pass,
+                    static fn() => null,
+                    static fn() => null,
+                );
+
+                $this->assertSame($iterations, $count);
+            });
+    }
+
+    public function testThePassCallbackIsNotCalledWhenThereIsAFailure()
+    {
+        $this
+            ->forAll(Set\Integers::between(1, 10))
+            ->then(function($iterations) {
+                $proof = new Proof(
+                    'run the number of given test iterations',
+                    new Given(Set\Strings::any()),
+                    new When(static fn($string) => $string),
+                    new Then(new Hold(static function($held, $fail, $result, $string) {
+                        $fail('watever');
                     })),
                 );
 
@@ -40,9 +98,15 @@ class ProofTest extends TestCase
                 $pass = static function() use (&$count) {
                     $count++;
                 };
-                $proof($iterations, new RandomInt, $pass, static fn() => null);
+                $proof(
+                    $iterations,
+                    new RandomInt,
+                    $pass,
+                    static fn() => null,
+                    static fn() => null,
+                );
 
-                $this->assertSame($iterations, $count);
+                $this->assertSame(0, $count);
             });
     }
 
@@ -57,7 +121,7 @@ class ProofTest extends TestCase
                     new When(static function($string) {
                         throw new \Exception($string);
                     }),
-                    new Then(new Hold(function($pass, $fail, $result, $string) {
+                    new Then(new Hold(function($held, $fail, $result, $string) {
                         $this->assertTrue($result->thrown());
                         $this->assertInstanceOf(\Exception::class, $result->value());
                         $this->assertSame($string, $result->value()->getMessage());
@@ -69,7 +133,13 @@ class ProofTest extends TestCase
                 $fail = static function() use (&$count) {
                     $count++;
                 };
-                $proof($iterations, new RandomInt, static fn() => null, $fail);
+                $proof(
+                    $iterations,
+                    new RandomInt,
+                    static fn() => null,
+                    static fn() => null,
+                    $fail,
+                );
 
                 $this->assertSame(1, $count, 'Test cases should stop once a failure case has been detected');
             });
@@ -86,7 +156,7 @@ class ProofTest extends TestCase
                     new When(static function($string) {
                         throw new \Exception($string);
                     }),
-                    new Then(new Hold(static function($pass, $fail) {
+                    new Then(new Hold(static function($held, $fail) {
                         $fail('watever');
                     })),
                 );
@@ -96,7 +166,13 @@ class ProofTest extends TestCase
                 };
 
                 try {
-                    $this->assertNull($proof($iterations, new RandomInt, static fn() => null, $fail));
+                    $this->assertNull($proof(
+                        $iterations,
+                        new RandomInt,
+                        static fn() => null,
+                        static fn() => null,
+                        $fail,
+                    ));
                 } catch (Failure $e) {
                     $this->fail('The failure mechanism should not be exposed outside of the proof');
                 }
@@ -117,7 +193,7 @@ class ProofTest extends TestCase
                     new When(static function($string) {
                         throw new \Exception($string);
                     }),
-                    new Then(new Hold(static function($pass, $fail) use ($reason) {
+                    new Then(new Hold(static function($held, $fail) use ($reason) {
                         $fail($reason);
                     })),
                 );
@@ -129,7 +205,13 @@ class ProofTest extends TestCase
                     throw new Failure;
                 };
 
-                $proof(1, new RandomInt, static fn() => null, $fail);
+                $proof(
+                    1,
+                    new RandomInt,
+                    static fn() => null,
+                    static fn() => null,
+                    $fail,
+                );
             });
     }
 
@@ -141,7 +223,7 @@ class ProofTest extends TestCase
             new When(static function($string) {
                 throw new \Exception($string);
             }),
-            new Then(new Hold(static function($pass, $fail, $result, $string) {
+            new Then(new Hold(static function($held, $fail, $result, $string) {
                 $fail($string);
             })),
         );
@@ -151,7 +233,13 @@ class ProofTest extends TestCase
             $this->assertSame('', $reason);
             $thrown = true;
         };
-        $proof(1, new RandomInt, static fn() => null, $fail);
+        $proof(
+            1,
+            new RandomInt,
+            static fn() => null,
+            static fn() => null,
+            $fail,
+        );
 
         $this->assertTrue($thrown);
     }

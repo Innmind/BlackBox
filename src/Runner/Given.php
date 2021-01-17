@@ -39,18 +39,21 @@ final class Given
     }
 
     /**
-     * @param callable(string): void $fail
+     * @param callable(): void $pass To print when a test case is successful
+     * @param callable(string): void $fail To print when a test case is failing
      * @param callable(...mixed): void $prove
      */
     public function __invoke(
         int $tests,
         Random $rand,
+        callable $pass,
         callable $fail,
         callable $prove
     ): void {
         foreach ($this->set->take($tests)->values($rand) as $values) {
             try {
                 $this->test($fail, $prove, $values);
+                $pass();
             } catch (Failure $e) {
                 // no need to run more test cases
                 return;

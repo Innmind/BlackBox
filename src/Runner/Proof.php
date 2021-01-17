@@ -29,12 +29,14 @@ final class Proof
     }
 
     /**
+     * @param callable(): void $pass To print when a test case is successful
      * @param callable(): void $held To count the number of assertions
-     * @param callable(string, string): void $fail
+     * @param callable(string, string): void $fail To print when a test case is failing
      */
     public function __invoke(
         int $tests,
         Random $rand,
+        callable $pass,
         callable $held,
         callable $fail
     ): void {
@@ -45,6 +47,7 @@ final class Proof
         ($this->given)(
             $tests,
             $rand,
+            $pass,
             fn(string $reason) => $fail($this->name, $reason),
             fn(callable $fail, ...$args) => ($this->then)(
                 $held,
