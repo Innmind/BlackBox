@@ -161,8 +161,9 @@ class ProofTest extends TestCase
                     })),
                 );
 
-                $fail = static function() {
-                    throw new Failure;
+                $failed = false;
+                $fail = static function() use (&$failed) {
+                    $failed = true;
                 };
 
                 try {
@@ -173,6 +174,7 @@ class ProofTest extends TestCase
                         static fn() => null,
                         $fail,
                     ));
+                    $this->assertTrue($failed);
                 } catch (Failure $e) {
                     $this->fail('The failure mechanism should not be exposed outside of the proof');
                 }
@@ -198,11 +200,12 @@ class ProofTest extends TestCase
                     })),
                 );
 
-                $fail = function($a, $b) use ($name, $reason) {
+                $failed = false;
+                $fail = function($a, $b, $arguments) use ($name, $reason, &$failed) {
                     $this->assertSame($name, $a);
                     $this->assertSame($reason, $b);
 
-                    throw new Failure;
+                    $failed = true;
                 };
 
                 $proof(
@@ -212,6 +215,7 @@ class ProofTest extends TestCase
                     static fn() => null,
                     $fail,
                 );
+                $this->assertTrue($failed);
             });
     }
 
@@ -229,7 +233,7 @@ class ProofTest extends TestCase
         );
 
         $thrown = false;
-        $fail = function($name, $reason) use (&$thrown) {
+        $fail = function($name, $reason, $arguments) use (&$thrown) {
             $this->assertSame('', $reason);
             $thrown = true;
         };
