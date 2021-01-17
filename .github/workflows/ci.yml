@@ -147,6 +147,71 @@ jobs:
         continue-on-error: true
         env:
           BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}
+  successful_proofs:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        php-version: ['7.4', '8.0']
+    name: 'Validate successful proofs'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl
+          coverage: none
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Dependencies
+        run: composer install
+      - name: Run proofs
+        run: php proofs.php
+      - name: Validate it printed correctly
+        run: if [[ $(< proofs/expectedAdd.txt) != "${{steps.run_tests.outputs.run_proofs}}" ]]; then exit 1; fi
+  failing_proofs:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        php-version: ['7.4', '8.0']
+    name: 'Validate failing proofs'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl
+          coverage: none
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Dependencies
+        run: composer install
+      - name: Run proofs
+        run: echo "::set-output name=out::$(php falseProofs.php)"
+        id: run_proofs
+        continue-on-error: true
+      - name: Validate it failed
+        if: ${{ success() }}
+        run: exit 1
   psalm:
     runs-on: ubuntu-latest
     strategy:

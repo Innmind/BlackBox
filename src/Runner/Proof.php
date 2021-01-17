@@ -69,4 +69,9 @@ final class Proof
             },
         );
     }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
 }
