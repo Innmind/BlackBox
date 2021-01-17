@@ -42,6 +42,7 @@ class ProofTest extends TestCase
                 };
                 $proof(
                     $iterations,
+                    true,
                     new RandomInt,
                     static fn() => null,
                     $held,
@@ -70,6 +71,7 @@ class ProofTest extends TestCase
                 };
                 $proof(
                     $iterations,
+                    true,
                     new RandomInt,
                     $pass,
                     static fn() => null,
@@ -100,6 +102,7 @@ class ProofTest extends TestCase
                 };
                 $proof(
                     $iterations,
+                    true,
                     new RandomInt,
                     $pass,
                     static fn() => null,
@@ -135,6 +138,7 @@ class ProofTest extends TestCase
                 };
                 $proof(
                     $iterations,
+                    true,
                     new RandomInt,
                     static fn() => null,
                     static fn() => null,
@@ -169,6 +173,7 @@ class ProofTest extends TestCase
                 try {
                     $this->assertNull($proof(
                         $iterations,
+                        true,
                         new RandomInt,
                         static fn() => null,
                         static fn() => null,
@@ -210,6 +215,7 @@ class ProofTest extends TestCase
 
                 $proof(
                     1,
+                    true,
                     new RandomInt,
                     static fn() => null,
                     static fn() => null,
@@ -239,6 +245,7 @@ class ProofTest extends TestCase
         };
         $proof(
             1,
+            true,
             new RandomInt,
             static fn() => null,
             static fn() => null,
@@ -278,6 +285,7 @@ class ProofTest extends TestCase
         };
         $proof(
             1,
+            true,
             new RandomInt,
             static fn() => null,
             static fn() => null,
@@ -285,5 +293,38 @@ class ProofTest extends TestCase
         );
 
         $this->assertTrue($failed);
+    }
+
+    public function testShrinkingCanBeDisabled()
+    {
+        $proof = new Proof(
+            'shrinking can be disabled',
+            new Given(Set\Strings::any()),
+            new When(static function($string) {
+                throw new \Exception($string);
+            }),
+            new Then(new Hold(static function($held, $fail, $result, $string) {
+                $fail($string);
+            })),
+        );
+
+        $thrown = false;
+        $fail = function($name, $reason, $arguments) use (&$thrown) {
+            // sometimes this assertion will fail in the case the original value
+            // generated is an empty string, but there is no way to detect that
+            // from the outside of the system
+            $this->assertNotSame('', $reason);
+            $thrown = true;
+        };
+        $proof(
+            1,
+            false,
+            new RandomInt,
+            static fn() => null,
+            static fn() => null,
+            $fail,
+        );
+
+        $this->assertTrue($thrown);
     }
 }

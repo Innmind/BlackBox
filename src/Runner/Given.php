@@ -46,6 +46,7 @@ final class Given
      */
     public function __invoke(
         int $tests,
+        bool $enableShrinking,
         Random $rand,
         callable $pass,
         callable $fail,
@@ -53,7 +54,7 @@ final class Given
     ): void {
         foreach ($this->set->take($tests)->values($rand) as $values) {
             try {
-                $this->test($fail, $prove, $values);
+                $this->test($fail, $prove, $values, $enableShrinking);
                 $pass();
             } catch (Failure $e) {
                 // no need to run more test cases
@@ -69,8 +70,12 @@ final class Given
      *
      * @throws Failure When the test case failed
      */
-    private function test(callable $fail, callable $prove, Value $values): void
-    {
+    private function test(
+        callable $fail,
+        callable $prove,
+        Value $values,
+        bool $enableShrinking
+    ): void {
         try {
             $prove(
                 static function(string $reason, Arguments $arguments): void {
@@ -82,7 +87,7 @@ final class Given
                 $values,
             );
         } catch (Failure $e) {
-            if (!$values->shrinkable()) {
+            if (!$values->shrinkable() || !$enableShrinking) {
                 $fail($e->reason(), $e->arguments());
 
                 throw $e;

@@ -39,6 +39,7 @@ final class Proof
      */
     public function __invoke(
         int $tests,
+        bool $enableShrinking,
         Random $rand,
         callable $pass,
         callable $held,
@@ -50,6 +51,7 @@ final class Proof
          */
         ($this->given)(
             $tests,
+            $enableShrinking,
             $rand,
             $pass,
             fn(string $reason, Arguments $arguments) => $fail($this->name, $reason, $arguments),
