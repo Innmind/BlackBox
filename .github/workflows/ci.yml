@@ -176,8 +176,6 @@ jobs:
         run: composer install
       - name: Run proofs
         run: php proofs.php
-      - name: Validate it printed correctly
-        run: if [[ $(< proofs/expectedAdd.txt) != "${{steps.run_tests.outputs.run_proofs}}" ]]; then exit 1; fi
   failing_proofs:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -206,8 +204,7 @@ jobs:
       - name: Install Dependencies
         run: composer install
       - name: Run proofs
-        run: echo "::set-output name=out::$(php falseProofs.php)"
-        id: run_proofs
+        run: php falseProofs.php
         continue-on-error: true
       - name: Validate it failed
         if: ${{ success() }}
