@@ -247,4 +247,43 @@ class ProofTest extends TestCase
 
         $this->assertTrue($thrown);
     }
+
+    public function testArgumentsThatMadeTheTestCaseFailAreAccessibleInTheFaillCallback()
+    {
+        $proof = new Proof(
+            'shrink to the smallest possible value',
+            new Given(
+                Set\Strings::any(),
+                Set\Integers::any(),
+            ),
+            new When(static function($string, $i) {
+                throw new \Exception($string);
+            }),
+            new Then(new Hold(static function($held, $fail, $result, $string) {
+                $fail($string);
+            })),
+        );
+
+        $failed = false;
+        $fail = function($name, $reason, $arguments) use (&$failed) {
+            $arguments(function($name, $value) {
+                if ($name === 'string') {
+                    $this->assertSame('', $value);
+                } else {
+                    $this->assertSame('i', $name);
+                    $this->assertSame(0, $value);
+                }
+            });
+            $failed = true;
+        };
+        $proof(
+            1,
+            new RandomInt,
+            static fn() => null,
+            static fn() => null,
+            $fail,
+        );
+
+        $this->assertTrue($failed);
+    }
 }

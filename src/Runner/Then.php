@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
+use Innmind\BlackBox\Set\Value;
+
 final class Then
 {
     private Hold $hold;
@@ -15,14 +17,14 @@ final class Then
     /**
      * @param callable(): void $held To count the number of assertions
      * @param callable(string): void $fail
-     * @param mixed $args
+     * @param Value<list<mixed>> $args
      */
     public function __invoke(
         callable $held,
         callable $fail,
         TestResult $result,
-        ...$args
+        Value $args
     ): void {
-        ($this->hold)($held, $fail, $result, ...$args);
+        ($this->hold)($held, $fail, $result, ...$args->unwrap());
     }
 }

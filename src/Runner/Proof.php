@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
-use Innmind\BlackBox\Random;
+use Innmind\BlackBox\{
+    Random,
+    Set\Value,
+};
 
 /**
  * Bear in mind this is not a formal proof (in the mathematical sense) but an
@@ -49,8 +52,8 @@ final class Proof
             $rand,
             $pass,
             fn(string $reason, Arguments $arguments) => $fail($this->name, $reason, $arguments),
-            function(callable $fail, ...$args) use ($held): void {
-                $testResult = ($this->when)(...$args);
+            function(callable $fail, Value $args) use ($held): void {
+                $testResult = ($this->when)($args);
 
                 ($this->then)(
                     $held,
@@ -58,7 +61,7 @@ final class Proof
                         $fail($reason, $testResult->arguments());
                     },
                     $testResult,
-                    ...$args,
+                    $args,
                 );
             },
         );

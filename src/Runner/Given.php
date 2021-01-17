@@ -41,7 +41,7 @@ final class Given
     /**
      * @param callable(): void $pass To print when a test case is successful
      * @param callable(string, Arguments): void $fail To print when a test case is failing
-     * @param callable(...mixed): void $prove
+     * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove
      */
     public function __invoke(
         int $tests,
@@ -63,7 +63,7 @@ final class Given
 
     /**
      * @param callable(string, Arguments): void $fail
-     * @param callable(callable(string, Arguments): void, ...mixed): void $prove
+     * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove
      * @param Value<list<mixed>> $values
      *
      * @throws Failure When the test case failed
@@ -78,7 +78,7 @@ final class Given
                     // going to attempt to shrink the test case
                     throw new Failure($reason, $arguments);
                 },
-                ...$values->unwrap(),
+                $values,
             );
         } catch (Failure $e) {
             if (!$values->shrinkable()) {
@@ -93,7 +93,7 @@ final class Given
 
     /**
      * @param callable(string, Arguments): void $fail
-     * @param callable(callable(string, Arguments): void, ...mixed): void $prove
+     * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove
      * @param Value<list<mixed>> $values
      *
      * @throws Failure
@@ -114,9 +114,9 @@ final class Given
             $currentStrategy = $dichotomy->a();
 
             try {
-                $prove($throwOnFail, ...$currentStrategy->unwrap());
+                $prove($throwOnFail, $currentStrategy);
                 $currentStrategy = $dichotomy->b();
-                $prove($throwOnFail, ...$currentStrategy->unwrap());
+                $prove($throwOnFail, $currentStrategy);
             } catch (Failure $e) {
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
