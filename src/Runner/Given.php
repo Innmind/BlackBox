@@ -113,7 +113,6 @@ final class Given
         $throwOnFail = static function(string $reason, Arguments $arguments): void {
             throw new Failure($reason, $arguments);
         };
-        $previousStrategy = $values;
         $dichotomy = $values->shrink();
 
         do {
@@ -127,7 +126,6 @@ final class Given
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
-                    $previousStrategy = $currentStrategy;
 
                     continue;
                 }
@@ -135,23 +133,22 @@ final class Given
                 // current strategy no longer shrinkable so it means we reached
                 // a leaf of our search tree meaning the current exception is the
                 // last one we can obtain
-                $this->throw($e, $currentStrategy, $fail);
+                $this->throw($e, $fail);
             }
 
             // when a and b work then the previous failure has been generated
             // with the smallest values possible
-            $this->throw($previousFailure, $previousStrategy, $fail);
+            $this->throw($previousFailure, $fail);
             // we can use an infinite condition here since all exits are covered
         } while (true);
     }
 
     /**
-     * @param Value<list<mixed>> $values
      * @param callable(string, Arguments): void $fail
      *
      * @throws Failure
      */
-    private function throw(Failure $e, Value $values, callable $fail): void
+    private function throw(Failure $e, callable $fail): void
     {
         $fail($e->reason(), $e->arguments());
 
