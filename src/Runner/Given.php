@@ -39,6 +39,7 @@ final class Given
     }
 
     /**
+     * @param positive-int $tests Number of test cases to generate per proof
      * @param callable(): void $pass To print when a test case is successful
      * @param callable(string, Arguments): void $fail To print when a test case is failing
      * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove

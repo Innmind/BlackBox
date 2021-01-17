@@ -32,6 +32,7 @@ final class Proof
     }
 
     /**
+     * @param positive-int $tests Number of test cases to generate per proof
      * @param callable(): void $pass To print when a test case is successful
      * @param callable(): void $held To count the number of assertions
      * @param callable(string, string, Arguments): void $fail To print when a test case is failing
