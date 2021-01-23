@@ -55,27 +55,58 @@ final class Combination
      */
     public function shrink(): array
     {
-        /** @var list<Value> */
-        $strategyA = [];
-        /** @var list<Value> */
-        $strategyB = [];
+        return ['a' => $this->shrinkFirst(), 'b' => $this->shrinkSecond()];
+    }
+
+    /**
+     * @param 'a'|'b' $strategy
+     */
+    private function shrinkFirst(string $strategy = 'a'): self
+    {
+        $values = [];
         $foundOne = false;
 
         foreach ($this->values as $value) {
             if (!$foundOne && $value->shrinkable()) {
-                $strategyA[] = $value->shrink()->a();
-                $strategyB[] = $value->shrink()->b();
+                /** @var Value */
+                $values[] = $value->shrink()->{$strategy}();
                 $foundOne = true;
             } else {
-                $strategyA[] = $value;
-                $strategyB[] = $value;
+                $values[] = $value;
             }
         }
 
-        return [
-            'a' => self::of(...\array_reverse($strategyA)),
-            'b' => self::of(...\array_reverse($strategyB)),
-        ];
+        return self::of(...\array_reverse($values));
+    }
+
+    /**
+     * Will try to shrink the second value that can be shrunk
+     *
+     * It will fallback to shrinking the first one with the "b" strategy if
+     * there is only one shrinkable value
+     */
+    private function shrinkSecond(): self
+    {
+        $values = [];
+        $found = 0;
+
+        foreach ($this->values as $value) {
+            if ($value->shrinkable()) {
+                $found++;
+            }
+
+            if ($found === 2 && $value->shrinkable()) {
+                $values[] = $value->shrink()->a();
+            } else {
+                $values[] = $value;
+            }
+        }
+
+        if ($found >= 2) {
+            return self::of(...\array_reverse($values));
+        }
+
+        return $this->shrinkFirst('b');
     }
 
     private static function of(Value $value, Value ...$values): self

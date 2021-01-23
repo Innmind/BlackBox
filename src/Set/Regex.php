@@ -19,6 +19,7 @@ use ReverseRegex\{
 
 /**
  * @implements Set<string>
+ * @psalm-suppress all As by default the package is not installed
  */
 final class Regex implements Set
 {
