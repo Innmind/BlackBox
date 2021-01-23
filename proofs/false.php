@@ -1,13 +1,6 @@
 <?php
 
-use Innmind\BlackBox\{
-    Runner\Proof,
-    Runner\Given,
-    Runner\When,
-    Runner\Then,
-    Runner\Hold,
-    Set,
-};
+use Innmind\BlackBox\Set;
 
 function add($a, $b)
 {
@@ -15,17 +8,17 @@ function add($a, $b)
 }
 
 return function() {
-    yield new Proof(
+    yield proof(
         'add is always positive',
-        new Given(
+        given(
             Set\Integers::any(),
             Set\Integers::any(),
         ),
-        new When(function($a, $b) {
+        when(function($a, $b) {
             return add($a, $b);
         }),
-        new Then(
-            new Hold(function($held, $fail, $result) {
+        then(
+            hold(function($held, $fail, $result) {
                 if ($result->value() < 0) {
                     $fail('add is not always positive');
                 }

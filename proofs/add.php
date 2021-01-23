@@ -1,13 +1,6 @@
 <?php
 
-use Innmind\BlackBox\{
-    Runner\Proof,
-    Runner\Given,
-    Runner\When,
-    Runner\Then,
-    Runner\Hold,
-    Set,
-};
+use Innmind\BlackBox\Set;
 
 function add($a, $b)
 {
@@ -15,17 +8,17 @@ function add($a, $b)
 }
 
 return function() {
-    yield new Proof(
+    yield proof(
         'add is commutative',
-        new Given(
+        given(
             Set\Integers::any(),
             Set\Integers::any(),
         ),
-        new When(function($a, $b) {
+        when(function($a, $b) {
             return add($a, $b);
         }),
-        new Then(
-            new Hold(function($held, $fail, $result, $a, $b) {
+        then(
+            hold(function($held, $fail, $result, $a, $b) {
                 if (!$result->value() === add($b, $a)) {
                     $fail('add is not commutative');
                 }
@@ -35,18 +28,18 @@ return function() {
         ),
     );
 
-    yield new Proof(
+    yield proof(
         'add is associative',
-        new Given(
+        given(
             Set\Integers::any(),
             Set\Integers::any(),
             Set\Integers::any(),
         ),
-        new When(function($a, $b, $c) {
+        when(function($a, $b, $c) {
             return add(add($a, $b), $c);
         }),
-        new Then(
-            new Hold(function($held, $fail, $result, $a, $b, $c) {
+        then(
+            hold(function($held, $fail, $result, $a, $b, $c) {
                 if (!$result->value() === add($a, add($b, $c))) {
                     $fail('add is not associative');
                 }
@@ -56,16 +49,16 @@ return function() {
         ),
     );
 
-    yield new Proof(
+    yield proof(
         'add is an identity function',
-        new Given(
+        given(
             Set\Integers::any(),
         ),
-        new When(function($a) {
+        when(function($a) {
             return add($a, 0);
         }),
-        new Then(
-            new Hold(function($held, $fail, $result, $a) {
+        then(
+            hold(function($held, $fail, $result, $a) {
                 if (!$result->value() === $a) {
                     $fail('add is not an identity function');
                 }

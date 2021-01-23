@@ -88,6 +88,8 @@ final class BlackBox
      */
     public function tryToProve(string $pathToProofs): int
     {
+        require_once __DIR__.'/Runner/functions.php';
+
         $run = new Runner(
             $this->tests,
             $this->enableShrinking,
