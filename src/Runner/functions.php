@@ -11,28 +11,33 @@ use Innmind\BlackBox\{
     Set,
 };
 
-function proof(string $name, Given $given, When $when, Then $then): Proof {
+function proof(string $name, Given $given, When $when, Then $then): Proof
+{
     return new Proof($name, $given, $when, $then);
 }
 
-function given(Set $first, Set ...$rest): Given {
+function given(Set $first, Set ...$rest): Given
+{
     return new Given($first, ...$rest);
 }
 
 /**
  * @param callable(...mixed): mixed $test
  */
-function when(callable $test): When {
+function when(callable $test): When
+{
     return new When($test);
 }
 
-function then(Hold $hold, Hold ...$rest): Then {
+function then(Hold $hold, Hold ...$rest): Then
+{
     return new Then($hold, ...$rest);
 }
 
 /**
  * @param callable(callable(): void, callable(string): void, TestResult, ...mixed): void $assertion
  */
-function hold(callable $assertion): Hold {
+function hold(callable $assertion): Hold
+{
     return new Hold($assertion);
 }
