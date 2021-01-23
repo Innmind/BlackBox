@@ -52,7 +52,7 @@ final class BlackBox
     }
 
     /**
-     * @return positive-int The exit code to return by the script
+     * @return int(0)|int(1) The exit code to return by the script
      */
     public function tryToProve(string $pathToProofs): int
     {
