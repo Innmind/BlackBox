@@ -74,4 +74,13 @@ final class Proof
     {
         return $this->name;
     }
+
+    public function matches(string $filter): bool
+    {
+        if ($filter === '') {
+            return true;
+        }
+
+        return \strpos($this->name, $filter) !== false;
+    }
 }

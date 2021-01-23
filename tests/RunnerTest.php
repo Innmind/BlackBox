@@ -20,6 +20,7 @@ class RunnerTest extends TestCase
             true,
             new RandomInt,
             $this->createMock(Printer::class),
+            '',
         );
 
         $this->expectException(LogicException::class);
@@ -34,6 +35,7 @@ class RunnerTest extends TestCase
             true,
             new RandomInt,
             $this->createMock(Printer::class),
+            '',
         );
 
         $this->expectException(LogicException::class);

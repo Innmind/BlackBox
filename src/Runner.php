@@ -17,6 +17,7 @@ final class Runner
     private bool $enableShrinking;
     private Random $random;
     private Printer $printer;
+    private string $filter;
 
     /**
      * @param positive-int $tests
@@ -25,12 +26,14 @@ final class Runner
         int $tests,
         bool $enableShrinking,
         Random $random,
-        Printer $printer
+        Printer $printer,
+        string $filter
     ) {
         $this->tests = $tests;
         $this->enableShrinking = $enableShrinking;
         $this->random = $random;
         $this->printer = $printer;
+        $this->filter = $filter;
     }
 
     /**
@@ -56,6 +59,10 @@ final class Runner
 
         /** @var Proof $proof */
         foreach ($proofs as $proof) {
+            if (!$proof->matches($this->filter)) {
+                continue;
+            }
+
             $this->printer->start($proof->name());
             $proof(
                 $this->tests,

@@ -7,6 +7,8 @@ use Innmind\BlackBox\Runner\Printer;
 
 final class BlackBox
 {
+    /** @var list<string> */
+    private array $argv;
     /** @var positive-int */
     private int $tests;
     private bool $enableShrinking;
@@ -14,28 +16,46 @@ final class BlackBox
     private Printer $printer;
 
     /**
+     * @param list<string> $argv
      * @param positive-int $tests
      */
     private function __construct(
+        array $argv,
         int $tests,
         bool $enableShrinking,
         Random $random,
         Printer $printer
     ) {
+        $this->argv = $argv;
         $this->tests = $tests;
         $this->enableShrinking = $enableShrinking;
         $this->random = $random;
         $this->printer = $printer;
     }
 
-    public static function of(): self
+    /**
+     * @param list<string> $argv
+     */
+    public static function of(array $argv): self
     {
-        return new self(100, true, new Random\RandomInt, new Printer\Simple);
+        return new self(
+            $argv,
+            100,
+            true,
+            new Random\RandomInt,
+            new Printer\Simple,
+        );
     }
 
     public function disableShrinking(): self
     {
-        return new self($this->tests, false, $this->random, $this->printer);
+        return new self(
+            $this->argv,
+            $this->tests,
+            false,
+            $this->random,
+            $this->printer,
+        );
     }
 
     /**
@@ -43,12 +63,24 @@ final class BlackBox
      */
     public function testsPerProof(int $tests): self
     {
-        return new self($tests, $this->enableShrinking, $this->random, $this->printer);
+        return new self(
+            $this->argv,
+            $tests,
+            $this->enableShrinking,
+            $this->random,
+            $this->printer,
+        );
     }
 
     public function usePrinter(Printer $printer): self
     {
-        return new self($this->tests, $this->enableShrinking, $this->random, $printer);
+        return new self(
+            $this->argv,
+            $this->tests,
+            $this->enableShrinking,
+            $this->random,
+            $printer,
+        );
     }
 
     /**
@@ -61,6 +93,7 @@ final class BlackBox
             $this->enableShrinking,
             $this->random,
             $this->printer,
+            $this->argv[1] ?? '',
         );
 
         return (int) $run($pathToProofs);
