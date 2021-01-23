@@ -62,7 +62,7 @@ class CombinationTest extends TestCase
         $this->assertTrue($shrinkable->shrinkable());
     }
 
-    public function testShrinkUsesTheFirstValueThatIsShrinkableToBuildItsOwnDichotomy()
+    public function testShrinkUsesFirstTwoValuesThatAreShrinkableToBuildItsOwnDichotomy()
     {
         $combination = new Combination(Value::immutable(
             66,
@@ -91,7 +91,7 @@ class CombinationTest extends TestCase
             $shrinked['a']->unwrap(),
         );
         $this->assertSame(
-            [42, 23, 66],
+            [42, 24, 33],
             $shrinked['b']->unwrap(),
         );
         $this->assertSame(
@@ -103,11 +103,11 @@ class CombinationTest extends TestCase
             $shrinked['a']->shrink()['b']->unwrap(),
         );
         $this->assertSame(
-            [42, 23, 65],
+            [42, 23, 33],
             $shrinked['b']->shrink()['b']->unwrap(),
         );
         $this->assertSame(
-            [42, 23, 33],
+            [42, 12, 33],
             $shrinked['b']->shrink()['a']->unwrap(),
         );
     }
