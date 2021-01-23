@@ -327,4 +327,42 @@ class ProofTest extends TestCase
 
         $this->assertTrue($thrown);
     }
+
+    public function testPassCallbackContainsTheProofName()
+    {
+        $this
+            ->forAll(
+                Set\Strings::any(),
+                Set\Strings::any(),
+            )
+            ->then(function($name, $reason) {
+                $proof = new Proof(
+                    $name,
+                    new Given(Set\Strings::any()),
+                    new When(static function($string) {
+                        return $string;
+                    }),
+                    new Then(new Hold(static function($held) {
+                        $held();
+                    })),
+                );
+
+                $passed = false;
+                $pass = function($a) use ($name, &$passed) {
+                    $this->assertSame($name, $a);
+
+                    $passed = true;
+                };
+
+                $proof(
+                    1,
+                    true,
+                    new RandomInt,
+                    $pass,
+                    static fn() => null,
+                    static fn() => null,
+                );
+                $this->assertTrue($passed);
+            });
+    }
 }

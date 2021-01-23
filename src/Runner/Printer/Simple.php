@@ -28,7 +28,7 @@ final class Simple implements Printer
         ++$this->countProofs;
     }
 
-    public function pass(): void
+    public function pass(string $proof): void
     {
         ++$this->countTestCases;
         echo '.';

@@ -33,7 +33,7 @@ final class Proof
 
     /**
      * @param positive-int $tests Number of test cases to generate per proof
-     * @param callable(): void $pass To print when a test case is successful
+     * @param callable(string): void $pass To print when a test case is successful
      * @param callable(): void $held To count the number of assertions
      * @param callable(string, string, Arguments): void $fail To print when a test case is failing
      */
@@ -53,7 +53,7 @@ final class Proof
             $tests,
             $enableShrinking,
             $rand,
-            $pass,
+            fn() => $pass($this->name),
             fn(string $reason, Arguments $arguments) => $fail($this->name, $reason, $arguments),
             function(callable $fail, Value $args) use ($held): void {
                 $testResult = ($this->when)($args);

@@ -7,7 +7,7 @@ interface Printer
 {
     public function begin(): void;
     public function start(string $proof): void;
-    public function pass(): void;
+    public function pass(string $proof): void;
     public function held(): void;
     public function fail(string $proof, string $reason, Arguments $arguments): void;
 

@@ -61,7 +61,7 @@ final class Runner
                 $this->tests,
                 $this->enableShrinking,
                 $this->random,
-                fn() => $this->printer->pass(),
+                fn(string $name) => $this->printer->pass($name),
                 fn() => $this->printer->held(),
                 fn(string $name, string $reason, Arguments $arguments) => $this->printer->fail(
                     $name,
