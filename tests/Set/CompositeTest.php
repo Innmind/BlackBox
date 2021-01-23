@@ -10,11 +10,15 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random\MtRand,
+    PHPUnit\BlackBox,
     Exception\EmptySet,
 };
+use PHPUnit\Framework\ExpectationFailedException;
 
 class CompositeTest extends TestCase
 {
+    use BlackBox;
+
     private $set;
 
     public function setUp(): void
@@ -351,5 +355,32 @@ class CompositeTest extends TestCase
             ->filter(static fn() => false)
             ->values(new MtRand)
             ->current();
+    }
+
+    /**
+     * This test is here to help fix the problem described in the issue linked below
+     *
+     * @see https://github.com/Innmind/BlackBox/issues/6
+     */
+    public function testShrinksAsFastAsPossible()
+    {
+        try {
+            $this
+                ->forAll(Set\Integers::below(0), Set\Integers::above(0))
+                ->filter(fn($a, $b) => $a !== 0)
+                ->then(function($a, $b) {
+                    $this->assertGreaterThanOrEqual(
+                        0,
+                        $a + $b,
+                        "[$a,$b]",
+                    );
+                });
+            $this->fail('The assertion should fail');
+        } catch (ExpectationFailedException $e) {
+            $this->assertStringContainsString(
+                '[-1,0]',
+                $e->getMessage(),
+            );
+        }
     }
 }
