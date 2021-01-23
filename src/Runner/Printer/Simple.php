@@ -7,6 +7,10 @@ use Innmind\BlackBox\Runner\{
     Printer,
     Arguments,
 };
+use SebastianBergmann\Timer\{
+    ResourceUsageFormatter,
+    Timer,
+};
 
 final class Simple implements Printer
 {
@@ -16,6 +20,12 @@ final class Simple implements Printer
     private int $countFailures = 0;
     /** @var list<array{proof: string, reason: string, arguments:Arguments}> */
     private array $failures = [];
+    private Timer $timer;
+
+    public function __construct()
+    {
+        $this->timer = new Timer;
+    }
 
     public function begin(): void
     {
@@ -24,6 +34,7 @@ final class Simple implements Printer
         $this->countAssertions = 0;
         $this->countFailures = 0;
         $this->failures = [];
+        $this->timer->start();
     }
 
     public function start(string $proof): void
@@ -60,6 +71,8 @@ final class Simple implements Printer
 
     public function terminate(): bool
     {
+        $duration = $this->timer->stop();
+
         if ($this->countFailures) {
             echo "\n\n";
         }
@@ -82,7 +95,8 @@ final class Simple implements Printer
         echo "Proofs:               {$this->countProofs}\n";
         echo "Test cases generated: {$this->countTestCases}\n";
         echo "Assertions:           {$this->countAssertions}\n";
-        echo "Failures:             {$this->countFailures}\n";
+        echo "Failures:             {$this->countFailures}\n\n";
+        echo (new ResourceUsageFormatter)->resourceUsage($duration)."\n";
 
         return $this->countFailures > 0;
     }
