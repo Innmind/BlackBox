@@ -205,6 +205,7 @@ jobs:
         run: composer install
       - name: Run proofs
         run: |
+          set +e
           php falseProofs.php
           if [[ $? -eq 0 ]]; then echo 1; else echo 0; fi
   psalm:
