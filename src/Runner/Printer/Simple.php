@@ -14,6 +14,8 @@ final class Simple implements Printer
     private int $countTestCases = 0;
     private int $countAssertions = 0;
     private int $countFailures = 0;
+    /** @var list<array{proof: string, reason: string, arguments:Arguments}> */
+    private array $failures = [];
 
     public function begin(): void
     {
@@ -21,6 +23,7 @@ final class Simple implements Printer
         $this->countTestCases = 0;
         $this->countAssertions = 0;
         $this->countFailures = 0;
+        $this->failures = [];
     }
 
     public function start(string $proof): void
@@ -45,6 +48,11 @@ final class Simple implements Printer
     {
         ++$this->countTestCases;
         ++$this->countFailures;
+        $this->failures[] = [
+            'proof' => $proof,
+            'reason' => $reason,
+            'arguments' => $arguments,
+        ];
         echo 'F';
 
         $this->breakLine();
@@ -52,6 +60,24 @@ final class Simple implements Printer
 
     public function terminate(): bool
     {
+        if ($this->countFailures) {
+            echo "\n\n";
+        }
+
+        foreach ($this->failures as $failure) {
+            echo '"'.$failure['proof'].'" invalidated'.":\n";
+            echo "{$failure['reason']}\n";
+            echo "\n";
+            echo "Caused by:\n";
+            /** @psalm-suppress MissingClosureParamType */
+            $failure['arguments'](static function(string $argument, $value): void {
+                echo "\$$argument = ";
+                \var_export($value);
+                echo ";\n";
+            });
+            echo "\n";
+        }
+
         echo "\n";
         echo "Proofs:               {$this->countProofs}\n";
         echo "Test cases generated: {$this->countTestCases}\n";
