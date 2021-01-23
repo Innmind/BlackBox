@@ -2,12 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
-use Innmind\BlackBox\{
-    Runner,
-    Runner\Printer\Simple,
-    Random\RandomInt,
-};
+use Innmind\BlackBox\BlackBox;
 
-$runner = new Runner(100, true, new RandomInt, new Simple);
+$code = BlackBox::of()->tryToProve(__DIR__.'/proofs/all.php');
 
-exit ((int) $runner(__DIR__.'/proofs/all.php'));
+exit($code);
