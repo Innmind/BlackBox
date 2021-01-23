@@ -206,7 +206,7 @@ jobs:
       - name: Run proofs
         run: |
           php falseProofs.php
-          if [ $? -eq 0 ]; then echo 1; else echo 0; fi
+          if [[ $? -eq 0 ]]; then echo 1; else echo 0; fi
   psalm:
     runs-on: ubuntu-latest
     strategy:
