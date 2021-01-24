@@ -255,4 +255,11 @@ class RealNumbersTest extends TestCase
             $this->assertSame(43, (int) $float->unwrap());
         }
     }
+
+    public function testValuesAreFloats()
+    {
+        foreach (RealNumbers::any()->values(new MtRand) as $float) {
+            $this->assertIsFloat($float->unwrap());
+        }
+    }
 }
