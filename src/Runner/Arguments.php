@@ -14,7 +14,7 @@ final class Arguments
 
     /**
      * @param Value<list<mixed>> $args
-     * @param list<string> $names [description]
+     * @param list<string> $names
      */
     public function __construct(Value $args, array $names)
     {
