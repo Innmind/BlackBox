@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
-use Innmind\BlackBox\Runner\Printer;
+use Innmind\BlackBox\Runner\{
+    Printer,
+    Proof,
+};
 
 final class BlackBox
 {
@@ -84,9 +87,11 @@ final class BlackBox
     }
 
     /**
+     * @param \Generator<Proof> $proofs
+     *
      * @return 0|1 The exit code to return by the script
      */
-    public function tryToProve(string $pathToProofs): int
+    public function tryToProve(\Generator $proofs): int
     {
         require_once __DIR__.'/Runner/functions.php';
 
@@ -98,6 +103,6 @@ final class BlackBox
             $this->argv[1] ?? '',
         );
 
-        return (int) $run($pathToProofs);
+        return (int) $run($proofs);
     }
 }

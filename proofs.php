@@ -4,6 +4,8 @@ require_once 'vendor/autoload.php';
 
 use Innmind\BlackBox\BlackBox;
 
-$code = BlackBox::of($argv)->tryToProve(__DIR__.'/proofs/all.php');
+$code = BlackBox::of($argv)->tryToProve(
+    (require __DIR__.'/proofs/all.php')()
+);
 
 exit($code);

@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     Runner\Proof,
     Runner\Printer,
     Runner\TestResult,
-    Exception\LogicException,
 };
 
 final class Runner
@@ -37,24 +36,12 @@ final class Runner
     }
 
     /**
+     * @param \Generator<Proof> $proofs
+     *
      * @return bool True if it failed
      */
-    public function __invoke(string $pathToProofs): bool
+    public function __invoke(\Generator $proofs): bool
     {
-        $wrongFactoryType = new LogicException('Proofs file must return callable(): Generator<Innmind\BlackBox\Runner\Proof>');
-        /** @psalm-suppress UnresolvableInclude */
-        $factory = require $pathToProofs;
-
-        if (!\is_callable($factory)) {
-            throw $wrongFactoryType;
-        }
-
-        $proofs = $factory();
-
-        if (!$proofs instanceof \Generator) {
-            throw $wrongFactoryType;
-        }
-
         $this->printer->begin();
 
         /** @var Proof $proof */
