@@ -104,6 +104,12 @@ final class Simple implements Printer
             \var_export($failure['result']->value());
             echo "\n";
             echo "\n";
+
+            foreach ($failure['trace'] as $frame) {
+                echo "$frame\n";
+            }
+
+            echo "\n";
             echo \str_repeat('-', self::WIDTH)."\n";
         }
 
