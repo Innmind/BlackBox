@@ -19,7 +19,7 @@ final class Simple implements Printer
     private int $countTestCases = 0;
     private int $countAssertions = 0;
     private int $countFailures = 0;
-    /** @var list<array{proof: string, reason: string, result:TestResult}> */
+    /** @var list<array{proof: string, reason: string, result: TestResult, trace: list<string>}> */
     private array $failures = [];
     private Timer $timer;
 
@@ -56,14 +56,22 @@ final class Simple implements Printer
         ++$this->countAssertions;
     }
 
-    public function fail(string $proof, string $reason, TestResult $result): void
-    {
+    /**
+     * @param list<string> $trace
+     */
+    public function fail(
+        string $proof,
+        string $reason,
+        TestResult $result,
+        array $trace
+    ): void {
         ++$this->countTestCases;
         ++$this->countFailures;
         $this->failures[] = [
             'proof' => $proof,
             'reason' => $reason,
             'result' => $result,
+            'trace' => $trace,
         ];
         echo 'F';
 

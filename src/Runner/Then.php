@@ -16,7 +16,7 @@ final class Then
 
     /**
      * @param callable(): void $held To count the number of assertions
-     * @param callable(string): void $fail
+     * @param callable(string, list<string>): void $fail
      * @param Value<list<mixed>> $args
      */
     public function __invoke(

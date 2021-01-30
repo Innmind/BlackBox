@@ -9,6 +9,8 @@ final class Hold
 {
     /** @var callable(callable(): void, callable(string): void, TestResult, ...mixed): void */
     private $assertion;
+    /** @var list<string> */
+    private $trace;
 
     /**
      * @param callable(callable(): void, callable(string): void, TestResult, ...mixed): void $assertion
@@ -16,11 +18,26 @@ final class Hold
     public function __construct(callable $assertion)
     {
         $this->assertion = $assertion;
+        /** @var list<array{class?: string, type: string, file?: string, function: string, line?: int}> */
+        $trace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
+        /** @var list<array{class?: string, type: string, file: string, function: string, line: int}> */
+        $trace = \array_filter(
+            $trace,
+            static fn(array $frame): bool => \array_key_exists('file', $frame) && \array_key_exists('line', $frame),
+        );
+        $trace = \array_filter(
+            $trace,
+            static fn(array $frame): bool => \strpos($frame['file'], 'innmind/black-box/src') === false,
+        );
+        $this->trace = \array_values(\array_map(
+            static fn(array $frame): string => "{$frame['file']}:{$frame['line']}",
+            $trace,
+        ));
     }
 
     /**
      * @param callable(): void $held To count the number of assertions
-     * @param callable(string): void $fail
+     * @param callable(string, list<string>): void $fail
      * @param mixed $args
      */
     public function __invoke(
@@ -29,7 +46,14 @@ final class Hold
         TestResult $result,
         ...$args
     ): void {
-        ($this->assertion)($held, $fail, $result, ...$args);
+        ($this->assertion)(
+            $held,
+            function(string $reason) use ($fail): void {
+                $fail($reason, $this->trace);
+            },
+            $result,
+            ...$args,
+        );
     }
 
     public static function all(self $hold, self ...$rest): self

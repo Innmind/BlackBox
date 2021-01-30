@@ -9,7 +9,16 @@ interface Printer
     public function start(string $proof): void;
     public function pass(string $proof): void;
     public function held(): void;
-    public function fail(string $proof, string $reason, TestResult $result): void;
+
+    /**
+     * @param list<string> $trace
+     */
+    public function fail(
+        string $proof,
+        string $reason,
+        TestResult $result,
+        array $trace
+    ): void;
 
     /**
      * @return bool True if there is at least one failure
