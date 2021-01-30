@@ -2,9 +2,9 @@
 
 use Innmind\BlackBox\Set;
 
-function add($a, $b)
+function add($a, $b): string
 {
-    return $a + $b;
+    return \gmp_strval(\gmp_add($a, $b));
 }
 
 return function() {
@@ -45,7 +45,7 @@ return function() {
         when(fn($a) => add($a, 0)),
         then(
             same(
-                fn($a) => $a,
+                fn($a) => (string) $a,
                 'add is not an identity function',
             ),
         ),
