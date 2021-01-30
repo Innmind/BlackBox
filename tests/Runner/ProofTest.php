@@ -47,6 +47,7 @@ class ProofTest extends TestCase
                     static fn() => null,
                     $held,
                     static fn() => null,
+                    static fn() => null,
                 );
 
                 $this->assertSame($iterations, $count);
@@ -74,6 +75,7 @@ class ProofTest extends TestCase
                     true,
                     new RandomInt,
                     $pass,
+                    static fn() => null,
                     static fn() => null,
                     static fn() => null,
                 );
@@ -105,6 +107,7 @@ class ProofTest extends TestCase
                     true,
                     new RandomInt,
                     $pass,
+                    static fn() => null,
                     static fn() => null,
                     static fn() => null,
                 );
@@ -142,6 +145,7 @@ class ProofTest extends TestCase
                     new RandomInt,
                     static fn() => null,
                     static fn() => null,
+                    static fn() => null,
                     $fail,
                 );
 
@@ -175,6 +179,7 @@ class ProofTest extends TestCase
                         $iterations,
                         true,
                         new RandomInt,
+                        static fn() => null,
                         static fn() => null,
                         static fn() => null,
                         $fail,
@@ -219,6 +224,7 @@ class ProofTest extends TestCase
                     new RandomInt,
                     static fn() => null,
                     static fn() => null,
+                    static fn() => null,
                     $fail,
                 );
                 $this->assertTrue($failed);
@@ -247,6 +253,7 @@ class ProofTest extends TestCase
             1,
             true,
             new RandomInt,
+            static fn() => null,
             static fn() => null,
             static fn() => null,
             $fail,
@@ -289,6 +296,7 @@ class ProofTest extends TestCase
             new RandomInt,
             static fn() => null,
             static fn() => null,
+            static fn() => null,
             $fail,
         );
 
@@ -320,6 +328,7 @@ class ProofTest extends TestCase
             1,
             false,
             new RandomInt,
+            static fn() => null,
             static fn() => null,
             static fn() => null,
             $fail,
@@ -359,6 +368,7 @@ class ProofTest extends TestCase
                     true,
                     new RandomInt,
                     $pass,
+                    static fn() => null,
                     static fn() => null,
                     static fn() => null,
                 );

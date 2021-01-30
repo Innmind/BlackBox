@@ -41,6 +41,7 @@ final class Given
     /**
      * @param positive-int $tests Number of test cases to generate per proof
      * @param callable(): void $pass To print when a test case is successful
+     * @param callable('a'|'b'): void $shrinking To print when shrinking a failing test case
      * @param callable(string, TestResult, list<string>): void $fail To print when a test case is failing
      * @param callable(callable(string, TestResult, list<string>): void, Value<list<mixed>>): void $prove
      */
@@ -49,12 +50,13 @@ final class Given
         bool $enableShrinking,
         Random $rand,
         callable $pass,
+        callable $shrinking,
         callable $fail,
         callable $prove
     ): void {
         foreach ($this->set->take($tests)->values($rand) as $values) {
             try {
-                $this->test($fail, $prove, $values, $enableShrinking);
+                $this->test($shrinking, $fail, $prove, $values, $enableShrinking);
                 $pass();
             } catch (Failure $e) {
                 // no need to run more test cases
@@ -64,6 +66,7 @@ final class Given
     }
 
     /**
+     * @param callable('a'|'b') $shrinking
      * @param callable(string, TestResult, list<string>): void $fail
      * @param callable(callable(string, TestResult, list<string>): void, Value<list<mixed>>): void $prove
      * @param Value<list<mixed>> $values
@@ -71,6 +74,7 @@ final class Given
      * @throws Failure When the test case failed
      */
     private function test(
+        callable $shrinking,
         callable $fail,
         callable $prove,
         Value $values,
@@ -95,11 +99,12 @@ final class Given
                 throw $e;
             }
 
-            $this->shrink($e, $fail, $prove, $values);
+            $this->shrink($e, $shrinking, $fail, $prove, $values);
         }
     }
 
     /**
+     * @param callable('a'|'b') $shrinking
      * @param callable(string, TestResult, list<string>): void $fail
      * @param callable(callable(string, TestResult, list<string>): void, Value<list<mixed>>): void $prove
      * @param Value<list<mixed>> $values
@@ -108,6 +113,7 @@ final class Given
      */
     private function shrink(
         Failure $previousFailure,
+        callable $shrinking,
         callable $fail,
         callable $prove,
         Value $values
@@ -123,8 +129,10 @@ final class Given
             $currentStrategy = $dichotomy->a();
 
             try {
+                $shrinking('a');
                 $prove($throwOnFail, $currentStrategy);
                 $currentStrategy = $dichotomy->b();
+                $shrinking('b');
                 $prove($throwOnFail, $currentStrategy);
             } catch (Failure $e) {
                 if ($currentStrategy->shrinkable()) {

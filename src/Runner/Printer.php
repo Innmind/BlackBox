@@ -11,6 +11,11 @@ interface Printer
     public function held(): void;
 
     /**
+     * @param 'a'|'b' $strategy
+     */
+    public function shrinking(string $proof, string $strategy): void;
+
+    /**
      * @param list<string> $trace
      */
     public function fail(

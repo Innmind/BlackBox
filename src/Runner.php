@@ -64,13 +64,17 @@ final class Runner
             }
 
             $this->printer->start($proof->name());
-            /** @psalm-suppress MixedArgumentTypeCoercion For the trace */
+            /**
+             * @psalm-suppress ArgumentTypeCoercion For the shrinking strategy
+             * @psalm-suppress MixedArgumentTypeCoercion For the trace
+             */
             $proof(
                 $this->tests,
                 $this->enableShrinking,
                 $this->random,
                 fn(string $name) => $this->printer->pass($name),
                 fn() => $this->printer->held(),
+                fn(string $name, string $strategy) => $this->printer->shrinking($name, $strategy),
                 fn(string $name, string $reason, TestResult $result, array $trace) => $this->printer->fail(
                     $name,
                     $reason,

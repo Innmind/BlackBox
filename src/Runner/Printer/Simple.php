@@ -19,6 +19,7 @@ final class Simple implements Printer
     private int $countTestCases = 0;
     private int $countAssertions = 0;
     private int $countFailures = 0;
+    private int $lineChars = 0;
     /** @var list<array{proof: string, reason: string, result: TestResult, trace: list<string>}> */
     private array $failures = [];
     private Timer $timer;
@@ -34,6 +35,7 @@ final class Simple implements Printer
         $this->countTestCases = 0;
         $this->countAssertions = 0;
         $this->countFailures = 0;
+        $this->lineChars = 0;
         $this->failures = [];
         $this->timer->start();
     }
@@ -46,6 +48,7 @@ final class Simple implements Printer
     public function pass(string $proof): void
     {
         ++$this->countTestCases;
+        ++$this->lineChars;
         echo '.';
 
         $this->breakLine();
@@ -54,6 +57,17 @@ final class Simple implements Printer
     public function held(): void
     {
         ++$this->countAssertions;
+    }
+
+    /**
+     * @param 'a'|'b' $strategy
+     */
+    public function shrinking(string $proof, string $strategy): void
+    {
+        ++$this->lineChars;
+        echo 'S';
+
+        $this->breakLine();
     }
 
     /**
@@ -67,6 +81,7 @@ final class Simple implements Printer
     ): void {
         ++$this->countTestCases;
         ++$this->countFailures;
+        ++$this->lineChars;
         $this->failures[] = [
             'proof' => $proof,
             'reason' => $reason,
@@ -125,8 +140,9 @@ final class Simple implements Printer
 
     private function breakLine(): void
     {
-        if ($this->countTestCases % self::WIDTH === 0) {
+        if ($this->lineChars % self::WIDTH === 0) {
             echo "\n";
+            $this->lineChars = 0;
         }
     }
 }
