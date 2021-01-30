@@ -76,6 +76,7 @@ final class Simple implements Printer
 
         if ($this->countFailures) {
             echo "\n\n";
+            echo \str_repeat('-', self::WIDTH)."\n\n";
         }
 
         foreach ($this->failures as $failure) {
@@ -96,7 +97,6 @@ final class Simple implements Printer
             echo "\n";
             echo "\n";
             echo \str_repeat('-', self::WIDTH)."\n";
-            echo "\n";
         }
 
         echo "\n";
