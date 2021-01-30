@@ -14,17 +14,12 @@ return function() {
             Set\Integers::any(),
             Set\Integers::any(),
         ),
-        when(function($a, $b) {
-            return add($a, $b);
-        }),
+        when(fn($a, $b) => add($a, $b)),
         then(
-            hold(function($held, $fail, $result, $a, $b) {
-                if (!$result->value() === add($b, $a)) {
-                    $fail('add is not commutative');
-                }
-
-                $held();
-            }),
+            same(
+                fn($a, $b) => add($b, $a),
+                'add is not commutative'
+            ),
         ),
     );
 
@@ -35,36 +30,24 @@ return function() {
             Set\Integers::any(),
             Set\Integers::any(),
         ),
-        when(function($a, $b, $c) {
-            return add(add($a, $b), $c);
-        }),
+        when(fn($a, $b, $c) => add(add($a, $b), $c)),
         then(
-            hold(function($held, $fail, $result, $a, $b, $c) {
-                if (!$result->value() === add($a, add($b, $c))) {
-                    $fail('add is not associative');
-                }
-
-                $held();
-            }),
+            same(
+                fn($a, $b, $c) => add($a, add($b, $c)),
+                'add is not associative',
+            ),
         ),
     );
 
     yield proof(
         'add is an identity function',
-        given(
-            Set\Integers::any(),
-        ),
-        when(function($a) {
-            return add($a, 0);
-        }),
+        given(Set\Integers::any()),
+        when(fn($a) => add($a, 0)),
         then(
-            hold(function($held, $fail, $result, $a) {
-                if (!$result->value() === $a) {
-                    $fail('add is not an identity function');
-                }
-
-                $held();
-            }),
+            same(
+                fn($a) => $a,
+                'add is not an identity function',
+            ),
         ),
     );
 };
