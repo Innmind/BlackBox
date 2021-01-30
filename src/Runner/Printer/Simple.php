@@ -14,6 +14,7 @@ use SebastianBergmann\Timer\{
 
 final class Simple implements Printer
 {
+    private const WIDTH = 50;
     private int $countProofs = 0;
     private int $countTestCases = 0;
     private int $countAssertions = 0;
@@ -89,6 +90,13 @@ final class Simple implements Printer
                 echo ";\n";
             });
             echo "\n";
+            $thrown = $failure['result']->thrown() ? ' (thrown)' : '';
+            echo "Generated$thrown: \n";
+            \var_export($failure['result']->value());
+            echo "\n";
+            echo "\n";
+            echo \str_repeat('-', self::WIDTH)."\n";
+            echo "\n";
         }
 
         echo "\n";
@@ -103,7 +111,7 @@ final class Simple implements Printer
 
     private function breakLine(): void
     {
-        if ($this->countTestCases % 50 === 0) {
+        if ($this->countTestCases % self::WIDTH === 0) {
             echo "\n";
         }
     }
