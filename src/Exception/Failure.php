@@ -3,18 +3,18 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Exception;
 
-use Innmind\BlackBox\Runner\Arguments;
+use Innmind\BlackBox\Runner\TestResult;
 
 final class Failure extends RuntimeException
 {
     private string $reason;
-    private Arguments $arguments;
+    private TestResult $result;
 
-    public function __construct(string $reason, Arguments $arguments)
+    public function __construct(string $reason, TestResult $result)
     {
         parent::__construct($reason);
         $this->reason = $reason;
-        $this->arguments = $arguments;
+        $this->result = $result;
     }
 
     public function reason(): string
@@ -22,8 +22,8 @@ final class Failure extends RuntimeException
         return $this->reason;
     }
 
-    public function arguments(): Arguments
+    public function result(): TestResult
     {
-        return $this->arguments;
+        return $this->result;
     }
 }

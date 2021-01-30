@@ -41,8 +41,8 @@ final class Given
     /**
      * @param positive-int $tests Number of test cases to generate per proof
      * @param callable(): void $pass To print when a test case is successful
-     * @param callable(string, Arguments): void $fail To print when a test case is failing
-     * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove
+     * @param callable(string, TestResult): void $fail To print when a test case is failing
+     * @param callable(callable(string, TestResult): void, Value<list<mixed>>): void $prove
      */
     public function __invoke(
         int $tests,
@@ -64,8 +64,8 @@ final class Given
     }
 
     /**
-     * @param callable(string, Arguments): void $fail
-     * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove
+     * @param callable(string, TestResult): void $fail
+     * @param callable(callable(string, TestResult): void, Value<list<mixed>>): void $prove
      * @param Value<list<mixed>> $values
      *
      * @throws Failure When the test case failed
@@ -78,17 +78,17 @@ final class Given
     ): void {
         try {
             $prove(
-                static function(string $reason, Arguments $arguments): void {
+                static function(string $reason, TestResult $result): void {
                     // we hijack the failure system here to prevent displaying
                     // the symbol that a test case has failed as first we are
                     // going to attempt to shrink the test case
-                    throw new Failure($reason, $arguments);
+                    throw new Failure($reason, $result);
                 },
                 $values,
             );
         } catch (Failure $e) {
             if (!$values->shrinkable() || !$enableShrinking) {
-                $fail($e->reason(), $e->arguments());
+                $fail($e->reason(), $e->result());
 
                 throw $e;
             }
@@ -98,8 +98,8 @@ final class Given
     }
 
     /**
-     * @param callable(string, Arguments): void $fail
-     * @param callable(callable(string, Arguments): void, Value<list<mixed>>): void $prove
+     * @param callable(string, TestResult): void $fail
+     * @param callable(callable(string, TestResult): void, Value<list<mixed>>): void $prove
      * @param Value<list<mixed>> $values
      *
      * @throws Failure
@@ -110,8 +110,8 @@ final class Given
         callable $prove,
         Value $values
     ): void {
-        $throwOnFail = static function(string $reason, Arguments $arguments): void {
-            throw new Failure($reason, $arguments);
+        $throwOnFail = static function(string $reason, TestResult $result): void {
+            throw new Failure($reason, $result);
         };
         $dichotomy = $values->shrink();
 
@@ -144,13 +144,13 @@ final class Given
     }
 
     /**
-     * @param callable(string, Arguments): void $fail
+     * @param callable(string, TestResult): void $fail
      *
      * @throws Failure
      */
     private function throw(Failure $e, callable $fail): void
     {
-        $fail($e->reason(), $e->arguments());
+        $fail($e->reason(), $e->result());
 
         throw $e;
     }

@@ -5,7 +5,7 @@ namespace Innmind\BlackBox\Runner\Printer;
 
 use Innmind\BlackBox\Runner\{
     Printer,
-    Arguments,
+    TestResult,
 };
 use SebastianBergmann\Timer\{
     ResourceUsageFormatter,
@@ -18,7 +18,7 @@ final class Simple implements Printer
     private int $countTestCases = 0;
     private int $countAssertions = 0;
     private int $countFailures = 0;
-    /** @var list<array{proof: string, reason: string, arguments:Arguments}> */
+    /** @var list<array{proof: string, reason: string, result:TestResult}> */
     private array $failures = [];
     private Timer $timer;
 
@@ -55,14 +55,14 @@ final class Simple implements Printer
         ++$this->countAssertions;
     }
 
-    public function fail(string $proof, string $reason, Arguments $arguments): void
+    public function fail(string $proof, string $reason, TestResult $result): void
     {
         ++$this->countTestCases;
         ++$this->countFailures;
         $this->failures[] = [
             'proof' => $proof,
             'reason' => $reason,
-            'arguments' => $arguments,
+            'result' => $result,
         ];
         echo 'F';
 
@@ -83,7 +83,7 @@ final class Simple implements Printer
             echo "\n";
             echo "Caused by:\n";
             /** @psalm-suppress MissingClosureParamType */
-            $failure['arguments'](static function(string $argument, $value): void {
+            $failure['result']->arguments()(static function(string $argument, $value): void {
                 echo "\$$argument = ";
                 \var_export($value);
                 echo ";\n";

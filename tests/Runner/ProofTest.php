@@ -206,7 +206,7 @@ class ProofTest extends TestCase
                 );
 
                 $failed = false;
-                $fail = function($a, $b, $arguments) use ($name, $reason, &$failed) {
+                $fail = function($a, $b, $result) use ($name, $reason, &$failed) {
                     $this->assertSame($name, $a);
                     $this->assertSame($reason, $b);
 
@@ -239,7 +239,7 @@ class ProofTest extends TestCase
         );
 
         $thrown = false;
-        $fail = function($name, $reason, $arguments) use (&$thrown) {
+        $fail = function($name, $reason, $result) use (&$thrown) {
             $this->assertSame('', $reason);
             $thrown = true;
         };
@@ -272,8 +272,8 @@ class ProofTest extends TestCase
         );
 
         $failed = false;
-        $fail = function($name, $reason, $arguments) use (&$failed) {
-            $arguments(function($name, $value) {
+        $fail = function($name, $reason, $result) use (&$failed) {
+            $result->arguments()(function($name, $value) {
                 if ($name === 'string') {
                     $this->assertSame('', $value);
                 } else {
@@ -309,7 +309,7 @@ class ProofTest extends TestCase
         );
 
         $thrown = false;
-        $fail = function($name, $reason, $arguments) use (&$thrown) {
+        $fail = function($name, $reason, $result) use (&$thrown) {
             // sometimes this assertion will fail in the case the original value
             // generated is an empty string, but there is no way to detect that
             // from the outside of the system

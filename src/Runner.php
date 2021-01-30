@@ -6,7 +6,7 @@ namespace Innmind\BlackBox;
 use Innmind\BlackBox\{
     Runner\Proof,
     Runner\Printer,
-    Runner\Arguments,
+    Runner\TestResult,
     Exception\LogicException,
 };
 
@@ -70,10 +70,10 @@ final class Runner
                 $this->random,
                 fn(string $name) => $this->printer->pass($name),
                 fn() => $this->printer->held(),
-                fn(string $name, string $reason, Arguments $arguments) => $this->printer->fail(
+                fn(string $name, string $reason, TestResult $result) => $this->printer->fail(
                     $name,
                     $reason,
-                    $arguments,
+                    $result,
                 ),
             );
         }
