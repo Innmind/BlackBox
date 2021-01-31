@@ -58,6 +58,7 @@ final class Strings implements Set
     }
 
     /**
+     * @deprecated To be removed in the next major version
      * @see https://github.com/icomefromthenet/ReverseRegex For the supported expressions
      */
     public static function matching(string $expression): Regex
