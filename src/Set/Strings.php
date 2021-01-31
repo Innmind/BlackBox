@@ -58,10 +58,13 @@ final class Strings implements Set
     }
 
     /**
+     * @deprecated To be removed in the next major version
      * @see https://github.com/icomefromthenet/ReverseRegex For the supported expressions
+     * @psalm-suppress DeprecatedClass
      */
     public static function matching(string $expression): Regex
     {
+        /** @psalm-suppress DeprecatedClass */
         return Regex::for($expression);
     }
 
