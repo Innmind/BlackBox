@@ -18,6 +18,7 @@ use ReverseRegex\{
 };
 
 /**
+ * @deprecated To be removed in the next major version
  * @implements Set<string>
  * @psalm-suppress all As by default the package is not installed
  */

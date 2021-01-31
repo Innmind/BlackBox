@@ -19,7 +19,7 @@ class CharsTest extends TestCase
 
     public function testAny()
     {
-        $this->assertInstanceOf(Chars::class, Chars::any());
+        $this->assertInstanceOf(Set::class, Chars::any());
     }
 
     public function testByDefault100ValuesAreGenerated()
@@ -36,7 +36,7 @@ class CharsTest extends TestCase
             return \ord($value) % 2 === 0;
         });
 
-        $this->assertInstanceOf(Chars::class, $even);
+        $this->assertInstanceOf(Set::class, $even);
         $this->assertNotSame($values, $even);
         $hasOddChar = \array_reduce(
             $this->unwrap($values->values(new MtRand)),
@@ -62,7 +62,7 @@ class CharsTest extends TestCase
         $a = Chars::any();
         $b = $a->take(50);
 
-        $this->assertInstanceOf(Chars::class, $b);
+        $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
         $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
@@ -81,12 +81,18 @@ class CharsTest extends TestCase
         }
     }
 
-    public function testCharsAreNotShrinkable()
+    public function testCharsAreShrinkable()
     {
         $chars = Chars::any();
 
         foreach ($chars->values(new MtRand) as $value) {
-            $this->assertFalse($value->shrinkable());
+            if ($value->unwrap() === \chr(0)) {
+                // since chars is a decoration of integers chr(0) cannot be
+                // shrunk as it is the lowest value of the integer set
+                continue;
+            }
+
+            $this->assertTrue($value->shrinkable());
         }
     }
 }
