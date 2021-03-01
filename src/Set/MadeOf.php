@@ -17,7 +17,7 @@ final class MadeOf implements Set
     private array $sets;
     private Integers $range;
     private int $size = 100;
-    /** @var \Closure(list<I>): bool */
+    /** @var \Closure(string): bool */
     private \Closure $predicate;
 
     /**
@@ -67,7 +67,7 @@ final class MadeOf implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        $self->predicate = static function(array $value) use ($previous, $predicate): bool {
+        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
             /** @psalm-suppress MixedArgumentTypeCoercion */
             if (!$previous($value)) {
                 return false;
@@ -96,6 +96,9 @@ final class MadeOf implements Set
             Sequence::of($chars, $this->range),
         );
 
-        yield from $set->values($rand);
+        yield from $set
+            ->take($this->size)
+            ->filter($this->predicate)
+            ->values($rand);
     }
 }

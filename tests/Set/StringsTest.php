@@ -283,4 +283,22 @@ class StringsTest extends TestCase
             $this->assertLessThan(43, \strlen($string));
         }
     }
+
+    public function testFilterMadeOf()
+    {
+        $set = Strings::madeOf(Chars::any())->filter(static fn($string) => $string !== '');
+
+        foreach ($set->values(new MtRand) as $value) {
+            $this->assertNotSame('', $value->unwrap());
+        }
+    }
+
+    public function testTakeMadeOf()
+    {
+        $set = Strings::madeOf(Chars::any());
+        $set2 = $set->take(50);
+
+        $this->assertCount(100, \iterator_to_array($set->values(new MtRand)));
+        $this->assertCount(50, \iterator_to_array($set2->values(new MtRand)));
+    }
 }
