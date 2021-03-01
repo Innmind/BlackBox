@@ -6,6 +6,7 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Strings,
     Set\Regex,
+    Set\Chars,
     Set,
     Set\Value,
     Random\MtRand,
@@ -212,5 +213,74 @@ class StringsTest extends TestCase
                 ->take(0)
                 ->values(new MtRand)
         );
+    }
+
+    public function testMadeOf()
+    {
+        $set = Strings::madeOf(Chars::lowercaseLetter());
+        $allowed = \range('a', 'z');
+
+        foreach ($set->values(new MtRand) as $value) {
+            if (\strlen($value->unwrap()) === 0) {
+                continue;
+            }
+
+            $chars = \str_split($value->unwrap());
+
+            foreach ($chars as $char) {
+                $this->assertContains($char, $allowed);
+            }
+        }
+
+        $set = Strings::madeOf(Chars::lowercaseLetter(), Chars::uppercaseLetter());
+        $allowed = [...\range('a', 'z'), ...\range('A', 'Z')];
+
+        foreach ($set->values(new MtRand) as $value) {
+            if (\strlen($value->unwrap()) === 0) {
+                continue;
+            }
+
+            $chars = \str_split($value->unwrap());
+
+            foreach ($chars as $char) {
+                $this->assertContains($char, $allowed);
+            }
+        }
+    }
+
+    public function testMadeOfBetween()
+    {
+        $set = Strings::madeOf(Chars::any())->between(2, 42);
+
+        foreach ($set->values(new MtRand) as $value) {
+            $string = $value->unwrap();
+
+            $this->assertGreaterThan(1, \strlen($string));
+            $this->assertLessThan(43, \strlen($string));
+        }
+    }
+
+    public function testMadeOfAtLeast()
+    {
+        $set = Strings::madeOf(Chars::any())->atLeast(2);
+
+        foreach ($set->values(new MtRand) as $value) {
+            $string = $value->unwrap();
+
+            $this->assertGreaterThan(1, \strlen($string));
+            $this->assertLessThan(131, \strlen($string));
+        }
+    }
+
+    public function testMadeOfAtMost()
+    {
+        $set = Strings::madeOf(Chars::any())->atMost(42);
+
+        foreach ($set->values(new MtRand) as $value) {
+            $string = $value->unwrap();
+
+            $this->assertGreaterThanOrEqual(0, \strlen($string));
+            $this->assertLessThan(43, \strlen($string));
+        }
     }
 }

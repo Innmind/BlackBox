@@ -68,6 +68,15 @@ final class Strings implements Set
         return Regex::for($expression);
     }
 
+    /**
+     * @param Set<string> $first
+     * @param Set<string> $rest
+     */
+    public static function madeOf(Set $first, Set ...$rest): MadeOf
+    {
+        return new MadeOf($first, ...$rest);
+    }
+
     public function take(int $size): Set
     {
         return $this->set->take($size);
