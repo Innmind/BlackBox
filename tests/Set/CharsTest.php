@@ -95,4 +95,40 @@ class CharsTest extends TestCase
             $this->assertTrue($value->shrinkable());
         }
     }
+
+    public function testLowercaseLetter()
+    {
+        $allowed = \range('a', 'z');
+
+        foreach (Chars::lowercaseLetter()->values(new MTrand) as $value) {
+            $this->assertContains($value->unwrap(), $allowed);
+        }
+    }
+
+    public function testUppercaseLetter()
+    {
+        $allowed = \range('A', 'Z');
+
+        foreach (Chars::uppercaseLetter()->values(new MTrand) as $value) {
+            $this->assertContains($value->unwrap(), $allowed);
+        }
+    }
+
+    public function testNumber()
+    {
+        $allowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        foreach (Chars::number()->values(new MTrand) as $value) {
+            $this->assertContains($value->unwrap(), $allowed);
+        }
+    }
+
+    public function testAscii()
+    {
+        $allowed = \range(' ', '~');
+
+        foreach (Chars::ascii()->values(new MTrand) as $value) {
+            $this->assertContains($value->unwrap(), $allowed);
+        }
+    }
 }
