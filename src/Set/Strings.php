@@ -23,7 +23,10 @@ final class Strings implements Set
         $boundA ??= 128;
         $boundB ??= 0;
 
-        /** @psalm-suppress MixedArgumentTypeCoercion */
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress InvalidArgument
+         */
         $this->set = Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
             Sequence::of(

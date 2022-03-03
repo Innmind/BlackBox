@@ -79,6 +79,7 @@ final class RealNumbers implements Set
         while ($iterations < $this->size) {
             // simulate the function lcg_value()
             $lcg = ($rand(0, 100) / 100);
+            /** @var float */
             $value = $rand($this->lowerBound, $this->upperBound) * $lcg;
 
             if (!($this->predicate)($value)) {

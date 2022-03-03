@@ -25,7 +25,10 @@ final class Unicode
      */
     public static function lengthBetween(int $min, int $max): Set
     {
-        /** @psalm-suppress MixedArgumentTypeCoercion */
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress InvalidArgument
+         */
         return Set\Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
             Set\Sequence::of(

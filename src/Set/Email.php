@@ -48,6 +48,10 @@ final class Email
      */
     private static function string(int $maxLength, string ...$extra): Set
     {
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
+         * @psalm-suppress InvalidArgument Same problem as above
+         */
         return new Set\Either(
             // either only with simple characters
             Set\Decorate::immutable(
@@ -59,7 +63,7 @@ final class Email
             ),
             // or with some extra ones in the middle
             Set\Composite::immutable(
-                static fn(...$parts): string => \implode('', $parts),
+                static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
                 Set\Decorate::immutable(
                     static fn(array $chars): string => \implode('', $chars),
@@ -80,6 +84,10 @@ final class Email
      */
     private static function tld(): Set
     {
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
+         * @psalm-suppress InvalidArgument Same problem as above
+         */
         return Set\Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
             Set\Sequence::of(

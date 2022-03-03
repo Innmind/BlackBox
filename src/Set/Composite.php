@@ -84,6 +84,9 @@ final class Composite implements Set
         return new self(false, $aggregate, $first, ...$sets);
     }
 
+    /**
+     * @return Set<C>
+     */
     public function take(int $size): Set
     {
         $self = clone $this;
@@ -92,6 +95,11 @@ final class Composite implements Set
         return $self;
     }
 
+    /**
+     * @param callable(C): bool $predicate
+     *
+     * @return Set<C>
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -118,7 +126,6 @@ final class Composite implements Set
 
         while ($matrix->valid() && $this->continue($iterations)) {
             $combination = $matrix->current();
-            /** @var mixed */
             $value = ($this->aggregate)(...$combination->unwrap());
             $matrix->next();
 
