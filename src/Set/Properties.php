@@ -12,6 +12,8 @@ use Innmind\BlackBox\{
 final class Properties
 {
     /**
+     * @no-named-arguments
+     *
      * @return Set<Ensure>
      */
     public static function of(Concrete $first, Concrete ...$properties): Set
@@ -22,6 +24,8 @@ final class Properties
     }
 
     /**
+     * @no-named-arguments
+     *
      * @param Set<Concrete> $first
      * @param Set<Concrete> $properties
      *
@@ -54,9 +58,12 @@ final class Properties
         /** @var Set<list<Concrete>> */
         $sequences = Sequence::of($set, $range);
 
-        /** @psalm-suppress MixedArgument */
+        /**
+         * @psalm-suppress MixedArgument
+         * @psalm-suppress InvalidArgument
+         */
         return Decorate::immutable(
-            static fn(array $properties): Ensure => new Ensure(...$properties),
+            static fn(array $properties): Ensure => new Ensure(...\array_values($properties)),
             $sequences,
         );
     }

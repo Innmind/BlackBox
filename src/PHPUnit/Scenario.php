@@ -22,6 +22,8 @@ final class Scenario
     private TestRunner $run;
 
     /**
+     * @no-named-arguments
+     *
      * @param callable(\Throwable, Set\Value, callable): void $recordFailure
      * @param callable(\Throwable): bool $expectsException
      */
@@ -111,11 +113,7 @@ final class Scenario
         $set = ($this->wrap)($this->set);
         $return = null;
 
-        /**
-         * @var Set\Value<list<mixed>> $values
-         */
         foreach ($set->values($this->rand) as $values) {
-            /** @var R */
             $return = ($this->run)($test, $values);
         }
 

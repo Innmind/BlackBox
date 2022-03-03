@@ -11,6 +11,8 @@ use Innmind\BlackBox\{
 final class Property
 {
     /**
+     * @no-named-arguments
+     *
      * @param class-string<Concrete> $property
      *
      * @return Set<Concrete>

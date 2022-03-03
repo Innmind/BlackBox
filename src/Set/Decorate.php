@@ -27,7 +27,6 @@ final class Decorate implements Set
      */
     private function __construct(bool $immutable, callable $decorate, Set $set)
     {
-        /** @var \Closure(I): D */
         $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
         $this->immutable = $immutable;
@@ -44,6 +43,7 @@ final class Decorate implements Set
      */
     public static function immutable(callable $decorate, Set $set): self
     {
+        /** @psalm-suppress InvalidArgument Don't know why it complains */
         return new self(true, $decorate, $set);
     }
 
@@ -58,6 +58,7 @@ final class Decorate implements Set
      */
     public static function mutable(callable $decorate, Set $set): self
     {
+        /** @psalm-suppress InvalidArgument Don't know why it complains */
         return new self(false, $decorate, $set);
     }
 
@@ -85,7 +86,6 @@ final class Decorate implements Set
     {
         foreach ($this->set->values($rand) as $value) {
             if ($value->isImmutable() && $this->immutable) {
-                /** @var D */
                 $decorated = ($this->decorate)($value->unwrap());
 
                 yield Value::immutable(
@@ -120,21 +120,19 @@ final class Decorate implements Set
         $shrinked = $value->shrink();
 
         return new Dichotomy(
-            $this->shrinkWithStrategy($mutable, $value, $shrinked->a()),
-            $this->shrinkWithStrategy($mutable, $value, $shrinked->b()),
+            $this->shrinkWithStrategy($mutable, $shrinked->a()),
+            $this->shrinkWithStrategy($mutable, $shrinked->b()),
         );
     }
 
     /**
-     * @param Value<I> $value
      * @param Value<I> $strategy
      *
      * @return callable(): Value<D>
      */
-    private function shrinkWithStrategy(bool $mutable, Value $value, Value $strategy): callable
+    private function shrinkWithStrategy(bool $mutable, Value $strategy): callable
     {
         if ($mutable) {
-            /** @psalm-suppress MissingClosureReturnType */
             return fn(): Value => Value::mutable(
                 fn() => ($this->decorate)($strategy->unwrap()),
                 $this->shrink(true, $strategy),

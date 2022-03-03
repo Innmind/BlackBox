@@ -23,6 +23,8 @@ final class Elements implements Set
     private \Closure $predicate;
 
     /**
+     * @no-named-arguments
+     *
      * @param mixed $first
      * @param mixed $elements
      */
@@ -34,6 +36,8 @@ final class Elements implements Set
     }
 
     /**
+     * @no-named-arguments
+     *
      * @param mixed $first
      * @param mixed $elements
      */

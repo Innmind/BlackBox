@@ -24,6 +24,9 @@ final class Composite implements Set
     private \Closure $predicate;
     private bool $immutable;
 
+    /**
+     * @no-named-arguments
+     */
     private function __construct(
         bool $immutable,
         callable $aggregate,
@@ -51,6 +54,7 @@ final class Composite implements Set
 
     /**
      * @template T
+     * @no-named-arguments
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *
@@ -66,6 +70,7 @@ final class Composite implements Set
 
     /**
      * @template T
+     * @no-named-arguments
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *
@@ -79,6 +84,9 @@ final class Composite implements Set
         return new self(false, $aggregate, $first, ...$sets);
     }
 
+    /**
+     * @return Set<C>
+     */
     public function take(int $size): Set
     {
         $self = clone $this;
@@ -87,6 +95,11 @@ final class Composite implements Set
         return $self;
     }
 
+    /**
+     * @param callable(C): bool $predicate
+     *
+     * @return Set<C>
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -113,7 +126,6 @@ final class Composite implements Set
 
         while ($matrix->valid() && $this->continue($iterations)) {
             $combination = $matrix->current();
-            /** @var mixed */
             $value = ($this->aggregate)(...$combination->unwrap());
             $matrix->next();
 

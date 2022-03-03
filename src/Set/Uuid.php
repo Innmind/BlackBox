@@ -13,6 +13,10 @@ final class Uuid
     public static function any(): Set
     {
         $chars = Set\Elements::of(...\range('a', 'f'), ...\range(0, 9));
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress InvalidArgument
+         */
         $part = static fn(int $length): Set => Set\Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
             Sequence::of(

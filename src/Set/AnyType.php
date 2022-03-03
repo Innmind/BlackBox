@@ -15,6 +15,7 @@ final class AnyType
      */
     public static function any(): Set
     {
+        /** @psalm-suppress InvalidArgument Due to array not being a list */
         return new Set\Either(
             self::primitives(),
             Sequence::of(

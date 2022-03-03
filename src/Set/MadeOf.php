@@ -21,6 +21,8 @@ final class MadeOf implements Set
     private \Closure $predicate;
 
     /**
+     * @no-named-arguments
+     *
      * @param Set<string> $first
      * @param Set<string> $rest
      */
@@ -91,6 +93,11 @@ final class MadeOf implements Set
             $chars = new Set\Either(...$this->sets);
         }
 
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
+         * @psalm-suppress InvalidArgument Same problem as above
+         * @var Set<string>
+         */
         $set = Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
             Sequence::of($chars, $this->range),
