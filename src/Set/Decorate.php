@@ -27,7 +27,6 @@ final class Decorate implements Set
      */
     private function __construct(bool $immutable, callable $decorate, Set $set)
     {
-        /** @var \Closure(I): D */
         $this->decorate = \Closure::fromCallable($decorate);
         $this->set = $set;
         $this->immutable = $immutable;
@@ -85,7 +84,6 @@ final class Decorate implements Set
     {
         foreach ($this->set->values($rand) as $value) {
             if ($value->isImmutable() && $this->immutable) {
-                /** @var D */
                 $decorated = ($this->decorate)($value->unwrap());
 
                 yield Value::immutable(

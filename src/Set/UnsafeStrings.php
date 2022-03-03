@@ -100,7 +100,6 @@ final class UnsafeStrings implements Set
      */
     private function removeTrailingCharacter(string $value): callable
     {
-        /** @var string */
         $shrinked = \mb_substr($value, 0, -1, 'ASCII');
 
         if (!($this->predicate)($shrinked)) {
@@ -115,7 +114,6 @@ final class UnsafeStrings implements Set
      */
     private function removeLeadingCharacter(string $value): callable
     {
-        /** @var string */
         $shrinked = \mb_substr($value, 1, null, 'ASCII');
 
         if (!($this->predicate)($shrinked)) {

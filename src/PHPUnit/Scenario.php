@@ -111,11 +111,7 @@ final class Scenario
         $set = ($this->wrap)($this->set);
         $return = null;
 
-        /**
-         * @var Set\Value<list<mixed>> $values
-         */
         foreach ($set->values($this->rand) as $values) {
-            /** @var R */
             $return = ($this->run)($test, $values);
         }
 

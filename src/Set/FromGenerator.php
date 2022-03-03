@@ -78,7 +78,6 @@ final class FromGenerator implements Set
 
     public function values(Random $rand): \Generator
     {
-        /** @var \Generator<T> */
         $generator = ($this->generatorFactory)($rand);
         $iterations = 0;
 
