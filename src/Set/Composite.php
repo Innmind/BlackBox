@@ -24,6 +24,9 @@ final class Composite implements Set
     private \Closure $predicate;
     private bool $immutable;
 
+    /**
+     * @no-named-arguments
+     */
     private function __construct(
         bool $immutable,
         callable $aggregate,
@@ -51,6 +54,7 @@ final class Composite implements Set
 
     /**
      * @template T
+     * @no-named-arguments
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *
@@ -66,6 +70,7 @@ final class Composite implements Set
 
     /**
      * @template T
+     * @no-named-arguments
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *

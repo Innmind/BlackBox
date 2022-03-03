@@ -8,6 +8,9 @@ final class Properties
     /** @var list<Property> */
     private array $properties;
 
+    /**
+     * @no-named-arguments
+     */
     public function __construct(Property $first, Property ...$properties)
     {
         $this->properties = [$first, ...$properties];

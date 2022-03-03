@@ -22,6 +22,8 @@ final class Scenario
     private TestRunner $run;
 
     /**
+     * @no-named-arguments
+     *
      * @param callable(\Throwable, Set\Value, callable): void $recordFailure
      * @param callable(\Throwable): bool $expectsException
      */

@@ -69,6 +69,8 @@ final class Strings implements Set
     }
 
     /**
+     * @no-named-arguments
+     *
      * @param Set<string> $first
      * @param Set<string> $rest
      */

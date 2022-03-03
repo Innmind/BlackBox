@@ -18,6 +18,9 @@ final class Either implements Set
     private array $sets;
     private int $size;
 
+    /**
+     * @no-named-arguments
+     */
     public function __construct(Set $first, Set $second, Set ...$rest)
     {
         $this->sets = [$first, $second, ...$rest];

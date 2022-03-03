@@ -21,6 +21,8 @@ final class MadeOf implements Set
     private \Closure $predicate;
 
     /**
+     * @no-named-arguments
+     *
      * @param Set<string> $first
      * @param Set<string> $rest
      */
