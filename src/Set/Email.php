@@ -63,7 +63,7 @@ final class Email
             ),
             // or with some extra ones in the middle
             Set\Composite::immutable(
-                static fn(string|int ...$parts): string => \implode('', $parts),
+                static fn(...$parts): string => \implode('', $parts),
                 self::letter(),
                 Set\Decorate::immutable(
                     static fn(array $chars): string => \implode('', $chars),
