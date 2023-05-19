@@ -26,13 +26,13 @@ final class Property
         }
 
         if ($count === 1) {
-            /** @psalm-suppress MissingClosureParamType */
             return Decorate::immutable(
                 static fn($input): Concrete => new $property($input),
                 \reset($inputs),
             );
         }
 
+        /** @psalm-suppress InvalidArgument */
         return Composite::immutable(
             static fn(...$inputs): Concrete => new $property(...$inputs),
             ...$inputs,

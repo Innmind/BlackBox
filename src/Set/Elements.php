@@ -20,6 +20,7 @@ final class Elements implements Set
 {
     private int $size;
     private array $elements;
+    /** @var \Closure(mixed): bool */
     private \Closure $predicate;
 
     /**

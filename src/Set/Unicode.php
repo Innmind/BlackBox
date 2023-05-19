@@ -51,7 +51,7 @@ final class Unicode
         /**
          * @psalm-suppress MixedReturnStatement
          * @psalm-suppress MixedInferredReturnType
-         * @var list<Set<string>>
+         * @var non-empty-list<Set<string>>
          */
         $sets = \array_map(
             static fn(string $method): Set => self::{$method}(),
@@ -2266,9 +2266,10 @@ final class Unicode
      */
     private static function between(int $min, int $max): Set
     {
+        /** @var Set<string> */
         return Decorate::immutable(
-            static fn(int $index): string => \IntlChar::chr($index),
+            static fn(int $index): ?string => \IntlChar::chr($index),
             Integers::between($min, $max),
-        );
+        )->filter(static fn($char) => \is_string($char));
     }
 }

@@ -32,7 +32,7 @@
         }
     },
     "require-dev": {
-        "vimeo/psalm": "~4.1",
+        "vimeo/psalm": "~5.6",
         "ramsey/uuid": "^4.1",
         "innmind/coding-standard": "^1.1"
     }

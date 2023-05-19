@@ -14,6 +14,7 @@ use Innmind\BlackBox\{
  * class, so it can't be re-generated on the fly
  *
  * @template T
+ * @implements Set<T>
  */
 final class FromGenerator implements Set
 {

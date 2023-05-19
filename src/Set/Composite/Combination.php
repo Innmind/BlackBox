@@ -7,7 +7,7 @@ use Innmind\BlackBox\Set\Value;
 
 final class Combination
 {
-    /** @var list<Value> */
+    /** @var non-empty-list<Value> */
     private array $values;
 
     public function __construct(Value $right)

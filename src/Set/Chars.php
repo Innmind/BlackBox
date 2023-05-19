@@ -9,11 +9,11 @@ use Innmind\BlackBox\{
 };
 
 /**
- * @implements Set<string>
+ * @implements Set<non-empty-string>
  */
 final class Chars implements Set
 {
-    /** @var Set<string> */
+    /** @var Set<non-empty-string> */
     private Set $set;
 
     public function __construct()
@@ -22,7 +22,7 @@ final class Chars implements Set
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function any(): Set
     {
@@ -33,7 +33,7 @@ final class Chars implements Set
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function lowercaseLetter(): Set
     {
@@ -44,7 +44,7 @@ final class Chars implements Set
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function uppercaseLetter(): Set
     {
@@ -55,7 +55,7 @@ final class Chars implements Set
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function number(): Set
     {
@@ -66,7 +66,7 @@ final class Chars implements Set
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function ascii(): Set
     {

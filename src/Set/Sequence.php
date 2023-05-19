@@ -60,12 +60,12 @@ final class Sequence implements Set
         $previous = $this->predicate;
         $self = clone $this;
         $self->predicate = static function(array $value) use ($previous, $predicate): bool {
-            /** @psalm-suppress MixedArgumentTypeCoercion */
+            /** @psalm-suppress ArgumentTypeCoercion */
             if (!$previous($value)) {
                 return false;
             }
 
-            /** @psalm-suppress MixedArgumentTypeCoercion */
+            /** @psalm-suppress ArgumentTypeCoercion */
             return $predicate($value);
         };
 

@@ -63,9 +63,10 @@ final class Composite implements Set
     public static function immutable(
         callable $aggregate,
         Set $first,
+        Set $second,
         Set ...$sets
     ): self {
-        return new self(true, $aggregate, $first, ...$sets);
+        return new self(true, $aggregate, $first, $second, ...$sets);
     }
 
     /**
@@ -79,9 +80,10 @@ final class Composite implements Set
     public static function mutable(
         callable $aggregate,
         Set $first,
+        Set $second,
         Set ...$sets
     ): self {
-        return new self(false, $aggregate, $first, ...$sets);
+        return new self(false, $aggregate, $first, $second, ...$sets);
     }
 
     /**

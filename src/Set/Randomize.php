@@ -13,12 +13,19 @@ use Innmind\BlackBox\{
  * Use this set to prevent iterating over all possible combinations of a composite set
  *
  * It will allow to test more diverse combinations for a given set
+ *
+ * @template I
+ * @implements Set<I>
  */
 final class Randomize implements Set
 {
+    /** @var Set<I> */
     private Set $set;
     private int $size;
 
+    /**
+     * @param Set<I> $set
+     */
     public function __construct(Set $set)
     {
         $this->set = $set;

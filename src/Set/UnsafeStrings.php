@@ -16,6 +16,7 @@ use Innmind\Json\Json;
 final class UnsafeStrings implements Set
 {
     private int $size;
+    /** @var \Closure(string): bool */
     private \Closure $predicate;
 
     public function __construct()
