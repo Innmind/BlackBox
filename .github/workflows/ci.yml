@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        php-version: ['7.4', '8.0']
+        php-version: ['8.2']
         dependency-versions: ['lowest', 'highest']
     name: 'PHPUnit Latest'
     steps:
@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
-        php-version: ['7.4', '8.0']
+        php-version: ['8.2']
         detailed-properties: [1, 0]
     name: 'PHPUnit Printer Class Latest'
     steps:
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['7.4']
+        php-version: ['8.2']
     name: 'Psalm'
     steps:
       - name: Checkout
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['7.4']
+        php-version: ['8.2']
     name: 'CS'
     steps:
       - name: Checkout

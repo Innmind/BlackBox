@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/BlackBox/issues"
     },
     "require": {
-        "php": "~7.4|~8.0",
+        "php": "~8.2",
         "innmind/json": "^1.1",
         "symfony/var-dumper": "~6.0",
         "phpunit/phpunit": "~9.0"
