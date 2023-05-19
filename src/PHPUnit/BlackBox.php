@@ -78,12 +78,4 @@ trait BlackBox
 
         return $scenario;
     }
-
-    /**
-     * Use the seeder to generate random values to initiate your properties
-     */
-    protected function seeder(): Seeder
-    {
-        return new Seeder(new RandomInt);
-    }
 }
