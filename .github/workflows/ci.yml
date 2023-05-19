@@ -20,17 +20,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: xdebug
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Install Dependencies
-        run: composer install
+      - name: Composer
+        uses: "ramsey/composer-install@v2"
       - name: Install icomefromthenet/reverse-regex
         if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
         run: composer require icomefromthenet/reverse-regex
@@ -57,17 +48,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: xdebug
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Install Dependencies
-        run: composer install
+      - name: Composer
+        uses: "ramsey/composer-install@v2"
       - name: Install icomefromthenet/reverse-regex
         if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
         run: composer require icomefromthenet/reverse-regex
@@ -95,17 +77,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Install Dependencies
-        run: composer install
+      - name: Composer
+        uses: "ramsey/composer-install@v2"
       - name: PHPUnit Printer Class
         run: |
           set +e
@@ -131,17 +104,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Install Dependencies
-        run: composer install
+      - name: Composer
+        uses: "ramsey/composer-install@v2"
       - name: Install PHPUnit ${{ matrix.phpunit-version }}
         run: composer remove phpunit/phpunit && composer require sebastian/diff '~3.0' && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit Printer Class
@@ -165,17 +129,8 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Install Dependencies
-        run: composer install
+      - name: Composer
+        uses: "ramsey/composer-install@v2"
       - name: Install icomefromthenet/reverse-regex
         run: composer require icomefromthenet/reverse-regex
       - name: Psalm
@@ -194,16 +149,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
-      - name: Install Dependencies
-        run: composer install --no-progress
+      - name: Composer
+        uses: "ramsey/composer-install@v2"
       - name: CS
         run: vendor/bin/php-cs-fixer fix --diff --dry-run --diff-format udiff
