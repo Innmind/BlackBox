@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\BlackBox\Set\Nullable`
+
 ### Changed
 
 - All `Set`s constructor are now private
