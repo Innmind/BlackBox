@@ -72,15 +72,15 @@ final class RealNumbers implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
             // simulate the function lcg_value()
-            $lcg = ($rand(0, 100) / 100);
+            $lcg = ($random->between(0, 100) / 100);
             /** @var float */
-            $value = $rand($this->lowerBound, $this->upperBound) * $lcg;
+            $value = $random->between($this->lowerBound, $this->upperBound) * $lcg;
 
             if (!($this->predicate)($value)) {
                 continue;

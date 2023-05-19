@@ -77,12 +77,12 @@ final class Integers implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $value = $rand($this->lowerBound, $this->upperBound);
+            $value = $random->between($this->lowerBound, $this->upperBound);
 
             if (!($this->predicate)($value)) {
                 continue;

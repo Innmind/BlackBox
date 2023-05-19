@@ -6,7 +6,7 @@ namespace Tests\Innmind\BlackBox\PHPUnit;
 use Innmind\BlackBox\{
     PHPUnit\Scenario,
     Set\Integers,
-    Random\MtRand,
+    Random,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class ScenarioTest extends TestCase
     public function testCallingWithOnlyOneSet()
     {
         $scenario = new Scenario(
-            new MtRand,
+            Random::mersenneTwister,
             static fn() => null,
             static fn() => false,
             Integers::any(),
@@ -32,7 +32,7 @@ class ScenarioTest extends TestCase
     public function testCallingWithMultipleSets()
     {
         $scenario = new Scenario(
-            new MtRand,
+            Random::mersenneTwister,
             static fn() => null,
             static fn() => false,
             Integers::any(),
@@ -50,7 +50,7 @@ class ScenarioTest extends TestCase
     public function testAllowToOnlyTakeACertainNumberOfScenarios()
     {
         $scenario1 = new Scenario(
-            new MtRand,
+            Random::mersenneTwister,
             static fn() => null,
             static fn() => false,
             Integers::any(),
@@ -77,7 +77,7 @@ class ScenarioTest extends TestCase
     public function testAllowAFilterCanBeAppliedOnTheScenario()
     {
         $scenario1 = new Scenario(
-            new MtRand,
+            Random::mersenneTwister,
             static fn() => null,
             static fn() => false,
             Integers::between(-1_000_000_000, 1_000_000_000), // the range is to avoid float to in conversion
@@ -110,7 +110,7 @@ class ScenarioTest extends TestCase
     public function testDisableShrinking()
     {
         $scenario = new Scenario(
-            new MtRand,
+            Random::mersenneTwister,
             static fn() => null,
             static fn() => false,
             Integers::any(),
@@ -146,7 +146,7 @@ class ScenarioTest extends TestCase
     public function testReturnTheLastValueReturnedByTheTestCallback()
     {
         $scenario = new Scenario(
-            new MtRand,
+            Random::mersenneTwister,
             static fn() => null,
             static fn() => false,
             Integers::any(),

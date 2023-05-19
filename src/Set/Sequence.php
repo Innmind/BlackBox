@@ -72,18 +72,18 @@ final class Sequence implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
-        $immutable = $this->set->values($rand)->current()->isImmutable();
+        $immutable = $this->set->values($random)->current()->isImmutable();
         $yielded = 0;
 
         do {
-            foreach ($this->sizes->values($rand) as $size) {
+            foreach ($this->sizes->values($random) as $size) {
                 if ($yielded === $this->size) {
                     return;
                 }
 
-                $values = $this->generate($size->unwrap(), $rand);
+                $values = $this->generate($size->unwrap(), $random);
 
                 if (!($this->predicate)($this->wrap($values))) {
                     continue;

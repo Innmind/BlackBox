@@ -42,8 +42,8 @@ final class NaturalNumbers implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
-        yield from $this->set->values($rand);
+        yield from $this->set->values($random);
     }
 }

@@ -9,7 +9,7 @@ use Innmind\BlackBox\{
     Set\Chars,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 use ReverseRegex\Lexer;
 
@@ -36,7 +36,7 @@ class StringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Strings::any()->values(new MtRand));
+        $values = $this->unwrap(Strings::any()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -47,7 +47,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::any()->values(new MtRand)),
+            $this->unwrap(Strings::any()->values(Random::mersenneTwister)),
         );
 
         $this->assertLessThanOrEqual(128, \max($values));
@@ -59,7 +59,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::atMost(256)->values(new MtRand)),
+            $this->unwrap(Strings::atMost(256)->values(Random::mersenneTwister)),
         );
 
         $this->assertLessThanOrEqual(256, \max($values));
@@ -74,7 +74,7 @@ class StringsTest extends TestCase
 
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($values->values(new MtRand)),
+            $this->unwrap($values->values(Random::mersenneTwister)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -83,7 +83,7 @@ class StringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($others->values(new MtRand)),
+            $this->unwrap($others->values(Random::mersenneTwister)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -98,18 +98,18 @@ class StringsTest extends TestCase
         $b = $a->take(50);
 
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
-        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
     }
 
     public function testValues()
     {
         $a = Strings::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
 
-        foreach ($a->values(new MtRand) as $value) {
+        foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -119,7 +119,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::between(0, 1); // always generate string of length 1
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             if (!$value->shrinkable()) {
                 continue;
             }
@@ -137,7 +137,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(static fn($string) => $string !== '');
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -146,7 +146,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(static fn($string) => $string !== '');
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -160,7 +160,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::any()->filter(static fn($string) => \strlen($string) > 20);
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertTrue(\strlen($dichotomy->a()->unwrap()) > 20);
@@ -172,7 +172,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::between(100, 200);
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertGreaterThanOrEqual(100, \strlen($value->unwrap()));
             $this->assertLessThanOrEqual(200, \strlen($value->unwrap()));
         }
@@ -182,7 +182,7 @@ class StringsTest extends TestCase
     {
         $strings = Strings::atLeast(100);
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertGreaterThanOrEqual(100, \strlen($value->unwrap()));
         }
     }
@@ -199,7 +199,7 @@ class StringsTest extends TestCase
             }
         };
 
-        foreach ($integers->values(new MtRand) as $value) {
+        foreach ($integers->values(Random::mersenneTwister) as $value) {
             $assertInBounds($value, 'a');
             $assertInBounds($value, 'b');
         }
@@ -212,7 +212,7 @@ class StringsTest extends TestCase
             \iterator_to_array(
                 Strings::any()
                     ->take(0)
-                    ->values(new MtRand),
+                    ->values(Random::mersenneTwister),
             ),
         );
     }
@@ -222,7 +222,7 @@ class StringsTest extends TestCase
         $set = Strings::madeOf(Chars::lowercaseLetter());
         $allowed = \range('a', 'z');
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             if (\strlen($value->unwrap()) === 0) {
                 continue;
             }
@@ -237,7 +237,7 @@ class StringsTest extends TestCase
         $set = Strings::madeOf(Chars::lowercaseLetter(), Chars::uppercaseLetter());
         $allowed = [...\range('a', 'z'), ...\range('A', 'Z')];
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             if (\strlen($value->unwrap()) === 0) {
                 continue;
             }
@@ -254,7 +254,7 @@ class StringsTest extends TestCase
     {
         $set = Strings::madeOf(Chars::any())->between(2, 42);
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $string = $value->unwrap();
 
             $this->assertGreaterThan(1, \strlen($string));
@@ -266,7 +266,7 @@ class StringsTest extends TestCase
     {
         $set = Strings::madeOf(Chars::any())->atLeast(2);
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $string = $value->unwrap();
 
             $this->assertGreaterThan(1, \strlen($string));
@@ -278,7 +278,7 @@ class StringsTest extends TestCase
     {
         $set = Strings::madeOf(Chars::any())->atMost(42);
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $string = $value->unwrap();
 
             $this->assertGreaterThanOrEqual(0, \strlen($string));
@@ -290,7 +290,7 @@ class StringsTest extends TestCase
     {
         $set = Strings::madeOf(Chars::any())->filter(static fn($string) => $string !== '');
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertNotSame('', $value->unwrap());
         }
     }
@@ -300,7 +300,7 @@ class StringsTest extends TestCase
         $set = Strings::madeOf(Chars::any());
         $set2 = $set->take(50);
 
-        $this->assertCount(100, \iterator_to_array($set->values(new MtRand)));
-        $this->assertCount(50, \iterator_to_array($set2->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($set->values(Random::mersenneTwister)));
+        $this->assertCount(50, \iterator_to_array($set2->values(Random::mersenneTwister)));
     }
 }

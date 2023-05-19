@@ -71,7 +71,7 @@ final class Elements implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
         $elements = \array_values(\array_filter(
@@ -86,7 +86,7 @@ final class Elements implements Set
         $max = \count($elements) - 1;
 
         while ($iterations < $this->size) {
-            $index = $rand(0, $max);
+            $index = $random->between(0, $max);
             /** @var mixed */
             $value = $elements[$index];
 

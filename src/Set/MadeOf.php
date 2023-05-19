@@ -96,7 +96,7 @@ final class MadeOf implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         $chars = $this->sets[0];
 
@@ -117,6 +117,6 @@ final class MadeOf implements Set
         yield from $set
             ->take($this->size)
             ->filter($this->predicate)
-            ->values($rand);
+            ->values($random);
     }
 }

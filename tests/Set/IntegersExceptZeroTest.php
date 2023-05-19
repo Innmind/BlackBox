@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Set\IntegersExceptZero,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 
 class IntegersExceptZeroTest extends TestCase
@@ -24,7 +24,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(IntegersExceptZero::any()->values(new MtRand));
+        $values = $this->unwrap(IntegersExceptZero::any()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
         $this->assertNotContains(0, $values);
@@ -40,7 +40,7 @@ class IntegersExceptZeroTest extends TestCase
         $this->assertInstanceOf(IntegersExceptZero::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            $this->unwrap($integers->values(new MtRand)),
+            $this->unwrap($integers->values(Random::mersenneTwister)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -49,7 +49,7 @@ class IntegersExceptZeroTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            $this->unwrap($even->values(new MtRand)),
+            $this->unwrap($even->values(Random::mersenneTwister)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -65,18 +65,18 @@ class IntegersExceptZeroTest extends TestCase
 
         $this->assertInstanceOf(IntegersExceptZero::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
-        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
     }
 
     public function testValues()
     {
         $a = IntegersExceptZero::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
 
-        foreach ($a->values(new MtRand) as $value) {
+        foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -86,7 +86,7 @@ class IntegersExceptZeroTest extends TestCase
     {
         $integers = IntegersExceptZero::any();
 
-        foreach ($integers->values(new MtRand) as $value) {
+        foreach ($integers->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }

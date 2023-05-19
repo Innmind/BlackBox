@@ -58,16 +58,16 @@ final class Either implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
         $emptySets = [];
 
         while ($iterations < $this->size) {
-            $setToChoose = $rand(0, \count($this->sets) - 1);
+            $setToChoose = $random->between(0, \count($this->sets) - 1);
 
             try {
-                $value = $this->sets[$setToChoose]->values($rand)->current();
+                $value = $this->sets[$setToChoose]->values($random)->current();
 
                 yield $value;
             } catch (EmptySet $e) {

@@ -121,9 +121,9 @@ final class Composite implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
-        $matrix = $this->matrix->values($rand);
+        $matrix = $this->matrix->values($random);
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {

@@ -56,7 +56,7 @@ final class UnsafeStrings implements Set
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         /** @var list<string> */
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
@@ -73,7 +73,7 @@ final class UnsafeStrings implements Set
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $index = $rand(0, $size);
+            $index = $random->between(0, $size);
             $value = $values[$index];
 
             yield Value::immutable($value, $this->shrink($value));

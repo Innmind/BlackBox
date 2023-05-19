@@ -8,7 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Property,
     Properties as PropertiesModel,
-    Random\MtRand,
+    Random,
     PHPUnit\BlackBox,
 };
 
@@ -32,7 +32,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        $this->assertCount(100, \iterator_to_array($properties->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($properties->values(Random::mersenneTwister)));
     }
 
     public function testGeneratePropertiesModel()
@@ -41,7 +41,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        foreach ($properties->values(new MtRand) as $scenario) {
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
             $this->assertInstanceOf(PropertiesModel::class, $scenario->unwrap());
         }
     }
@@ -52,7 +52,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        foreach ($properties->values(new MtRand) as $scenario) {
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
             $this->assertTrue($scenario->isImmutable());
         }
     }
@@ -64,7 +64,7 @@ class PropertiesTest extends TestCase
         );
         $sizes = [];
 
-        foreach ($properties->values(new MtRand) as $scenario) {
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
             $sizes[] = \count($scenario->unwrap()->properties());
         }
 
@@ -80,8 +80,8 @@ class PropertiesTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $properties2);
         $this->assertNotSame($properties, $properties2);
-        $this->assertCount(100, \iterator_to_array($properties->values(new MtRand)));
-        $this->assertCount(50, \iterator_to_array($properties2->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($properties->values(Random::mersenneTwister)));
+        $this->assertCount(50, \iterator_to_array($properties2->values(Random::mersenneTwister)));
     }
 
     public function testFilter()
@@ -98,14 +98,14 @@ class PropertiesTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($properties->values(new MtRand)),
+                $this->unwrap($properties->values(Random::mersenneTwister)),
                 $hasUnder50Properties,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($properties2->values(new MtRand)),
+                $this->unwrap($properties2->values(Random::mersenneTwister)),
                 $hasUnder50Properties,
                 false,
             ),

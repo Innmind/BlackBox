@@ -6,7 +6,7 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Property,
     Set\Integers,
-    Random\RandomInt,
+    Random,
 };
 use PHPUnit\Framework\TestCase;
 use Fixtures\Innmind\BlackBox\{
@@ -18,7 +18,7 @@ class PropertyTest extends TestCase
 {
     public function testNoRequiredInputAlwaysReturnTheSamePropertyObjects()
     {
-        $values = Property::of(UpChangeState::class)->values(new RandomInt);
+        $values = Property::of(UpChangeState::class)->values(Random::default);
         $previous = $values->current()->unwrap();
         $values->next();
 
@@ -31,7 +31,7 @@ class PropertyTest extends TestCase
 
     public function testPropertyWithOnlyOneArgumentIsRebuiltEveryTimeWithADifferentInput()
     {
-        $values = Property::of(RaiseBy::class, Integers::above(0))->values(new RandomInt);
+        $values = Property::of(RaiseBy::class, Integers::above(0))->values(Random::default);
         $previous = $values->current()->unwrap();
         $values->next();
 
@@ -51,7 +51,7 @@ class PropertyTest extends TestCase
             RaiseBy::class,
             Integers::above(0),
             Integers::above(0), // unused argument, only here to test behaviour with the composite
-        )->values(new RandomInt);
+        )->values(Random::default);
         $previous = $values->current()->unwrap();
         $values->next();
 

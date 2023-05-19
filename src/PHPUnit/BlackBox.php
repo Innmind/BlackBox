@@ -5,7 +5,7 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     Set,
-    Random\RandomInt,
+    Random,
 };
 use PHPUnit\Framework\TestCase;
 use PHPUnit\TextUI\{
@@ -59,7 +59,7 @@ trait BlackBox
         }
 
         $scenario = new Scenario(
-            new RandomInt,
+            Random::default,
             $recordFailure,
             $expectsException,
             $first,

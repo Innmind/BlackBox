@@ -29,7 +29,7 @@ final class FromGenerator implements Set
      */
     private function __construct(callable $generatorFactory)
     {
-        if (!$generatorFactory(new Random\MtRand) instanceof \Generator) {
+        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
             throw new \TypeError('Argument 1 must be of type callable(): \Generator');
         }
 
@@ -77,9 +77,9 @@ final class FromGenerator implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
-        $generator = ($this->generatorFactory)($rand);
+        $generator = ($this->generatorFactory)($random);
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {

@@ -82,9 +82,9 @@ final class Decorate implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
-        foreach ($this->set->values($rand) as $value) {
+        foreach ($this->set->values($random) as $value) {
             if ($value->isImmutable() && $this->immutable) {
                 $decorated = ($this->decorate)($value->unwrap());
 

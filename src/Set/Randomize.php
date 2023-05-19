@@ -57,13 +57,13 @@ final class Randomize implements Set
         return new self($this->set->filter($predicate));
     }
 
-    public function values(Random $rand): \Generator
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
             try {
-                $value = $this->set->values($rand)->current();
+                $value = $this->set->values($random)->current();
             } catch (EmptySet $e) {
                 continue;
             }

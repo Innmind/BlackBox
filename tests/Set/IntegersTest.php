@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Set\Integers,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 
 class IntegersTest extends TestCase
@@ -25,7 +25,7 @@ class IntegersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(Integers::any()->values(new MtRand));
+        $values = $this->unwrap(Integers::any()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -35,7 +35,7 @@ class IntegersTest extends TestCase
         $values = Integers::between(-10, 10);
 
         $hasOutsideBounds = \array_reduce(
-            $this->unwrap($values->values(new MtRand)),
+            $this->unwrap($values->values(Random::mersenneTwister)),
             static function(bool $hasOutsideBounds, int $value): bool {
                 return $hasOutsideBounds || $value > 10 || $value < -10;
             },
@@ -51,10 +51,10 @@ class IntegersTest extends TestCase
         $values = Integers::above(10);
 
         $this->assertInstanceOf(Integers::class, $values);
-        $this->assertCount(100, $this->unwrap($values->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($values->values(Random::mersenneTwister)));
         $this->assertGreaterThanOrEqual(
             10,
-            \min($this->unwrap($values->values(new MtRand))),
+            \min($this->unwrap($values->values(Random::mersenneTwister))),
         );
     }
 
@@ -63,10 +63,10 @@ class IntegersTest extends TestCase
         $values = Integers::below(10);
 
         $this->assertInstanceOf(Integers::class, $values);
-        $this->assertCount(100, $this->unwrap($values->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($values->values(Random::mersenneTwister)));
         $this->assertLessThanOrEqual(
             10,
-            \max($this->unwrap($values->values(new MtRand))),
+            \max($this->unwrap($values->values(Random::mersenneTwister))),
         );
     }
 
@@ -80,7 +80,7 @@ class IntegersTest extends TestCase
         $this->assertInstanceOf(Integers::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            $this->unwrap($integers->values(new MtRand)),
+            $this->unwrap($integers->values(Random::mersenneTwister)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -89,7 +89,7 @@ class IntegersTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            $this->unwrap($even->values(new MtRand)),
+            $this->unwrap($even->values(Random::mersenneTwister)),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -105,18 +105,18 @@ class IntegersTest extends TestCase
 
         $this->assertInstanceOf(Integers::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
-        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
     }
 
     public function testValues()
     {
         $a = Integers::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
 
-        foreach ($a->values(new MtRand) as $value) {
+        foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -126,7 +126,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::between(-1, 1)->filter(static fn($i) => $i === 0);
 
-        foreach ($ints->values(new MtRand) as $value) {
+        foreach ($ints->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -135,7 +135,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::any()->filter(static fn($i) => $i !== 0);
 
-        foreach ($ints->values(new MtRand) as $value) {
+        foreach ($ints->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -144,7 +144,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::any()->filter(static fn($i) => $i !== 0);
 
-        foreach ($ints->values(new MtRand) as $value) {
+        foreach ($ints->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->isImmutable());
         }
     }
@@ -153,7 +153,7 @@ class IntegersTest extends TestCase
     {
         $positive = Integers::above(1);
 
-        foreach ($positive->values(new MtRand) as $value) {
+        foreach ($positive->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -165,7 +165,7 @@ class IntegersTest extends TestCase
 
         $negative = Integers::below(-1);
 
-        foreach ($negative->values(new MtRand) as $value) {
+        foreach ($negative->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -180,7 +180,7 @@ class IntegersTest extends TestCase
     {
         $integers = Integers::any();
 
-        foreach ($integers->values(new MtRand) as $value) {
+        foreach ($integers->values(Random::mersenneTwister) as $value) {
             $this->assertSame(
                 $value->unwrap() <=> 0,
                 $value->shrink()->a()->unwrap() <=> 0,
@@ -196,7 +196,7 @@ class IntegersTest extends TestCase
     {
         $even = Integers::any()->filter(static fn($i) => $i !== 0 && ($i % 2) === 0);
 
-        foreach ($even->values(new MtRand) as $value) {
+        foreach ($even->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertSame(0, $dichotomy->a()->unwrap() % 2);
@@ -205,7 +205,7 @@ class IntegersTest extends TestCase
 
         $odd = Integers::any()->filter(static fn($i) => $i !== 0 && ($i % 2) === 1);
 
-        foreach ($odd->values(new MtRand) as $value) {
+        foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertSame(1, $dichotomy->a()->unwrap() % 2);
@@ -215,7 +215,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkingStrategiesNeverProduceTheSameResultTwice()
     {
-        $integer = Integers::between(-1000, 1000)->values(new MtRand)->current();
+        $integer = Integers::between(-1000, 1000)->values(Random::mersenneTwister)->current();
         $previous = $integer;
         $integer = $integer->shrink()->a();
 
@@ -225,7 +225,7 @@ class IntegersTest extends TestCase
             $integer = $integer->shrink()->a();
         }
 
-        $integer = Integers::between(-1000, 1000)->values(new MtRand)->current();
+        $integer = Integers::between(-1000, 1000)->values(Random::mersenneTwister)->current();
         $previous = $integer;
         $integer = $integer->shrink()->b();
 
@@ -248,7 +248,7 @@ class IntegersTest extends TestCase
             }
         };
 
-        foreach ($integers->values(new MtRand) as $value) {
+        foreach ($integers->values(Random::mersenneTwister) as $value) {
             $assertInBounds($value, 'a');
             $assertInBounds($value, 'b');
         }
@@ -261,7 +261,7 @@ class IntegersTest extends TestCase
             \iterator_to_array(
                 Integers::any()
                     ->take(0)
-                    ->values(new MtRand),
+                    ->values(Random::mersenneTwister),
             ),
         );
     }
@@ -270,7 +270,7 @@ class IntegersTest extends TestCase
     {
         $ints = Integers::above(43);
 
-        foreach ($ints->values(new MtRand) as $int) {
+        foreach ($ints->values(Random::mersenneTwister) as $int) {
             while ($int->shrinkable()) {
                 $int = $int->shrink()->a();
             }

@@ -8,7 +8,7 @@ use Innmind\BlackBox\{
     Set\Integers,
     Set\Decorate,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 use PHPUnit\Framework\{
     TestCase,
@@ -49,7 +49,7 @@ class TestRunnerTest extends TestCase
 
                     $this->assertTrue(false); // to trigger shrinking
                 },
-                $set->values(new MtRand)->current(),
+                $set->values(Random::mersenneTwister)->current(),
             );
             $this->fail('it should have thrown an exception');
         } catch (ExpectationFailedException $e) {
@@ -80,7 +80,7 @@ class TestRunnerTest extends TestCase
                     ++$runned;
                     $this->assertTrue(false);
                 },
-                $set->values(new MtRand)->current(),
+                $set->values(Random::mersenneTwister)->current(),
             );
             $this->fail('it should have thrown an exception');
         } catch (ExpectationFailedException $e) {
@@ -122,7 +122,7 @@ class TestRunnerTest extends TestCase
             Integers::any(),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             try {
                 $run(
                     static function($int) {
@@ -152,7 +152,7 @@ class TestRunnerTest extends TestCase
             Integers::any(),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             try {
                 $run(
                     static function($int) {
@@ -182,7 +182,7 @@ class TestRunnerTest extends TestCase
             Integers::any(),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             try {
                 $run(
                     static function($int) {
@@ -207,7 +207,7 @@ class TestRunnerTest extends TestCase
             static fn() => false,
         );
 
-        foreach (Integers::any()->values(new MtRand) as $value) {
+        foreach (Integers::any()->values(Random::mersenneTwister) as $value) {
             try {
                 $run(
                     static function($int) {
@@ -236,7 +236,7 @@ class TestRunnerTest extends TestCase
             Integers::above(0),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             try {
                 $run(
                     static function($int) {

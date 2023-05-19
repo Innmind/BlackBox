@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Set\Randomize,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 
 class RandomizeTest extends TestCase
@@ -26,7 +26,7 @@ class RandomizeTest extends TestCase
             Set\Elements::of(new \stdClass, 42),
         );
 
-        $this->assertCount(100, $this->unwrap($set->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($set->values(Random::mersenneTwister)));
     }
 
     public function testTake()
@@ -38,8 +38,8 @@ class RandomizeTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $set2);
         $this->assertNotSame($set2, $set1);
-        $this->assertCount(100, $this->unwrap($set1->values(new MtRand)));
-        $this->assertCount(50, $this->unwrap($set2->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($set1->values(Random::mersenneTwister)));
+        $this->assertCount(50, $this->unwrap($set2->values(Random::mersenneTwister)));
     }
 
     public function testFilter()
@@ -51,15 +51,15 @@ class RandomizeTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $set2);
         $this->assertNotSame($set2, $set1);
-        $this->assertCount(100, $this->unwrap($set1->values(new MtRand)));
-        $this->assertCount(100, $this->unwrap($set2->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($set1->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($set2->values(Random::mersenneTwister)));
         $this->assertCount(
             2,
-            \array_unique($this->unwrap($set1->values(new MtRand))),
+            \array_unique($this->unwrap($set1->values(Random::mersenneTwister))),
         );
         $this->assertCount(
             1,
-            \array_unique($this->unwrap($set2->values(new MtRand))),
+            \array_unique($this->unwrap($set2->values(Random::mersenneTwister))),
         );
     }
 
@@ -74,7 +74,7 @@ class RandomizeTest extends TestCase
             ->method('values')
             ->willReturn((static fn() => yield $expected)());
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertSame($expected, $value);
         }
     }
@@ -87,7 +87,7 @@ class RandomizeTest extends TestCase
             }
         }));
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
         }
     }
