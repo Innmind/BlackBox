@@ -14,6 +14,7 @@ final class Scenario
 {
     private Random $rand;
     private \Closure $recordFailure;
+    /** @var \Closure(\Throwable): bool */
     private \Closure $expectsException;
     /** @var Set<list<mixed>> */
     private Set $set;
