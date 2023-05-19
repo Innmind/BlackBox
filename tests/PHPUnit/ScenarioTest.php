@@ -80,8 +80,8 @@ class ScenarioTest extends TestCase
             new MtRand,
             static fn() => null,
             static fn() => false,
-            Integers::any(),
-            Integers::any(),
+            Integers::between(-1_000_000_000, 1_000_000_000), // the range is to avoid float to in conversion
+            Integers::between(-1_000_000_000, 1_000_000_000), // the range is to avoid float to in conversion
         );
         $scenario2 = $scenario1->filter(static function($a, $b): bool {
             return ($a + $b) % 2 === 0;

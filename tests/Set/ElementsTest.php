@@ -113,9 +113,11 @@ class ElementsTest extends TestCase
     {
         $this->assertCount(
             0,
-            Elements::of(1, 2, 3)
-                ->take(0)
-                ->values(new MtRand),
+            \iterator_to_array(
+                Elements::of(1, 2, 3)
+                    ->take(0)
+                    ->values(new MtRand),
+            ),
         );
     }
 

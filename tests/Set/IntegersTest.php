@@ -258,9 +258,11 @@ class IntegersTest extends TestCase
     {
         $this->assertCount(
             0,
-            Integers::any()
-                ->take(0)
-                ->values(new MtRand),
+            \iterator_to_array(
+                Integers::any()
+                    ->take(0)
+                    ->values(new MtRand),
+            ),
         );
     }
 

@@ -209,9 +209,11 @@ class StringsTest extends TestCase
     {
         $this->assertCount(
             0,
-            Strings::any()
-                ->take(0)
-                ->values(new MtRand),
+            \iterator_to_array(
+                Strings::any()
+                    ->take(0)
+                    ->values(new MtRand),
+            ),
         );
     }
 

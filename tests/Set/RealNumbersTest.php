@@ -237,9 +237,11 @@ class RealNumbersTest extends TestCase
     {
         $this->assertCount(
             0,
-            RealNumbers::any()
-                ->take(0)
-                ->values(new MtRand),
+            \iterator_to_array(
+                RealNumbers::any()
+                    ->take(0)
+                    ->values(new MtRand),
+            ),
         );
     }
 

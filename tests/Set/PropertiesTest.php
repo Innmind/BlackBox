@@ -32,7 +32,7 @@ class PropertiesTest extends TestCase
             $this->createMock(Property::class),
         );
 
-        $this->assertCount(100, $properties->values(new MtRand));
+        $this->assertCount(100, \iterator_to_array($properties->values(new MtRand)));
     }
 
     public function testGeneratePropertiesModel()
@@ -80,8 +80,8 @@ class PropertiesTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $properties2);
         $this->assertNotSame($properties, $properties2);
-        $this->assertCount(100, $properties->values(new MtRand));
-        $this->assertCount(50, $properties2->values(new MtRand));
+        $this->assertCount(100, \iterator_to_array($properties->values(new MtRand)));
+        $this->assertCount(50, \iterator_to_array($properties2->values(new MtRand)));
     }
 
     public function testFilter()
