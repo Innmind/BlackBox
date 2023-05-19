@@ -14,7 +14,7 @@ class RealNumbersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new RealNumbers);
+        $this->assertInstanceOf(Set::class, RealNumbers::any());
     }
 
     public function testAny()

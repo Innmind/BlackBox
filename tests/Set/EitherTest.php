@@ -17,7 +17,7 @@ class EitherTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Either(
+            Either::any(
                 $this->createMock(Set::class),
                 $this->createMock(Set::class),
             ),
@@ -26,7 +26,7 @@ class EitherTest extends TestCase
 
     public function testTake100ValuesByDefault()
     {
-        $either = new Either(
+        $either = Either::any(
             Set\Elements::of(1),
             Set\Elements::of(2),
         );
@@ -40,7 +40,7 @@ class EitherTest extends TestCase
 
     public function testTake()
     {
-        $either1 = new Either(
+        $either1 = Either::any(
             Set\Elements::of(1),
             Set\Elements::of(2),
         );
@@ -54,7 +54,7 @@ class EitherTest extends TestCase
 
     public function testFilter()
     {
-        $either = new Either(
+        $either = Either::any(
             Set\Elements::of(1),
             Set\Elements::of(null),
             Set\Elements::of(2),
@@ -75,7 +75,7 @@ class EitherTest extends TestCase
 
     public function testValues()
     {
-        $set = new Either(
+        $set = Either::any(
             Set\Elements::of(1),
             Set\Elements::of(null),
             Set\Elements::of(2),
@@ -89,7 +89,7 @@ class EitherTest extends TestCase
 
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
-        $set = new Either(
+        $set = Either::any(
             Set\FromGenerator::of(static function() {
                 if (\mt_rand(0, 1) === 1) {
                     yield \mt_rand();
@@ -105,7 +105,7 @@ class EitherTest extends TestCase
 
     public function testAlwaysUseAnotherSetWhenOneIsAnEmptySet()
     {
-        $set = new Either(
+        $set = Either::any(
             Set\Elements::of(1)->filter(static fn() => false),
             Set\Elements::of(2),
         );
@@ -117,7 +117,7 @@ class EitherTest extends TestCase
 
     public function testThrowWhenNoValueCanBeGenerated()
     {
-        $set = new Either(
+        $set = Either::any(
             Set\Elements::of(1)->filter(static fn() => false),
             Set\Elements::of(2),
         );

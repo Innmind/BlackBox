@@ -18,17 +18,17 @@ final class RealNumbers implements Set
     private int $size;
     private \Closure $predicate;
 
-    public function __construct(int $lowerBound = null, int $upperBound = null)
+    private function __construct(int $lowerBound, int $upperBound)
     {
-        $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
-        $this->upperBound = $upperBound ?? \PHP_INT_MAX;
+        $this->lowerBound = $lowerBound;
+        $this->upperBound = $upperBound;
         $this->size = 100;
         $this->predicate = fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
     public static function any(): self
     {
-        return new self;
+        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
     }
 
     public static function between(int $lowerBound, int $upperBound): self
@@ -38,12 +38,12 @@ final class RealNumbers implements Set
 
     public static function above(int $lowerBound): self
     {
-        return new self($lowerBound);
+        return new self($lowerBound, \PHP_INT_MAX);
     }
 
     public static function below(int $upperBound): self
     {
-        return new self(null, $upperBound);
+        return new self(\PHP_INT_MIN, $upperBound);
     }
 
     public function take(int $size): Set

@@ -17,7 +17,7 @@ class FromGeneratorTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new FromGenerator(static function() {
+            FromGenerator::of(static function() {
                 yield 42;
             }),
         );
@@ -38,7 +38,7 @@ class FromGeneratorTest extends TestCase
         $this->expectException(\TypeError::class);
         $this->expectExceptionMessage('Argument 1 must be of type callable(): \Generator');
 
-        new FromGenerator(static function() {});
+        FromGenerator::of(static function() {});
     }
 
     public function testTake()

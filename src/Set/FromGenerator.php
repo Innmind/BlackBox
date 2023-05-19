@@ -27,7 +27,7 @@ final class FromGenerator implements Set
     /**
      * @param callable(Random): \Generator<T> $generatorFactory
      */
-    public function __construct(callable $generatorFactory)
+    private function __construct(callable $generatorFactory)
     {
         if (!$generatorFactory(new Random\MtRand) instanceof \Generator) {
             throw new \TypeError('Argument 1 must be of type callable(): \Generator');

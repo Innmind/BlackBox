@@ -14,7 +14,7 @@ class NaturalNumbersExceptZeroTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new NaturalNumbersExceptZero);
+        $this->assertInstanceOf(Set::class, NaturalNumbersExceptZero::any());
     }
 
     public function testAny()

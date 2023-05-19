@@ -16,7 +16,7 @@ final class AnyType
     public static function any(): Set
     {
         /** @psalm-suppress InvalidArgument Due to array not being a list */
-        return new Set\Either(
+        return Set\Either::any(
             self::primitives(),
             Sequence::of(
                 self::primitives(),
@@ -39,7 +39,7 @@ final class AnyType
     {
         // no resource is generated as it may result in a fatal error of too
         // many opened resources
-        return new Set\Either(
+        return Set\Either::any(
             Elements::of(true, false, null),
             Integers::any(),
             RealNumbers::any(),

@@ -21,11 +21,11 @@ class DichotomyTest extends TestCase
     {
         $this
             ->forAll(
-                new Set\Either(
+                Set\Either::any(
                     Set\Integers::any(),
                     Set\Strings::any(),
                 ),
-                new Set\Either(
+                Set\Either::any(
                     Set\Integers::any(),
                     Set\Strings::any(),
                 ),

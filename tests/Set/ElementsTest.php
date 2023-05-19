@@ -15,7 +15,7 @@ class ElementsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new Elements(42));
+        $this->assertInstanceOf(Set::class, Elements::of(42));
     }
 
     public function testOf()

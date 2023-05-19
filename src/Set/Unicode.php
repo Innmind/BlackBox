@@ -58,7 +58,7 @@ final class Unicode
             $methods,
         );
 
-        return new Set\Either(...$sets);
+        return Set\Either::any(...$sets);
     }
 
     /**

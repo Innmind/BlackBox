@@ -17,7 +17,7 @@ class StringsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new Strings);
+        $this->assertInstanceOf(Set::class, Strings::any());
     }
 
     public function testAny()
@@ -117,7 +117,7 @@ class StringsTest extends TestCase
 
     public function testEmptyStringCannotBeShrinked()
     {
-        $strings = new Strings(1); // always generate string of length 1
+        $strings = Strings::between(0, 1); // always generate string of length 1
 
         foreach ($strings->values(new MtRand) as $value) {
             if (!$value->shrinkable()) {

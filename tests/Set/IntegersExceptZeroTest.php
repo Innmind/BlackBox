@@ -14,7 +14,7 @@ class IntegersExceptZeroTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new IntegersExceptZero);
+        $this->assertInstanceOf(Set::class, IntegersExceptZero::any());
     }
 
     public function testAny()

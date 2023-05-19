@@ -29,7 +29,7 @@ final class Elements implements Set
      * @param mixed $first
      * @param mixed $elements
      */
-    public function __construct($first, ...$elements)
+    private function __construct($first, ...$elements)
     {
         $this->size = 100;
         $this->elements = [$first, ...$elements];

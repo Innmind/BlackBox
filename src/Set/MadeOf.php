@@ -26,11 +26,22 @@ final class MadeOf implements Set
      * @param Set<string> $first
      * @param Set<string> $rest
      */
-    public function __construct(Set $first, Set ...$rest)
+    private function __construct(Set $first, Set ...$rest)
     {
         $this->sets = [$first, ...$rest];
         $this->range = Integers::between(0, 128);
         $this->predicate = static fn(): bool => true;
+    }
+
+    /**
+     * @no-named-arguments
+     *
+     * @param Set<string> $first
+     * @param Set<string> $rest
+     */
+    public static function of(Set $first, Set ...$rest): self
+    {
+        return new self($first, ...$rest);
     }
 
     public function between(int $minLength, int $maxLength): self
@@ -90,7 +101,7 @@ final class MadeOf implements Set
         $chars = $this->sets[0];
 
         if (\count($this->sets) > 1) {
-            $chars = new Set\Either(...$this->sets);
+            $chars = Set\Either::any(...$this->sets);
         }
 
         /**

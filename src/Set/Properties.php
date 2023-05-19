@@ -36,7 +36,7 @@ final class Properties
         if (\count($properties) === 0) {
             $set = $first;
         } else {
-            $set = new Either($first, ...$properties);
+            $set = Either::any($first, ...$properties);
         }
 
         return self::chooseFrom($set);

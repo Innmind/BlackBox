@@ -57,7 +57,7 @@ final class Scenario
         $this->expectsException = \Closure::fromCallable($expectsException);
         $this->set = $set->take(100);
         /** @var \Closure(Set<list<mixed>>): Set<list<mixed>> */
-        $this->wrap = \Closure::fromCallable(static fn(Set $set): Set => new Randomize($set));
+        $this->wrap = Randomize::of(...);
         $this->run = new TestRunner(
             $recordFailure,
             $expectsException,

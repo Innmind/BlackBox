@@ -16,13 +16,13 @@ class RandomizeTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            new Randomize($this->createMock(Set::class)),
+            Randomize::of($this->createMock(Set::class)),
         );
     }
 
     public function testGenerate100ValuesByDefault()
     {
-        $set = new Randomize(
+        $set = Randomize::of(
             Set\Elements::of(new \stdClass, 42),
         );
 
@@ -31,7 +31,7 @@ class RandomizeTest extends TestCase
 
     public function testTake()
     {
-        $set1 = new Randomize(
+        $set1 = Randomize::of(
             Set\Elements::of(new \stdClass, 42),
         );
         $set2 = $set1->take(50);
@@ -44,7 +44,7 @@ class RandomizeTest extends TestCase
 
     public function testFilter()
     {
-        $set1 = new Randomize(
+        $set1 = Randomize::of(
             Set\Elements::of('foo', 42),
         );
         $set2 = $set1->filter(static fn($v) => \is_int($v));
@@ -65,7 +65,7 @@ class RandomizeTest extends TestCase
 
     public function testAlwaysTakeTheFirstValueGeneratedByTheUnderlyingSet()
     {
-        $set = new Randomize(
+        $set = Randomize::of(
             $inner = $this->createMock(Set::class),
         );
         $expected = Value::immutable(new \stdClass);
@@ -81,7 +81,7 @@ class RandomizeTest extends TestCase
 
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
-        $set = new Randomize(Set\FromGenerator::of(static function() {
+        $set = Randomize::of(Set\FromGenerator::of(static function() {
             if (\mt_rand(0, 1) === 1) {
                 yield \mt_rand();
             }

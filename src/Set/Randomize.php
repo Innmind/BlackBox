@@ -26,10 +26,22 @@ final class Randomize implements Set
     /**
      * @param Set<I> $set
      */
-    public function __construct(Set $set)
+    private function __construct(Set $set)
     {
         $this->set = $set;
         $this->size = 100;
+    }
+
+    /**
+     * @template T
+     *
+     * @param Set<T> $set
+     *
+     * @return self<T>
+     */
+    public static function of(Set $set): self
+    {
+        return new self($set);
     }
 
     public function take(int $size): Set

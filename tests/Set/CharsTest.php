@@ -14,7 +14,7 @@ class CharsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new Chars);
+        $this->assertInstanceOf(Set::class, Chars::any());
     }
 
     public function testAny()

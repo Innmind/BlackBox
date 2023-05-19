@@ -15,7 +15,7 @@ class UnsafeStringsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new UnsafeStrings);
+        $this->assertInstanceOf(Set::class, UnsafeStrings::any());
     }
 
     public function testAny()

@@ -52,7 +52,7 @@ final class Email
          * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
          * @psalm-suppress InvalidArgument Same problem as above
          */
-        return new Set\Either(
+        return Set\Either::any(
             // either only with simple characters
             Set\Decorate::immutable(
                 static fn(array $chars): string => \implode('', $chars),

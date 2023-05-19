@@ -14,7 +14,7 @@ class NaturalNumbersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new NaturalNumbers);
+        $this->assertInstanceOf(Set::class, NaturalNumbers::any());
     }
 
     public function testAny()

@@ -8,19 +8,8 @@ use Innmind\BlackBox\{
     Random,
 };
 
-/**
- * @implements Set<non-empty-string>
- */
-final class Chars implements Set
+final class Chars
 {
-    /** @var Set<non-empty-string> */
-    private Set $set;
-
-    public function __construct()
-    {
-        $this->set = self::any();
-    }
-
     /**
      * @return Set<non-empty-string>
      */
@@ -81,28 +70,10 @@ final class Chars implements Set
      */
     public static function alphanumerical(): Set
     {
-        return new Set\Either(
+        return Set\Either::any(
             self::lowercaseLetter(),
             self::uppercaseLetter(),
             self::number(),
         );
-    }
-
-    public function take(int $size): Set
-    {
-        return $this->set->take($size);
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        return $this->set->filter($predicate);
-    }
-
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
-    public function values(Random $rand): \Generator
-    {
-        return $this->set->values($rand);
     }
 }

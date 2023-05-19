@@ -19,7 +19,7 @@ final class UnsafeStrings implements Set
     /** @var \Closure(string): bool */
     private \Closure $predicate;
 
-    public function __construct()
+    private function __construct()
     {
         $this->size = 100;
         $this->predicate = static fn(): bool => true;

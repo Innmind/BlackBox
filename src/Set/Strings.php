@@ -16,13 +16,8 @@ final class Strings implements Set
     /** @var Set<string> */
     private Set $set;
 
-    public function __construct(int $boundA = null, int $boundB = null)
+    private function __construct(int $min, int $max)
     {
-        // this trick is here because historically only the maxLength was configurable
-        // with the first argument
-        $boundA ??= 128;
-        $boundB ??= 0;
-
         /**
          * @psalm-suppress MixedArgumentTypeCoercion
          * @psalm-suppress InvalidArgument
@@ -31,18 +26,14 @@ final class Strings implements Set
             static fn(array $chars): string => \implode('', $chars),
             Sequence::of(
                 Chars::any(),
-                Integers::between(\min($boundA, $boundB), \max($boundA, $boundB)),
+                Integers::between($min, $max),
             ),
         );
     }
 
-    public static function any(int $maxLength = null): self
+    public static function any(): self
     {
-        if (\is_int($maxLength)) {
-            \trigger_error('Use Strings::atMost() instead', \E_USER_DEPRECATED);
-        }
-
-        return new self($maxLength);
+        return new self(0, 128);
     }
 
     public static function between(int $minLength, int $maxLength): self
@@ -68,7 +59,7 @@ final class Strings implements Set
      */
     public static function madeOf(Set $first, Set ...$rest): MadeOf
     {
-        return new MadeOf($first, ...$rest);
+        return MadeOf::of($first, ...$rest);
     }
 
     public function take(int $size): Set

@@ -16,7 +16,7 @@ final class NaturalNumbers implements Set
     /** @var Set<int> */
     private Set $set;
 
-    public function __construct()
+    private function __construct()
     {
         $this->set = Integers::above(0);
     }

@@ -21,10 +21,18 @@ final class Either implements Set
     /**
      * @no-named-arguments
      */
-    public function __construct(Set $first, Set $second, Set ...$rest)
+    private function __construct(Set $first, Set $second, Set ...$rest)
     {
         $this->sets = [$first, $second, ...$rest];
         $this->size = 100;
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function any(Set $first, Set $second, Set ...$rest): self
+    {
+        return new self($first, $second, ...$rest);
     }
 
     public function take(int $size): Set
