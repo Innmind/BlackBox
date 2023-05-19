@@ -25,36 +25,10 @@ jobs:
         with:
           dependency-versions: ${{ matrix.dependencies }}
       - name: PHPUnit
-        run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
+        run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-  phpunit_printer_class_latest:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-        php-version: ['8.2']
-        detailed-properties: [1, 0]
-    name: 'PHPUnit Printer Class'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl
-          coverage: none
-      - name: Composer
-        uses: "ramsey/composer-install@v2"
-      - name: PHPUnit Printer Class
-        run: |
-          set +e
-          vendor/bin/phpunit --group failing-on-purpose
-          if [[ $? -eq 0 ]]; then exit 1; else exit 0; fi
-        env:
-          BLACKBOX_DETAILED_PROPERTIES: ${{ matrix.detailed-properties }}
   psalm:
     runs-on: ubuntu-latest
     strategy:

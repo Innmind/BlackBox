@@ -59,23 +59,6 @@ class CounterTest extends TestCase
             });
     }
 
-    /** @group failing-on-purpose */
-    public function testWillDisplayStepsToFailure()
-    {
-        $this
-            ->forAll(Set\Properties::of(
-                new LowerBoundAtZero,
-                new UpperBoundAtHundred,
-                new UpAndDownIsAnIdentityFunction,
-                new DownAndUpIsAnIdentityFunction,
-                new DownChangeState,
-                new UpChangeState,
-            ))
-            ->then(static function($properties) {
-                $properties->ensureHeldBy(Counter::failOnPurpose());
-            });
-    }
-
     public function testParameterizedProperties()
     {
         $this

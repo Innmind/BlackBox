@@ -8,10 +8,6 @@ use Innmind\BlackBox\{
     Random,
 };
 use PHPUnit\Framework\TestCase;
-use PHPUnit\TextUI\{
-    ResultPrinter,
-    DefaultResultPrinter,
-};
 
 trait BlackBox
 {
@@ -19,20 +15,14 @@ trait BlackBox
     {
         $expectsException = static fn(\Throwable $e): bool => false;
         $recordFailure = function(\Throwable $e, Set\Value $values, callable $test): void {
-            if (\class_exists(ResultPrinter::class)) {
-                ResultPrinterV8::record($this, $e, $values, $test);
-            }
-
-            if (\class_exists(DefaultResultPrinter::class)) {
-                ResultPrinterV9::record($this, $e, $values, $test);
-            }
+            // no longer supported
         };
 
         if ($this instanceof TestCase) {
             $expectsException = function(\Throwable $e): bool {
-                $expectedException = $this->getExpectedException();
-                $expectedExceptionMessage = $this->getExpectedExceptionMessage();
-                $expectedExceptionCode = $this->getExpectedExceptionCode();
+                $expectedException = $this->expectedException;
+                $expectedExceptionMessage = $this->expectedExceptionMessage;
+                $expectedExceptionCode = $this->expectedExceptionCode;
 
                 if (
                     \is_null($expectedException) &&
