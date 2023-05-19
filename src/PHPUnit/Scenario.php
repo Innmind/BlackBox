@@ -118,6 +118,6 @@ final class Scenario
             $return = ($this->run)($test, $values);
         }
 
-        return $return;
+        return $return; // TODO remove
     }
 }
