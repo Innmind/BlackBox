@@ -14,7 +14,7 @@ trait BlackBox
     protected function forAll(Set $first, Set ...$sets): Scenario
     {
         $expectsException = static fn(\Throwable $e): bool => false;
-        $recordFailure = function(\Throwable $e, Set\Value $values, callable $test): void {
+        $recordFailure = static function(\Throwable $e, Set\Value $values, callable $test): void {
             // no longer supported
         };
 
