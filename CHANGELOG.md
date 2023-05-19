@@ -6,6 +6,7 @@
 
 - All `Set`s constructor are now private
 - PHP `8.2` is now required
+- `Innmind\BlackBox\Set\AnyType` has been renamed to `Innmind\BlackBox\Set\Type`
 
 ### Removed
 

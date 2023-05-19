@@ -8,7 +8,7 @@ use Innmind\BlackBox\Set;
 /**
  * Use this set to prove your code is indifferent to the value passed to it
  */
-final class AnyType
+final class Type
 {
     /**
      * @return Set<mixed>
