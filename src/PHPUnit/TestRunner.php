@@ -18,7 +18,7 @@ final class TestRunner
     public function __construct(
         callable $recordFailure,
         callable $expectsException,
-        bool $disableShrinking = false
+        bool $disableShrinking = false,
     ) {
         $this->recordFailure = \Closure::fromCallable($recordFailure);
         $this->expectsException = \Closure::fromCallable($expectsException);
@@ -51,7 +51,7 @@ final class TestRunner
     private function tryToShrink(
         callable $test,
         Value $values,
-        \Throwable $parentFailure
+        \Throwable $parentFailure,
     ): void {
         if ($this->shrinkingDisabled) {
             $this->throw($parentFailure, $values, $test);
@@ -67,7 +67,7 @@ final class TestRunner
     private function shrink(
         callable $test,
         Value $values,
-        \Throwable $previousFailure
+        \Throwable $previousFailure,
     ): void {
         $previousStrategy = $values;
         $dichotomy = $values->shrink();

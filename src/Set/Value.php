@@ -21,7 +21,7 @@ final class Value
     private function __construct(
         bool $immutable,
         callable $unwrap,
-        ?Dichotomy $dichotomy
+        ?Dichotomy $dichotomy,
     ) {
         $this->unwrap = \Closure::fromCallable($unwrap);
         $this->immutable = $immutable;

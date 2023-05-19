@@ -239,7 +239,7 @@ class RealNumbersTest extends TestCase
             0,
             RealNumbers::any()
                 ->take(0)
-                ->values(new MtRand)
+                ->values(new MtRand),
         );
     }
 

@@ -115,7 +115,7 @@ class ElementsTest extends TestCase
             0,
             Elements::of(1, 2, 3)
                 ->take(0)
-                ->values(new MtRand)
+                ->values(new MtRand),
         );
     }
 

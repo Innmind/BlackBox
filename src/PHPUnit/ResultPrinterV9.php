@@ -54,7 +54,7 @@ final class ResultPrinterV9 extends DefaultResultPrinter
         object $testCase,
         \Throwable $e,
         Value $value,
-        callable $test
+        callable $test,
     ): void {
         if (\is_null(self::$currentInstance)) {
             return;

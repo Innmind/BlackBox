@@ -167,7 +167,7 @@ class DecorateTest extends TestCase
                     yield 'gc';
                     yield 'eb';
                 }),
-            )
+            ),
         )->filter(static fn($object) => $object->prop->prop[0] === 'e');
 
         $this->assertCount(2, \iterator_to_array($set->values(new MtRand)));
@@ -191,7 +191,7 @@ class DecorateTest extends TestCase
                 yield 'fb';
                 yield 'gc';
                 yield 'eb';
-            })
+            }),
         );
 
         foreach ($nonShrinkable->values(new MtRand) as $value) {

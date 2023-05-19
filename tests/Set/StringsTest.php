@@ -128,7 +128,7 @@ class StringsTest extends TestCase
                 $value
                     ->shrink()
                     ->a() // length of 0
-                    ->shrinkable()
+                    ->shrinkable(),
             );
         }
     }
@@ -211,7 +211,7 @@ class StringsTest extends TestCase
             0,
             Strings::any()
                 ->take(0)
-                ->values(new MtRand)
+                ->values(new MtRand),
         );
     }
 

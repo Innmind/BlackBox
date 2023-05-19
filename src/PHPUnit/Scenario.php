@@ -33,7 +33,7 @@ final class Scenario
         callable $recordFailure,
         callable $expectsException,
         Set $first,
-        Set ...$sets
+        Set ...$sets,
     ) {
         if (\count($sets) === 0) {
             /** @var Set<list<mixed>> */

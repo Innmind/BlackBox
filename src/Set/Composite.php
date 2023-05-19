@@ -32,7 +32,7 @@ final class Composite implements Set
         callable $aggregate,
         Set $first,
         Set $second,
-        Set ...$sets
+        Set ...$sets,
     ) {
         $this->immutable = $immutable;
         /** @var \Closure(mixed...): C */
@@ -64,7 +64,7 @@ final class Composite implements Set
         callable $aggregate,
         Set $first,
         Set $second,
-        Set ...$sets
+        Set ...$sets,
     ): self {
         return new self(true, $aggregate, $first, $second, ...$sets);
     }
@@ -81,7 +81,7 @@ final class Composite implements Set
         callable $aggregate,
         Set $first,
         Set $second,
-        Set ...$sets
+        Set ...$sets,
     ): self {
         return new self(false, $aggregate, $first, $second, ...$sets);
     }
@@ -192,7 +192,7 @@ final class Composite implements Set
     private function shrinkWithStrategy(
         bool $mutable,
         Combination $combination,
-        Combination $strategy
+        Combination $strategy,
     ): callable {
         $shrinked = ($this->aggregate)(...$strategy->unwrap());
 

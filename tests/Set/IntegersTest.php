@@ -260,7 +260,7 @@ class IntegersTest extends TestCase
             0,
             Integers::any()
                 ->take(0)
-                ->values(new MtRand)
+                ->values(new MtRand),
         );
     }
 
