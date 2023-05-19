@@ -10,6 +10,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4', '8.0']
         with-reverse-regex: ['yes', 'no']
+        dependency-versions: ['lowest', 'highest']
     name: 'PHPUnit Latest'
     steps:
       - name: Checkout
@@ -22,6 +23,8 @@ jobs:
           coverage: xdebug
       - name: Composer
         uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
       - name: Install icomefromthenet/reverse-regex
         if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
         run: composer require icomefromthenet/reverse-regex
