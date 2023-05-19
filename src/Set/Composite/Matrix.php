@@ -8,6 +8,9 @@ use Innmind\BlackBox\{
     Random,
 };
 
+/**
+ * @internal
+ */
 final class Matrix
 {
     private Set $a;

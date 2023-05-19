@@ -5,6 +5,7 @@ namespace Innmind\BlackBox\Set;
 
 /**
  * @template T
+ * @internal
  */
 final class Dichotomy
 {

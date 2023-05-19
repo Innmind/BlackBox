@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Set\Composite;
 
 use Innmind\BlackBox\Set\Value;
 
+/**
+ * @internal
+ */
 final class Combination
 {
     /** @var non-empty-list<Value> */
