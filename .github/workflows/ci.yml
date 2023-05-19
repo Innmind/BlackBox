@@ -9,7 +9,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4', '8.0']
-        with-reverse-regex: ['yes', 'no']
         dependency-versions: ['lowest', 'highest']
     name: 'PHPUnit Latest'
     steps:
@@ -25,9 +24,6 @@ jobs:
         uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: ${{ matrix.dependencies }}
-      - name: Install icomefromthenet/reverse-regex
-        if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
-        run: composer require icomefromthenet/reverse-regex
       - name: PHPUnit
         run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover --exclude-group failing-on-purpose
       - uses: codecov/codecov-action@v1
@@ -40,7 +36,6 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         php-version: ['7.4', '8.0']
         phpunit-version: ['8']
-        with-reverse-regex: ['yes', 'no']
     name: 'PHPUnit'
     steps:
       - name: Checkout
@@ -53,9 +48,6 @@ jobs:
           coverage: xdebug
       - name: Composer
         uses: "ramsey/composer-install@v2"
-      - name: Install icomefromthenet/reverse-regex
-        if: ${{ matrix.with-reverse-regex == 'yes' && matrix.php-version == '7.4' }}
-        run: composer require icomefromthenet/reverse-regex
       - name: Install PHPUnit ${{ matrix.phpunit-version }}
         run: composer remove phpunit/phpunit && composer require sebastian/diff '~3.0' && composer require phpunit/phpunit '~${{ matrix.phpunit-version }}.0'
       - name: PHPUnit
@@ -134,8 +126,6 @@ jobs:
           extensions: mbstring, intl
       - name: Composer
         uses: "ramsey/composer-install@v2"
-      - name: Install icomefromthenet/reverse-regex
-        run: composer require icomefromthenet/reverse-regex
       - name: Psalm
         run: vendor/bin/psalm --shepherd
   cs:

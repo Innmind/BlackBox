@@ -35,8 +35,5 @@
         "vimeo/psalm": "~4.1",
         "ramsey/uuid": "^4.1",
         "innmind/coding-standard": "^1.1"
-    },
-    "suggest": {
-        "icomefromthenet/reverse-regex": "To be able to use Set\\Regex"
     }
 }
