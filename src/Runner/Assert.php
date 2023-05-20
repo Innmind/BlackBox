@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
+use Innmind\BlackBox\Runner\Assert\Failure;
+
 final class Assert
 {
     private Stats $stats;

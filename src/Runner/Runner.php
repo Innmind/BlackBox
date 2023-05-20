@@ -60,7 +60,7 @@ final class Runner
                             $assert,
                             $scenario,
                         );
-                    } catch (Failure $e) {
+                    } catch (Proof\Scenario\Failure $e) {
                         $print->failed(
                             $this->output,
                             $this->error,

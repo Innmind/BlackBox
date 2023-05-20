@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Runner\Printer;
 
 use Innmind\BlackBox\Runner\{
-    Failure,
+    Proof\Scenario\Failure,
     IO,
 };
 

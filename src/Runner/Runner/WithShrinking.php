@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Runner\Runner;
 use Innmind\BlackBox\{
     Set\Value,
     Runner\Assert,
-    Runner\Failure,
     Runner\Proof\Scenario,
     Runner\Printer,
     Runner\IO,
@@ -17,7 +16,7 @@ final class WithShrinking
     /**
      * @param Value<Scenario> $scenario
      *
-     * @throws Failure
+     * @throws Scenario\Failure
      */
     public function __invoke(
         Printer\Proof $print,
@@ -29,9 +28,9 @@ final class WithShrinking
         try {
             $scenario->unwrap()($assert);
             $print->success($output, $error);
-        } catch (Failure $e) {
+        } catch (Assert\Failure $e) {
             if (!$scenario->shrinkable()) {
-                throw $e;
+                throw Scenario\Failure::of($e, $scenario);
             }
 
             $this->shrink(
@@ -48,10 +47,10 @@ final class WithShrinking
     /**
      * @param Value<Scenario> $scenario
      *
-     * @throws Failure
+     * @throws Scenario\Failure
      */
     private function shrink(
-        Failure $previousFailure,
+        Assert\Failure $previousFailure,
         Printer\Proof $print,
         IO $output,
         IO $error,
@@ -68,7 +67,7 @@ final class WithShrinking
                 $currentStrategy->unwrap()($assert);
                 $currentStrategy = $dichotomy->b();
                 $currentStrategy->unwrap()($assert);
-            } catch (Failure $e) {
+            } catch (Assert\Failure $e) {
                 if ($currentStrategy->shrinkable()) {
                     $dichotomy = $currentStrategy->shrink();
                     $previousFailure = $e;
@@ -82,12 +81,12 @@ final class WithShrinking
                 // current strategy no longer shrinkable so it means we reached
                 // a leaf of our search tree meaning the current exception is the
                 // last one we can obtain
-                throw $e;
+                throw Scenario\Failure::of($e, $currentStrategy);
             }
 
             // when a and b work then the previous failure has been generated
             // with the smallest values possible
-            throw $previousFailure;
+            throw Scenario\Failure::of($previousFailure, $previousStrategy);
             // we can use an infinite condition here since all exits are covered
         } while (true);
     }

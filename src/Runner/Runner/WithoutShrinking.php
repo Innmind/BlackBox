@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Runner\Runner;
 use Innmind\BlackBox\{
     Set\Value,
     Runner\Assert,
-    Runner\Failure,
     Runner\Proof\Scenario,
     Runner\Printer,
     Runner\IO,
@@ -17,7 +16,7 @@ final class WithoutShrinking
     /**
      * @param Value<Scenario> $scenario
      *
-     * @throws Failure
+     * @throws Scenario\Failure
      */
     public function __invoke(
         Printer\Proof $print,
@@ -26,7 +25,11 @@ final class WithoutShrinking
         Assert $assert,
         Value $scenario,
     ): void {
-        $scenario->unwrap()($assert);
-        $print->success($output, $error);
+        try {
+            $scenario->unwrap()($assert);
+            $print->success($output, $error);
+        } catch (Assert\Failure $e) {
+            throw Scenario\Failure::of($e, $scenario);
+        }
     }
 }
