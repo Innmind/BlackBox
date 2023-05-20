@@ -123,6 +123,8 @@ final class Application
      */
     public function tryToProve(callable $proofs): Result
     {
+        require_once __DIR__.'/Runner/functions.php';
+
         $run = Runner::of(
             $this->random,
             $this->printer,

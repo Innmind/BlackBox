@@ -30,4 +30,12 @@ final class Assert
             throw new Failure;
         }
     }
+
+    /**
+     * @throws Failure
+     */
+    public function same(mixed $a, mixed $b): void
+    {
+        $this->that(static fn() => $a === $b);
+    }
 }
