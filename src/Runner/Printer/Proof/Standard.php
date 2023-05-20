@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Runner\Printer\Proof;
 
 use Innmind\BlackBox\Runner\{
     Proof\Scenario\Failure,
+    Assert\Failure\Truth,
+    Assert\Failure\Property,
+    Assert\Failure\Comparison,
     IO,
     Printer\Proof,
 };
@@ -53,16 +56,10 @@ final class Standard implements Proof
         $this->newLine($output);
         $error("F\n");
         $output('$proof = ');
-        $output(
-            $this->dumper->dump(
-                $this->cloner->cloneVar(
-                    $failure->scenario()->unwrap(),
-                ),
-                true,
-            ) ?? '',
-        );
+        $output($this->dump($failure->scenario()->unwrap()));
 
-        // TODO improve the detail of the error depending on the kind of failure
+        $this->renderFailure($output, $failure->assertion()->kind());
+
         $output(\sprintf(
             "\n%s\n",
             $failure->assertion()->kind()->message(),
@@ -124,5 +121,42 @@ final class Standard implements Proof
         }
 
         ++$this->scenarii;
+    }
+
+    private function renderFailure(
+        IO $output,
+        Truth|Property|Comparison $failure,
+    ): void {
+        if ($failure instanceof Truth) {
+            return;
+        }
+
+        if ($failure instanceof Property) {
+            $output(\sprintf(
+                '$variable = %s',
+                $this->dump($failure->value()),
+            ));
+
+            return;
+        }
+
+        $output(\sprintf(
+            '$expected = %s',
+            $this->dump($failure->expected()),
+        ));
+        $output(\sprintf(
+            '$actual = %s',
+            $this->dump($failure->actual()),
+        ));
+    }
+
+    private function dump(mixed $value): string
+    {
+        return $this->dumper->dump(
+            $this->cloner->cloneVar(
+                $value,
+            ),
+            true,
+        ) ?? '';
     }
 }
