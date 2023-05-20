@@ -26,6 +26,7 @@ final class WithoutShrinking
         Assert $assert,
         Value $scenario,
     ): void {
-        // TODO
+        $scenario->unwrap()($assert);
+        $print->success($output, $error);
     }
 }
