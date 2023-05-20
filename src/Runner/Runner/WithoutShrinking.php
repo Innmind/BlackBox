@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Runner\Assert,
     Runner\Failure,
     Runner\Proof\Scenario,
+    Runner\Printer,
 };
 
 final class WithoutShrinking
@@ -17,8 +18,11 @@ final class WithoutShrinking
      *
      * @throws Failure
      */
-    public function __invoke(Assert $assert, Value $scenario): void
-    {
+    public function __invoke(
+        Printer\Proof $print,
+        Assert $assert,
+        Value $scenario,
+    ): void {
         // TODO
     }
 }

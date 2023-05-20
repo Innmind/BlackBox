@@ -13,42 +13,52 @@ use Innmind\BlackBox\{
 final class Runner
 {
     private Random $random;
+    private Printer $print;
+    private WithShrinking|WithoutShrinking $run;
     /** @var \Generator<Proof> */
     private \Generator $proofs;
-    private WithShrinking|WithoutShrinking $run;
 
     /**
      * @param \Generator<Proof> $proofs
      */
     private function __construct(
         Random $random,
-        \Generator $proofs,
+        Printer $print,
         WithShrinking|WithoutShrinking $run,
+        \Generator $proofs,
     ) {
         $this->random = $random;
-        $this->proofs = $proofs;
+        $this->print = $print;
         $this->run = $run;
+        $this->proofs = $proofs;
     }
 
     public function __invoke(Assert $assert): void
     {
+        $this->print->start();
+
         foreach ($this->proofs as $proof) {
-            // TODO print start of proof
-            foreach ($proof->scenarii()->values($this->random) as $scenario) {
-                try {
-                    // TODO also inject the printer to show the shrinking process
-                    ($this->run)($assert, $scenario);
-                } catch (Failure $e) {
-                    // TODO print the failure
-                    break;
-                } catch (EmptySet $e) {
-                    // TODO print that the set is too restrictive
-                    break;
+            $print = $this->print->proof($proof->name());
+
+            try {
+                foreach ($proof->scenarii()->values($this->random) as $scenario) {
+                    try {
+                        ($this->run)($print, $assert, $scenario);
+                    } catch (Failure $e) {
+                        $print->failed($e);
+
+                        break;
+                    }
                 }
+            } catch (EmptySet $e) {
+                $print->emptySet();
+
+                break;
             }
-            // TODO print end of proof
+
+            $print->end();
         }
 
-        // TODO print end of proofs
+        $this->print->end();
     }
 }
