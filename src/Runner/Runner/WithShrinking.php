@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     Runner\Failure,
     Runner\Proof\Scenario,
     Runner\Printer,
+    Runner\IO,
 };
 
 final class WithShrinking
@@ -20,6 +21,8 @@ final class WithShrinking
      */
     public function __invoke(
         Printer\Proof $print,
+        IO $output,
+        IO $error,
         Assert $assert,
         Value $scenario,
     ): void {

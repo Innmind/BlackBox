@@ -3,13 +3,16 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Printer;
 
-use Innmind\BlackBox\Runner\Failure;
+use Innmind\BlackBox\Runner\{
+    Failure,
+    IO,
+};
 
 interface Proof
 {
-    public function emptySet(): void;
-    public function success(): void;
-    public function shrunk(): void;
-    public function failed(Failure $failure): void;
-    public function end(): void;
+    public function emptySet(IO $output, IO $error): void;
+    public function success(IO $output, IO $error): void;
+    public function shrunk(IO $output, IO $error): void;
+    public function failed(IO $output, IO $error, Failure $failure): void;
+    public function end(IO $output, IO $error): void;
 }

@@ -14,6 +14,8 @@ final class Runner
 {
     private Random $random;
     private Printer $print;
+    private IO $output;
+    private IO $error;
     private WithShrinking|WithoutShrinking $run;
     /** @var \Generator<Proof> */
     private \Generator $proofs;
@@ -24,41 +26,59 @@ final class Runner
     private function __construct(
         Random $random,
         Printer $print,
+        IO $output,
+        IO $error,
         WithShrinking|WithoutShrinking $run,
         \Generator $proofs,
     ) {
         $this->random = $random;
         $this->print = $print;
+        $this->output = $output;
+        $this->error = $error;
         $this->run = $run;
         $this->proofs = $proofs;
     }
 
     public function __invoke(Assert $assert): void
     {
-        $this->print->start();
+        $this->print->start($this->output, $this->error);
 
         foreach ($this->proofs as $proof) {
-            $print = $this->print->proof($proof->name());
+            $print = $this->print->proof(
+                $this->output,
+                $this->error,
+                $proof->name(),
+            );
 
             try {
                 foreach ($proof->scenarii()->values($this->random) as $scenario) {
                     try {
-                        ($this->run)($print, $assert, $scenario);
+                        ($this->run)(
+                            $print,
+                            $this->output,
+                            $this->error,
+                            $assert,
+                            $scenario,
+                        );
                     } catch (Failure $e) {
-                        $print->failed($e);
+                        $print->failed(
+                            $this->output,
+                            $this->error,
+                            $e,
+                        );
 
                         break;
                     }
                 }
             } catch (EmptySet $e) {
-                $print->emptySet();
+                $print->emptySet($this->output, $this->error);
 
                 break;
             }
 
-            $print->end();
+            $print->end($this->output, $this->error);
         }
 
-        $this->print->end();
+        $this->print->end($this->output, $this->error);
     }
 }
