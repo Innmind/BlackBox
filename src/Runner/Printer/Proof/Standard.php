@@ -62,6 +62,12 @@ final class Standard implements Proof
             ) ?? '',
         );
 
+        // TODO improve the detail of the error depending on the kind of failure
+        $output(\sprintf(
+            "\n%s\n",
+            $failure->assertion()->kind()->message(),
+        ));
+
         /**
          * @var list<array{
          *      file?: string,
