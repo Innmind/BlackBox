@@ -43,4 +43,9 @@ final class Failure extends \Exception
     {
         return $this->scenario;
     }
+
+    public function assertion(): Assert\Failure
+    {
+        return $this->failure;
+    }
 }

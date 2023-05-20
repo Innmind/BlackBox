@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
-use Innmind\BlackBox\Runner\Assert\Failure;
+use Innmind\BlackBox\Runner\Assert\{
+    Failure,
+    Failure\Truth,
+};
 
 final class Assert
 {
@@ -21,15 +24,18 @@ final class Assert
 
     /**
      * @param callable(): bool $assertion
+     * @param non-empty-string $message
      *
      * @throws Failure
      */
-    public function that(callable $assertion): void
-    {
+    public function that(
+        callable $assertion,
+        string $message = null,
+    ): void {
         $this->stats->incrementAssertions();
 
         if (!$assertion()) {
-            throw new Failure;
+            throw Failure::of(Truth::of($message ?? 'Failed to verify that an assertion is true'));
         }
     }
 
