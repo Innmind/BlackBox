@@ -39,7 +39,7 @@ final class Runner
         $this->proofs = $proofs;
     }
 
-    public function __invoke(Assert $assert): void
+    public function __invoke(Stats $stats, Assert $assert): void
     {
         $this->print->start($this->output, $this->error);
 
@@ -79,6 +79,27 @@ final class Runner
             $print->end($this->output, $this->error);
         }
 
-        $this->print->end($this->output, $this->error);
+        $this->print->end($this->output, $this->error, $stats);
+    }
+
+    /**
+     * @param \Generator<Proof> $proofs
+     */
+    public static function of(
+        Random $random,
+        Printer $print,
+        IO $output,
+        IO $error,
+        WithShrinking|WithoutShrinking $run,
+        \Generator $proofs,
+    ): self {
+        return new self(
+            $random,
+            $print,
+            $output,
+            $error,
+            $run,
+            $proofs,
+        );
     }
 }

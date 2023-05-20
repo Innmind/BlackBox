@@ -5,8 +5,16 @@ namespace Innmind\BlackBox\Runner;
 
 final class Assert
 {
-    private function __construct()
+    private Stats $stats;
+
+    private function __construct(Stats $stats)
     {
+        $this->stats = $stats;
+    }
+
+    public static function of(Stats $stats): self
+    {
+        return new self($stats);
     }
 
     /**
