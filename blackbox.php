@@ -5,10 +5,9 @@ require 'vendor/autoload.php';
 
 use Innmind\BlackBox\{
     Application,
+    Runner\Load,
 };
 
 Application::new()
-    ->tryToProve(function() {
-        yield from (require __DIR__.'/proofs/add.php')();
-    })
+    ->tryToProve(Load::from(__DIR__.'/proofs/add.php'))
     ->exit();
