@@ -39,7 +39,13 @@ final class Application
 
     public static function new(): self
     {
-        return new self();
+        return new self(
+            Random::default,
+            Printer\Default::new(),
+            IO\Standard::output,
+            IO\Standard::error,
+            new WithShrinking,
+        );
     }
 
     /**
