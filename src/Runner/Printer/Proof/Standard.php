@@ -52,6 +52,7 @@ final class Standard implements Proof
     {
         $this->newLine($output);
         $error("F\n");
+        $output('$proof = ');
         $output(
             $this->dumper->dump(
                 $this->cloner->cloneVar(
