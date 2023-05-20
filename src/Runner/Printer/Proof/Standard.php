@@ -65,7 +65,7 @@ final class Standard implements Proof
 
     public function end(IO $output, IO $error): void
     {
-        $output("\n");
+        $output("\n\n");
     }
 
     private function newLine(IO $output): void
