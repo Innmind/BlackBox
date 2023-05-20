@@ -35,9 +35,16 @@ final class Standard implements Printer
 
     public function end(IO $output, IO $error, Stats $stats): void
     {
+        $statsToPrint = \sprintf(
+            'Proofs: %s, Scenarii: %s, Assertions: %s',
+            $stats->proofs(),
+            $stats->scenarii(),
+            $stats->assertions(),
+        );
+
         match ($stats->successful()) {
-            true => $output("OK\n"),
-            false => $error("Failed\n"),
+            true => $output("OK\n$statsToPrint\n"),
+            false => $error("Failed\n$statsToPrint, Failures: {$stats->failures()}\n"),
         };
     }
 }

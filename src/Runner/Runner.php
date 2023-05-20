@@ -44,6 +44,7 @@ final class Runner
         $this->print->start($this->output, $this->error);
 
         foreach ($this->proofs as $proof) {
+            $stats->incrementProofs();
             $print = $this->print->proof(
                 $this->output,
                 $this->error,
@@ -52,6 +53,8 @@ final class Runner
 
             try {
                 foreach ($proof->scenarii()->values($this->random) as $scenario) {
+                    $stats->incrementScenarii();
+
                     try {
                         ($this->run)(
                             $print,
@@ -61,6 +64,7 @@ final class Runner
                             $scenario,
                         );
                     } catch (Proof\Scenario\Failure $e) {
+                        $stats->incrementFailures();
                         $print->failed(
                             $this->output,
                             $this->error,

@@ -26,6 +26,8 @@ final class Assert
      */
     public function that(callable $assertion): void
     {
+        $this->stats->incrementAssertions();
+
         if (!$assertion()) {
             throw new Failure;
         }
