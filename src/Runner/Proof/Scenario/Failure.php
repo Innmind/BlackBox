@@ -35,4 +35,12 @@ final class Failure extends \Exception
     ): self {
         return new self($failure, $scenario);
     }
+
+    /**
+     * @return Value<Scenario>
+     */
+    public function scenario(): Value
+    {
+        return $this->scenario;
+    }
 }
