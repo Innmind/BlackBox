@@ -16,19 +16,24 @@ final class Generic implements Proof
     private Set $values;
     /** @var \Closure(Assert, ...mixed): void */
     private \Closure $test;
+    /** @var list<\UnitEnum> */
+    private array $tags;
 
     /**
      * @param Set<list<mixed>> $values
      * @param \Closure(Assert, ...mixed): void $test
+     * @param list<\UnitEnum> $tags
      */
     private function __construct(
         Name $name,
         Set $values,
         \Closure $test,
+        array $tags,
     ) {
         $this->name = $name;
         $this->values = $values;
         $this->test = $test;
+        $this->tags = $tags;
     }
 
     /**
@@ -40,12 +45,31 @@ final class Generic implements Proof
         Set $values,
         \Closure $test,
     ): self {
-        return new self($name, $values, $test);
+        return new self($name, $values, $test, []);
     }
 
     public function name(): Name
     {
         return $this->name;
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @no-named-arguments
+     */
+    public function tag(\UnitEnum ...$tags): self
+    {
+        return new self(
+            $this->name,
+            $this->values,
+            $this->test,
+            [...$this->tags, ...$tags],
+        );
+    }
+
+    public function tags(): array
+    {
+        return $this->tags;
     }
 
     public function scenarii(): Set

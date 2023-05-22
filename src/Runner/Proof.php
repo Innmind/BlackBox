@@ -14,6 +14,17 @@ interface Proof
     public function name(): Name;
 
     /**
+     * @psalm-mutation-free
+     * @no-named-arguments
+     */
+    public function tag(\UnitEnum ...$tags): self;
+
+    /**
+     * @return list<\UnitEnum>
+     */
+    public function tags(): array;
+
+    /**
      * @return Set<Scenario>
      */
     public function scenarii(): Set;
