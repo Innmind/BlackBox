@@ -9,11 +9,18 @@ use Innmind\BlackBox\Runner\{
     Proof,
     Stats,
 };
+use SebastianBergmann\Timer\{
+    Timer,
+    ResourceUsageFormatter,
+};
 
 final class Standard implements Printer
 {
+    private Timer $timer;
+
     private function __construct()
     {
+        $this->timer = new Timer;
     }
 
     public static function new(): self
@@ -23,6 +30,8 @@ final class Standard implements Printer
 
     public function start(IO $output, IO $error): void
     {
+        $this->timer->start();
+
         $output("BlackBox\n");
     }
 
@@ -41,6 +50,9 @@ final class Standard implements Printer
             $stats->scenarii(),
             $stats->assertions(),
         );
+
+        $output((new ResourceUsageFormatter)->resourceUsage($this->timer->stop()));
+        $output("\n\n");
 
         match ($stats->successful()) {
             true => $output("OK\n$statsToPrint\n"),
