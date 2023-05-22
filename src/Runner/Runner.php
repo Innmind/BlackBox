@@ -49,6 +49,7 @@ final class Runner
                 $this->output,
                 $this->error,
                 $proof->name(),
+                $proof->tags(),
             );
 
             try {

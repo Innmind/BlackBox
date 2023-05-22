@@ -35,8 +35,20 @@ final class Standard implements Printer
         $output("BlackBox\n");
     }
 
-    public function proof(IO $output, IO $error, Proof\Name $proof): Printer\Proof
-    {
+    public function proof(
+        IO $output,
+        IO $error,
+        Proof\Name $proof,
+        array $tags,
+    ): Printer\Proof {
+        foreach ($tags as $tag) {
+            $output("[{$tag->name}]");
+        }
+
+        if (\count($tags) > 0) {
+            $output(' ');
+        }
+
         $output($proof->toString().":\n");
 
         return Printer\Proof\Standard::new();
