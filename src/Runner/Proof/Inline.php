@@ -102,7 +102,7 @@ final class Inline implements Proof
          * @var Set<Scenario>
          */
         return Set\Decorate::immutable(
-            fn(array $args) => Scenario\Generic::of($args, $this->test),
+            fn(array $args) => Scenario\Inline::of($args, $this->test),
             $this->values,
         )->take($this->scenarii ?? $count);
     }

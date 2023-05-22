@@ -8,7 +8,7 @@ use Innmind\BlackBox\Runner\{
     Proof\Scenario,
 };
 
-final class Generic implements Scenario
+final class Inline implements Scenario
 {
     /** @var list<mixed> */
     private array $args;
