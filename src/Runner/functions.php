@@ -25,6 +25,18 @@ function proof(
 }
 
 /**
+ * @param non-empty-string $name
+ * @param callable(Assert): void $test
+ */
+function test(string $name, callable $test): Proof
+{
+    return Proof\Inline::test(
+        Proof\Name::of($name),
+        \Closure::fromCallable($test),
+    );
+}
+
+/**
  * @no-named-arguments
  *
  * @return Set<list<mixed>>

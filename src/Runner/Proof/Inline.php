@@ -18,22 +18,27 @@ final class Inline implements Proof
     private \Closure $test;
     /** @var list<\UnitEnum> */
     private array $tags;
+    /** @var ?positive-int */
+    private ?int $scenarii;
 
     /**
      * @param Set<list<mixed>> $values
      * @param \Closure(Assert, ...mixed): void $test
      * @param list<\UnitEnum> $tags
+     * @param ?positive-int $scenarii
      */
     private function __construct(
         Name $name,
         Set $values,
         \Closure $test,
         array $tags,
+        ?int $scenarii,
     ) {
         $this->name = $name;
         $this->values = $values;
         $this->test = $test;
         $this->tags = $tags;
+        $this->scenarii = $scenarii;
     }
 
     /**
@@ -45,7 +50,23 @@ final class Inline implements Proof
         Set $values,
         \Closure $test,
     ): self {
-        return new self($name, $values, $test, []);
+        return new self($name, $values, $test, [], null);
+    }
+
+    /**
+     * @param \Closure(Assert): void $test
+     */
+    public static function test(
+        Name $name,
+        \Closure $test,
+    ): self {
+        return new self(
+            $name,
+            Set\Elements::of([]),
+            $test,
+            [],
+            1,
+        );
     }
 
     public function name(): Name
@@ -64,6 +85,7 @@ final class Inline implements Proof
             $this->values,
             $this->test,
             [...$this->tags, ...$tags],
+            $this->scenarii,
         );
     }
 
@@ -82,6 +104,6 @@ final class Inline implements Proof
         return Set\Decorate::immutable(
             fn(array $args) => Scenario\Generic::of($args, $this->test),
             $this->values,
-        )->take($count);
+        )->take($this->scenarii ?? $count);
     }
 }
