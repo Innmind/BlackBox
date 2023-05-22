@@ -9,7 +9,7 @@ use Innmind\BlackBox\{
     Runner\Assert,
 };
 
-final class Generic implements Proof
+final class Inline implements Proof
 {
     private Name $name;
     /** @var Set<list<mixed>> */

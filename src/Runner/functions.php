@@ -17,7 +17,7 @@ function proof(
     Set $given,
     callable $test,
 ): Proof {
-    return Proof\Generic::of(
+    return Proof\Inline::of(
         Proof\Name::of($name),
         $given,
         \Closure::fromCallable($test),
