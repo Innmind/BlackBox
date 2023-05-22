@@ -19,11 +19,6 @@ final class UpChangeState implements Property
         return Set\Elements::of(new self);
     }
 
-    public function name(): string
-    {
-        return 'Up change state';
-    }
-
     public function applicableTo(object $counter): bool
     {
         return $counter->current() < 100;

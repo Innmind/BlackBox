@@ -19,11 +19,6 @@ final class UpperBoundAtHundred implements Property
         return Set\Elements::of(new self);
     }
 
-    public function name(): string
-    {
-        return 'Counter can not go higher than 100';
-    }
-
     public function applicableTo(object $counter): bool
     {
         return $counter->current() > 98;

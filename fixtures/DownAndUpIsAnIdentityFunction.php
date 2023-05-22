@@ -19,11 +19,6 @@ final class DownAndUpIsAnIdentityFunction implements Property
         return Set\Elements::of(new self);
     }
 
-    public function name(): string
-    {
-        return 'Down and up return to the initial value';
-    }
-
     public function applicableTo(object $counter): bool
     {
         return $counter->current() > 0;

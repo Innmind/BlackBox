@@ -29,11 +29,6 @@ final class RaiseBy implements Property
         );
     }
 
-    public function name(): string
-    {
-        return 'Raise by '.$this->raise;
-    }
-
     public function applicableTo(object $counter): bool
     {
         return $counter->current() < 100;

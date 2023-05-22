@@ -11,7 +11,6 @@ interface Property
      * @return Set<static>
      */
     public static function any(): Set;
-    public function name(): string;
     public function applicableTo(object $systemUnderTest): bool;
 
     /**

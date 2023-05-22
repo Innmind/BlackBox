@@ -19,11 +19,6 @@ final class UpAndDownIsAnIdentityFunction implements Property
         return Set\Elements::of(new self);
     }
 
-    public function name(): string
-    {
-        return 'Up and down return to the initial value';
-    }
-
     public function applicableTo(object $counter): bool
     {
         return $counter->current() < 99;

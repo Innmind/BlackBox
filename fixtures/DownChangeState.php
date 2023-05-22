@@ -19,11 +19,6 @@ final class DownChangeState implements Property
         return Set\Elements::of(new self);
     }
 
-    public function name(): string
-    {
-        return 'Down change state';
-    }
-
     public function applicableTo(object $counter): bool
     {
         return $counter->current() > 0;
