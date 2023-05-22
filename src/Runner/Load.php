@@ -16,8 +16,15 @@ final class Load
      */
     public function __invoke(string $path): \Generator
     {
-        /** @psalm-suppress UnresolvableInclude Presume the developer uses a valid absolute path */
-        yield from (require $path)($this);
+        /**
+         * @psalm-suppress UnresolvableInclude Presume the developer uses a valid absolute path
+         * @var mixed $value
+         */
+        foreach ((require $path)($this) as $value) {
+            if ($value instanceof Proof) {
+                yield $value;
+            }
+        }
     }
 
     /**
