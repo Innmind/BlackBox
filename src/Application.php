@@ -27,10 +27,13 @@ final class Application
     private \Closure $parseTag;
     /** @var list<string> */
     private array $args;
+    /** @var positive-int */
+    private int $scenariiPerProof;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
      * @param list<string> $args
+     * @param positive-int $scenariiPerProof
      */
     private function __construct(
         Random $random,
@@ -40,6 +43,7 @@ final class Application
         WithShrinking|WithoutShrinking $runner,
         \Closure $parseTag,
         array $args,
+        int $scenariiPerProof,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -48,6 +52,7 @@ final class Application
         $this->runner = $runner;
         $this->parseTag = $parseTag;
         $this->args = $args;
+        $this->scenariiPerProof = $scenariiPerProof;
     }
 
     /**
@@ -63,6 +68,7 @@ final class Application
             new WithShrinking,
             Tag::of(...),
             $args,
+            100,
         );
     }
 
@@ -79,6 +85,7 @@ final class Application
             $this->runner,
             $this->parseTag,
             $this->args,
+            $this->scenariiPerProof,
         );
     }
 
@@ -95,6 +102,7 @@ final class Application
             $this->runner,
             $this->parseTag,
             $this->args,
+            $this->scenariiPerProof,
         );
     }
 
@@ -111,6 +119,7 @@ final class Application
             $this->runner,
             $this->parseTag,
             $this->args,
+            $this->scenariiPerProof,
         );
     }
 
@@ -127,6 +136,7 @@ final class Application
             $this->runner,
             $this->parseTag,
             $this->args,
+            $this->scenariiPerProof,
         );
     }
 
@@ -143,6 +153,7 @@ final class Application
             new WithoutShrinking,
             $this->parseTag,
             $this->args,
+            $this->scenariiPerProof,
         );
     }
 
@@ -161,6 +172,26 @@ final class Application
             $this->runner,
             fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
             $this->args,
+            $this->scenariiPerProof,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param positive-int $count
+     */
+    public function scenariiPerProof(int $count): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->args,
+            $count,
         );
     }
 
@@ -182,6 +213,7 @@ final class Application
             $this->error,
             $this->runner,
             $filter($proofs()),
+            $this->scenariiPerProof,
         );
         $stats = Stats::new();
         $assert = Assert::of($stats);

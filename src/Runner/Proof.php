@@ -25,7 +25,9 @@ interface Proof
     public function tags(): array;
 
     /**
+     * @param positive-int $count
+     *
      * @return Set<Scenario>
      */
-    public function scenarii(): Set;
+    public function scenarii(int $count): Set;
 }

@@ -72,7 +72,7 @@ final class Inline implements Proof
         return $this->tags;
     }
 
-    public function scenarii(): Set
+    public function scenarii(int $count): Set
     {
         /**
          * @psalm-suppress ArgumentTypeCoercion
@@ -82,6 +82,6 @@ final class Inline implements Proof
         return Set\Decorate::immutable(
             fn(array $args) => Scenario\Generic::of($args, $this->test),
             $this->values,
-        );
+        )->take($count);
     }
 }

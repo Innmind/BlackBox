@@ -19,9 +19,12 @@ final class Runner
     private WithShrinking|WithoutShrinking $run;
     /** @var \Generator<Proof> */
     private \Generator $proofs;
+    /** @var positive-int */
+    private int $scenariiPerProof;
 
     /**
      * @param \Generator<Proof> $proofs
+     * @param positive-int $scenariiPerProof
      */
     private function __construct(
         Random $random,
@@ -30,6 +33,7 @@ final class Runner
         IO $error,
         WithShrinking|WithoutShrinking $run,
         \Generator $proofs,
+        int $scenariiPerProof,
     ) {
         $this->random = $random;
         $this->print = $print;
@@ -37,6 +41,7 @@ final class Runner
         $this->error = $error;
         $this->run = $run;
         $this->proofs = $proofs;
+        $this->scenariiPerProof = $scenariiPerProof;
     }
 
     public function __invoke(Stats $stats, Assert $assert): void
@@ -53,7 +58,11 @@ final class Runner
             );
 
             try {
-                foreach ($proof->scenarii()->values($this->random) as $scenario) {
+                $scenarii = $proof
+                    ->scenarii($this->scenariiPerProof)
+                    ->values($this->random);
+
+                foreach ($scenarii as $scenario) {
                     $stats->incrementScenarii();
 
                     try {
@@ -89,6 +98,7 @@ final class Runner
 
     /**
      * @param \Generator<Proof> $proofs
+     * @param positive-int $scenariiPerProof
      */
     public static function of(
         Random $random,
@@ -97,6 +107,7 @@ final class Runner
         IO $error,
         WithShrinking|WithoutShrinking $run,
         \Generator $proofs,
+        int $scenariiPerProof,
     ): self {
         return new self(
             $random,
@@ -105,6 +116,7 @@ final class Runner
             $error,
             $run,
             $proofs,
+            $scenariiPerProof,
         );
     }
 }
