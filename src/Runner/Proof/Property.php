@@ -14,6 +14,8 @@ final class Property implements Proof
 {
     /** @var class-string<Concrete> */
     private string $property;
+    /** @var ?non-empty-string */
+    private ?string $name;
     /** @var Set<object> */
     private Set $systemUnderTest;
     /** @var list<\UnitEnum> */
@@ -21,15 +23,18 @@ final class Property implements Proof
 
     /**
      * @param class-string<Concrete> $property
+     * @param ?non-empty-string $name
      * @param Set<object> $systemUnderTest
      * @param list<\UnitEnum> $tags
      */
     private function __construct(
         string $property,
+        ?string $name,
         Set $systemUnderTest,
         array $tags,
     ) {
         $this->property = $property;
+        $this->name = $name;
         $this->systemUnderTest = $systemUnderTest;
         $this->tags = $tags;
     }
@@ -42,12 +47,34 @@ final class Property implements Proof
         string $property,
         Set $systemUnderTest,
     ): self {
-        return new self($property, $systemUnderTest, []);
+        return new self($property, null, $systemUnderTest, []);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param non-empty-string $name
+     */
+    public function named(string $name): self
+    {
+        return new self(
+            $this->property,
+            $name,
+            $this->systemUnderTest,
+            $this->tags,
+        );
     }
 
     public function name(): Name
     {
-        return Name::of($this->property);
+        return Name::of(match ($this->name) {
+            null => $this->property,
+            default => \sprintf(
+                '%s(%s)',
+                $this->property,
+                $this->name,
+            ),
+        });
     }
 
     /**
@@ -58,6 +85,7 @@ final class Property implements Proof
     {
         return new self(
             $this->property,
+            $this->name,
             $this->systemUnderTest,
             [...$this->tags, ...$tags],
         );
