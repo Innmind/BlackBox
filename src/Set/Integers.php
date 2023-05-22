@@ -31,6 +31,9 @@ final class Integers implements Set
         return new self(\PHP_INT_MIN, \PHP_INT_MAX);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public static function between(int $lowerBound, int $upperBound): self
     {
         return new self($lowerBound, $upperBound);

@@ -27,13 +27,13 @@ class CounterTest extends TestCase
     public function testProperties()
     {
         $this
-            ->forAll(Set\Properties::of(
-                new LowerBoundAtZero,
-                new UpperBoundAtHundred,
-                new UpAndDownIsAnIdentityFunction,
-                new DownAndUpIsAnIdentityFunction,
-                new DownChangeState,
-                new UpChangeState,
+            ->forAll(Set\Properties::any(
+                LowerBoundAtZero::any(),
+                UpperBoundAtHundred::any(),
+                UpAndDownIsAnIdentityFunction::any(),
+                DownAndUpIsAnIdentityFunction::any(),
+                DownChangeState::any(),
+                UpChangeState::any(),
             ))
             ->then(static function($properties) {
                 $properties->ensureHeldBy(new Counter);
@@ -44,13 +44,13 @@ class CounterTest extends TestCase
     {
         $this
             ->forAll(
-                Set\Properties::of(
-                    new LowerBoundAtZero,
-                    new UpperBoundAtHundred,
-                    new UpAndDownIsAnIdentityFunction,
-                    new DownAndUpIsAnIdentityFunction,
-                    new DownChangeState,
-                    new UpChangeState,
+                Set\Properties::any(
+                    LowerBoundAtZero::any(),
+                    UpperBoundAtHundred::any(),
+                    UpAndDownIsAnIdentityFunction::any(),
+                    DownAndUpIsAnIdentityFunction::any(),
+                    DownChangeState::any(),
+                    UpChangeState::any(),
                 ),
                 Set\Integers::between(0, 100),
             )

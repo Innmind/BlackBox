@@ -20,16 +20,16 @@ class PropertiesTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            Properties::of(
-                $this->createMock(Property::class),
+            Properties::any(
+                Set\Elements::of($this->createMock(Property::class)),
             ),
         );
     }
 
     public function testGenerate100ScenariiByDefault()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
 
         $this->assertCount(100, \iterator_to_array($properties->values(Random::mersenneTwister)));
@@ -37,8 +37,8 @@ class PropertiesTest extends TestCase
 
     public function testGeneratePropertiesModel()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
 
         foreach ($properties->values(Random::mersenneTwister) as $scenario) {
@@ -48,8 +48,8 @@ class PropertiesTest extends TestCase
 
     public function testValuesAreConsideredImmutable()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
 
         foreach ($properties->values(Random::mersenneTwister) as $scenario) {
@@ -59,8 +59,8 @@ class PropertiesTest extends TestCase
 
     public function testScenariiAreOfDifferentSizes()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
         $sizes = [];
 
@@ -73,8 +73,8 @@ class PropertiesTest extends TestCase
 
     public function testTake()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
         $properties2 = $properties->take(50);
 
@@ -86,8 +86,8 @@ class PropertiesTest extends TestCase
 
     public function testFilter()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
         $properties2 = $properties->filter(static fn($scenario) => \count($scenario->properties()) > 50);
 
@@ -112,39 +112,17 @@ class PropertiesTest extends TestCase
         );
     }
 
-    public function testAtLeastOnePropertyIsEnforced()
+    public function testMaxNumberOfPropertiesGeneratedAtOnce()
     {
-        $this
-            ->forAll(
-                Set\Integers::below(0),
-                Set\Integers::above(1),
-            )
-            ->then(function($lowerBound, $upperBound) {
-                $this->expectException(\LogicException::class);
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
+        )->atMost(50);
+        $sizes = [];
 
-                Properties::chooseFrom(
-                    Set\Elements::of($this->createMock(Property::class)),
-                    Set\Integers::between($lowerBound, $upperBound),
-                );
-            });
-    }
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
+            $sizes[] = \count($scenario->unwrap()->properties());
+        }
 
-    public function testAnyLowerBoundAbove1IsAccepted()
-    {
-        $this
-            ->forAll(
-                Set\Integers::above(1),
-                Set\Integers::above(1),
-            )
-            ->filter(fn($lowerBound, $upperBound) => $upperBound > $lowerBound)
-            ->then(function($lowerBound, $upperBound) {
-                $this->assertInstanceOf(
-                    Set::class,
-                    Properties::chooseFrom(
-                        Set\Elements::of($this->createMock(Property::class)),
-                        Set\Integers::between($lowerBound, $upperBound),
-                    ),
-                );
-            });
+        $this->assertLessThanOrEqual(50, \max($sizes));
     }
 }
