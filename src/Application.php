@@ -13,6 +13,7 @@ use Innmind\BlackBox\Runner\{
     Result,
     Stats,
     Assert,
+    Filter,
 };
 
 final class Application
@@ -22,22 +23,37 @@ final class Application
     private IO $output;
     private IO $error;
     private WithShrinking|WithoutShrinking $runner;
+    /** @var \Closure(string): ?\UnitEnum */
+    private \Closure $parseTag;
+    /** @var list<string> */
+    private array $args;
 
+    /**
+     * @param \Closure(string): ?\UnitEnum $parseTag
+     * @param list<string> $args
+     */
     private function __construct(
         Random $random,
         Printer $printer,
         IO $output,
         IO $error,
         WithShrinking|WithoutShrinking $runner,
+        \Closure $parseTag,
+        array $args,
     ) {
         $this->random = $random;
         $this->printer = $printer;
         $this->output = $output;
         $this->error = $error;
         $this->runner = $runner;
+        $this->parseTag = $parseTag;
+        $this->args = $args;
     }
 
-    public static function new(): self
+    /**
+     * @param list<string> $args
+     */
+    public static function new(array $args): self
     {
         return new self(
             Random::default,
@@ -45,6 +61,8 @@ final class Application
             IO\Standard::output,
             IO\Standard::error,
             new WithShrinking,
+            Tag::of(...),
+            $args,
         );
     }
 
@@ -59,6 +77,8 @@ final class Application
             $this->output,
             $this->error,
             $this->runner,
+            $this->parseTag,
+            $this->args,
         );
     }
 
@@ -73,6 +93,8 @@ final class Application
             $this->output,
             $this->error,
             $this->runner,
+            $this->parseTag,
+            $this->args,
         );
     }
 
@@ -87,6 +109,8 @@ final class Application
             $output,
             $this->error,
             $this->runner,
+            $this->parseTag,
+            $this->args,
         );
     }
 
@@ -101,6 +125,8 @@ final class Application
             $this->output,
             $error,
             $this->runner,
+            $this->parseTag,
+            $this->args,
         );
     }
 
@@ -115,6 +141,26 @@ final class Application
             $this->output,
             $this->error,
             new WithoutShrinking,
+            $this->parseTag,
+            $this->args,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(string): ?\UnitEnum $parser
+     */
+    public function parseTagWith(callable $parser): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
+            $this->args,
         );
     }
 
@@ -125,13 +171,17 @@ final class Application
     {
         require_once __DIR__.'/Runner/functions.php';
 
+        $tags = \array_map($this->parseTag, $this->args);
+        $tags = \array_filter($tags, static fn($tag) => $tag instanceof \UnitEnum);
+        $filter = Filter::new()->onTags(...$tags);
+
         $run = Runner::of(
             $this->random,
             $this->printer,
             $this->output,
             $this->error,
             $this->runner,
-            $proofs(),
+            $filter($proofs()),
         );
         $stats = Stats::new();
         $assert = Assert::of($stats);

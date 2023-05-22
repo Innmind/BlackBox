@@ -8,6 +8,6 @@ use Innmind\BlackBox\{
     Runner\Load,
 };
 
-Application::new()
+Application::new($argv)
     ->tryToProve(Load::from(__DIR__.'/proofs/add.php'))
     ->exit();
