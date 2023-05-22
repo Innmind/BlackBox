@@ -6,8 +6,8 @@ namespace Fixtures\Innmind\BlackBox;
 use Innmind\BlackBox\{
     Property,
     Set,
+    Runner\Assert,
 };
-use PHPUnit\Framework\Assert;
 
 final class LowerBoundAtZero implements Property
 {
@@ -29,10 +29,10 @@ final class LowerBoundAtZero implements Property
         return $counter->current() < 2;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $counter->down();
-        Assert::assertSame(0, $counter->current());
+        $assert->same(0, $counter->current());
 
         return $counter;
     }

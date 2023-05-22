@@ -5,6 +5,7 @@ use Innmind\BlackBox\{
     Set,
     Runner\Proof,
     Runner\Assert,
+    Property,
 };
 
 /**
@@ -59,4 +60,15 @@ function given(Set $first, Set ...$rest): Set
     }
 
     return Set\Randomize::of($given);
+}
+
+/**
+ * @param class-string<Property> $property
+ * @param Set<object> $systemUnderTest
+ */
+function property(
+    string $property,
+    Set $systemUnderTest,
+): Proof\Property {
+    return Proof\Property::of($property, $systemUnderTest);
 }

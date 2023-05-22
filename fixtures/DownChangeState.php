@@ -6,8 +6,8 @@ namespace Fixtures\Innmind\BlackBox;
 use Innmind\BlackBox\{
     Property,
     Set,
+    Runner\Assert,
 };
-use PHPUnit\Framework\Assert;
 
 final class DownChangeState implements Property
 {
@@ -29,11 +29,11 @@ final class DownChangeState implements Property
         return $counter->current() > 0;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $initial = $counter->current();
         $counter->down();
-        Assert::assertLessThan($initial, $counter->current());
+        $assert->number($initial)->greaterThan($counter->current());
 
         return $counter;
     }

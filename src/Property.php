@@ -3,8 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
+use Innmind\BlackBox\Runner\Assert;
+
 interface Property
 {
+    /**
+     * @return Set<static>
+     */
+    public static function any(): Set;
     public function name(): string;
     public function applicableTo(object $systemUnderTest): bool;
 
@@ -13,5 +19,5 @@ interface Property
      *
      * @return object The system under test with the property applied
      */
-    public function ensureHeldBy(object $systemUnderTest): object;
+    public function ensureHeldBy(Assert $assert, object $systemUnderTest): object;
 }

@@ -6,8 +6,8 @@ namespace Fixtures\Innmind\BlackBox;
 use Innmind\BlackBox\{
     Property,
     Set,
+    Runner\Assert,
 };
-use PHPUnit\Framework\Assert;
 
 final class UpperBoundAtHundred implements Property
 {
@@ -29,10 +29,10 @@ final class UpperBoundAtHundred implements Property
         return $counter->current() > 98;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $counter->up();
-        Assert::assertSame(100, $counter->current());
+        $assert->same(100, $counter->current());
 
         return $counter;
     }

@@ -6,8 +6,8 @@ namespace Fixtures\Innmind\BlackBox;
 use Innmind\BlackBox\{
     Property,
     Set,
+    Runner\Assert,
 };
-use PHPUnit\Framework\Assert;
 
 final class UpAndDownIsAnIdentityFunction implements Property
 {
@@ -29,12 +29,12 @@ final class UpAndDownIsAnIdentityFunction implements Property
         return $counter->current() < 99;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $initial = $counter->current();
         $counter->up();
         $counter->down();
-        Assert::assertSame($initial, $counter->current());
+        $assert->same($initial, $counter->current());
 
         return $counter;
     }

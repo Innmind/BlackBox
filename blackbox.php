@@ -9,5 +9,5 @@ use Innmind\BlackBox\{
 };
 
 Application::new($argv)
-    ->tryToProve(Load::from(__DIR__.'/proofs/add.php'))
+    ->tryToProve(Load::from(__DIR__.'/proofs/all.php'))
     ->exit();
