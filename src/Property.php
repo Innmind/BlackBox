@@ -14,8 +14,6 @@ interface Property
     public function applicableTo(object $systemUnderTest): bool;
 
     /**
-     * @throws \Exception Any exception understood by your test framework
-     *
      * @return object The system under test with the property applied
      */
     public function ensureHeldBy(Assert $assert, object $systemUnderTest): object;

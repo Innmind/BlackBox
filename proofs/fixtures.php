@@ -63,4 +63,21 @@ return static function() {
         UpperBoundAtHundred::class,
         Set\Elements::of(new Counter(99), new Counter(100)),
     );
+
+    yield properties(
+        'Counter properties',
+        Set\Properties::any(
+            DownAndUpIsAnIdentityFunction::any(),
+            DownChangeState::any(),
+            LowerBoundAtZero::any(),
+            RaiseBy::any(),
+            UpAndDownIsAnIdentityFunction::any(),
+            UpChangeState::any(),
+            UpperBoundAtHundred::any(),
+        ),
+        Set\Decorate::mutable(
+            static fn($initial) => new Counter($initial),
+            Set\Integers::between(0, 100),
+        ),
+    );
 };

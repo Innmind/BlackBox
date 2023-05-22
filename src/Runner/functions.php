@@ -6,6 +6,7 @@ use Innmind\BlackBox\{
     Runner\Proof,
     Runner\Assert,
     Property,
+    Properties,
 };
 
 /**
@@ -71,4 +72,21 @@ function property(
     Set $systemUnderTest,
 ): Proof\Property {
     return Proof\Property::of($property, $systemUnderTest);
+}
+
+/**
+ * @param non-empty-string $name
+ * @param Set<Properties> $properties
+ * @param Set<object> $systemUnderTest
+ */
+function properties(
+    string $name,
+    Set $properties,
+    Set $systemUnderTest,
+): Proof {
+    return Proof\Properties::of(
+        Proof\Name::of($name),
+        $properties,
+        $systemUnderTest,
+    );
 }

@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
+use Innmind\BlackBox\Runner\Assert;
+
 final class Properties
 {
     /** @var list<Property> */
@@ -17,15 +19,13 @@ final class Properties
     }
 
     /**
-     * @throws \Exception Any exception understood by your test framework
-     *
      * @return object The system under test with the property applied
      */
-    public function ensureHeldBy(object $systemUnderTest): object
+    public function ensureHeldBy(Assert $assert, object $systemUnderTest): object
     {
         foreach ($this->properties as $property) {
             if ($property->applicableTo($systemUnderTest)) {
-                $systemUnderTest = $property->ensureHeldBy($systemUnderTest);
+                $systemUnderTest = $property->ensureHeldBy($assert, $systemUnderTest);
             }
         }
 
