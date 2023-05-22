@@ -47,7 +47,7 @@ return static function() {
         UpAndDownIsAnIdentityFunction::class,
         Set\Decorate::mutable(
             static fn($initial) => new Counter($initial),
-            Set\Integers::between(0, 99),
+            Set\Integers::between(0, 98),
         ),
     );
 

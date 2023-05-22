@@ -24,6 +24,10 @@ final class Property implements Scenario
 
     public function __invoke(Assert $assert): mixed
     {
+        if (!$this->property->applicableTo($this->systemUnderTest)) {
+            $assert->fail('The property is not applicable to the system under test.');
+        }
+
         $this->property->ensureHeldBy($assert, $this->systemUnderTest);
 
         return null;

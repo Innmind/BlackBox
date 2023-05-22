@@ -31,6 +31,16 @@ final class Assert
     }
 
     /**
+     * @param non-empty-string $message
+     *
+     * @throws Failure
+     */
+    public function fail(string $message): void
+    {
+        throw Failure::of(Truth::of($message));
+    }
+
+    /**
      * @param callable(): bool $assertion
      * @param non-empty-string $message
      *
