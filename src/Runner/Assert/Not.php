@@ -58,7 +58,7 @@ final class Not
      */
     public function count(
         int $expected,
-        \Countable $collection,
+        \Countable|array $collection,
         string $message = null,
     ): self {
         $this->stats->incrementAssertions();
