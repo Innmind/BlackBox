@@ -39,4 +39,14 @@ final class Property implements Scenario
     ): self {
         return new self($property, $systemUnderTest);
     }
+
+    public function property(): Concrete
+    {
+        return $this->property;
+    }
+
+    public function systemUnderTest(): object
+    {
+        return $this->systemUnderTest;
+    }
 }

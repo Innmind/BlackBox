@@ -44,4 +44,29 @@ final class Inline implements Scenario
     ): self {
         return new self($args, $test);
     }
+
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function parameters(): array
+    {
+        $reflection = new \ReflectionObject($this->test);
+        $method = $reflection->getMethod('__invoke');
+        $parameters = $method->getParameters();
+        \array_shift($parameters); // to remove the Assert parameter
+        $parameters = \array_map(
+            static fn($parameter) => $parameter->getName(),
+            $parameters,
+        );
+        $args = [];
+
+        foreach ($this->args as $index => $arg) {
+            $args[] = [
+                $parameters[$index] ?? 'undefined',
+                $arg,
+            ];
+        }
+
+        return $args;
+    }
 }

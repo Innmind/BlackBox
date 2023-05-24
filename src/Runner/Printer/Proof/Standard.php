@@ -10,6 +10,7 @@ use Innmind\BlackBox\Runner\{
     Assert\Failure\Comparison,
     IO,
     Printer\Proof,
+    Proof\Scenario,
 };
 use Symfony\Component\VarDumper\{
     Dumper\CliDumper,
@@ -54,9 +55,10 @@ final class Standard implements Proof
     public function failed(IO $output, IO $error, Failure $failure): void
     {
         $this->newLine($output);
-        $error("F\n");
-        $output('$proof = ');
-        $output($this->dump($failure->scenario()->unwrap()));
+        $error("F\n\n");
+        $this->renderScenario($output, $failure->scenario()->unwrap());
+
+        $output("\n");
 
         $this->renderFailure($output, $failure->assertion()->kind());
 
@@ -158,5 +160,47 @@ final class Standard implements Proof
             ),
             true,
         ) ?? '';
+    }
+
+    private function renderScenario(IO $output, Scenario $scenario): void
+    {
+        if ($scenario instanceof Scenario\Inline) {
+            $this->renderInlineScenario($output, $scenario);
+        }
+
+        if ($scenario instanceof Scenario\Property) {
+            $this->renderPropertyScenario($output, $scenario);
+        }
+
+        if ($scenario instanceof Scenario\Properties) {
+            $this->renderPropertiesScenario($output, $scenario);
+        }
+    }
+
+    private function renderInlineScenario(IO $output, Scenario\Inline $scenario): void
+    {
+        foreach ($scenario->parameters() as [$name, $value]) {
+            $output(\sprintf(
+                '$%s = ',
+                $name,
+            ));
+            $output($this->dump($value));
+        }
+    }
+
+    private function renderPropertyScenario(IO $output, Scenario\Property $scenario): void
+    {
+        $output('$property = ');
+        $output($this->dump($scenario->property()));
+        $output('$systemUnderTest = ');
+        $output($this->dump($scenario->systemUnderTest()));
+    }
+
+    private function renderPropertiesScenario(IO $output, Scenario\Properties $scenario): void
+    {
+        $output('$properties = ');
+        $output($this->dump($scenario->properties()));
+        $output('$systemUnderTest = ');
+        $output($this->dump($scenario->systemUnderTest()));
     }
 }
