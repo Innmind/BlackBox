@@ -60,6 +60,7 @@ final class Inline implements Scenario
         );
         $args = [];
 
+        /** @var mixed $arg */
         foreach ($this->args as $index => $arg) {
             $args[] = [
                 $parameters[$index] ?? 'undefined',

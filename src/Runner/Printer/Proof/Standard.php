@@ -179,6 +179,7 @@ final class Standard implements Proof
 
     private function renderInlineScenario(IO $output, Scenario\Inline $scenario): void
     {
+        /** @var mixed $value */
         foreach ($scenario->parameters() as [$name, $value]) {
             $output(\sprintf(
                 '$%s = ',
