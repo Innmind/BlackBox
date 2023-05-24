@@ -619,7 +619,8 @@ return static function($load) {
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
-            $sut->object(new class{});
+            $sut->object(new class {
+            });
 
             try {
                 $sut->object($value);
