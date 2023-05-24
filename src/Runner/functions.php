@@ -5,18 +5,18 @@ use Innmind\BlackBox\{
     Set,
     Runner\Proof,
     Runner\Assert,
+    Runner\Given,
     Property,
     Properties,
 };
 
 /**
  * @param non-empty-string $name
- * @param Set<list<mixed>> $given
  * @param callable(Assert, ...mixed): void $test
  */
 function proof(
     string $name,
-    Set $given,
+    Given $given,
     callable $test,
 ): Proof {
     return Proof\Inline::of(
@@ -40,10 +40,8 @@ function test(string $name, callable $test): Proof
 
 /**
  * @no-named-arguments
- *
- * @return Set<list<mixed>>
  */
-function given(Set $first, Set ...$rest): Set
+function given(Set $first, Set ...$rest): Given
 {
     /** @var Set<list<mixed>> */
     $given = Set\Decorate::immutable(
@@ -60,7 +58,7 @@ function given(Set $first, Set ...$rest): Set
         );
     }
 
-    return Set\Randomize::of($given);
+    return Given::of(Set\Randomize::of($given));
 }
 
 /**

@@ -7,13 +7,13 @@ use Innmind\BlackBox\{
     Set,
     Runner\Proof,
     Runner\Assert,
+    Runner\Given,
 };
 
 final class Inline implements Proof
 {
     private Name $name;
-    /** @var Set<list<mixed>> */
-    private Set $values;
+    private Given $values;
     /** @var \Closure(Assert, ...mixed): void */
     private \Closure $test;
     /** @var list<\UnitEnum> */
@@ -22,14 +22,13 @@ final class Inline implements Proof
     private ?int $scenarii;
 
     /**
-     * @param Set<list<mixed>> $values
      * @param \Closure(Assert, ...mixed): void $test
      * @param list<\UnitEnum> $tags
      * @param ?positive-int $scenarii
      */
     private function __construct(
         Name $name,
-        Set $values,
+        Given $values,
         \Closure $test,
         array $tags,
         ?int $scenarii,
@@ -42,12 +41,11 @@ final class Inline implements Proof
     }
 
     /**
-     * @param Set<list<mixed>> $values
      * @param \Closure(Assert, ...mixed): void $test
      */
     public static function of(
         Name $name,
-        Set $values,
+        Given $values,
         \Closure $test,
     ): self {
         return new self($name, $values, $test, [], null);
@@ -62,7 +60,7 @@ final class Inline implements Proof
     ): self {
         return new self(
             $name,
-            Set\Elements::of([]),
+            Given::of(Set\Elements::of([])),
             $test,
             [],
             1,
@@ -103,7 +101,7 @@ final class Inline implements Proof
          */
         return Set\Decorate::immutable(
             fn(array $args) => Scenario\Inline::of($args, $this->test),
-            $this->values,
+            $this->values->set(),
         )->take($this->scenarii ?? $count);
     }
 }
