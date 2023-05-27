@@ -17,6 +17,8 @@ final class MadeOf implements Set
     private Set $chars;
 
     /**
+     * @psalm-mutation-free
+     *
      * @no-named-arguments
      *
      * @param Set<string> $chars
@@ -27,6 +29,8 @@ final class MadeOf implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @param Set<string> $first
@@ -44,6 +48,8 @@ final class MadeOf implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param 0|positive-int $minLength
      * @param positive-int $maxLength
      *
@@ -55,6 +61,8 @@ final class MadeOf implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $length
      *
      * @return Set<string>
@@ -65,6 +73,8 @@ final class MadeOf implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $length
      *
      * @return Set<string>
@@ -74,16 +84,25 @@ final class MadeOf implements Set
         return $this->build(0, $length);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return $this->build(0, 128)->take($size);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         return $this->build(0, 128)->filter($predicate);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
@@ -97,6 +116,8 @@ final class MadeOf implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param 0|positive-int $min
      * @param positive-int $max
      *

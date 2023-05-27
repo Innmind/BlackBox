@@ -8,6 +8,8 @@ use Innmind\BlackBox\Set;
 final class Strings
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function any(): Set
@@ -16,6 +18,8 @@ final class Strings
     }
 
     /**
+     * @psalm-pure
+     *
      * @param 0|positive-int $minLength
      * @param positive-int $maxLength
      *
@@ -29,6 +33,8 @@ final class Strings
     }
 
     /**
+     * @psalm-pure
+     *
      * @param positive-int $maxLength
      *
      * @return Set<string>
@@ -39,6 +45,8 @@ final class Strings
     }
 
     /**
+     * @psalm-pure
+     *
      * @param positive-int $minLength
      *
      * @return Set<string>
@@ -49,6 +57,8 @@ final class Strings
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @param Set<string> $first

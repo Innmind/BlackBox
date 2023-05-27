@@ -22,6 +22,8 @@ final class Decorate implements Set
     private bool $immutable;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param \Closure(I): D $decorate
      * @param Set<I> $set
      */
@@ -33,6 +35,8 @@ final class Decorate implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @template V
      *
@@ -47,6 +51,8 @@ final class Decorate implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @template V
      *
@@ -60,6 +66,9 @@ final class Decorate implements Set
         return new self(false, \Closure::fromCallable($decorate), $set);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -69,6 +78,9 @@ final class Decorate implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         /** @psalm-suppress MixedArgument */
@@ -79,6 +91,9 @@ final class Decorate implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): self
     {
         return self::immutable($map, $this);

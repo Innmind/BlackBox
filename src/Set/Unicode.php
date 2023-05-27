@@ -11,6 +11,8 @@ use Innmind\BlackBox\Set;
 final class Unicode
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function strings(): Set
@@ -20,6 +22,8 @@ final class Unicode
 
     /**
      * The bounds express the number of characters not the number of bytes
+     *
+     * @psalm-pure
      *
      * @param 0|positive-int $min
      * @param positive-int $max
@@ -34,6 +38,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function any(): Set
@@ -57,6 +63,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function controlCharater(): Set
@@ -65,6 +73,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function basicLatin(): Set
@@ -73,6 +83,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latin1Supplement(): Set
@@ -81,6 +93,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latinExtendedA(): Set
@@ -89,6 +103,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latinExtendedB(): Set
@@ -97,6 +113,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ipaExtensions(): Set
@@ -105,6 +123,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function spacingModifierLetters(): Set
@@ -113,6 +133,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarks(): Set
@@ -121,6 +143,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function greekAndCoptic(): Set
@@ -129,6 +153,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cyrillic(): Set
@@ -137,6 +163,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cyrillicSupplement(): Set
@@ -145,6 +173,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function armenian(): Set
@@ -153,6 +183,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hebrew(): Set
@@ -161,6 +193,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arabic(): Set
@@ -169,6 +203,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function syriac(): Set
@@ -177,6 +213,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arabicSupplement(): Set
@@ -185,6 +223,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function thaana(): Set
@@ -193,6 +233,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function nko(): Set
@@ -201,6 +243,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function samaritan(): Set
@@ -209,6 +253,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mandaic(): Set
@@ -217,6 +263,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function syriacSupplement(): Set
@@ -225,6 +273,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arabicExtendedA(): Set
@@ -233,6 +283,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function devanagari(): Set
@@ -241,6 +293,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bengali(): Set
@@ -249,6 +303,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function gurmukhi(): Set
@@ -257,6 +313,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function gujarati(): Set
@@ -265,6 +323,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oriya(): Set
@@ -273,6 +333,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tamil(): Set
@@ -281,6 +343,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function telugu(): Set
@@ -289,6 +353,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kannada(): Set
@@ -297,6 +363,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function malayalam(): Set
@@ -305,6 +373,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function sinhala(): Set
@@ -313,6 +383,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function thai(): Set
@@ -321,6 +393,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function lao(): Set
@@ -329,6 +403,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tibetan(): Set
@@ -337,6 +413,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function myanmar(): Set
@@ -345,6 +423,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function georgian(): Set
@@ -353,6 +433,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hangulJamo(): Set
@@ -361,6 +443,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ethiopic(): Set
@@ -369,6 +453,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ethiopicSupplement(): Set
@@ -377,6 +463,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cherokee(): Set
@@ -385,6 +473,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function unifiedCanadianAboriginalSyllabics(): Set
@@ -393,6 +483,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ogham(): Set
@@ -401,6 +493,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function runic(): Set
@@ -409,6 +503,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tagalog(): Set
@@ -417,6 +513,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hanunoo(): Set
@@ -425,6 +523,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function buhid(): Set
@@ -433,6 +533,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tagbanwa(): Set
@@ -441,6 +543,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function khmer(): Set
@@ -449,6 +553,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mongolian(): Set
@@ -457,6 +563,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function unifiedCanadianAboriginalSyllabicsExtended(): Set
@@ -465,6 +573,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function limbu(): Set
@@ -473,6 +583,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function taiLe(): Set
@@ -481,6 +593,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function newTaiLue(): Set
@@ -489,6 +603,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function khmerSymbols(): Set
@@ -497,6 +613,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function buginese(): Set
@@ -505,6 +623,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function taiTham(): Set
@@ -513,6 +633,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarksExtended(): Set
@@ -521,6 +643,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function balinese(): Set
@@ -529,6 +653,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function sundanese(): Set
@@ -537,6 +663,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function batak(): Set
@@ -545,6 +673,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function lepcha(): Set
@@ -553,6 +683,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function olChiki(): Set
@@ -561,6 +693,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cyrillicExtendedC(): Set
@@ -569,6 +703,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function sundaneseSupplement(): Set
@@ -577,6 +713,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function vedicExtensions(): Set
@@ -585,6 +723,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function phoneticExtensions(): Set
@@ -593,6 +733,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function phoneticExtensionsSupplement(): Set
@@ -601,6 +743,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarksSupplement(): Set
@@ -609,6 +753,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latinExtendedAdditional(): Set
@@ -617,6 +763,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function greekExtended(): Set
@@ -625,6 +773,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function generalPunctuation(): Set
@@ -633,6 +783,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function superscriptsAndSubscripts(): Set
@@ -641,6 +793,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function currencySymbols(): Set
@@ -649,6 +803,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarksForSymbols(): Set
@@ -657,6 +813,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function letterlikeSymbols(): Set
@@ -665,6 +823,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function numberForms(): Set
@@ -673,6 +833,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arrows(): Set
@@ -681,6 +843,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mathematicalOperators(): Set
@@ -689,6 +853,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miscellaneousTechnical(): Set
@@ -697,6 +863,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function controlPictures(): Set
@@ -705,6 +873,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function opticalCharacterRecognition(): Set
@@ -713,6 +883,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function enclosedAlphanumerics(): Set
@@ -721,6 +893,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function boxDrawing(): Set
@@ -729,6 +903,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function blockElements(): Set
@@ -737,6 +913,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function geometricShapes(): Set
@@ -745,6 +923,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miscellaneousSymbols(): Set
@@ -753,6 +933,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function dingbats(): Set
@@ -761,6 +943,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miscellaneousMathematicalSymbolsA(): Set
@@ -769,6 +953,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function supplementalArrowsA(): Set
@@ -777,6 +963,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function braillePatterns(): Set
@@ -785,6 +973,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function supplementalArrowsB(): Set
@@ -793,6 +983,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miscellaneousMathematicalSymbolsB(): Set
@@ -801,6 +993,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function supplementalMathematicalOperators(): Set
@@ -809,6 +1003,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miscellaneousSymbolsAndArrows(): Set
@@ -817,6 +1013,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function glagolitic(): Set
@@ -825,6 +1023,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latinExtendedC(): Set
@@ -833,6 +1033,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function coptic(): Set
@@ -841,6 +1043,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function georgianSupplement(): Set
@@ -849,6 +1053,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tifinagh(): Set
@@ -857,6 +1063,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ethiopicExtended(): Set
@@ -865,6 +1073,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cyrillicExtendedA(): Set
@@ -873,6 +1083,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function supplementalPunctuation(): Set
@@ -881,6 +1093,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkRadicalsSupplement(): Set
@@ -889,6 +1103,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kangxiRadicals(): Set
@@ -897,6 +1113,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ideographicDescriptionCharacters(): Set
@@ -905,6 +1123,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkSymbolsAndPunctuation(): Set
@@ -913,6 +1133,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hiragana(): Set
@@ -921,6 +1143,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function katakana(): Set
@@ -929,6 +1153,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bopomofo(): Set
@@ -937,6 +1163,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hangulCompatibilityJamo(): Set
@@ -945,6 +1173,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kanbun(): Set
@@ -953,6 +1183,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bopomofoExtended(): Set
@@ -961,6 +1193,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkStrokes(): Set
@@ -969,6 +1203,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function katakanaPhoneticExtensions(): Set
@@ -977,6 +1213,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function enclosedCJKLettersAndMonths(): Set
@@ -985,6 +1223,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkCompatibility(): Set
@@ -993,6 +1233,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionA(): Set
@@ -1001,6 +1243,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function yijingHexagramSymbols(): Set
@@ -1009,6 +1253,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographs(): Set
@@ -1017,6 +1263,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function yiSyllables(): Set
@@ -1025,6 +1273,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function yiRadicals(): Set
@@ -1033,6 +1283,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function lisu(): Set
@@ -1041,6 +1293,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function vai(): Set
@@ -1049,6 +1303,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cyrillicExtendedB(): Set
@@ -1057,6 +1313,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bamum(): Set
@@ -1065,6 +1323,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function modifierToneLetters(): Set
@@ -1073,6 +1333,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latinExtendedD(): Set
@@ -1081,6 +1343,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function sylotiNagri(): Set
@@ -1089,6 +1353,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function commonIndicNumberForms(): Set
@@ -1097,6 +1363,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function phagsPa(): Set
@@ -1105,6 +1373,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function saurashtra(): Set
@@ -1113,6 +1383,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function devanagariExtended(): Set
@@ -1121,6 +1393,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kayahLi(): Set
@@ -1129,6 +1403,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function rejang(): Set
@@ -1137,6 +1413,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hangulJamoExtendedA(): Set
@@ -1145,6 +1423,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function javanese(): Set
@@ -1153,6 +1433,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function myanmarExtendedB(): Set
@@ -1161,6 +1443,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cham(): Set
@@ -1169,6 +1453,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function myanmarExtendedA(): Set
@@ -1177,6 +1463,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function taiViet(): Set
@@ -1185,6 +1473,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function meeteiMayekExtensions(): Set
@@ -1193,6 +1483,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ethiopicExtendedA(): Set
@@ -1201,6 +1493,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function latinExtendedE(): Set
@@ -1209,6 +1503,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cherokeeSupplement(): Set
@@ -1217,6 +1513,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function meeteiMayek(): Set
@@ -1225,6 +1523,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hangulSyllables(): Set
@@ -1233,6 +1533,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hangulJamoExtendedB(): Set
@@ -1241,6 +1543,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkCompatibilityIdeographs(): Set
@@ -1249,6 +1553,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function alphabeticPresentationForms(): Set
@@ -1257,6 +1563,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arabicPresentationFormsA(): Set
@@ -1265,6 +1573,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function variationSelectors(): Set
@@ -1273,6 +1583,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function verticalForms(): Set
@@ -1281,6 +1593,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function combiningHalfMarks(): Set
@@ -1289,6 +1603,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkCompatibilityForms(): Set
@@ -1297,6 +1613,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function smallFormVariants(): Set
@@ -1305,6 +1623,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arabicPresentationFormsB(): Set
@@ -1313,6 +1633,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function halfwidthAndFullwidthForms(): Set
@@ -1321,6 +1643,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function specials(): Set
@@ -1329,6 +1653,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function linearBSyllabary(): Set
@@ -1337,6 +1663,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function linearBIdeograms(): Set
@@ -1345,6 +1673,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function aeganNumbers(): Set
@@ -1353,6 +1683,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ancientGreekNumbers(): Set
@@ -1361,6 +1693,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ancientSymbols(): Set
@@ -1369,6 +1703,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function phaistosDisc(): Set
@@ -1377,6 +1713,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function lycian(): Set
@@ -1385,6 +1723,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function carian(): Set
@@ -1393,6 +1733,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function copticEpactNumbers(): Set
@@ -1401,6 +1743,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldItalic(): Set
@@ -1409,6 +1753,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function gothic(): Set
@@ -1417,6 +1763,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldPermic(): Set
@@ -1425,6 +1773,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ugaritic(): Set
@@ -1433,6 +1783,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldPersian(): Set
@@ -1441,6 +1793,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function deseret(): Set
@@ -1449,6 +1803,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function shavian(): Set
@@ -1457,6 +1813,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function osmanya(): Set
@@ -1465,6 +1823,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function osage(): Set
@@ -1473,6 +1833,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function elbasan(): Set
@@ -1481,6 +1843,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function caucasianAlbanian(): Set
@@ -1489,6 +1853,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function linearA(): Set
@@ -1497,6 +1863,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cypriotSyllabary(): Set
@@ -1505,6 +1873,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function imperialAramaic(): Set
@@ -1513,6 +1883,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function palmyrene(): Set
@@ -1521,6 +1893,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function nabataean(): Set
@@ -1529,6 +1903,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function hatran(): Set
@@ -1537,6 +1913,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function phoenician(): Set
@@ -1545,6 +1923,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function lydian(): Set
@@ -1553,6 +1933,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function meroiticHieroglyphs(): Set
@@ -1561,6 +1943,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function meroiticCursive(): Set
@@ -1569,6 +1953,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kharoshthi(): Set
@@ -1577,6 +1963,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldSouthArabian(): Set
@@ -1585,6 +1973,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldNorthArabian(): Set
@@ -1593,6 +1983,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function manichaean(): Set
@@ -1601,6 +1993,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function avestan(): Set
@@ -1609,6 +2003,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function inscriptionalParthian(): Set
@@ -1617,6 +2013,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function inscriptionalPahlavi(): Set
@@ -1625,6 +2023,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function psalterPahlavi(): Set
@@ -1633,6 +2033,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldTurkic(): Set
@@ -1641,6 +2043,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function oldHungarian(): Set
@@ -1649,6 +2053,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function rumiNumeralSymbols(): Set
@@ -1657,6 +2063,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function brahmi(): Set
@@ -1665,6 +2073,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kaithi(): Set
@@ -1673,6 +2083,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function soraSompeg(): Set
@@ -1681,6 +2093,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function chakma(): Set
@@ -1689,6 +2103,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mahajani(): Set
@@ -1697,6 +2113,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function sharada(): Set
@@ -1705,6 +2123,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function sinhalaArchaicNumbers(): Set
@@ -1713,6 +2133,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function khojki(): Set
@@ -1721,6 +2143,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function multani(): Set
@@ -1729,6 +2153,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function khudawadi(): Set
@@ -1737,6 +2163,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function grantha(): Set
@@ -1745,6 +2173,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function newa(): Set
@@ -1753,6 +2183,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tirhuta(): Set
@@ -1761,6 +2193,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function siddham(): Set
@@ -1769,6 +2203,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function modi(): Set
@@ -1777,6 +2213,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mongolianSupplement(): Set
@@ -1785,6 +2223,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function takri(): Set
@@ -1793,6 +2233,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ahom(): Set
@@ -1801,6 +2243,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function warangCiti(): Set
@@ -1809,6 +2253,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function zanabazarSquare(): Set
@@ -1817,6 +2263,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function soyombo(): Set
@@ -1825,6 +2273,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function pauCinHau(): Set
@@ -1833,6 +2283,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bhaiksuki(): Set
@@ -1841,6 +2293,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function marchen(): Set
@@ -1849,6 +2303,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function masaramGondi(): Set
@@ -1857,6 +2313,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cuneiform(): Set
@@ -1865,6 +2323,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cuneiformNumbersAndPunctuation(): Set
@@ -1873,6 +2333,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function earlyDynasticCuneiform(): Set
@@ -1881,6 +2343,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function egyptianHieroglyphs(): Set
@@ -1889,6 +2353,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function anatolianHieroglyphs(): Set
@@ -1897,6 +2363,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bamumSupplement(): Set
@@ -1905,6 +2373,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mro(): Set
@@ -1913,6 +2383,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function bassaVah(): Set
@@ -1921,6 +2393,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function pahawhHmong(): Set
@@ -1929,6 +2403,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miao(): Set
@@ -1937,6 +2413,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ideographicSymbolsAndPunctuation(): Set
@@ -1945,6 +2423,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tangut(): Set
@@ -1953,6 +2433,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tangutComponents(): Set
@@ -1961,6 +2443,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kanaSupplement(): Set
@@ -1969,6 +2453,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function kanaExtendedA(): Set
@@ -1977,6 +2463,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function nushu(): Set
@@ -1985,6 +2473,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function duployan(): Set
@@ -1993,6 +2483,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function shorthandFormatControls(): Set
@@ -2001,6 +2493,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function byzantineMusicalSymbols(): Set
@@ -2009,6 +2503,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function musicalSymbols(): Set
@@ -2017,6 +2513,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ancientGreekMusicalNotation(): Set
@@ -2025,6 +2523,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function taiXuanJingSymbols(): Set
@@ -2033,6 +2533,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function countingRodNumerals(): Set
@@ -2041,6 +2543,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mathematicalAlphanumericSymbols(): Set
@@ -2049,6 +2553,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function suttonSignWriting(): Set
@@ -2057,6 +2563,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function glagoliticSupplement(): Set
@@ -2065,6 +2573,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mendeKikakui(): Set
@@ -2073,6 +2583,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function adlam(): Set
@@ -2081,6 +2593,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function arabicMathematicalAlphabeticSymbols(): Set
@@ -2089,6 +2603,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function mahjongTiles(): Set
@@ -2097,6 +2613,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function dominoTiles(): Set
@@ -2105,6 +2623,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function playingCards(): Set
@@ -2113,6 +2633,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function enclosedAlphanumericSupplement(): Set
@@ -2121,6 +2643,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function enclosedIdeopgraphicSupplement(): Set
@@ -2129,6 +2653,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function miscellaneousSymbolsAndPictographs(): Set
@@ -2137,6 +2663,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function emoticons(): Set
@@ -2145,6 +2673,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function ornamentalDingbats(): Set
@@ -2153,6 +2683,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function transportAndMapSymbols(): Set
@@ -2161,6 +2693,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function alchemicalSymbols(): Set
@@ -2169,6 +2703,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function geometricShapesExtended(): Set
@@ -2177,6 +2713,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function supplementalArrowsC(): Set
@@ -2185,6 +2723,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function supplementalSymbolsAndPictographs(): Set
@@ -2193,6 +2733,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionB(): Set
@@ -2201,6 +2743,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionC(): Set
@@ -2209,6 +2753,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionD(): Set
@@ -2217,6 +2763,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionE(): Set
@@ -2225,6 +2773,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionF(): Set
@@ -2233,6 +2783,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function cjkCompatibilityIdeographsSupplement(): Set
@@ -2241,6 +2793,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function tags(): Set
@@ -2249,6 +2803,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     public static function variationSelectorsSupplement(): Set
@@ -2257,6 +2813,8 @@ final class Unicode
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<string>
      */
     private static function between(int $min, int $max): Set

@@ -8,6 +8,8 @@ use Innmind\BlackBox\Set;
 final class Email
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function any(): Set
@@ -28,6 +30,8 @@ final class Email
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     private static function address(): Set
@@ -36,6 +40,8 @@ final class Email
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     private static function domain(): Set
@@ -44,6 +50,8 @@ final class Email
     }
 
     /**
+     * @psalm-pure
+     *
      * @param int<3, max> $maxLength
      * @param non-empty-string $extra
      *
@@ -72,6 +80,8 @@ final class Email
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     private static function tld(): Set
@@ -85,6 +95,8 @@ final class Email
     }
 
     /**
+     * @psalm-pure
+     *
      * @param non-empty-string $extra
      *
      * @return Set<non-empty-string>

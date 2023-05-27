@@ -27,6 +27,8 @@ final class Either implements Set
     private int $size;
 
     /**
+     * @psalm-mutation-free
+     *
      * @no-named-arguments
      *
      * @param positive-int $size
@@ -43,6 +45,8 @@ final class Either implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @template A
@@ -60,6 +64,9 @@ final class Either implements Set
         return new self(100, $first, $second, ...$rest);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -73,6 +80,9 @@ final class Either implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         return new self(
@@ -88,6 +98,9 @@ final class Either implements Set
         return $self;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);

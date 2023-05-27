@@ -14,6 +14,8 @@ use Innmind\BlackBox\{
 interface Set
 {
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      *
      * @return self<T>
@@ -21,6 +23,8 @@ interface Set
     public function take(int $size): self;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param callable(T): bool $predicate
      *
      * @return self<T>
@@ -28,6 +32,8 @@ interface Set
     public function filter(callable $predicate): self;
 
     /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(T): V $map

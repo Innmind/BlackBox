@@ -24,6 +24,8 @@ final class Sequence implements Set
     private \Closure $predicate;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param Set<I> $set
      * @param positive-int $size
      * @param \Closure(list<I>): bool $predicate
@@ -41,6 +43,8 @@ final class Sequence implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @template U
      *
      * @param Set<U> $set
@@ -53,6 +57,8 @@ final class Sequence implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      *
      * @return Set<list<I>>
@@ -68,6 +74,8 @@ final class Sequence implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      *
      * @return Set<list<I>>
@@ -83,6 +91,8 @@ final class Sequence implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param 0|positive-int $lower
      * @param positive-int $upper
      *
@@ -98,6 +108,9 @@ final class Sequence implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -108,6 +121,9 @@ final class Sequence implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -127,6 +143,9 @@ final class Sequence implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);

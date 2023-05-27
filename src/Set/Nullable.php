@@ -8,6 +8,8 @@ use Innmind\BlackBox\Set;
 final class Nullable
 {
     /**
+     * @psalm-pure
+     *
      * @template T
      *
      * @param Set<T> $set

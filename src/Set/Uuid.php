@@ -8,6 +8,8 @@ use Innmind\BlackBox\Set;
 final class Uuid
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function any(): Set

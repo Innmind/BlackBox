@@ -26,6 +26,8 @@ final class FromGenerator implements Set
     private \Closure $predicate;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param callable(Random): \Generator<T> $generatorFactory
      * @param positive-int $size
      * @param \Closure(T): bool $predicate
@@ -56,6 +58,9 @@ final class FromGenerator implements Set
         return new self($generatorFactory, 100, static fn(): bool => true);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -65,6 +70,9 @@ final class FromGenerator implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -85,6 +93,9 @@ final class FromGenerator implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);

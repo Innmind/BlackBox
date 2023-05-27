@@ -19,6 +19,8 @@ final class Properties implements Set
     private Set $properties;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param Set<Concrete> $properties
      */
     private function __construct(Set $properties)
@@ -27,6 +29,8 @@ final class Properties implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @param Set<Concrete> $first
@@ -42,6 +46,8 @@ final class Properties implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $max
      *
      * @return Set<Ensure>
@@ -51,16 +57,25 @@ final class Properties implements Set
         return $this->ensure($max);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return $this->ensure(100)->take($size);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         return $this->ensure(100)->filter($predicate);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this->ensure(100));
@@ -75,6 +90,8 @@ final class Properties implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $max
      *
      * @return Set<Ensure>

@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 /**
+ * @psalm-immutable
+ *
  * @template T
  */
 final class Value
@@ -80,6 +82,7 @@ final class Value
      */
     public function unwrap()
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return ($this->unwrap)();
     }
 }

@@ -25,6 +25,8 @@ final class Randomize implements Set
     private int $size;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param Set<I> $set
      * @param positive-int $size
      */
@@ -35,6 +37,8 @@ final class Randomize implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      *
      * @param Set<T> $set
@@ -46,6 +50,9 @@ final class Randomize implements Set
         return new self($set, 100);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -54,6 +61,9 @@ final class Randomize implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         return new self(
@@ -62,6 +72,9 @@ final class Randomize implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);

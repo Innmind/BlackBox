@@ -8,6 +8,8 @@ use Innmind\BlackBox\Set;
 final class IntegersExceptZero
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<int>
      */
     public static function any(): Set

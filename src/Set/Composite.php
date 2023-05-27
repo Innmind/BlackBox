@@ -19,12 +19,16 @@ final class Composite implements Set
 {
     /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
-    private Matrix $matrix;
+    private Set $first;
+    private Set $second;
+    /** @var list<Set> */
+    private array $sets;
     private ?int $size;
     private \Closure $predicate;
     private bool $immutable;
 
     /**
+     * @psalm-mutation-free
      * @no-named-arguments
      */
     private function __construct(
@@ -39,20 +43,14 @@ final class Composite implements Set
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->size = null; // by default allow all combinations
         $this->predicate = static fn(): bool => true;
-
-        $sets = [$first, $second, ...$sets];
-        $sets = \array_reverse($sets);
-        $first = \array_shift($sets);
-        $second = \array_shift($sets);
-
-        $this->matrix = \array_reduce(
-            $sets,
-            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
-            Matrix::of($second, $first),
-        );
+        $this->first = $first;
+        $this->second = $second;
+        $this->sets = $sets;
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @no-named-arguments
      *
@@ -70,6 +68,8 @@ final class Composite implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @no-named-arguments
      *
@@ -87,6 +87,8 @@ final class Composite implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @return Set<C>
      */
     public function take(int $size): Set
@@ -98,6 +100,8 @@ final class Composite implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param callable(C): bool $predicate
      *
      * @return Set<C>
@@ -120,6 +124,9 @@ final class Composite implements Set
         return $self;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
@@ -127,7 +134,7 @@ final class Composite implements Set
 
     public function values(Random $random): \Generator
     {
-        $matrix = $this->matrix->values($random);
+        $matrix = $this->matrix()->values($random);
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
@@ -161,6 +168,20 @@ final class Composite implements Set
         if ($iterations === 0) {
             throw new EmptySet;
         }
+    }
+
+    private function matrix(): Matrix
+    {
+        $sets = [$this->first, $this->second, ...$this->sets];
+        $sets = \array_reverse($sets);
+        $first = \array_shift($sets);
+        $second = \array_shift($sets);
+
+        return \array_reduce(
+            $sets,
+            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            Matrix::of($second, $first),
+        );
     }
 
     private function continue(int $iterations): bool

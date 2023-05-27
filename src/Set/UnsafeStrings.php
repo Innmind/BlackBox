@@ -21,6 +21,8 @@ final class UnsafeStrings implements Set
     private \Closure $predicate;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      * @param \Closure(string): bool $predicate
      */
@@ -32,11 +34,17 @@ final class UnsafeStrings implements Set
         $this->predicate = $predicate;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function any(): self
     {
         return new self(100, static fn(): bool => true);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -45,6 +53,9 @@ final class UnsafeStrings implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -61,6 +72,9 @@ final class UnsafeStrings implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);

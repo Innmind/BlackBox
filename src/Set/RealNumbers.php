@@ -21,6 +21,8 @@ final class RealNumbers implements Set
     private \Closure $predicate;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      * @param \Closure(float): bool $predicate
      */
@@ -36,26 +38,41 @@ final class RealNumbers implements Set
         $this->predicate = $predicate ?? fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function any(): self
     {
         return new self(\PHP_INT_MIN, \PHP_INT_MAX);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function between(int $lowerBound, int $upperBound): self
     {
         return new self($lowerBound, $upperBound);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function above(int $lowerBound): self
     {
         return new self($lowerBound, \PHP_INT_MAX);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function below(int $upperBound): self
     {
         return new self(\PHP_INT_MIN, $upperBound);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -66,6 +83,9 @@ final class RealNumbers implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -84,6 +104,9 @@ final class RealNumbers implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);

@@ -8,6 +8,8 @@ use Innmind\BlackBox\Set;
 final class NaturalNumbers
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<0|positive-int>
      */
     public static function any(): Set

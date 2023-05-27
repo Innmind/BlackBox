@@ -11,6 +11,8 @@ use Innmind\BlackBox\{
 final class Chars
 {
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function any(): Set
@@ -19,6 +21,8 @@ final class Chars
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function lowercaseLetter(): Set
@@ -27,6 +31,8 @@ final class Chars
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function uppercaseLetter(): Set
@@ -35,6 +41,8 @@ final class Chars
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function number(): Set
@@ -43,6 +51,8 @@ final class Chars
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function ascii(): Set
@@ -51,6 +61,8 @@ final class Chars
     }
 
     /**
+     * @psalm-pure
+     *
      * @return Set<non-empty-string>
      */
     public static function alphanumerical(): Set

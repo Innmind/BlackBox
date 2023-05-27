@@ -29,6 +29,8 @@ final class Elements implements Set
     private \Closure $predicate;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      * @param \Closure(T|U): bool $predicate
      * @param T $first
@@ -47,6 +49,8 @@ final class Elements implements Set
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @template A
@@ -62,6 +66,9 @@ final class Elements implements Set
         return new self(100, static fn(): bool => true, $first, $elements);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
         return new self(
@@ -72,6 +79,9 @@ final class Elements implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -91,6 +101,9 @@ final class Elements implements Set
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
