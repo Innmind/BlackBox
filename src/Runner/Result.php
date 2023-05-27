@@ -17,6 +17,9 @@ final class Result
         };
     }
 
+    /**
+     * @internal
+     */
     public static function of(Stats $stats): self
     {
         return new self($stats->successful());

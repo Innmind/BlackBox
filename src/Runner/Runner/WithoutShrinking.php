@@ -11,6 +11,9 @@ use Innmind\BlackBox\{
     Runner\IO,
 };
 
+/**
+ * @internal
+ */
 final class WithoutShrinking
 {
     /**

@@ -19,6 +19,8 @@ final class Property
     }
 
     /**
+     * @internal
+     *
      * @param non-empty-string $message
      */
     public static function of(mixed $value, string $message): self

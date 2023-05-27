@@ -10,6 +10,9 @@ use Innmind\BlackBox\{
     Exception\EmptySet,
 };
 
+/**
+ * @internal
+ */
 final class Runner
 {
     private Random $random;

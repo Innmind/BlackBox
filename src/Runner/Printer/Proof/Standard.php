@@ -17,6 +17,9 @@ use Symfony\Component\VarDumper\{
     Cloner\VarCloner,
 };
 
+/**
+ * @internal
+ */
 final class Standard implements Proof
 {
     private CliDumper $dumper;

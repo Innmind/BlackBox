@@ -20,6 +20,9 @@ final class Assert
         $this->stats = $stats;
     }
 
+    /**
+     * @internal
+     */
     public static function of(Stats $stats): self
     {
         return new self($stats);

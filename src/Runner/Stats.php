@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
+/**
+ * @internal
+ */
 final class Stats
 {
     /** @var 0|positive-int */

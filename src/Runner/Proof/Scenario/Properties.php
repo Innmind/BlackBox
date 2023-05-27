@@ -33,6 +33,9 @@ final class Properties implements Scenario
         return null;
     }
 
+    /**
+     * @internal
+     */
     public static function of(
         Concrete $properties,
         object $systemUnderTest,

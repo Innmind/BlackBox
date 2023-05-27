@@ -35,6 +35,8 @@ final class Inline implements Scenario
     }
 
     /**
+     * @internal
+     *
      * @param list<mixed> $args
      * @param \Closure(Assert, ...mixed): void $test
      */

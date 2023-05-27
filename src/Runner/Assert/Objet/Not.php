@@ -20,6 +20,9 @@ final class Not
         $this->object = $object;
     }
 
+    /**
+     * @internal
+     */
     public static function of(Stats $stats, object $object): self
     {
         return new self($stats, $object);

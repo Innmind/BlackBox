@@ -24,6 +24,8 @@ final class Resource
     }
 
     /**
+     * @internal
+     *
      * @param resource $resource
      */
     public static function of(Stats $stats, $resource): self

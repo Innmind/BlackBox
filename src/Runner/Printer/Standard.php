@@ -25,6 +25,9 @@ final class Standard implements Printer
         $this->withColors = $withColors;
     }
 
+    /**
+     * @internal
+     */
     public static function new(): self
     {
         return new self(true);

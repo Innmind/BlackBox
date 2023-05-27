@@ -20,6 +20,9 @@ final class Not
         $this->value = $value;
     }
 
+    /**
+     * @internal
+     */
     public static function of(Stats $stats, mixed $value): self
     {
         return new self($stats, $value);

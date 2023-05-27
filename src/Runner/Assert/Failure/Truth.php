@@ -17,6 +17,8 @@ final class Truth
     }
 
     /**
+     * @internal
+     *
      * @param non-empty-string $message
      */
     public static function of(string $message): self

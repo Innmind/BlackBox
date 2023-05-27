@@ -18,6 +18,9 @@ final class Failure extends \Exception
         $this->kind = $kind;
     }
 
+    /**
+     * @internal
+     */
     public static function of(Truth|Property|Comparison $kind): self
     {
         return new self($kind);

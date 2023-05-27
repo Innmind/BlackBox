@@ -27,6 +27,8 @@ final class Failure extends \Exception
     }
 
     /**
+     * @internal
+     *
      * @param Value<Scenario> $scenario
      */
     public static function of(

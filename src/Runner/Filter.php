@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
+/**
+ * @internal
+ */
 final class Filter
 {
     /** @var list<\UnitEnum> */

@@ -20,6 +20,9 @@ final class Number
         $this->number = $number;
     }
 
+    /**
+     * @internal
+     */
     public static function of(Stats $stats, int|float $number): self
     {
         return new self($stats, $number);
