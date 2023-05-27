@@ -47,7 +47,7 @@ final class Not
             return $attempt();
         } catch (\Throwable $e) {
             throw Failure::of(Property::of(
-                $attempt,
+                $e,
                 $message ?? 'Failed asserting that a callable does not throw an exception',
             ));
         }

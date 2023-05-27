@@ -5,6 +5,9 @@ namespace Innmind\BlackBox\Runner;
 
 use Innmind\BlackBox\Set;
 
+/**
+ * @psalm-immutable
+ */
 final class Given
 {
     /** @var Set<list<mixed>> */
@@ -19,6 +22,8 @@ final class Given
     }
 
     /**
+     * @psalm-pure
+     *
      * @param Set<list<mixed>> $args
      */
     public static function of(Set $args): self
