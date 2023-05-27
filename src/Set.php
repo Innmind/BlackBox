@@ -14,6 +14,8 @@ use Innmind\BlackBox\{
 interface Set
 {
     /**
+     * @param positive-int $size
+     *
      * @return self<T>
      */
     public function take(int $size): self;

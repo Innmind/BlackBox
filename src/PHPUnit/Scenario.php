@@ -59,6 +59,9 @@ final class Scenario
         );
     }
 
+    /**
+     * @param positive-int $size
+     */
     public function take(int $size): self
     {
         $wrap = $this->wrap;

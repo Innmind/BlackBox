@@ -88,6 +88,7 @@ final class Sequence implements Set
                     return;
                 }
 
+                /** @psalm-suppress ArgumentTypeCoercion TODO fix */
                 $values = $this->generate($size->unwrap(), $random);
 
                 if (!($this->predicate)($this->wrap($values))) {
@@ -112,6 +113,8 @@ final class Sequence implements Set
     }
 
     /**
+     * @param positive-int $size
+     *
      * @return list<Value<I>>
      */
     private function generate(int $size, Random $rand): array

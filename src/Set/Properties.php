@@ -70,19 +70,11 @@ final class Properties implements Set
         );
     }
 
-    /**
-     * @return Set<Ensure>
-     */
     public function take(int $size): Set
     {
         return $this->ensure->take($size);
     }
 
-    /**
-     * @param callable(Ensure): bool $predicate
-     *
-     * @return Set<Ensure>
-     */
     public function filter(callable $predicate): Set
     {
         return $this->ensure->filter($predicate);
