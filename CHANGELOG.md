@@ -15,6 +15,10 @@
 - `Innmind\BlackBox\Random` is now an enum
 - Requires `PHPUnit` `10`
 
+### Fixed
+
+- Avoid trying to generate from a `Set` in `Set\Either` that can't generate data
+
 ### Removed
 
 - `seeder` method provided by `Innmind\BlackBox\PHPUnit\Blackbox` trait

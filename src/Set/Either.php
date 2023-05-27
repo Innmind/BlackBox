@@ -96,23 +96,29 @@ final class Either implements Set
     public function values(Random $random): \Generator
     {
         $iterations = 0;
+        /** @var list<Set<T>|Set<U>|Set<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
-        $emptySets = [];
 
         while ($iterations < $this->size) {
-            $setToChoose = $random->between(0, \count($sets) - 1);
+            $count = \count($sets);
+
+            if ($count === 0 && $iterations === 0) {
+                throw new EmptySet;
+            }
+
+            if ($count === 0) {
+                return;
+            }
+
+            $setToChoose = $random->between(0, $count - 1);
 
             try {
                 $value = $sets[$setToChoose]->values($random)->current();
 
                 yield $value;
             } catch (EmptySet $e) {
-                // TODO remove the set from the one to choose
-                $emptySets[$setToChoose] = null;
-
-                if (\count($emptySets) === \count($sets)) {
-                    throw new EmptySet;
-                }
+                unset($sets[$setToChoose]);
+                $sets = \array_values($sets);
 
                 continue;
             }
