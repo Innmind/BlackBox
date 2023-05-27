@@ -17,15 +17,22 @@ use SebastianBergmann\Timer\{
 final class Standard implements Printer
 {
     private Timer $timer;
+    private bool $withColors;
 
-    private function __construct()
+    private function __construct(bool $withColors)
     {
         $this->timer = new Timer;
+        $this->withColors = $withColors;
     }
 
     public static function new(): self
     {
-        return new self;
+        return new self(true);
+    }
+
+    public static function withoutColors(): self
+    {
+        return new self(false);
     }
 
     public function start(IO $output, IO $error): void
@@ -51,7 +58,7 @@ final class Standard implements Printer
 
         $output($proof->toString().":\n");
 
-        return Printer\Proof\Standard::new();
+        return Printer\Proof\Standard::new($this->withColors);
     }
 
     public function end(IO $output, IO $error, Stats $stats): void

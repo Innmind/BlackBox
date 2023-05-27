@@ -23,16 +23,16 @@ final class Standard implements Proof
     private VarCloner $cloner;
     private int $scenarii = 0;
 
-    private function __construct()
+    private function __construct(bool $withColors)
     {
         $this->dumper = new CliDumper;
         $this->cloner = new VarCloner;
-        $this->dumper->setColors(true);
+        $this->dumper->setColors($withColors);
     }
 
-    public static function new(): self
+    public static function new(bool $withColors): self
     {
-        return new self;
+        return new self($withColors);
     }
 
     public function emptySet(IO $output, IO $error): void
