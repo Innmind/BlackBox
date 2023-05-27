@@ -5,28 +5,17 @@ namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
     Set\Strings,
-    Set\Regex,
     Set\Chars,
     Set,
     Set\Value,
     Random,
 };
-use ReverseRegex\Lexer;
 
 class StringsTest extends TestCase
 {
     public function testInterface()
     {
         $this->assertInstanceOf(Set::class, Strings::any());
-    }
-
-    public function testMatching()
-    {
-        if (!\class_exists(Lexer::class)) {
-            $this->markTestSkipped();
-        }
-
-        $this->assertInstanceOf(Regex::class, Strings::matching('\d'));
     }
 
     public function testByDefault100ValuesAreGenerated()
