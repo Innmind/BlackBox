@@ -17,21 +17,29 @@ use Innmind\BlackBox\{
  */
 final class Either implements Set
 {
-    /** @var list<Set<T>|Set<U>|Set<V>> */
-    private array $sets;
+    /** @var Set<T> */
+    private Set $first;
+    /** @var Set<U> */
+    private Set $second;
+    /** @var list<Set<V>> */
+    private array $rest;
+    /** @var positive-int */
     private int $size;
 
     /**
      * @no-named-arguments
      *
+     * @param positive-int $size
      * @param Set<T> $first
      * @param Set<U> $second
      * @param Set<V> $rest
      */
-    private function __construct(Set $first, Set $second, Set ...$rest)
+    private function __construct(int $size, Set $first, Set $second, Set ...$rest)
     {
-        $this->sets = [$first, $second, ...$rest];
-        $this->size = 100;
+        $this->first = $first;
+        $this->second = $second;
+        $this->rest = $rest;
+        $this->size = $size;
     }
 
     /**
@@ -49,27 +57,32 @@ final class Either implements Set
      */
     public static function any(Set $first, Set $second, Set ...$rest): self
     {
-        return new self($first, $second, ...$rest);
+        return new self(100, $first, $second, ...$rest);
     }
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->sets = \array_map(
-            static fn(Set $set): Set => $set->take($size),
-            $this->sets,
+        return new self(
+            $size,
+            $this->first->take($size),
+            $this->second->take($size),
+            ...\array_map(
+                static fn(Set $set): Set => $set->take($size),
+                $this->rest,
+            ),
         );
-        $self->size = $size;
-
-        return $self;
     }
 
     public function filter(callable $predicate): Set
     {
-        $self = clone $this;
-        $self->sets = \array_map(
-            static fn(Set $set): Set => $set->filter($predicate),
-            $this->sets,
+        return new self(
+            $this->size,
+            $this->first->filter($predicate),
+            $this->second->filter($predicate),
+            ...\array_map(
+                static fn(Set $set): Set => $set->filter($predicate),
+                $this->rest,
+            ),
         );
 
         return $self;
@@ -83,19 +96,21 @@ final class Either implements Set
     public function values(Random $random): \Generator
     {
         $iterations = 0;
+        $sets = [$this->first, $this->second, ...$this->rest];
         $emptySets = [];
 
         while ($iterations < $this->size) {
-            $setToChoose = $random->between(0, \count($this->sets) - 1);
+            $setToChoose = $random->between(0, \count($sets) - 1);
 
             try {
-                $value = $this->sets[$setToChoose]->values($random)->current();
+                $value = $sets[$setToChoose]->values($random)->current();
 
                 yield $value;
             } catch (EmptySet $e) {
+                // TODO remove the set from the one to choose
                 $emptySets[$setToChoose] = null;
 
-                if (\count($emptySets) === \count($this->sets)) {
+                if (\count($emptySets) === \count($sets)) {
                     throw new EmptySet;
                 }
 

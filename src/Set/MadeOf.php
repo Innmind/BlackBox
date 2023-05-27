@@ -15,10 +15,6 @@ final class MadeOf implements Set
 {
     /** @var Set<string> */
     private Set $chars;
-    private Integers $range;
-    private int $size = 100;
-    /** @var \Closure(string): bool */
-    private \Closure $predicate;
 
     /**
      * @no-named-arguments
@@ -28,8 +24,6 @@ final class MadeOf implements Set
     private function __construct(Set $chars)
     {
         $this->chars = $chars;
-        $this->range = Integers::between(0, 128);
-        $this->predicate = static fn(): bool => true;
     }
 
     /**
@@ -49,38 +43,45 @@ final class MadeOf implements Set
         return new self($chars);
     }
 
-    public function between(int $minLength, int $maxLength): self
+    /**
+     * @param 0|positive-int $minLength
+     * @param positive-int $maxLength
+     *
+     * @return Set<string>
+     */
+    public function between(int $minLength, int $maxLength): Set
     {
-        $self = clone $this;
-        $self->range = Integers::between($minLength, $maxLength);
-
-        return $self;
+        return $this->build($minLength, $maxLength);
     }
 
-    public function atLeast(int $length): self
+    /**
+     * @param positive-int $length
+     *
+     * @return Set<string>
+     */
+    public function atLeast(int $length): Set
     {
-        $self = clone $this;
-        $self->range = Integers::between($length, $length + 128);
-
-        return $self;
+        return $this->build($length, $length + 128);
     }
 
-    public function atMost(int $length): self
+    /**
+     * @param positive-int $length
+     *
+     * @return Set<string>
+     */
+    public function atMost(int $length): Set
     {
-        $self = clone $this;
-        $self->range = Integers::between(0, $length);
-
-        return $self;
+        return $this->build(0, $length);
     }
 
     public function take(int $size): Set
     {
-        return $this->build()->take($size);
+        return $this->build(0, 128)->take($size);
     }
 
     public function filter(callable $predicate): Set
     {
-        return $this->build()->filter($predicate);
+        return $this->build(0, 128)->filter($predicate);
     }
 
     public function map(callable $map): Set
@@ -91,17 +92,20 @@ final class MadeOf implements Set
     public function values(Random $random): \Generator
     {
         yield from $this
-            ->build()
+            ->build(0, 128)
             ->values($random);
     }
 
     /**
+     * @param 0|positive-int $min
+     * @param positive-int $max
+     *
      * @return Set<string>
      */
-    private function build(): Set
+    private function build(int $min, int $max): Set
     {
-        return Sequence::of($this->chars, $this->range)->map(
-            static fn(array $chars) => \implode('', $chars),
-        );
+        return Sequence::of($this->chars)
+            ->between($min, $max)
+            ->map(static fn(array $chars) => \implode('', $chars));
     }
 }

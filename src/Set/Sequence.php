@@ -17,22 +17,27 @@ final class Sequence implements Set
 {
     /** @var Set<I> */
     private Set $set;
-    /** @var Set<int> */
-    private Set $sizes;
+    private Integers $sizes;
+    /** @var positive-int */
     private int $size;
     /** @var \Closure(list<I>): bool */
     private \Closure $predicate;
 
     /**
      * @param Set<I> $set
+     * @param positive-int $size
+     * @param \Closure(list<I>): bool $predicate
      */
-    private function __construct(Set $set, Integers $sizes = null)
-    {
-        $sizes ??= Integers::between(0, 100);
+    private function __construct(
+        Set $set,
+        Integers $sizes,
+        int $size = null,
+        \Closure $predicate = null,
+    ) {
         $this->set = $set;
         $this->sizes = $sizes;
-        $this->size = 100;
-        $this->predicate = static fn(array $sequence): bool => \count($sequence) >= $sizes->lowerBound();
+        $this->size = $size ?? 100;
+        $this->predicate = $predicate ?? static fn(array $sequence): bool => \count($sequence) >= $sizes->lowerBound();
     }
 
     /**
@@ -42,34 +47,84 @@ final class Sequence implements Set
      *
      * @return self<U>
      */
-    public static function of(Set $set, Integers $sizes = null): self
+    public static function of(Set $set): self
     {
-        return new self($set, $sizes);
+        return new self($set, Integers::between(0, 100));
+    }
+
+    /**
+     * @param positive-int $size
+     *
+     * @return Set<list<I>>
+     */
+    public function atLeast(int $size): Set
+    {
+        return new self(
+            $this->set,
+            Integers::between($size, $size + 100),
+            $this->size,
+            null, // to make sure the lower bound is respected
+        );
+    }
+
+    /**
+     * @param positive-int $size
+     *
+     * @return Set<list<I>>
+     */
+    public function atMost(int $size): Set
+    {
+        return new self(
+            $this->set,
+            Integers::between(0, $size),
+            $this->size,
+            null, // to make sure the lower bound is respected
+        );
+    }
+
+    /**
+     * @param 0|positive-int $lower
+     * @param positive-int $upper
+     *
+     * @return Set<list<I>>
+     */
+    public function between(int $lower, int $upper): Set
+    {
+        return new self(
+            $this->set,
+            Integers::between($lower, $upper),
+            $this->size,
+            null, // to make sure the lower bound is respected
+        );
     }
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->sizes = $this->sizes->take($size);
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $this->set,
+            $this->sizes->take($size),
+            $size,
+            $this->predicate,
+        );
     }
 
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(array $value) use ($previous, $predicate): bool {
-            /** @var list<I> $value */
-            if (!$previous($value)) {
-                return false;
-            }
 
-            return $predicate($value);
-        };
+        return new self(
+            $this->set,
+            $this->sizes,
+            $this->size,
+            static function(array $value) use ($previous, $predicate): bool {
+                /** @var list<I> $value */
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+        );
     }
 
     public function map(callable $map): Set
@@ -88,7 +143,7 @@ final class Sequence implements Set
                     return;
                 }
 
-                /** @psalm-suppress ArgumentTypeCoercion TODO fix */
+                /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
 
                 if (!($this->predicate)($this->wrap($values))) {
@@ -113,12 +168,16 @@ final class Sequence implements Set
     }
 
     /**
-     * @param positive-int $size
+     * @param 0|positive-int $size
      *
      * @return list<Value<I>>
      */
     private function generate(int $size, Random $rand): array
     {
+        if ($size === 0) {
+            return [];
+        }
+
         return \array_values(\iterator_to_array($this->set->take($size)->values($rand)));
     }
 

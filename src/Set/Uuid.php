@@ -13,10 +13,10 @@ final class Uuid
     public static function any(): Set
     {
         $chars = Set\Elements::of(...\range('a', 'f'), ...\range(0, 9));
-        $part = static fn(int $length): Set => Sequence::of(
-            $chars,
-            Integers::between($length, $length),
-        )->map(static fn(array $chars): string => \implode('', $chars));
+        /** @psalm-suppress ArgumentTypeCoercion */
+        $part = static fn(int $length): Set => Sequence::of($chars)
+            ->between($length, $length)
+            ->map(static fn(array $chars): string => \implode('', $chars));
 
         /** @var Set<non-empty-string> */
         return Set\Composite::immutable(

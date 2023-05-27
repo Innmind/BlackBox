@@ -20,11 +20,6 @@ class StringsTest extends TestCase
         $this->assertInstanceOf(Set::class, Strings::any());
     }
 
-    public function testAny()
-    {
-        $this->assertInstanceOf(Strings::class, Strings::any());
-    }
-
     public function testMatching()
     {
         if (!\class_exists(Lexer::class)) {

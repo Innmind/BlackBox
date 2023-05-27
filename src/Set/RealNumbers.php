@@ -15,15 +15,25 @@ final class RealNumbers implements Set
 {
     private int $lowerBound;
     private int $upperBound;
+    /** @var positive-int */
     private int $size;
+    /** @var \Closure(float): bool */
     private \Closure $predicate;
 
-    private function __construct(int $lowerBound, int $upperBound)
-    {
+    /**
+     * @param positive-int $size
+     * @param \Closure(float): bool $predicate
+     */
+    private function __construct(
+        int $lowerBound,
+        int $upperBound,
+        int $size = null,
+        \Closure $predicate = null,
+    ) {
         $this->lowerBound = $lowerBound;
         $this->upperBound = $upperBound;
-        $this->size = 100;
-        $this->predicate = fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
+        $this->size = $size ?? 100;
+        $this->predicate = $predicate ?? fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
     public static function any(): self
@@ -48,25 +58,30 @@ final class RealNumbers implements Set
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $this->lowerBound,
+            $this->upperBound,
+            $size,
+            $this->predicate,
+        );
     }
 
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(float $value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
 
-            return $predicate($value);
-        };
+        return new self(
+            $this->lowerBound,
+            $this->upperBound,
+            $this->size,
+            static function(float $value) use ($previous, $predicate): bool {
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+        );
     }
 
     public function map(callable $map): Set

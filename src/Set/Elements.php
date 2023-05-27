@@ -19,23 +19,31 @@ use Innmind\BlackBox\{
  */
 final class Elements implements Set
 {
+    /** @var positive-int */
     private int $size;
-    /** @var list<T|U> */
+    /** @var T */
+    private mixed $first;
+    /** @var list<U> */
     private array $elements;
     /** @var \Closure(T|U): bool */
     private \Closure $predicate;
 
     /**
-     * @no-named-arguments
-     *
+     * @param positive-int $size
+     * @param \Closure(T|U): bool $predicate
      * @param T $first
-     * @param U $elements
+     * @param list<U> $elements
      */
-    private function __construct($first, ...$elements)
-    {
-        $this->size = 100;
-        $this->elements = [$first, ...$elements];
-        $this->predicate = static fn(): bool => true;
+    private function __construct(
+        int $size,
+        \Closure $predicate,
+        mixed $first,
+        array $elements,
+    ) {
+        $this->size = $size;
+        $this->predicate = $predicate;
+        $this->first = $first;
+        $this->elements = $elements;
     }
 
     /**
@@ -51,31 +59,36 @@ final class Elements implements Set
      */
     public static function of($first, ...$elements): self
     {
-        return new self($first, ...$elements);
+        return new self(100, static fn(): bool => true, $first, $elements);
     }
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $size,
+            $this->predicate,
+            $this->first,
+            $this->elements,
+        );
     }
 
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
-            /** @var T|U $value */
-            if (!$previous($value)) {
-                return false;
-            }
 
-            return $predicate($value);
-        };
+        return new self(
+            $this->size,
+            static function(mixed $value) use ($previous, $predicate): bool {
+                /** @var T|U $value */
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+            $this->first,
+            $this->elements,
+        );
     }
 
     public function map(callable $map): Set
@@ -87,7 +100,7 @@ final class Elements implements Set
     {
         $iterations = 0;
         $elements = \array_values(\array_filter(
-            $this->elements,
+            [$this->first, ...$this->elements],
             $this->predicate,
         ));
 

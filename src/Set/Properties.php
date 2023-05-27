@@ -17,26 +17,13 @@ final class Properties implements Set
 {
     /** @var Set<Concrete> */
     private Set $properties;
-    private Integers $range;
-    /** @var Set<Ensure> */
-    private Set $ensure;
 
     /**
      * @param Set<Concrete> $properties
      */
-    private function __construct(
-        Set $properties,
-        Integers $range,
-    ) {
+    private function __construct(Set $properties)
+    {
         $this->properties = $properties;
-        $this->range = $range;
-
-        /** @var Set<non-empty-list<Concrete>> */
-        $sequences = Sequence::of($properties, $range);
-
-        $this->ensure = $sequences->map(
-            static fn(array $properties): Ensure => new Ensure(...$properties),
-        );
     }
 
     /**
@@ -48,41 +35,35 @@ final class Properties implements Set
     public static function any(Set $first, Set ...$properties): self
     {
         if (\count($properties) === 0) {
-            return new self($first, Integers::between(1, 100));
+            return new self($first);
         }
 
-        return new self(
-            Either::any($first, ...$properties),
-            Integers::between(1, 100),
-        );
+        return new self(Either::any($first, ...$properties));
     }
 
     /**
-     * @psalm-mutation-free
-     *
      * @param positive-int $max
+     *
+     * @return Set<Ensure>
      */
-    public function atMost(int $max): self
+    public function atMost(int $max): Set
     {
-        return new self(
-            $this->properties,
-            Integers::between(1, $max),
-        );
+        return $this->ensure($max);
     }
 
     public function take(int $size): Set
     {
-        return $this->ensure->take($size);
+        return $this->ensure(100)->take($size);
     }
 
     public function filter(callable $predicate): Set
     {
-        return $this->ensure->filter($predicate);
+        return $this->ensure(100)->filter($predicate);
     }
 
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this->ensure);
+        return Decorate::immutable($map, $this->ensure(100));
     }
 
     /**
@@ -90,6 +71,21 @@ final class Properties implements Set
      */
     public function values(Random $random): \Generator
     {
-        yield from $this->ensure->values($random);
+        yield from $this->ensure(100)->values($random);
+    }
+
+    /**
+     * @param positive-int $max
+     *
+     * @return Set<Ensure>
+     */
+    private function ensure(int $max): Set
+    {
+        /** @var Set<non-empty-list<Concrete>> */
+        $sequences = Sequence::of($this->properties)->between(1, $max);
+
+        return $sequences->map(
+            static fn(array $properties): Ensure => new Ensure(...$properties),
+        );
     }
 }

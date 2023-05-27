@@ -21,14 +21,16 @@ final class Unicode
     /**
      * The bounds express the number of characters not the number of bytes
      *
+     * @param 0|positive-int $min
+     * @param positive-int $max
+     *
      * @return Set<string>
      */
     public static function lengthBetween(int $min, int $max): Set
     {
-        return Set\Sequence::of(
-            self::any(),
-            Set\Integers::between($min, $max),
-        )->map(static fn(array $chars): string => \implode('', $chars));
+        return Set\Sequence::of(self::any())
+            ->between($min, $max)
+            ->map(static fn(array $chars): string => \implode('', $chars));
     }
 
     /**

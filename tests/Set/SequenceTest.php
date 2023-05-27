@@ -35,10 +35,7 @@ class SequenceTest extends TestCase
 
     public function testGeneratesSequencesOfDifferentSizes()
     {
-        $sequences = Sequence::of(
-            Set\Chars::any(),
-            Set\Integers::between(0, 50),
-        );
+        $sequences = Sequence::of(Set\Chars::any())->between(0, 50);
         $sizes = [];
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
@@ -115,7 +112,7 @@ class SequenceTest extends TestCase
 
     public function testNonEmptySequenceCanBeShrunk()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(1, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(1, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
@@ -129,7 +126,7 @@ class SequenceTest extends TestCase
 
     public function testEmptySequenceCanNotBeShrunk()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(0, 1));
+        $sequences = Sequence::of(Set\Chars::any())->between(0, 1);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
@@ -143,7 +140,7 @@ class SequenceTest extends TestCase
 
     public function testNonEmptySequenceAreShrunkWithDifferentStrategies()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(3, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 6) {
@@ -164,7 +161,7 @@ class SequenceTest extends TestCase
 
     public function testShrunkSequencesDoContainsLessThanTheInitialValue()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(2, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(2, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 4) {
@@ -183,7 +180,7 @@ class SequenceTest extends TestCase
 
     public function testShrinkingStrategyAReduceTheSequenceFasterThanStrategyB()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(3, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 6) {
@@ -204,7 +201,7 @@ class SequenceTest extends TestCase
 
     public function testShrunkValuesConserveMutabilityProperty()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(1, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(1, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -218,8 +215,7 @@ class SequenceTest extends TestCase
                 static fn() => new \stdClass,
                 Set\Chars::any(),
             ),
-            Set\Integers::between(1, 100),
-        );
+        )->between(1, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
@@ -236,7 +232,7 @@ class SequenceTest extends TestCase
 
     public function testSequenceIsNeverShrunkBelowTheSpecifiedLowerBound()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(10, 50));
+        $sequences = Sequence::of(Set\Chars::any())->between(10, 50);
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             while ($sequence->shrinkable()) {
@@ -259,8 +255,7 @@ class SequenceTest extends TestCase
                 },
                 Set\Integers::any(),
             ),
-            Set\Integers::between(1, 20),
-        );
+        )->between(1, 20);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (!$value->shrinkable()) {
@@ -279,10 +274,7 @@ class SequenceTest extends TestCase
 
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
-        $sequences = Sequence::of(
-            Set\Integers::any(),
-            Set\Integers::between(1, 100),
-        );
+        $sequences = Sequence::of(Set\Integers::any())->between(1, 100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             while ($sequence->shrinkable()) {

@@ -21,15 +21,17 @@ final class Randomize implements Set
 {
     /** @var Set<I> */
     private Set $set;
+    /** @var positive-int */
     private int $size;
 
     /**
      * @param Set<I> $set
+     * @param positive-int $size
      */
-    private function __construct(Set $set)
+    private function __construct(Set $set, int $size)
     {
         $this->set = $set;
-        $this->size = 100;
+        $this->size = $size;
     }
 
     /**
@@ -41,20 +43,23 @@ final class Randomize implements Set
      */
     public static function of(Set $set): self
     {
-        return new self($set);
+        return new self($set, 100);
     }
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $this->set,
+            $size,
+        );
     }
 
     public function filter(callable $predicate): Set
     {
-        return new self($this->set->filter($predicate));
+        return new self(
+            $this->set->filter($predicate),
+            $this->size,
+        );
     }
 
     public function map(callable $map): Set

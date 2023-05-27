@@ -17,11 +17,6 @@ class NaturalNumbersTest extends TestCase
         $this->assertInstanceOf(Set::class, NaturalNumbers::any());
     }
 
-    public function testAny()
-    {
-        $this->assertInstanceOf(NaturalNumbers::class, NaturalNumbers::any());
-    }
-
     public function testByDefault100IntegersAreGenerated()
     {
         $values = $this->unwrap(NaturalNumbers::any()->values(Random::mersenneTwister));
@@ -40,7 +35,7 @@ class NaturalNumbersTest extends TestCase
             return $int % 2 === 0;
         });
 
-        $this->assertInstanceOf(NaturalNumbers::class, $even);
+        $this->assertInstanceOf(Set::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
             $this->unwrap($integers->values(Random::mersenneTwister)),
@@ -66,7 +61,7 @@ class NaturalNumbersTest extends TestCase
         $a = NaturalNumbers::any();
         $b = $a->take(50);
 
-        $this->assertInstanceOf(NaturalNumbers::class, $b);
+        $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
         $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));

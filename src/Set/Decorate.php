@@ -22,12 +22,12 @@ final class Decorate implements Set
     private bool $immutable;
 
     /**
-     * @param callable(I): D $decorate
+     * @param \Closure(I): D $decorate
      * @param Set<I> $set
      */
-    private function __construct(bool $immutable, callable $decorate, Set $set)
+    private function __construct(bool $immutable, \Closure $decorate, Set $set)
     {
-        $this->decorate = \Closure::fromCallable($decorate);
+        $this->decorate = $decorate;
         $this->set = $set;
         $this->immutable = $immutable;
     }
@@ -43,7 +43,7 @@ final class Decorate implements Set
      */
     public static function immutable(callable $decorate, Set $set): self
     {
-        return new self(true, $decorate, $set);
+        return new self(true, \Closure::fromCallable($decorate), $set);
     }
 
     /**
@@ -57,24 +57,26 @@ final class Decorate implements Set
      */
     public static function mutable(callable $decorate, Set $set): self
     {
-        return new self(false, $decorate, $set);
+        return new self(false, \Closure::fromCallable($decorate), $set);
     }
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->set = $this->set->take($size);
-
-        return $self;
+        return new self(
+            $this->immutable,
+            $this->decorate,
+            $this->set->take($size),
+        );
     }
 
     public function filter(callable $predicate): Set
     {
-        $self = clone $this;
         /** @psalm-suppress MixedArgument */
-        $self->set = $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value)));
-
-        return $self;
+        return new self(
+            $this->immutable,
+            $this->decorate,
+            $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value))),
+        );
     }
 
     public function map(callable $map): self

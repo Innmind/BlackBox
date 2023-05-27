@@ -3,52 +3,15 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
-/**
- * @implements Set<int>
- */
-final class IntegersExceptZero implements Set
+final class IntegersExceptZero
 {
-    /** @var Set<int> */
-    private Set $set;
-
-    private function __construct()
+    /**
+     * @return Set<int>
+     */
+    public static function any(): Set
     {
-        $this->set = Integers::any()->filter(static fn(int $value): bool => $value !== 0);
-    }
-
-    public static function any(): self
-    {
-        return new self;
-    }
-
-    public function take(int $size): Set
-    {
-        $self = clone $this;
-        $self->set = $this->set->take($size);
-
-        return $self;
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        $self = clone $this;
-        $self->set = $this->set->filter($predicate);
-
-        return $self;
-    }
-
-    public function map(callable $map): Set
-    {
-        return Decorate::immutable($map, $this->set);
-    }
-
-    public function values(Random $random): \Generator
-    {
-        yield from $this->set->values($random);
+        return Integers::any()->filter(static fn(int $value): bool => $value !== 0);
     }
 }

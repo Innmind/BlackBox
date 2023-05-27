@@ -3,45 +3,49 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
-/**
- * @implements Set<string>
- */
-final class Strings implements Set
+final class Strings
 {
-    /** @var Set<string> */
-    private Set $set;
-
-    private function __construct(int $min, int $max)
+    /**
+     * @return Set<string>
+     */
+    public static function any(): Set
     {
-        $this->set = Sequence::of(
-            Chars::any(),
-            Integers::between($min, $max),
-        )->map(static fn(array $chars): string => \implode('', $chars));
+        return self::between(0, 128);
     }
 
-    public static function any(): self
+    /**
+     * @param 0|positive-int $minLength
+     * @param positive-int $maxLength
+     *
+     * @return Set<string>
+     */
+    public static function between(int $minLength, int $maxLength): Set
     {
-        return new self(0, 128);
+        return Sequence::of(Chars::any())
+            ->between($minLength, $maxLength)
+            ->map(static fn(array $chars): string => \implode('', $chars));
     }
 
-    public static function between(int $minLength, int $maxLength): self
+    /**
+     * @param positive-int $maxLength
+     *
+     * @return Set<string>
+     */
+    public static function atMost(int $maxLength): Set
     {
-        return new self($minLength, $maxLength);
+        return self::between(0, $maxLength);
     }
 
-    public static function atMost(int $maxLength): self
+    /**
+     * @param positive-int $minLength
+     *
+     * @return Set<string>
+     */
+    public static function atLeast(int $minLength): Set
     {
-        return new self(0, $maxLength);
-    }
-
-    public static function atLeast(int $minLength): self
-    {
-        return new self($minLength, $minLength + 128);
+        return self::between($minLength, $minLength + 128);
     }
 
     /**
@@ -53,25 +57,5 @@ final class Strings implements Set
     public static function madeOf(Set $first, Set ...$rest): MadeOf
     {
         return MadeOf::of($first, ...$rest);
-    }
-
-    public function take(int $size): Set
-    {
-        return $this->set->take($size);
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        return $this->set->filter($predicate);
-    }
-
-    public function map(callable $map): Set
-    {
-        return Decorate::immutable($map, $this->set);
-    }
-
-    public function values(Random $random): \Generator
-    {
-        yield from $this->set->values($random);
     }
 }

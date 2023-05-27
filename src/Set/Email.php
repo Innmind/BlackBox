@@ -44,6 +44,7 @@ final class Email
     }
 
     /**
+     * @param int<3, max> $maxLength
      * @param non-empty-string $extra
      *
      * @return Set<non-empty-string>
@@ -53,18 +54,16 @@ final class Email
         /** @var Set<non-empty-string> */
         return Set\Either::any(
             // either only with simple characters
-            Set\Sequence::of(
-                self::letter(),
-                Set\Integers::between(1, $maxLength),
-            )->map(static fn(array $chars): string => \implode('', $chars)),
+            Set\Sequence::of(self::letter())
+                ->between(1, $maxLength)
+                ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
             Set\Composite::immutable(
                 static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
-                Set\Sequence::of(
-                    self::letter(...$extra),
-                    Set\Integers::between(1, $maxLength - 2),
-                )->map(static fn(array $chars): string => \implode('', $chars)),
+                Set\Sequence::of(self::letter(...$extra))
+                    ->between(1, $maxLength - 2)
+                    ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
             )->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
@@ -80,10 +79,9 @@ final class Email
         /**
          * @var Set<non-empty-string>
          */
-        return Set\Sequence::of(
-            Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')),
-            Set\Integers::between(1, 63),
-        )->map(static fn(array $chars): string => \implode('', $chars));
+        return Set\Sequence::of(Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')))
+            ->between(1, 63)
+            ->map(static fn(array $chars): string => \implode('', $chars));
     }
 
     /**

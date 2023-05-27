@@ -15,42 +15,50 @@ use Innmind\Json\Json;
  */
 final class UnsafeStrings implements Set
 {
+    /** @var positive-int */
     private int $size;
     /** @var \Closure(string): bool */
     private \Closure $predicate;
 
-    private function __construct()
-    {
-        $this->size = 100;
-        $this->predicate = static fn(): bool => true;
+    /**
+     * @param positive-int $size
+     * @param \Closure(string): bool $predicate
+     */
+    private function __construct(
+        int $size,
+        \Closure $predicate,
+    ) {
+        $this->size = $size;
+        $this->predicate = $predicate;
     }
 
     public static function any(): self
     {
-        return new self;
+        return new self(100, static fn(): bool => true);
     }
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $size,
+            $this->predicate,
+        );
     }
 
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
 
-            return $predicate($value);
-        };
+        return new self(
+            $this->size,
+            static function(string $value) use ($previous, $predicate): bool {
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+        );
     }
 
     public function map(callable $map): Set
