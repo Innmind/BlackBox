@@ -8,7 +8,7 @@ use Innmind\BlackBox\Set;
 final class Uuid
 {
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function any(): Set
     {
@@ -25,6 +25,7 @@ final class Uuid
             ),
         );
 
+        /** @var Set<non-empty-string> */
         return Set\Composite::immutable(
             static fn(string ...$parts): string => \implode('-', $parts),
             $part(8),

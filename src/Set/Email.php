@@ -8,11 +8,11 @@ use Innmind\BlackBox\Set;
 final class Email
 {
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function any(): Set
     {
-        /** @var Set<string> */
+        /** @var Set<non-empty-string> */
         return Composite::immutable(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
@@ -28,7 +28,7 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     private static function address(): Set
     {
@@ -36,7 +36,7 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     private static function domain(): Set
     {
@@ -44,7 +44,9 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @param non-empty-string $extra
+     *
+     * @return Set<non-empty-string>
      */
     private static function string(int $maxLength, string ...$extra): Set
     {
@@ -80,13 +82,14 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     private static function tld(): Set
     {
         /**
          * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
          * @psalm-suppress InvalidArgument Same problem as above
+         * @var Set<non-empty-string>
          */
         return Set\Decorate::immutable(
             static fn(array $chars): string => \implode('', $chars),
@@ -98,7 +101,9 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @param non-empty-string $extra
+     *
+     * @return Set<non-empty-string>
      */
     private static function letter(string ...$extra): Set
     {

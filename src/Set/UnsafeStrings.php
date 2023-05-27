@@ -53,9 +53,6 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
     public function values(Random $random): \Generator
     {
         /** @var list<string> */
