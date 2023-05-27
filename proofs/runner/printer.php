@@ -373,7 +373,7 @@ return static function() {
                 ->failed($io, $io, Failure::of(
                     Assert\Failure::of(Truth::of($message)),
                     Value::immutable(Scenario\Properties::of(
-                        new Properties(new LowerBoundAtZero),
+                        Properties::of(new LowerBoundAtZero),
                         new Counter,
                     )),
                 ));

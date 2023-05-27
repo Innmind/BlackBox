@@ -102,7 +102,7 @@ final class Properties implements Set
         $sequences = Sequence::of($this->properties)->between(1, $max);
 
         return $sequences->map(
-            static fn(array $properties): Ensure => new Ensure(...$properties),
+            static fn(array $properties): Ensure => Ensure::of(...$properties),
         );
     }
 }

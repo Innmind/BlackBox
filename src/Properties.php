@@ -13,9 +13,17 @@ final class Properties
     /**
      * @no-named-arguments
      */
-    public function __construct(Property $first, Property ...$properties)
+    private function __construct(Property $first, Property ...$properties)
     {
         $this->properties = [$first, ...$properties];
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function of(Property $first, Property ...$properties): self
+    {
+        return new self($first, ...$properties);
     }
 
     /**
