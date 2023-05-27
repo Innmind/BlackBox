@@ -44,10 +44,7 @@ function test(string $name, callable $test): Proof
 function given(Set $first, Set ...$rest): Given
 {
     /** @var Set<list<mixed>> */
-    $given = Set\Decorate::immutable(
-        static fn(mixed $value) => [$value],
-        $first,
-    );
+    $given = $first->map(static fn(mixed $value) => [$value]);
 
     if (\count($rest) > 0) {
         /** @var Set<list<mixed>> */

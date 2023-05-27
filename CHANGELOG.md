@@ -5,6 +5,7 @@
 ### Added
 
 - `Innmind\BlackBox\Set\Nullable`
+- `Innmind\BlackBox\Set::map()`
 
 ### Changed
 

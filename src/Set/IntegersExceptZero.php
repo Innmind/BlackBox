@@ -42,6 +42,11 @@ final class IntegersExceptZero implements Set
         return $self;
     }
 
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this->set);
+    }
+
     public function values(Random $random): \Generator
     {
         yield from $this->set->values($random);

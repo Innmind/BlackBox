@@ -82,6 +82,11 @@ final class Decorate implements Set
         return $self;
     }
 
+    public function map(callable $map): self
+    {
+        return self::immutable($map, $this);
+    }
+
     public function values(Random $random): \Generator
     {
         foreach ($this->set->values($random) as $value) {

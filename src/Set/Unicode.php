@@ -27,15 +27,11 @@ final class Unicode
     {
         /**
          * @psalm-suppress MixedArgumentTypeCoercion
-         * @psalm-suppress InvalidArgument
          */
-        return Set\Decorate::immutable(
-            static fn(array $chars): string => \implode('', $chars),
-            Set\Sequence::of(
-                self::any(),
-                Set\Integers::between($min, $max),
-            ),
-        );
+        return Set\Sequence::of(
+            self::any(),
+            Set\Integers::between($min, $max),
+        )->map(static fn(array $chars): string => \implode('', $chars));
     }
 
     /**
@@ -2267,9 +2263,8 @@ final class Unicode
     private static function between(int $min, int $max): Set
     {
         /** @var Set<string> */
-        return Decorate::immutable(
-            static fn(int $index): ?string => \IntlChar::chr($index),
-            Integers::between($min, $max),
-        )->filter(static fn($char) => \is_string($char));
+        return Integers::between($min, $max)
+            ->map(\IntlChar::chr(...))
+            ->filter(static fn($char) => \is_string($char));
     }
 }

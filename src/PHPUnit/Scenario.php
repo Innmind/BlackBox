@@ -37,11 +37,7 @@ final class Scenario
     ) {
         if (\count($sets) === 0) {
             /** @var Set<list<mixed>> */
-            $set = Set\Decorate::immutable(
-                /** @psalm-suppress MissingClosureParamType */
-                static fn($value): array => [$value],
-                $first,
-            );
+            $set = $first->map(static fn($value): array => [$value]);
         } else {
             /** @var Set<list<mixed>> */
             $set = Set\Composite::immutable(

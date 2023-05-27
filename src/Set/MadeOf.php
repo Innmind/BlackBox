@@ -93,6 +93,11 @@ final class MadeOf implements Set
         return $self;
     }
 
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */
@@ -109,9 +114,8 @@ final class MadeOf implements Set
          * @psalm-suppress InvalidArgument Same problem as above
          * @var Set<string>
          */
-        $set = Decorate::immutable(
+        $set = Sequence::of($chars, $this->range)->map(
             static fn(array $chars): string => \implode('', $chars),
-            Sequence::of($chars, $this->range),
         );
 
         yield from $set

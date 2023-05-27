@@ -53,6 +53,11 @@ final class UnsafeStrings implements Set
         return $self;
     }
 
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
     public function values(Random $random): \Generator
     {
         /** @var list<string> */

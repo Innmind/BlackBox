@@ -57,6 +57,11 @@ final class Randomize implements Set
         return new self($this->set->filter($predicate));
     }
 
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
     public function values(Random $random): \Generator
     {
         $iterations = 0;

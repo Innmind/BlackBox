@@ -69,6 +69,11 @@ final class RealNumbers implements Set
         return $self;
     }
 
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      */

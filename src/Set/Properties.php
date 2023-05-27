@@ -31,16 +31,11 @@ final class Properties implements Set
         $this->properties = $properties;
         $this->range = $range;
 
-        /** @var Set<list<Concrete>> */
+        /** @var Set<non-empty-list<Concrete>> */
         $sequences = Sequence::of($properties, $range);
 
-        /**
-         * @psalm-suppress MixedArgument
-         * @psalm-suppress InvalidArgument
-         */
-        $this->ensure = Decorate::immutable(
-            static fn(array $properties): Ensure => new Ensure(...\array_values($properties)),
-            $sequences,
+        $this->ensure = $sequences->map(
+            static fn(array $properties): Ensure => new Ensure(...$properties),
         );
     }
 
@@ -91,6 +86,11 @@ final class Properties implements Set
     public function filter(callable $predicate): Set
     {
         return $this->ensure->filter($predicate);
+    }
+
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this->ensure);
     }
 
     /**

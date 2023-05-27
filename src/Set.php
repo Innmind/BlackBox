@@ -26,6 +26,15 @@ interface Set
     public function filter(callable $predicate): self;
 
     /**
+     * @template V
+     *
+     * @param callable(T): V $map
+     *
+     * @return self<V>
+     */
+    public function map(callable $map): self;
+
+    /**
      * @internal End users mustn't use this method directly (BC breaks may be introduced)
      *
      * @throws EmptySet When no value can be generated

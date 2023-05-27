@@ -20,15 +20,11 @@ final class Strings implements Set
     {
         /**
          * @psalm-suppress MixedArgumentTypeCoercion
-         * @psalm-suppress InvalidArgument
          */
-        $this->set = Decorate::immutable(
-            static fn(array $chars): string => \implode('', $chars),
-            Sequence::of(
-                Chars::any(),
-                Integers::between($min, $max),
-            ),
-        );
+        $this->set = Sequence::of(
+            Chars::any(),
+            Integers::between($min, $max),
+        )->map(static fn(array $chars): string => \implode('', $chars));
     }
 
     public static function any(): self
@@ -70,6 +66,11 @@ final class Strings implements Set
     public function filter(callable $predicate): Set
     {
         return $this->set->filter($predicate);
+    }
+
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this->set);
     }
 
     /**

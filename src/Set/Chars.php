@@ -15,10 +15,7 @@ final class Chars
      */
     public static function any(): Set
     {
-        return Decorate::immutable(
-            static fn(int $ord): string => \chr($ord),
-            Integers::between(0, 255),
-        );
+        return Integers::between(0, 255)->map(\chr(...));
     }
 
     /**
@@ -26,10 +23,7 @@ final class Chars
      */
     public static function lowercaseLetter(): Set
     {
-        return Decorate::immutable(
-            static fn(int $ord): string => \chr($ord),
-            Integers::between(97, 122),
-        );
+        return Integers::between(97, 122)->map(\chr(...));
     }
 
     /**
@@ -37,10 +31,7 @@ final class Chars
      */
     public static function uppercaseLetter(): Set
     {
-        return Decorate::immutable(
-            static fn(int $ord): string => \chr($ord),
-            Integers::between(65, 90),
-        );
+        return Integers::between(65, 90)->map(\chr(...));
     }
 
     /**
@@ -48,10 +39,7 @@ final class Chars
      */
     public static function number(): Set
     {
-        return Decorate::immutable(
-            static fn(int $ord): string => \chr($ord),
-            Integers::between(48, 57),
-        );
+        return Integers::between(48, 57)->map(\chr(...));
     }
 
     /**
@@ -59,10 +47,7 @@ final class Chars
      */
     public static function ascii(): Set
     {
-        return Decorate::immutable(
-            static fn(int $ord): string => \chr($ord),
-            Integers::between(32, 126),
-        );
+        return Integers::between(32, 126)->map(\chr(...));
     }
 
     /**

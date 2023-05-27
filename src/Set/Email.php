@@ -56,24 +56,18 @@ final class Email
          */
         return Set\Either::any(
             // either only with simple characters
-            Set\Decorate::immutable(
-                static fn(array $chars): string => \implode('', $chars),
-                Set\Sequence::of(
-                    self::letter(),
-                    Set\Integers::between(1, $maxLength),
-                ),
-            ),
+            Set\Sequence::of(
+                self::letter(),
+                Set\Integers::between(1, $maxLength),
+            )->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
             Set\Composite::immutable(
                 static fn(...$parts): string => \implode('', $parts),
                 self::letter(),
-                Set\Decorate::immutable(
-                    static fn(array $chars): string => \implode('', $chars),
-                    Set\Sequence::of(
-                        self::letter(...$extra),
-                        Set\Integers::between(1, $maxLength - 2),
-                    ),
-                ),
+                Set\Sequence::of(
+                    self::letter(...$extra),
+                    Set\Integers::between(1, $maxLength - 2),
+                )->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
             )->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
@@ -88,16 +82,12 @@ final class Email
     {
         /**
          * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
-         * @psalm-suppress InvalidArgument Same problem as above
          * @var Set<non-empty-string>
          */
-        return Set\Decorate::immutable(
-            static fn(array $chars): string => \implode('', $chars),
-            Set\Sequence::of(
-                Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')),
-                Set\Integers::between(1, 63),
-            ),
-        );
+        return Set\Sequence::of(
+            Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')),
+            Set\Integers::between(1, 63),
+        )->map(static fn(array $chars): string => \implode('', $chars));
     }
 
     /**

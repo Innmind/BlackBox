@@ -96,12 +96,12 @@ final class Inline implements Proof
     {
         /**
          * @psalm-suppress ArgumentTypeCoercion
-         * @psalm-suppress InvalidArgument
          * @var Set<Scenario>
          */
-        return Set\Decorate::immutable(
-            fn(array $args) => Scenario\Inline::of($args, $this->test),
-            $this->values->set(),
-        )->take($this->scenarii ?? $count);
+        return $this
+            ->values
+            ->set()
+            ->map(fn(array $args) => Scenario\Inline::of($args, $this->test))
+            ->take($this->scenarii ?? $count);
     }
 }

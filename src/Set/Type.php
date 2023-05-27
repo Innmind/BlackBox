@@ -22,13 +22,10 @@ final class Type
                 self::primitives(),
                 Integers::between(0, 1), // no more needed to prove type indifference
             ),
-            Set\Decorate::mutable(
-                static fn(array $array): \Iterator => new \ArrayIterator($array),
-                Sequence::of(
-                    self::primitives(),
-                    Integers::between(0, 1), // no more needed to prove type indifference
-                ),
-            ),
+            Sequence::of(
+                self::primitives(),
+                Integers::between(0, 1), // no more needed to prove type indifference
+            )->map(static fn(array $array): \Iterator => new \ArrayIterator($array)),
         );
     }
 
