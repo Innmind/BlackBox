@@ -5,13 +5,19 @@ namespace Innmind\BlackBox;
 
 use Innmind\BlackBox\Runner\Assert;
 
+/**
+ * @template T of object
+ */
 final class Properties
 {
-    /** @var list<Property> */
+    /** @var list<Property<T>> */
     private array $properties;
 
     /**
      * @no-named-arguments
+     *
+     * @param Property<T> $first
+     * @param Property<T> $properties
      */
     private function __construct(Property $first, Property ...$properties)
     {
@@ -20,6 +26,13 @@ final class Properties
 
     /**
      * @no-named-arguments
+     *
+     * @template A of object
+     *
+     * @param Property<A> $first
+     * @param Property<A> $properties
+     *
+     * @return self<A>
      */
     public static function of(Property $first, Property ...$properties): self
     {
@@ -27,7 +40,9 @@ final class Properties
     }
 
     /**
-     * @return object The system under test with the property applied
+     * @param T $systemUnderTest
+     *
+     * @return T The system under test with the property applied
      */
     public function ensureHeldBy(Assert $assert, object $systemUnderTest): object
     {
@@ -41,7 +56,7 @@ final class Properties
     }
 
     /**
-     * @return list<Property>
+     * @return list<Property<T>>
      */
     public function properties(): array
     {
