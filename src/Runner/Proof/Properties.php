@@ -75,11 +75,7 @@ final class Properties implements Proof
 
     public function scenarii(int $count): Set
     {
-        /**
-         * @psalm-suppress ArgumentTypeCoercion
-         * @psalm-suppress InvalidArgument
-         * @var Set<Scenario>
-         */
+        /** @var Set<Scenario> */
         return Set\Composite::immutable(
             Scenario\Properties::of(...),
             $this->properties,

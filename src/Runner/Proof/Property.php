@@ -99,8 +99,6 @@ final class Property implements Proof
     public function scenarii(int $count): Set
     {
         /**
-         * @psalm-suppress ArgumentTypeCoercion
-         * @psalm-suppress InvalidArgument
          * @psalm-suppress MixedArgument
          * @var Set<Scenario>
          */

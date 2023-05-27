@@ -18,9 +18,6 @@ final class Strings implements Set
 
     private function __construct(int $min, int $max)
     {
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion
-         */
         $this->set = Sequence::of(
             Chars::any(),
             Integers::between($min, $max),
@@ -73,9 +70,6 @@ final class Strings implements Set
         return Decorate::immutable($map, $this->set);
     }
 
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
     public function values(Random $random): \Generator
     {
         yield from $this->set->values($random);

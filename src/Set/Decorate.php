@@ -43,7 +43,6 @@ final class Decorate implements Set
      */
     public static function immutable(callable $decorate, Set $set): self
     {
-        /** @psalm-suppress InvalidArgument Don't know why it complains */
         return new self(true, $decorate, $set);
     }
 
@@ -58,7 +57,6 @@ final class Decorate implements Set
      */
     public static function mutable(callable $decorate, Set $set): self
     {
-        /** @psalm-suppress InvalidArgument Don't know why it complains */
         return new self(false, $decorate, $set);
     }
 
@@ -73,11 +71,8 @@ final class Decorate implements Set
     public function filter(callable $predicate): Set
     {
         $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         * @psalm-suppress MixedArgument
-         */
-        $self->set = $this->set->filter(fn($value): bool => $predicate(($this->decorate)($value)));
+        /** @psalm-suppress MixedArgument */
+        $self->set = $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value)));
 
         return $self;
     }
@@ -102,7 +97,6 @@ final class Decorate implements Set
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                /** @psalm-suppress MissingClosureReturnType */
                 yield Value::mutable(
                     fn() => ($this->decorate)($value->unwrap()),
                     $this->shrink(true, $value),

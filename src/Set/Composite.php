@@ -106,8 +106,7 @@ final class Composite implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
             /** @var C */
             $value = $value;
 
@@ -150,7 +149,6 @@ final class Composite implements Set
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                /** @psalm-suppress MissingClosureReturnType */
                 yield Value::mutable(
                     fn() => ($this->aggregate)(...$combination->unwrap()),
                     $this->shrink(true, $combination),
@@ -206,7 +204,6 @@ final class Composite implements Set
         }
 
         if ($mutable) {
-            /** @psalm-suppress MissingClosureReturnType */
             return fn(): Value => Value::mutable(
                 fn() => ($this->aggregate)(...$strategy->unwrap()),
                 $this->shrink(true, $strategy),
@@ -225,7 +222,6 @@ final class Composite implements Set
     private function identity(bool $mutable, Combination $combination): callable
     {
         if ($mutable) {
-            /** @psalm-suppress MissingClosureReturnType */
             return fn(): Value => Value::mutable(
                 fn() => ($this->aggregate)(...$combination->unwrap()),
             );

@@ -13,9 +13,6 @@ final class Uuid
     public static function any(): Set
     {
         $chars = Set\Elements::of(...\range('a', 'f'), ...\range(0, 9));
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion
-         */
         $part = static fn(int $length): Set => Sequence::of(
             $chars,
             Integers::between($length, $length),

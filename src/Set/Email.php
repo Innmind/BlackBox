@@ -50,10 +50,7 @@ final class Email
      */
     private static function string(int $maxLength, string ...$extra): Set
     {
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
-         * @psalm-suppress InvalidArgument Same problem as above
-         */
+        /** @var Set<non-empty-string> */
         return Set\Either::any(
             // either only with simple characters
             Set\Sequence::of(
@@ -62,7 +59,7 @@ final class Email
             )->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
             Set\Composite::immutable(
-                static fn(...$parts): string => \implode('', $parts),
+                static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
                 Set\Sequence::of(
                     self::letter(...$extra),
@@ -81,7 +78,6 @@ final class Email
     private static function tld(): Set
     {
         /**
-         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
          * @var Set<non-empty-string>
          */
         return Set\Sequence::of(
@@ -97,10 +93,14 @@ final class Email
      */
     private static function letter(string ...$extra): Set
     {
+        /** @var Set<non-empty-string> */
         return Set\Elements::of(
             ...\range('a', 'z'),
             ...\range('A', 'Z'),
-            ...\range(0, 9),
+            ...\array_map(
+                static fn($i) => (string) $i,
+                \range(0, 9),
+            ),
             ...$extra,
         );
     }

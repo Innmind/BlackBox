@@ -94,10 +94,7 @@ final class Inline implements Proof
 
     public function scenarii(int $count): Set
     {
-        /**
-         * @psalm-suppress ArgumentTypeCoercion
-         * @var Set<Scenario>
-         */
+        /** @var Set<Scenario> */
         return $this
             ->values
             ->set()

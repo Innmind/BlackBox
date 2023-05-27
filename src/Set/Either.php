@@ -10,16 +10,23 @@ use Innmind\BlackBox\{
 };
 
 /**
- * @implements Set<mixed>
+ * @template T
+ * @template U
+ * @template V
+ * @implements Set<T|U|V>
  */
 final class Either implements Set
 {
-    /** @var list<Set<mixed>> */
+    /** @var list<Set<T>|Set<U>|Set<V>> */
     private array $sets;
     private int $size;
 
     /**
      * @no-named-arguments
+     *
+     * @param Set<T> $first
+     * @param Set<U> $second
+     * @param Set<V> $rest
      */
     private function __construct(Set $first, Set $second, Set ...$rest)
     {
@@ -29,6 +36,16 @@ final class Either implements Set
 
     /**
      * @no-named-arguments
+     *
+     * @template A
+     * @template B
+     * @template C
+     *
+     * @param Set<A> $first
+     * @param Set<B> $second
+     * @param Set<C> $rest
+     *
+     * @return self<A, B, C>
      */
     public static function any(Set $first, Set $second, Set ...$rest): self
     {

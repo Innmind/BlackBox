@@ -15,7 +15,7 @@ final class Type
      */
     public static function any(): Set
     {
-        /** @psalm-suppress InvalidArgument Due to array not being a list */
+        /** @var Set<mixed> */
         return Set\Either::any(
             self::primitives(),
             Sequence::of(
@@ -36,6 +36,10 @@ final class Type
     {
         // no resource is generated as it may result in a fatal error of too
         // many opened resources
+        /**
+         * @psalm-suppress InvalidArgument Don't why it complains
+         * @var Set<mixed>
+         */
         return Set\Either::any(
             Elements::of(true, false, null),
             Integers::any(),

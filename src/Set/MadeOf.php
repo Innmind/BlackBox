@@ -13,8 +13,8 @@ use Innmind\BlackBox\{
  */
 final class MadeOf implements Set
 {
-    /** @var non-empty-list<Set<string>> */
-    private array $sets;
+    /** @var Set<string> */
+    private Set $chars;
     private Integers $range;
     private int $size = 100;
     /** @var \Closure(string): bool */
@@ -23,12 +23,11 @@ final class MadeOf implements Set
     /**
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $rest
+     * @param Set<string> $chars
      */
-    private function __construct(Set $first, Set ...$rest)
+    private function __construct(Set $chars)
     {
-        $this->sets = [$first, ...$rest];
+        $this->chars = $chars;
         $this->range = Integers::between(0, 128);
         $this->predicate = static fn(): bool => true;
     }
@@ -41,7 +40,13 @@ final class MadeOf implements Set
      */
     public static function of(Set $first, Set ...$rest): self
     {
-        return new self($first, ...$rest);
+        $chars = $first;
+
+        if (\count($rest) > 0) {
+            $chars = Set\Either::any($first, ...$rest);
+        }
+
+        return new self($chars);
     }
 
     public function between(int $minLength, int $maxLength): self
@@ -70,27 +75,12 @@ final class MadeOf implements Set
 
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return $this->build()->take($size);
     }
 
     public function filter(callable $predicate): Set
     {
-        $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
-            /** @psalm-suppress MixedArgumentTypeCoercion */
-            if (!$previous($value)) {
-                return false;
-            }
-
-            /** @psalm-suppress MixedArgumentTypeCoercion */
-            return $predicate($value);
-        };
-
-        return $self;
+        return $this->build()->filter($predicate);
     }
 
     public function map(callable $map): Set
@@ -98,29 +88,20 @@ final class MadeOf implements Set
         return Decorate::immutable($map, $this);
     }
 
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
     public function values(Random $random): \Generator
     {
-        $chars = $this->sets[0];
-
-        if (\count($this->sets) > 1) {
-            $chars = Set\Either::any(...$this->sets);
-        }
-
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
-         * @psalm-suppress InvalidArgument Same problem as above
-         * @var Set<string>
-         */
-        $set = Sequence::of($chars, $this->range)->map(
-            static fn(array $chars): string => \implode('', $chars),
-        );
-
-        yield from $set
-            ->take($this->size)
-            ->filter($this->predicate)
+        yield from $this
+            ->build()
             ->values($random);
+    }
+
+    /**
+     * @return Set<string>
+     */
+    private function build(): Set
+    {
+        return Sequence::of($this->chars, $this->range)->map(
+            static fn(array $chars) => \implode('', $chars),
+        );
     }
 }

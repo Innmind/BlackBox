@@ -62,8 +62,7 @@ final class FromGenerator implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
             /** @var T */
             $value = $value;
 

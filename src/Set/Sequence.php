@@ -15,6 +15,7 @@ use Innmind\BlackBox\{
  */
 final class Sequence implements Set
 {
+    /** @var Set<I> */
     private Set $set;
     /** @var Set<int> */
     private Set $sizes;
@@ -60,12 +61,11 @@ final class Sequence implements Set
         $previous = $this->predicate;
         $self = clone $this;
         $self->predicate = static function(array $value) use ($previous, $predicate): bool {
-            /** @psalm-suppress ArgumentTypeCoercion */
+            /** @var list<I> $value */
             if (!$previous($value)) {
                 return false;
             }
 
-            /** @psalm-suppress ArgumentTypeCoercion */
             return $predicate($value);
         };
 
@@ -112,22 +112,20 @@ final class Sequence implements Set
     }
 
     /**
-     * @return list<Value>
+     * @return list<Value<I>>
      */
     private function generate(int $size, Random $rand): array
     {
-        /** @var list<Value> */
-        return \iterator_to_array($this->set->take($size)->values($rand));
+        return \array_values(\iterator_to_array($this->set->take($size)->values($rand)));
     }
 
     /**
-     * @param list<Value> $values
+     * @param list<Value<I>> $values
      *
      * @return list<I>
      */
     private function wrap(array $values): array
     {
-        /** @psalm-suppress MissingClosureReturnType */
         return \array_map(
             static fn(Value $value) => $value->unwrap(),
             $values,

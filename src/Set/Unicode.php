@@ -25,9 +25,6 @@ final class Unicode
      */
     public static function lengthBetween(int $min, int $max): Set
     {
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion
-         */
         return Set\Sequence::of(
             self::any(),
             Set\Integers::between($min, $max),

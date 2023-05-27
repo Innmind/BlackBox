@@ -10,7 +10,7 @@ use Innmind\BlackBox\Set\Value;
  */
 final class Combination
 {
-    /** @var non-empty-list<Value> */
+    /** @var non-empty-list<Value<mixed>> */
     private array $values;
 
     public function __construct(Value $right)
@@ -37,9 +37,8 @@ final class Combination
 
     public function unwrap(): array
     {
-        /** @psalm-suppress MissingClosureReturnType */
         return \array_map(
-            static fn(Value $value) => $value->unwrap(),
+            static fn(Value $value): mixed => $value->unwrap(),
             $this->values,
         );
     }

@@ -82,9 +82,6 @@ final class Integers implements Set
         return Decorate::immutable($map, $this);
     }
 
-    /**
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
     public function values(Random $random): \Generator
     {
         $iterations = 0;

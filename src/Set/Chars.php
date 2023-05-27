@@ -51,7 +51,7 @@ final class Chars
     }
 
     /**
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public static function alphanumerical(): Set
     {

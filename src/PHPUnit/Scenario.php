@@ -41,8 +41,7 @@ final class Scenario
         } else {
             /** @var Set<list<mixed>> */
             $set = Set\Composite::immutable(
-                /** @psalm-suppress MissingClosureParamType */
-                static fn(...$args): array => $args,
+                static fn(mixed ...$args): array => $args,
                 $first,
                 ...$sets,
             );

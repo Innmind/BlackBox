@@ -13,21 +13,23 @@ use Innmind\BlackBox\{
  * This set can only contain immutable values as they're generated outside of the
  * class, so it can't be re-generated on the fly
  *
- * @implements Set<mixed>
- *
+ * @template T
+ * @template U
+ * @implements Set<T|U>
  */
 final class Elements implements Set
 {
     private int $size;
+    /** @var list<T|U> */
     private array $elements;
-    /** @var \Closure(mixed): bool */
+    /** @var \Closure(T|U): bool */
     private \Closure $predicate;
 
     /**
      * @no-named-arguments
      *
-     * @param mixed $first
-     * @param mixed $elements
+     * @param T $first
+     * @param U $elements
      */
     private function __construct($first, ...$elements)
     {
@@ -39,8 +41,13 @@ final class Elements implements Set
     /**
      * @no-named-arguments
      *
-     * @param mixed $first
-     * @param mixed $elements
+     * @template A
+     * @template B
+     *
+     * @param A $first
+     * @param B $elements
+     *
+     * @return self<A, B>
      */
     public static function of($first, ...$elements): self
     {
@@ -59,8 +66,8 @@ final class Elements implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
+            /** @var T|U $value */
             if (!$previous($value)) {
                 return false;
             }
