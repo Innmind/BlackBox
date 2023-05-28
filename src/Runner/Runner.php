@@ -63,7 +63,7 @@ final class Runner
                 $proof->name(),
                 $proof->tags(),
             );
-            $coverage?->start($proof->name()->toString());
+            $coverage?->start($proof->name());
 
             try {
                 $scenarii = $proof

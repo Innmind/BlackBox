@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\CodeCoverage;
 
+use Innmind\BlackBox\Runner\Proof\Name;
 use SebastianBergmann\CodeCoverage\{
     Filter,
     Driver\Selector,
@@ -63,9 +64,9 @@ final class Report
         return new self($directories, $reportPath);
     }
 
-    public function start(string $proof): void
+    public function start(Name $proof): void
     {
-        $this->coverage->start($proof);
+        $this->coverage->start($proof->toString());
     }
 
     public function stop(): void
