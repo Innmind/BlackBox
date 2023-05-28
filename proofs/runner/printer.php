@@ -88,6 +88,7 @@ return static function() {
             Set\Integers::between(1, 10_000), // not above 10k to limit the time it takes
         ),
         static function($assert, $proofs, $scenarii, $assertions, $failures) {
+            $assert->true(false);
             $printer = Standard::new();
             $io = Collect::new();
             $stats = Stats::new();
