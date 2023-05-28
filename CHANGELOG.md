@@ -7,6 +7,14 @@
 - `Innmind\BlackBox\Set\Nullable`
 - `Innmind\BlackBox\Set::map()`
 - `Innmind\BlackBox\PHPUnit\Extension`
+- `Innmind\BlackBox\Application`
+- `Innmind\BlackBox\Tag`
+- `Innmind\BlackBox\Runner\Load`
+- `Innmind\BlackBox\Runner\CodeCoverage`
+- `Innmind\BlackBox\Runner\Assert`
+- `Innmind\BlackBox\Runner\Printer`
+- `Innmind\BlackBox\Runner\IO`
+- `Innmind\BlackBox\Property::any()`
 
 ### Changed
 
@@ -15,6 +23,20 @@
 - `Innmind\BlackBox\Set\AnyType` has been renamed to `Innmind\BlackBox\Set\Type`
 - `Innmind\BlackBox\Random` is now an enum
 - Requires `PHPUnit` `10`
+- `Innmind\BlackBox\Properties` constructor is now private, use `::of()` named constructor instead
+- `Innmind\BlackBox\Properties::ensureHeldBy` now expects `Innmind\BlackBox\Runner\Assert` as a first argument
+- `Innmind\BlackBox\Properties` is now longer compatible with third party test runners
+- `Innmind\BlackBox\Property::ensureHeldBy` now expects `Innmind\BlackBox\Runner\Assert` as a first argument
+- `Innmind\BlackBox\Property` is now longer compatible with third party test runners
+- `Innmind\BlackBox\Set::take()` and `::filter()` now explicitly state that they are mutation free
+- `Innmind\BlackBox\Set::take()` now requires a `positive-int` as argument
+- `Innmind\BlackBox\Set\Chars` now longer implements the `Set` interface, use `Chars::any()` instead
+- `Innmind\BlackBox\Set\IntegersExceptZero` now longer implements the `Set` interface, use `IntegersExceptZero::any()` instead
+- `Innmind\BlackBox\Set\NaturalNumbers` now longer implements the `Set` interface, use `NaturalNumbers::any()` instead
+- `Innmind\BlackBox\Set\NaturalNumbersExceptZero` now longer implements the `Set` interface, use `NaturalNumbersExceptZero::any()` instead
+- `Innmind\BlackBox\Set\Sequence::of()` now longer accept the range of values as 2nd argument, use `Sequence::of()->atLeast()`, `Sequence::of()->atMost()` and `Sequence::of()->between()` instead
+- `Innmind\BlackBox\Set\Strings` now longer implements the `Set` interface, use `Strings::any()` instead
+- `Innmind\BlackBox\Set\Strings::any()` now longer accept the maximum length, use `Strings::atMost()` instead
 
 ### Fixed
 
@@ -29,3 +51,9 @@
 - `Innmind\BlackBox\Set\Strings::matching()`
 - `Innmind\BlackBox\Random\RandomInt`
 - `Innmind\BlackBox\Random\MtRand`
+- `Innmind\BlackBox\Property::name()`
+- `Innmind\BlackBox\PHPUnit\BlackBox::seeder()`
+- `Innmind\BlackBox\PHPUnit\Seeder`
+- `Innmind\BlackBox\Set\Properties::chooseFrom()`, use `Properties::any()->between()` or `Properties::any()->atMost()` instead
+- `Innmind\BlackBox\Set\Property`
+- `Innmind\BlackBox\Set\Unicode::lengthBetween()`, use `Unicode::any()->between()` instead
