@@ -30,10 +30,51 @@ final class Load
     /**
      * @return \Closure(): \Generator<Proof>
      */
-    public static function from(string $path): \Closure
+    public static function file(string $path): \Closure
     {
         return static function() use ($path) {
             yield from (new self)($path);
+        };
+    }
+
+    /**
+     * @return \Closure(): \Generator<Proof>
+     */
+    public static function directory(string $path): \Closure
+    {
+        return static function() use ($path) {
+            $load = new self;
+            $files = new \FilesystemIterator($path);
+
+            /** @var \SplFileInfo $file */
+            foreach ($files as $path => $file) {
+                if ($file->isFile()) {
+                    yield from $load($path);
+                }
+            }
+        };
+    }
+
+    /**
+     * @return \Closure(): \Generator<Proof>
+     */
+    public static function everythingIn(string $path): \Closure
+    {
+        return static function() use ($path) {
+            $load = new self;
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($path),
+            );
+
+            /**
+             * @var string $path
+             * @var \SplFileInfo $file
+             */
+            foreach ($files as $path => $file) {
+                if ($file->isFile()) {
+                    yield from $load($path);
+                }
+            }
         };
     }
 }
