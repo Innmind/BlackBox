@@ -47,8 +47,12 @@ final class Runner
         $this->scenariiPerProof = $scenariiPerProof;
     }
 
-    public function __invoke(Stats $stats, Assert $assert): void
-    {
+    public function __invoke(
+        Stats $stats,
+        Assert $assert,
+        ?CodeCoverage $codeCoverage,
+    ): void {
+        $coverage = $codeCoverage?->build();
         $this->print->start($this->output, $this->error);
 
         foreach ($this->proofs as $proof) {
@@ -59,6 +63,7 @@ final class Runner
                 $proof->name(),
                 $proof->tags(),
             );
+            $coverage?->start($proof->name()->toString());
 
             try {
                 $scenarii = $proof
@@ -94,9 +99,11 @@ final class Runner
             }
 
             $print->end($this->output, $this->error);
+            $coverage?->stop();
         }
 
         $this->print->end($this->output, $this->error, $stats);
+        $coverage?->dump();
     }
 
     /**

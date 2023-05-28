@@ -14,6 +14,7 @@ use Innmind\BlackBox\Runner\{
     Stats,
     Assert,
     Filter,
+    CodeCoverage,
 };
 
 final class Application
@@ -25,6 +26,7 @@ final class Application
     private WithShrinking|WithoutShrinking $runner;
     /** @var \Closure(string): ?\UnitEnum */
     private \Closure $parseTag;
+    private ?CodeCoverage $codeCoverage;
     /** @var list<string> */
     private array $args;
     /** @var positive-int */
@@ -42,6 +44,7 @@ final class Application
         IO $error,
         WithShrinking|WithoutShrinking $runner,
         \Closure $parseTag,
+        ?CodeCoverage $codeCoverage,
         array $args,
         int $scenariiPerProof,
     ) {
@@ -51,6 +54,7 @@ final class Application
         $this->error = $error;
         $this->runner = $runner;
         $this->parseTag = $parseTag;
+        $this->codeCoverage = $codeCoverage;
         $this->args = $args;
         $this->scenariiPerProof = $scenariiPerProof;
     }
@@ -67,6 +71,7 @@ final class Application
             IO\Standard::error,
             new WithShrinking,
             Tag::of(...),
+            null,
             $args,
             100,
         );
@@ -84,6 +89,7 @@ final class Application
             $this->error,
             $this->runner,
             $this->parseTag,
+            $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
         );
@@ -101,6 +107,7 @@ final class Application
             $this->error,
             $this->runner,
             $this->parseTag,
+            $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
         );
@@ -118,6 +125,7 @@ final class Application
             $this->error,
             $this->runner,
             $this->parseTag,
+            $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
         );
@@ -135,6 +143,7 @@ final class Application
             $error,
             $this->runner,
             $this->parseTag,
+            $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
         );
@@ -152,6 +161,7 @@ final class Application
             $this->error,
             new WithoutShrinking,
             $this->parseTag,
+            $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
         );
@@ -171,6 +181,7 @@ final class Application
             $this->error,
             $this->runner,
             fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
+            $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
         );
@@ -190,8 +201,27 @@ final class Application
             $this->error,
             $this->runner,
             $this->parseTag,
+            $this->codeCoverage,
             $this->args,
             $count,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function codeCoverage(CodeCoverage $codeCoverage): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
         );
     }
 
@@ -218,7 +248,7 @@ final class Application
         $stats = Stats::new();
         $assert = Assert::of($stats);
 
-        $run($stats, $assert);
+        $run($stats, $assert, $this->codeCoverage);
 
         return Result::of($stats);
     }
