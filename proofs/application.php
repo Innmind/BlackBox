@@ -22,7 +22,7 @@ return static function() {
                 ->useRandom($random)
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
-                ->tryToProve(Load::from(__DIR__.'/fixtures.php'));
+                ->tryToProve(Load::file(__DIR__.'/fixtures.php'));
 
             $assert->true($result->successful());
         },
