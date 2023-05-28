@@ -58,7 +58,7 @@ final class Standard implements Proof
     public function failed(IO $output, IO $error, Failure $failure): void
     {
         $this->newLine($output);
-        $error("F\n\n");
+        $output("F\n\n");
         $this->renderScenario($output, $failure->scenario()->unwrap());
 
         $output("\n");
