@@ -51,14 +51,14 @@ final class Standard implements Proof
 
     public function shrunk(IO $output, IO $error): void
     {
-        dump('shrunk');
+        \var_dump('shrunk');
         $this->newLine($output);
         $output('S');
     }
 
     public function failed(IO $output, IO $error, Failure $failure): void
     {
-        dump('failed');
+        \var_dump('failed');
         $this->newLine($output);
         $error("F\n\n");
         $this->renderScenario($output, $failure->scenario()->unwrap());
