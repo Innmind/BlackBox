@@ -7,6 +7,8 @@ use Innmind\BlackBox\{
     Application,
     Runner\Given,
     Runner\Proof,
+    Runner\Proof\Scenario,
+    Set\Value,
 };
 
 final class Compatibility
@@ -65,6 +67,7 @@ final class Compatibility
      */
     public function then(callable $test): void
     {
+        /** @var \SplQueue<array{mixed, Value<Scenario>}> */
         $failures = new \SplQueue;
         $printer = new ExtractFailure($failures);
 
@@ -84,10 +87,12 @@ final class Compatibility
             });
 
         if (!$failures->isEmpty()) {
-            /** @var mixed */
-            $failure = $failures->dequeue();
+            /** @var mixed $failure */
+            [$failure, $scenario] = $failures->dequeue();
 
             if ($failure instanceof \Throwable) {
+                Extension::record($test, $scenario);
+
                 throw $failure;
             }
         }

@@ -4,6 +4,10 @@
   <php>
     <env name="BLACKBOX_SET_SIZE" value="200"/>
   </php>
+  <extensions>
+    <bootstrap class="Innmind\BlackBox\PHPUnit\Extension">
+    </bootstrap>
+  </extensions>
   <testsuites>
     <testsuite name="Test suite">
       <directory>./tests</directory>

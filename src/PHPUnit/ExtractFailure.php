@@ -6,8 +6,10 @@ namespace Innmind\BlackBox\PHPUnit;
 use Innmind\BlackBox\{
     Runner\Printer,
     Runner\Proof,
+    Runner\Proof\Scenario,
     Runner\IO,
     Runner\Stats,
+    Set\Value,
 };
 
 /**
@@ -15,8 +17,12 @@ use Innmind\BlackBox\{
  */
 final class ExtractFailure implements Printer
 {
+    /** @var \SplQueue<array{mixed, Value<Scenario>}> */
     private \SplQueue $failures;
 
+    /**
+     * @param \SplQueue<array{mixed, Value<Scenario>}> $failures
+     */
     public function __construct(\SplQueue $failures)
     {
         $this->failures = $failures;

@@ -6,6 +6,7 @@
 
 - `Innmind\BlackBox\Set\Nullable`
 - `Innmind\BlackBox\Set::map()`
+- `Innmind\BlackBox\PHPUnit\Extension`
 
 ### Changed
 

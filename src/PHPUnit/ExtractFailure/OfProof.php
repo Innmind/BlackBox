@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit\ExtractFailure;
 
-use Innmind\BlackBox\Runner\{
-    Printer\Proof,
-    Proof\Scenario\Failure,
-    IO,
-    Assert\Failure\Property,
+use Innmind\BlackBox\{
+    Runner\Printer\Proof,
+    Runner\Proof\Scenario,
+    Runner\Proof\Scenario\Failure,
+    Runner\IO,
+    Runner\Assert\Failure\Property,
+    Set\Value,
 };
 
 /**
@@ -15,8 +17,12 @@ use Innmind\BlackBox\Runner\{
  */
 final class OfProof implements Proof
 {
+    /** @var \SplQueue<array{mixed, Value<Scenario>}> */
     private \SplQueue $failures;
 
+    /**
+     * @param \SplQueue<array{mixed, Value<Scenario>}> $failures
+     */
     public function __construct(\SplQueue $failures)
     {
         $this->failures = $failures;
@@ -43,7 +49,10 @@ final class OfProof implements Proof
             return;
         }
 
-        $this->failures->enqueue($failure->assertion()->kind()->value());
+        $this->failures->enqueue([
+            $failure->assertion()->kind()->value(),
+            $failure->scenario(),
+        ]);
     }
 
     public function end(IO $output, IO $error): void
