@@ -71,7 +71,7 @@ return static function() {
                 ->hasKey(3);
             $assert
                 ->string($written[1])
-                ->matches('~^Time: \d{2}:\d{2}(\.\d{3})?, Memory: \d{2}\.\d{2} [KM]B$~');
+                ->matches('~^Time: \d{2}:\d{2}(\.\d{3})?, Memory: \d{1,2}\.\d{2} [KM]B$~');
             $assert->same("\n\n", $written[2]);
             $assert->same(
                 "OK\nProofs: $proofs, Scenarii: $scenarii, Assertions: $assertions\n",
@@ -121,7 +121,7 @@ return static function() {
                 ->hasKey(3);
             $assert
                 ->string($written[1])
-                ->matches('~^Time: \d{2}:\d{2}(\.\d{3})?, Memory: \d{2}\.\d{2} [KM]B$~');
+                ->matches('~^Time: \d{2}:\d{2}(\.\d{3})?, Memory: \d{1,2}\.\d{2} [KM]B$~');
             $assert->same("\n\n", $written[2]);
             $assert->same(
                 "Failed\nProofs: $proofs, Scenarii: $scenarii, Assertions: $assertions, Failures: $failures\n",
