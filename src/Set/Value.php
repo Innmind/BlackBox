@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 /**
+ * @psalm-immutable
+ *
  * @template T
  */
 final class Value
@@ -21,7 +23,7 @@ final class Value
     private function __construct(
         bool $immutable,
         callable $unwrap,
-        ?Dichotomy $dichotomy
+        ?Dichotomy $dichotomy,
     ) {
         $this->unwrap = \Closure::fromCallable($unwrap);
         $this->immutable = $immutable;
@@ -64,7 +66,11 @@ final class Value
         return $this->dichotomy instanceof Dichotomy;
     }
 
-    /** @psalm-suppress InvalidNullableReturnType */
+    /**
+     * @psalm-suppress InvalidNullableReturnType
+     *
+     * @return Dichotomy<T>
+     */
     public function shrink(): Dichotomy
     {
         /** @psalm-suppress NullableReturnStatement */
@@ -76,6 +82,7 @@ final class Value
      */
     public function unwrap()
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return ($this->unwrap)();
     }
 }

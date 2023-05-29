@@ -3,47 +3,18 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
-/**
- * @implements Set<int>
- */
-final class NaturalNumbersExceptZero implements Set
+final class NaturalNumbersExceptZero
 {
-    /** @var Set<int> */
-    private Set $set;
-
-    public function __construct()
+    /**
+     * @psalm-pure
+     *
+     * @return Set<positive-int>
+     */
+    public static function any(): Set
     {
-        $this->set = Integers::above(1);
-    }
-
-    public static function any(): self
-    {
-        return new self;
-    }
-
-    public function take(int $size): Set
-    {
-        $self = clone $this;
-        $self->set = $this->set->take($size);
-
-        return $self;
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        $self = clone $this;
-        $self->set = $this->set->filter($predicate);
-
-        return $self;
-    }
-
-    public function values(Random $rand): \Generator
-    {
-        yield from $this->set->values($rand);
+        /** @var Set<positive-int> */
+        return Integers::above(1);
     }
 }

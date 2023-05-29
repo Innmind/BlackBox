@@ -8,7 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     PHPUnit\BlackBox,
-    Random\MtRand,
+    Random,
 };
 
 class EmailTest extends TestCase
@@ -20,9 +20,9 @@ class EmailTest extends TestCase
         $emails = Email::any();
 
         $this->assertInstanceOf(Set::class, $emails);
-        $this->assertCount(100, \iterator_to_array($emails->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($emails->values(Random::mersenneTwister)));
 
-        foreach ($emails->values(new MtRand) as $value) {
+        foreach ($emails->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
             $this->assertIsString($value->unwrap());
@@ -42,7 +42,7 @@ class EmailTest extends TestCase
     {
         $emails = Email::any();
 
-        foreach ($emails->values(new MtRand) as $email) {
+        foreach ($emails->values(Random::mersenneTwister) as $email) {
             $this->assertTrue($email->shrinkable());
         }
     }

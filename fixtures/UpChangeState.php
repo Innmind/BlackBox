@@ -3,14 +3,20 @@ declare(strict_types = 1);
 
 namespace Fixtures\Innmind\BlackBox;
 
-use Innmind\BlackBox\Property;
-use PHPUnit\Framework\Assert;
+use Innmind\BlackBox\{
+    Property,
+    Set,
+    Runner\Assert,
+};
 
 final class UpChangeState implements Property
 {
-    public function name(): string
+    /**
+     * @return Set<self>
+     */
+    public static function any(): Set
     {
-        return 'Up change state';
+        return Set\Elements::of(new self);
     }
 
     public function applicableTo(object $counter): bool
@@ -18,11 +24,11 @@ final class UpChangeState implements Property
         return $counter->current() < 100;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $initial = $counter->current();
         $counter->up();
-        Assert::assertGreaterThan($initial, $counter->current());
+        $assert->number($initial)->lessThan($counter->current());
 
         return $counter;
     }

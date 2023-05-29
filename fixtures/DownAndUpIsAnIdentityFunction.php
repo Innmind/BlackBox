@@ -3,14 +3,20 @@ declare(strict_types = 1);
 
 namespace Fixtures\Innmind\BlackBox;
 
-use Innmind\BlackBox\Property;
-use PHPUnit\Framework\Assert;
+use Innmind\BlackBox\{
+    Property,
+    Set,
+    Runner\Assert,
+};
 
 final class DownAndUpIsAnIdentityFunction implements Property
 {
-    public function name(): string
+    /**
+     * @return Set<self>
+     */
+    public static function any(): Set
     {
-        return 'Down and up return to the initial value';
+        return Set\Elements::of(new self);
     }
 
     public function applicableTo(object $counter): bool
@@ -18,12 +24,12 @@ final class DownAndUpIsAnIdentityFunction implements Property
         return $counter->current() > 0;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $initial = $counter->current();
         $counter->down();
         $counter->up();
-        Assert::assertSame($initial, $counter->current());
+        $assert->same($initial, $counter->current());
 
         return $counter;
     }

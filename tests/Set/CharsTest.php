@@ -7,14 +7,14 @@ use Innmind\BlackBox\{
     Set\Chars,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 
 class CharsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new Chars);
+        $this->assertInstanceOf(Set::class, Chars::any());
     }
 
     public function testAny()
@@ -24,7 +24,7 @@ class CharsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Chars::any()->values(new MtRand));
+        $values = $this->unwrap(Chars::any()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -39,7 +39,7 @@ class CharsTest extends TestCase
         $this->assertInstanceOf(Set::class, $even);
         $this->assertNotSame($values, $even);
         $hasOddChar = \array_reduce(
-            $this->unwrap($values->values(new MtRand)),
+            $this->unwrap($values->values(Random::mersenneTwister)),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || \ord($value) % 2 === 1;
             },
@@ -48,7 +48,7 @@ class CharsTest extends TestCase
         $this->assertTrue($hasOddChar);
 
         $hasOddChar = \array_reduce(
-            $this->unwrap($even->values(new MtRand)),
+            $this->unwrap($even->values(Random::mersenneTwister)),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || \ord($value) % 2 === 1;
             },
@@ -64,18 +64,18 @@ class CharsTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
-        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
     }
 
     public function testValues()
     {
         $a = Chars::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
 
-        foreach ($a->values(new MtRand) as $value) {
+        foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -85,7 +85,7 @@ class CharsTest extends TestCase
     {
         $chars = Chars::any();
 
-        foreach ($chars->values(new MtRand) as $value) {
+        foreach ($chars->values(Random::mersenneTwister) as $value) {
             if ($value->unwrap() === \chr(0)) {
                 // since chars is a decoration of integers chr(0) cannot be
                 // shrunk as it is the lowest value of the integer set
@@ -100,7 +100,7 @@ class CharsTest extends TestCase
     {
         $allowed = \range('a', 'z');
 
-        foreach (Chars::lowercaseLetter()->values(new MTrand) as $value) {
+        foreach (Chars::lowercaseLetter()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }
@@ -109,7 +109,7 @@ class CharsTest extends TestCase
     {
         $allowed = \range('A', 'Z');
 
-        foreach (Chars::uppercaseLetter()->values(new MTrand) as $value) {
+        foreach (Chars::uppercaseLetter()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }
@@ -118,7 +118,7 @@ class CharsTest extends TestCase
     {
         $allowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-        foreach (Chars::number()->values(new MTrand) as $value) {
+        foreach (Chars::number()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }
@@ -127,7 +127,7 @@ class CharsTest extends TestCase
     {
         $allowed = \range(' ', '~');
 
-        foreach (Chars::ascii()->values(new MTrand) as $value) {
+        foreach (Chars::ascii()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }

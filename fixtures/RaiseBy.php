@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Fixtures\Innmind\BlackBox;
 
-use Innmind\BlackBox\Property;
-use PHPUnit\Framework\Assert;
+use Innmind\BlackBox\{
+    Property,
+    Set,
+    Runner\Assert,
+};
 
 final class RaiseBy implements Property
 {
@@ -15,9 +18,12 @@ final class RaiseBy implements Property
         $this->raise = $raise;
     }
 
-    public function name(): string
+    /**
+     * @return Set<self>
+     */
+    public static function any(): Set
     {
-        return 'Raise by '.$this->raise;
+        return Set\Integers::between(1, 99)->map(static fn(int $raise) => new self($raise));
     }
 
     public function applicableTo(object $counter): bool
@@ -25,7 +31,7 @@ final class RaiseBy implements Property
         return $counter->current() < 100;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $initial = $counter->current();
 
@@ -33,7 +39,7 @@ final class RaiseBy implements Property
             $counter->up();
         }
 
-        Assert::assertGreaterThan($initial, $counter->current());
+        $assert->number($initial)->lessThan($counter->current());
 
         return $counter;
     }

@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Set\UnsafeStrings,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
     Exception\EmptySet,
 };
 
@@ -15,7 +15,7 @@ class UnsafeStringsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new UnsafeStrings);
+        $this->assertInstanceOf(Set::class, UnsafeStrings::any());
     }
 
     public function testAny()
@@ -25,7 +25,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(UnsafeStrings::any()->values(new MtRand));
+        $values = $this->unwrap(UnsafeStrings::any()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -40,7 +40,7 @@ class UnsafeStringsTest extends TestCase
         $this->assertInstanceOf(UnsafeStrings::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($values->values(new MtRand)),
+            $this->unwrap($values->values(Random::mersenneTwister)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -49,7 +49,7 @@ class UnsafeStringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($others->values(new MtRand)),
+            $this->unwrap($others->values(Random::mersenneTwister)),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -65,18 +65,18 @@ class UnsafeStringsTest extends TestCase
 
         $this->assertInstanceOf(UnsafeStrings::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
-        $this->assertCount(50, $this->unwrap($b->values(new MtRand)));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
     }
 
     public function testValues()
     {
         $a = UnsafeStrings::any();
 
-        $this->assertInstanceOf(\Generator::class, $a->values(new MtRand));
-        $this->assertCount(100, $this->unwrap($a->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
 
-        foreach ($a->values(new MtRand) as $value) {
+        foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -86,7 +86,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => $string === '');
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -95,7 +95,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->shrinkable());
         }
     }
@@ -104,7 +104,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -118,7 +118,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 1);
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -140,7 +140,7 @@ class UnsafeStringsTest extends TestCase
         // otherwise they won't match the given predicate
         $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) === 1);
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
@@ -156,7 +156,7 @@ class UnsafeStringsTest extends TestCase
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 20);
 
-        foreach ($strings->values(new MtRand) as $value) {
+        foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertTrue(\strlen($dichotomy->a()->unwrap()) > 20);
@@ -170,7 +170,7 @@ class UnsafeStringsTest extends TestCase
 
         UnsafeStrings::any()
             ->filter(static fn() => false)
-            ->values(new MtRand)
+            ->values(Random::mersenneTwister)
             ->current();
     }
 }

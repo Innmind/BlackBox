@@ -3,14 +3,20 @@ declare(strict_types = 1);
 
 namespace Fixtures\Innmind\BlackBox;
 
-use Innmind\BlackBox\Property;
-use PHPUnit\Framework\Assert;
+use Innmind\BlackBox\{
+    Property,
+    Set,
+    Runner\Assert,
+};
 
 final class UpperBoundAtHundred implements Property
 {
-    public function name(): string
+    /**
+     * @return Set<self>
+     */
+    public static function any(): Set
     {
-        return 'Counter can not go higher than 100';
+        return Set\Elements::of(new self);
     }
 
     public function applicableTo(object $counter): bool
@@ -18,10 +24,10 @@ final class UpperBoundAtHundred implements Property
         return $counter->current() > 98;
     }
 
-    public function ensureHeldBy(object $counter): object
+    public function ensureHeldBy(Assert $assert, object $counter): object
     {
         $counter->up();
-        Assert::assertSame(100, $counter->current());
+        $assert->same(100, $counter->current());
 
         return $counter;
     }

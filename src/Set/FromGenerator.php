@@ -14,9 +14,11 @@ use Innmind\BlackBox\{
  * class, so it can't be re-generated on the fly
  *
  * @template T
+ * @implements Set<T>
  */
 final class FromGenerator implements Set
 {
+    /** @var positive-int */
     private int $size;
     /** @var \Closure(Random): \Generator<T> */
     private \Closure $generatorFactory;
@@ -24,17 +26,20 @@ final class FromGenerator implements Set
     private \Closure $predicate;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param callable(Random): \Generator<T> $generatorFactory
+     * @param positive-int $size
+     * @param \Closure(T): bool $predicate
      */
-    public function __construct(callable $generatorFactory)
-    {
-        if (!$generatorFactory(new Random\MtRand) instanceof \Generator) {
-            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
-        }
-
-        $this->size = 100;
+    private function __construct(
+        callable $generatorFactory,
+        int $size,
+        \Closure $predicate,
+    ) {
         $this->generatorFactory = \Closure::fromCallable($generatorFactory);
-        $this->predicate = static fn(): bool => true;
+        $this->size = $size;
+        $this->predicate = $predicate;
     }
 
     /**
@@ -46,39 +51,59 @@ final class FromGenerator implements Set
      */
     public static function of(callable $generatorFactory): self
     {
-        return new self($generatorFactory);
+        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
+            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
+        }
+
+        return new self($generatorFactory, 100, static fn(): bool => true);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $this->generatorFactory,
+            $size,
+            $this->predicate,
+        );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
-            /** @var T */
-            $value = $value;
 
-            if (!$previous($value)) {
-                return false;
-            }
+        return new self(
+            $this->generatorFactory,
+            $this->size,
+            static function(mixed $value) use ($previous, $predicate): bool {
+                /** @var T */
+                $value = $value;
 
-            return $predicate($value);
-        };
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+        );
     }
 
-    public function values(Random $rand): \Generator
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
     {
-        $generator = ($this->generatorFactory)($rand);
+        return Decorate::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
+    {
+        $generator = ($this->generatorFactory)($random);
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {

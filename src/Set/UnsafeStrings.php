@@ -15,47 +15,72 @@ use Innmind\Json\Json;
  */
 final class UnsafeStrings implements Set
 {
+    /** @var positive-int */
     private int $size;
+    /** @var \Closure(string): bool */
     private \Closure $predicate;
 
-    public function __construct()
-    {
-        $this->size = 100;
-        $this->predicate = static fn(): bool => true;
-    }
-
-    public static function any(): self
-    {
-        return new self;
-    }
-
-    public function take(int $size): Set
-    {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
-
-            return $predicate($value);
-        };
-
-        return $self;
+    /**
+     * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     * @param \Closure(string): bool $predicate
+     */
+    private function __construct(
+        int $size,
+        \Closure $predicate,
+    ) {
+        $this->size = $size;
+        $this->predicate = $predicate;
     }
 
     /**
-     * @psalm-suppress MixedReturnTypeCoercion
+     * @psalm-pure
      */
-    public function values(Random $rand): \Generator
+    public static function any(): self
+    {
+        return new self(100, static fn(): bool => true);
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function take(int $size): Set
+    {
+        return new self(
+            $size,
+            $this->predicate,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function filter(callable $predicate): Set
+    {
+        $previous = $this->predicate;
+
+        return new self(
+            $this->size,
+            static function(string $value) use ($previous, $predicate): bool {
+                if (!$previous($value)) {
+                    return false;
+                }
+
+                return $predicate($value);
+            },
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
     {
         /** @var list<string> */
         $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
@@ -72,7 +97,7 @@ final class UnsafeStrings implements Set
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $index = $rand(0, $size);
+            $index = $random->between(0, $size);
             $value = $values[$index];
 
             yield Value::immutable($value, $this->shrink($value));

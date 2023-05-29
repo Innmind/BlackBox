@@ -22,17 +22,21 @@ final class Decorate implements Set
     private bool $immutable;
 
     /**
-     * @param callable(I): D $decorate
+     * @psalm-mutation-free
+     *
+     * @param \Closure(I): D $decorate
      * @param Set<I> $set
      */
-    private function __construct(bool $immutable, callable $decorate, Set $set)
+    private function __construct(bool $immutable, \Closure $decorate, Set $set)
     {
-        $this->decorate = \Closure::fromCallable($decorate);
+        $this->decorate = $decorate;
         $this->set = $set;
         $this->immutable = $immutable;
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @template V
      *
@@ -43,11 +47,12 @@ final class Decorate implements Set
      */
     public static function immutable(callable $decorate, Set $set): self
     {
-        /** @psalm-suppress InvalidArgument Don't know why it complains */
-        return new self(true, $decorate, $set);
+        return new self(true, \Closure::fromCallable($decorate), $set);
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @template V
      *
@@ -58,33 +63,45 @@ final class Decorate implements Set
      */
     public static function mutable(callable $decorate, Set $set): self
     {
-        /** @psalm-suppress InvalidArgument Don't know why it complains */
-        return new self(false, $decorate, $set);
+        return new self(false, \Closure::fromCallable($decorate), $set);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->set = $this->set->take($size);
-
-        return $self;
+        return new self(
+            $this->immutable,
+            $this->decorate,
+            $this->set->take($size),
+        );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
-        $self = clone $this;
-        /**
-         * @psalm-suppress MissingClosureParamType
-         * @psalm-suppress MixedArgument
-         */
-        $self->set = $this->set->filter(fn($value): bool => $predicate(($this->decorate)($value)));
-
-        return $self;
+        /** @psalm-suppress MixedArgument */
+        return new self(
+            $this->immutable,
+            $this->decorate,
+            $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value))),
+        );
     }
 
-    public function values(Random $rand): \Generator
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): self
     {
-        foreach ($this->set->values($rand) as $value) {
+        return self::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
+    {
+        foreach ($this->set->values($random) as $value) {
             if ($value->isImmutable() && $this->immutable) {
                 $decorated = ($this->decorate)($value->unwrap());
 
@@ -97,7 +114,6 @@ final class Decorate implements Set
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                /** @psalm-suppress MissingClosureReturnType */
                 yield Value::mutable(
                     fn() => ($this->decorate)($value->unwrap()),
                     $this->shrink(true, $value),
