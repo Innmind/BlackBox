@@ -9,7 +9,7 @@ use Innmind\BlackBox\{
     Set\Decorate,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
     PHPUnit\BlackBox,
     Exception\EmptySet,
 };
@@ -71,7 +71,7 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = $this->unwrap($this->set->take(2)->values(new MtRand));
+        $values = $this->unwrap($this->set->take(2)->values(Random::mersenneTwister));
 
         $this->assertSame(
             [
@@ -97,13 +97,13 @@ class CompositeTest extends TestCase
                 'ebc',
                 'ebd',
             ],
-            $this->unwrap($values->values(new MtRand)),
+            $this->unwrap($values->values(Random::mersenneTwister)),
         );
     }
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->values(new MtRand));
+        $values = $this->unwrap($this->set->values(Random::mersenneTwister));
 
         $this->assertSame(
             [
@@ -122,10 +122,10 @@ class CompositeTest extends TestCase
 
     public function testValues()
     {
-        $this->assertInstanceOf(\Generator::class, $this->set->values(new MtRand));
-        $this->assertCount(8, $this->unwrap($this->set->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
+        $this->assertCount(8, $this->unwrap($this->set->values(Random::mersenneTwister)));
 
-        foreach ($this->set->values(new MtRand) as $value) {
+        foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -154,7 +154,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->isImmutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
@@ -191,9 +191,9 @@ class CompositeTest extends TestCase
             }),
         )->filter(static fn($object) => $object->prop->prop[0] === 'e');
 
-        $this->assertCount(4, \iterator_to_array($set->values(new MtRand)));
+        $this->assertCount(4, \iterator_to_array($set->values(Random::mersenneTwister)));
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->isImmutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
@@ -225,7 +225,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($mutable->values(new MtRand) as $value) {
+        foreach ($mutable->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->isImmutable());
         }
 
@@ -241,7 +241,7 @@ class CompositeTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($immutable->values(new MtRand) as $value) {
+        foreach ($immutable->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->isImmutable());
         }
     }
@@ -266,7 +266,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($shrinkable->values(new MtRand) as $value) {
+        foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->shrinkable());
         }
 
@@ -291,7 +291,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($nonShrinkable->values(new MtRand) as $value) {
+        foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -310,7 +310,7 @@ class CompositeTest extends TestCase
             Set\Integers::any(),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $value = $value->unwrap();
             $a = $dichotomy->a()->unwrap();
@@ -335,7 +335,7 @@ class CompositeTest extends TestCase
             Set\Strings::between(0, 5),
         );
 
-        foreach ($set->values(new MtRand) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $a = $value;
 
             while ($a->shrinkable()) {
@@ -353,7 +353,7 @@ class CompositeTest extends TestCase
         $this
             ->set
             ->filter(static fn() => false)
-            ->values(new MtRand)
+            ->values(Random::mersenneTwister)
             ->current();
     }
 

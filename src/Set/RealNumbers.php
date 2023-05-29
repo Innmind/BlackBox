@@ -15,72 +15,112 @@ final class RealNumbers implements Set
 {
     private int $lowerBound;
     private int $upperBound;
+    /** @var positive-int */
     private int $size;
+    /** @var \Closure(float): bool */
     private \Closure $predicate;
 
-    public function __construct(int $lowerBound = null, int $upperBound = null)
-    {
-        $this->lowerBound = $lowerBound ?? \PHP_INT_MIN;
-        $this->upperBound = $upperBound ?? \PHP_INT_MAX;
-        $this->size = 100;
-        $this->predicate = fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
+    /**
+     * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     * @param \Closure(float): bool $predicate
+     */
+    private function __construct(
+        int $lowerBound,
+        int $upperBound,
+        int $size = null,
+        \Closure $predicate = null,
+    ) {
+        $this->lowerBound = $lowerBound;
+        $this->upperBound = $upperBound;
+        $this->size = $size ?? 100;
+        $this->predicate = $predicate ?? fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function any(): self
     {
-        return new self;
+        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function between(int $lowerBound, int $upperBound): self
     {
         return new self($lowerBound, $upperBound);
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function above(int $lowerBound): self
     {
-        return new self($lowerBound);
-    }
-
-    public static function below(int $upperBound): self
-    {
-        return new self(null, $upperBound);
-    }
-
-    public function take(int $size): Set
-    {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(float $value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
-
-            return $predicate($value);
-        };
-
-        return $self;
+        return new self($lowerBound, \PHP_INT_MAX);
     }
 
     /**
-     * @psalm-suppress MixedReturnTypeCoercion
+     * @psalm-pure
      */
-    public function values(Random $rand): \Generator
+    public static function below(int $upperBound): self
+    {
+        return new self(\PHP_INT_MIN, $upperBound);
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function take(int $size): Set
+    {
+        return new self(
+            $this->lowerBound,
+            $this->upperBound,
+            $size,
+            $this->predicate,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function filter(callable $predicate): Set
+    {
+        $previous = $this->predicate;
+
+        return new self(
+            $this->lowerBound,
+            $this->upperBound,
+            $this->size,
+            static function(float $value) use ($previous, $predicate): bool {
+                if (!$previous($value)) {
+                    return false;
+                }
+
+                return $predicate($value);
+            },
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
             // simulate the function lcg_value()
-            $lcg = ($rand(0, 100) / 100);
+            $lcg = ($random->between(0, 100) / 100);
             /** @var float */
-            $value = $rand($this->lowerBound, $this->upperBound) * $lcg;
+            $value = $random->between($this->lowerBound, $this->upperBound) * $lcg;
 
             if (!($this->predicate)($value)) {
                 continue;

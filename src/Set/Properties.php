@@ -4,67 +4,105 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
+    Random,
     Set,
     Property as Concrete,
     Properties as Ensure,
 };
 
-final class Properties
+/**
+ * @implements Set<Ensure>
+ */
+final class Properties implements Set
 {
+    /** @var Set<Concrete> */
+    private Set $properties;
+
     /**
-     * @no-named-arguments
+     * @psalm-mutation-free
      *
-     * @return Set<Ensure>
+     * @param Set<Concrete> $properties
      */
-    public static function of(Concrete $first, Concrete ...$properties): Set
+    private function __construct(Set $properties)
     {
-        return self::chooseFrom(
-            Elements::of($first, ...$properties),
-        );
+        $this->properties = $properties;
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @param Set<Concrete> $first
      * @param Set<Concrete> $properties
-     *
-     * @return Set<Ensure>
      */
-    public static function any(Set $first, Set ...$properties): Set
+    public static function any(Set $first, Set ...$properties): self
     {
         if (\count($properties) === 0) {
-            $set = $first;
-        } else {
-            $set = new Either($first, ...$properties);
+            return new self($first);
         }
 
-        return self::chooseFrom($set);
+        return new self(Either::any($first, ...$properties));
     }
 
     /**
-     * @param Set<Concrete> $set
+     * @psalm-mutation-free
+     *
+     * @param positive-int $max
      *
      * @return Set<Ensure>
      */
-    public static function chooseFrom(Set $set, Integers $range = null): Set
+    public function atMost(int $max): Set
     {
-        $range ??= Integers::between(1, 100);
+        return $this->ensure($max);
+    }
 
-        if ($range->lowerBound() < 1) {
-            throw new \LogicException('At least one property is required');
-        }
+    /**
+     * @psalm-mutation-free
+     */
+    public function take(int $size): Set
+    {
+        return $this->ensure(100)->take($size);
+    }
 
-        /** @var Set<list<Concrete>> */
-        $sequences = Sequence::of($set, $range);
+    /**
+     * @psalm-mutation-free
+     */
+    public function filter(callable $predicate): Set
+    {
+        return $this->ensure(100)->filter($predicate);
+    }
 
-        /**
-         * @psalm-suppress MixedArgument
-         * @psalm-suppress InvalidArgument
-         */
-        return Decorate::immutable(
-            static fn(array $properties): Ensure => new Ensure(...\array_values($properties)),
-            $sequences,
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this->ensure(100));
+    }
+
+    /**
+     * @return \Generator<Value<Ensure>>
+     */
+    public function values(Random $random): \Generator
+    {
+        yield from $this->ensure(100)->values($random);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param positive-int $max
+     *
+     * @return Set<Ensure>
+     */
+    private function ensure(int $max): Set
+    {
+        /** @var Set<non-empty-list<Concrete>> */
+        $sequences = Sequence::of($this->properties)->between(1, $max);
+
+        return $sequences->map(
+            static fn(array $properties): Ensure => Ensure::of(...$properties),
         );
     }
 }

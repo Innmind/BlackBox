@@ -3,29 +3,52 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox;
 
+use Innmind\BlackBox\Runner\Assert;
+
+/**
+ * @template T of object
+ */
 final class Properties
 {
-    /** @var list<Property> */
+    /** @var list<Property<T>> */
     private array $properties;
 
     /**
      * @no-named-arguments
+     *
+     * @param Property<T> $first
+     * @param Property<T> $properties
      */
-    public function __construct(Property $first, Property ...$properties)
+    private function __construct(Property $first, Property ...$properties)
     {
         $this->properties = [$first, ...$properties];
     }
 
     /**
-     * @throws \Exception Any exception understood by your test framework
+     * @no-named-arguments
      *
-     * @return object The system under test with the property applied
+     * @template A of object
+     *
+     * @param Property<A> $first
+     * @param Property<A> $properties
+     *
+     * @return self<A>
      */
-    public function ensureHeldBy(object $systemUnderTest): object
+    public static function of(Property $first, Property ...$properties): self
+    {
+        return new self($first, ...$properties);
+    }
+
+    /**
+     * @param T $systemUnderTest
+     *
+     * @return T The system under test with the property applied
+     */
+    public function ensureHeldBy(Assert $assert, object $systemUnderTest): object
     {
         foreach ($this->properties as $property) {
             if ($property->applicableTo($systemUnderTest)) {
-                $systemUnderTest = $property->ensureHeldBy($systemUnderTest);
+                $systemUnderTest = $property->ensureHeldBy($assert, $systemUnderTest);
             }
         }
 
@@ -33,7 +56,7 @@ final class Properties
     }
 
     /**
-     * @return list<Property>
+     * @return list<Property<T>>
      */
     public function properties(): array
     {

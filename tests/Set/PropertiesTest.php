@@ -8,7 +8,7 @@ use Innmind\BlackBox\{
     Set,
     Property,
     Properties as PropertiesModel,
-    Random\MtRand,
+    Random,
     PHPUnit\BlackBox,
 };
 
@@ -20,51 +20,51 @@ class PropertiesTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            Properties::of(
-                $this->createMock(Property::class),
+            Properties::any(
+                Set\Elements::of($this->createMock(Property::class)),
             ),
         );
     }
 
     public function testGenerate100ScenariiByDefault()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
 
-        $this->assertCount(100, $properties->values(new MtRand));
+        $this->assertCount(100, \iterator_to_array($properties->values(Random::mersenneTwister)));
     }
 
     public function testGeneratePropertiesModel()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
 
-        foreach ($properties->values(new MtRand) as $scenario) {
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
             $this->assertInstanceOf(PropertiesModel::class, $scenario->unwrap());
         }
     }
 
     public function testValuesAreConsideredImmutable()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
 
-        foreach ($properties->values(new MtRand) as $scenario) {
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
             $this->assertTrue($scenario->isImmutable());
         }
     }
 
     public function testScenariiAreOfDifferentSizes()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
         $sizes = [];
 
-        foreach ($properties->values(new MtRand) as $scenario) {
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
             $sizes[] = \count($scenario->unwrap()->properties());
         }
 
@@ -73,21 +73,21 @@ class PropertiesTest extends TestCase
 
     public function testTake()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
         $properties2 = $properties->take(50);
 
         $this->assertInstanceOf(Set::class, $properties2);
         $this->assertNotSame($properties, $properties2);
-        $this->assertCount(100, $properties->values(new MtRand));
-        $this->assertCount(50, $properties2->values(new MtRand));
+        $this->assertCount(100, \iterator_to_array($properties->values(Random::mersenneTwister)));
+        $this->assertCount(50, \iterator_to_array($properties2->values(Random::mersenneTwister)));
     }
 
     public function testFilter()
     {
-        $properties = Properties::of(
-            $this->createMock(Property::class),
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
         );
         $properties2 = $properties->filter(static fn($scenario) => \count($scenario->properties()) > 50);
 
@@ -98,53 +98,31 @@ class PropertiesTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($properties->values(new MtRand)),
+                $this->unwrap($properties->values(Random::mersenneTwister)),
                 $hasUnder50Properties,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($properties2->values(new MtRand)),
+                $this->unwrap($properties2->values(Random::mersenneTwister)),
                 $hasUnder50Properties,
                 false,
             ),
         );
     }
 
-    public function testAtLeastOnePropertyIsEnforced()
+    public function testMaxNumberOfPropertiesGeneratedAtOnce()
     {
-        $this
-            ->forAll(
-                Set\Integers::below(0),
-                Set\Integers::above(1),
-            )
-            ->then(function($lowerBound, $upperBound) {
-                $this->expectException(\LogicException::class);
+        $properties = Properties::any(
+            Set\Elements::of($this->createMock(Property::class)),
+        )->atMost(50);
+        $sizes = [];
 
-                Properties::chooseFrom(
-                    Set\Elements::of($this->createMock(Property::class)),
-                    Set\Integers::between($lowerBound, $upperBound),
-                );
-            });
-    }
+        foreach ($properties->values(Random::mersenneTwister) as $scenario) {
+            $sizes[] = \count($scenario->unwrap()->properties());
+        }
 
-    public function testAnyLowerBoundAbove1IsAccepted()
-    {
-        $this
-            ->forAll(
-                Set\Integers::above(1),
-                Set\Integers::above(1),
-            )
-            ->filter(fn($lowerBound, $upperBound) => $upperBound > $lowerBound)
-            ->then(function($lowerBound, $upperBound) {
-                $this->assertInstanceOf(
-                    Set::class,
-                    Properties::chooseFrom(
-                        Set\Elements::of($this->createMock(Property::class)),
-                        Set\Integers::between($lowerBound, $upperBound),
-                    ),
-                );
-            });
+        $this->assertLessThanOrEqual(50, \max($sizes));
     }
 }

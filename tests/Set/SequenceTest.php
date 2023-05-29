@@ -6,7 +6,7 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Sequence,
     Set,
-    Random\MtRand,
+    Random,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ class SequenceTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            Sequence::of(Set\Chars::any())
+            Sequence::of(Set\Chars::any()),
         );
     }
 
@@ -24,10 +24,10 @@ class SequenceTest extends TestCase
     {
         $sequences = Sequence::of(Set\Chars::any());
 
-        $this->assertInstanceOf(\Generator::class, $sequences->values(new MtRand));
-        $this->assertCount(100, \iterator_to_array($sequences->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $sequences->values(Random::mersenneTwister));
+        $this->assertCount(100, \iterator_to_array($sequences->values(Random::mersenneTwister)));
 
-        foreach ($sequences->values(new MtRand) as $sequence) {
+        foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             $this->assertInstanceOf(Set\Value::class, $sequence);
             $this->assertIsArray($sequence->unwrap());
         }
@@ -35,13 +35,10 @@ class SequenceTest extends TestCase
 
     public function testGeneratesSequencesOfDifferentSizes()
     {
-        $sequences = Sequence::of(
-            Set\Chars::any(),
-            Set\Integers::between(0, 50)
-        );
+        $sequences = Sequence::of(Set\Chars::any())->between(0, 50);
         $sizes = [];
 
-        foreach ($sequences->values(new MtRand) as $sequence) {
+        foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             $sizes[] = \count($sequence->unwrap());
         }
 
@@ -55,8 +52,8 @@ class SequenceTest extends TestCase
 
         $this->assertNotSame($sequences1, $sequences2);
         $this->assertInstanceOf(Sequence::class, $sequences2);
-        $this->assertCount(100, \iterator_to_array($sequences1->values(new MtRand)));
-        $this->assertCount(50, \iterator_to_array($sequences2->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($sequences1->values(Random::mersenneTwister)));
+        $this->assertCount(50, \iterator_to_array($sequences2->values(Random::mersenneTwister)));
     }
 
     public function testFilter()
@@ -71,20 +68,20 @@ class SequenceTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                \iterator_to_array($sequences->values(new MtRand)),
+                \iterator_to_array($sequences->values(Random::mersenneTwister)),
                 $hasOddSequence,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                \iterator_to_array($sequences2->values(new MtRand)),
+                \iterator_to_array($sequences2->values(Random::mersenneTwister)),
                 $hasOddSequence,
                 false,
             ),
         );
-        $this->assertCount(100, \iterator_to_array($sequences->values(new MtRand)));
-        $this->assertCount(100, \iterator_to_array($sequences2->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($sequences->values(Random::mersenneTwister)));
+        $this->assertCount(100, \iterator_to_array($sequences2->values(Random::mersenneTwister)));
     }
 
     public function testFlagStructureAsMutableWhenUnderlyingSetValuesAreMutable()
@@ -96,7 +93,7 @@ class SequenceTest extends TestCase
             ),
         );
 
-        foreach ($sequences->values(new MtRand) as $sequence) {
+        foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             $this->assertFalse($sequence->isImmutable());
             $this->assertSame(\count($sequence->unwrap()), \count($sequence->unwrap()));
 
@@ -115,9 +112,9 @@ class SequenceTest extends TestCase
 
     public function testNonEmptySequenceCanBeShrunk()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(1, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(1, 100);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
                 // as it can generate sequences of 1 element
                 continue;
@@ -129,9 +126,9 @@ class SequenceTest extends TestCase
 
     public function testEmptySequenceCanNotBeShrunk()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(0, 1));
+        $sequences = Sequence::of(Set\Chars::any())->between(0, 1);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
                 // as it can generate sequences of 1 element
                 continue;
@@ -143,9 +140,9 @@ class SequenceTest extends TestCase
 
     public function testNonEmptySequenceAreShrunkWithDifferentStrategies()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(3, 100);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 6) {
                 // when less than the double of the lower limit strategy A will
                 // fallback to strategy B
@@ -164,9 +161,9 @@ class SequenceTest extends TestCase
 
     public function testShrunkSequencesDoContainsLessThanTheInitialValue()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(2, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(2, 100);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 4) {
                 // otherwise strategy A will return it's identity since 3/2 won't
                 // match the predicate of minimum size 2, so strategy will return
@@ -183,9 +180,9 @@ class SequenceTest extends TestCase
 
     public function testShrinkingStrategyAReduceTheSequenceFasterThanStrategyB()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(3, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(3, 100);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 6) {
                 // otherwise strategy A will return it's identity since 5/2 won't
                 // match the predicate of minimum size 3, so strategy will return
@@ -204,9 +201,9 @@ class SequenceTest extends TestCase
 
     public function testShrunkValuesConserveMutabilityProperty()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(1, 100));
+        $sequences = Sequence::of(Set\Chars::any())->between(1, 100);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
             $this->assertTrue($dichotomy->a()->isImmutable());
@@ -218,10 +215,9 @@ class SequenceTest extends TestCase
                 static fn() => new \stdClass,
                 Set\Chars::any(),
             ),
-            Set\Integers::between(1, 100),
-        );
+        )->between(1, 100);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
                 // lower bound is not shrinkable
                 continue;
@@ -236,9 +232,9 @@ class SequenceTest extends TestCase
 
     public function testSequenceIsNeverShrunkBelowTheSpecifiedLowerBound()
     {
-        $sequences = Sequence::of(Set\Chars::any(), Set\Integers::between(10, 50));
+        $sequences = Sequence::of(Set\Chars::any())->between(10, 50);
 
-        foreach ($sequences->values(new MtRand) as $sequence) {
+        foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             while ($sequence->shrinkable()) {
                 $sequence = $sequence->shrink()->a();
             }
@@ -259,10 +255,9 @@ class SequenceTest extends TestCase
                 },
                 Set\Integers::any(),
             ),
-            Set\Integers::between(1, 20),
-        );
+        )->between(1, 20);
 
-        foreach ($sequences->values(new MtRand) as $value) {
+        foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (!$value->shrinkable()) {
                 continue;
             }
@@ -279,12 +274,9 @@ class SequenceTest extends TestCase
 
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
-        $sequences = Sequence::of(
-            Set\Integers::any(),
-            Set\Integers::between(1, 100),
-        );
+        $sequences = Sequence::of(Set\Integers::any())->between(1, 100);
 
-        foreach ($sequences->values(new MtRand) as $sequence) {
+        foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             while ($sequence->shrinkable()) {
                 $sequence = $sequence->shrink()->a();
             }

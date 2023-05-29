@@ -13,68 +13,107 @@ use Innmind\BlackBox\{
  * This set can only contain immutable values as they're generated outside of the
  * class, so it can't be re-generated on the fly
  *
- * @implements Set<mixed>
- *
+ * @template T
+ * @template U
+ * @implements Set<T|U>
  */
 final class Elements implements Set
 {
+    /** @var positive-int */
     private int $size;
+    /** @var T */
+    private mixed $first;
+    /** @var list<U> */
     private array $elements;
+    /** @var \Closure(T|U): bool */
     private \Closure $predicate;
 
     /**
-     * @no-named-arguments
+     * @psalm-mutation-free
      *
-     * @param mixed $first
-     * @param mixed $elements
+     * @param positive-int $size
+     * @param \Closure(T|U): bool $predicate
+     * @param T $first
+     * @param list<U> $elements
      */
-    public function __construct($first, ...$elements)
-    {
-        $this->size = 100;
-        $this->elements = [$first, ...$elements];
-        $this->predicate = static fn(): bool => true;
+    private function __construct(
+        int $size,
+        \Closure $predicate,
+        mixed $first,
+        array $elements,
+    ) {
+        $this->size = $size;
+        $this->predicate = $predicate;
+        $this->first = $first;
+        $this->elements = $elements;
     }
 
     /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
-     * @param mixed $first
-     * @param mixed $elements
+     * @template A
+     * @template B
+     *
+     * @param A $first
+     * @param B $elements
+     *
+     * @return self<A, B>
      */
     public static function of($first, ...$elements): self
     {
-        return new self($first, ...$elements);
+        return new self(100, static fn(): bool => true, $first, $elements);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function take(int $size): Set
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $size,
+            $this->predicate,
+            $this->first,
+            $this->elements,
+        );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
-            if (!$previous($value)) {
-                return false;
-            }
 
-            return $predicate($value);
-        };
+        return new self(
+            $this->size,
+            static function(mixed $value) use ($previous, $predicate): bool {
+                /** @var T|U $value */
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+            $this->first,
+            $this->elements,
+        );
     }
 
-    public function values(Random $rand): \Generator
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
     {
         $iterations = 0;
         $elements = \array_values(\array_filter(
-            $this->elements,
+            [$this->first, ...$this->elements],
             $this->predicate,
         ));
 
@@ -85,7 +124,7 @@ final class Elements implements Set
         $max = \count($elements) - 1;
 
         while ($iterations < $this->size) {
-            $index = $rand(0, $max);
+            $index = $random->between(0, $max);
             /** @var mixed */
             $value = $elements[$index];
 

@@ -5,85 +5,40 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     Set,
-    Random\RandomInt,
-};
-use PHPUnit\Framework\TestCase;
-use PHPUnit\TextUI\{
-    ResultPrinter,
-    DefaultResultPrinter,
+    Random,
+    Application,
+    Runner\Given,
 };
 
 trait BlackBox
 {
-    protected function forAll(Set $first, Set ...$sets): Scenario
+    protected function forAll(Set $first, Set ...$rest): Compatibility
     {
-        $expectsException = static fn(\Throwable $e): bool => false;
-        $recordFailure = function(\Throwable $e, Set\Value $values, callable $test): void {
-            if (\class_exists(ResultPrinter::class)) {
-                ResultPrinterV8::record($this, $e, $values, $test);
-            }
+        $app = Application::new([]);
 
-            if (\class_exists(DefaultResultPrinter::class)) {
-                ResultPrinterV9::record($this, $e, $values, $test);
-            }
-        };
-
-        if ($this instanceof TestCase) {
-            $expectsException = function(\Throwable $e): bool {
-                $expectedException = $this->getExpectedException();
-                $expectedExceptionMessage = $this->getExpectedExceptionMessage();
-                $expectedExceptionCode = $this->getExpectedExceptionCode();
-
-                if (
-                    \is_null($expectedException) &&
-                    \is_null($expectedExceptionMessage) &&
-                    \is_null($expectedExceptionCode)
-                ) {
-                    return false;
-                }
-
-                if (\is_string($expectedException) && !$e instanceof $expectedException) {
-                    return false;
-                }
-
-                if (\is_string($expectedExceptionMessage) && $expectedExceptionMessage !== $e->getMessage()) {
-                    return false;
-                }
-
-                if (!\is_null($expectedExceptionCode) && ((string) $expectedExceptionCode !== (string) $e->getCode())) {
-                    return false;
-                }
-
-                return true;
-            };
-        }
-
-        $scenario = new Scenario(
-            new RandomInt,
-            $recordFailure,
-            $expectsException,
-            $first,
-            ...$sets,
-        );
         $size = \getenv('BLACKBOX_SET_SIZE');
         $disableShrinking = (bool) \getenv('BLACKBOX_DISABLE_SHRINKING');
 
         if ($size !== false) {
-            $scenario = $scenario->take((int) $size);
+            $app = $app->scenariiPerProof((int) $size);
         }
 
         if ($disableShrinking) {
-            $scenario = $scenario->disableShrinking();
+            $app = $app->disableShrinking();
         }
 
-        return $scenario;
-    }
+        /** @var Set<list<mixed>> */
+        $given = $first->map(static fn(mixed $value) => [$value]);
 
-    /**
-     * Use the seeder to generate random values to initiate your properties
-     */
-    protected function seeder(): Seeder
-    {
-        return new Seeder(new RandomInt);
+        if (\count($rest) > 0) {
+            /** @var Set<list<mixed>> */
+            $given = Set\Composite::immutable(
+                static fn(mixed ...$args) => $args,
+                $first,
+                ...$rest,
+            );
+        }
+
+        return new Compatibility($app, Given::of(Set\Randomize::of($given)));
     }
 }

@@ -19,12 +19,16 @@ final class Composite implements Set
 {
     /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
-    private Matrix $matrix;
+    private Set $first;
+    private Set $second;
+    /** @var list<Set> */
+    private array $sets;
     private ?int $size;
     private \Closure $predicate;
     private bool $immutable;
 
     /**
+     * @psalm-mutation-free
      * @no-named-arguments
      */
     private function __construct(
@@ -32,27 +36,21 @@ final class Composite implements Set
         callable $aggregate,
         Set $first,
         Set $second,
-        Set ...$sets
+        Set ...$sets,
     ) {
         $this->immutable = $immutable;
         /** @var \Closure(mixed...): C */
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->size = null; // by default allow all combinations
         $this->predicate = static fn(): bool => true;
-
-        $sets = [$first, $second, ...$sets];
-        $sets = \array_reverse($sets);
-        $first = \array_shift($sets);
-        $second = \array_shift($sets);
-
-        $this->matrix = \array_reduce(
-            $sets,
-            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
-            Matrix::of($second, $first),
-        );
+        $this->first = $first;
+        $this->second = $second;
+        $this->sets = $sets;
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @no-named-arguments
      *
@@ -63,12 +61,15 @@ final class Composite implements Set
     public static function immutable(
         callable $aggregate,
         Set $first,
-        Set ...$sets
+        Set $second,
+        Set ...$sets,
     ): self {
-        return new self(true, $aggregate, $first, ...$sets);
+        return new self(true, $aggregate, $first, $second, ...$sets);
     }
 
     /**
+     * @psalm-pure
+     *
      * @template T
      * @no-named-arguments
      *
@@ -79,12 +80,15 @@ final class Composite implements Set
     public static function mutable(
         callable $aggregate,
         Set $first,
-        Set ...$sets
+        Set $second,
+        Set ...$sets,
     ): self {
-        return new self(false, $aggregate, $first, ...$sets);
+        return new self(false, $aggregate, $first, $second, ...$sets);
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @return Set<C>
      */
     public function take(int $size): Set
@@ -96,6 +100,8 @@ final class Composite implements Set
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param callable(C): bool $predicate
      *
      * @return Set<C>
@@ -104,8 +110,7 @@ final class Composite implements Set
     {
         $previous = $this->predicate;
         $self = clone $this;
-        /** @psalm-suppress MissingClosureParamType */
-        $self->predicate = static function($value) use ($previous, $predicate): bool {
+        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
             /** @var C */
             $value = $value;
 
@@ -119,9 +124,17 @@ final class Composite implements Set
         return $self;
     }
 
-    public function values(Random $rand): \Generator
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
     {
-        $matrix = $this->matrix->values($rand);
+        return Decorate::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
+    {
+        $matrix = $this->matrix()->values($random);
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
@@ -143,7 +156,6 @@ final class Composite implements Set
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                /** @psalm-suppress MissingClosureReturnType */
                 yield Value::mutable(
                     fn() => ($this->aggregate)(...$combination->unwrap()),
                     $this->shrink(true, $combination),
@@ -156,6 +168,20 @@ final class Composite implements Set
         if ($iterations === 0) {
             throw new EmptySet;
         }
+    }
+
+    private function matrix(): Matrix
+    {
+        $sets = [$this->first, $this->second, ...$this->sets];
+        $sets = \array_reverse($sets);
+        $first = \array_shift($sets);
+        $second = \array_shift($sets);
+
+        return \array_reduce(
+            $sets,
+            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            Matrix::of($second, $first),
+        );
     }
 
     private function continue(int $iterations): bool
@@ -190,7 +216,7 @@ final class Composite implements Set
     private function shrinkWithStrategy(
         bool $mutable,
         Combination $combination,
-        Combination $strategy
+        Combination $strategy,
     ): callable {
         $shrinked = ($this->aggregate)(...$strategy->unwrap());
 
@@ -199,7 +225,6 @@ final class Composite implements Set
         }
 
         if ($mutable) {
-            /** @psalm-suppress MissingClosureReturnType */
             return fn(): Value => Value::mutable(
                 fn() => ($this->aggregate)(...$strategy->unwrap()),
                 $this->shrink(true, $strategy),
@@ -218,7 +243,6 @@ final class Composite implements Set
     private function identity(bool $mutable, Combination $combination): callable
     {
         if ($mutable) {
-            /** @psalm-suppress MissingClosureReturnType */
             return fn(): Value => Value::mutable(
                 fn() => ($this->aggregate)(...$combination->unwrap()),
             );

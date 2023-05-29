@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Set\Uuid,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 use Ramsey\Uuid\Uuid as U;
 
@@ -21,9 +21,9 @@ class UuidTest extends TestCase
         $uuids = Uuid::any();
 
         $this->assertInstanceOf(Set::class, $uuids);
-        $this->assertCount(100, \iterator_to_array($uuids->values(new MtRand)));
+        $this->assertCount(100, \iterator_to_array($uuids->values(Random::mersenneTwister)));
 
-        foreach ($uuids->values(new MtRand) as $uuid) {
+        foreach ($uuids->values(Random::mersenneTwister) as $uuid) {
             $this->assertInstanceOf(Value::class, $uuid);
             $this->assertTrue($uuid->isImmutable());
             $this->assertMatchesRegularExpression(
@@ -42,7 +42,7 @@ class UuidTest extends TestCase
             return $value->shrinkable() ? $min($value->shrink()->{$type}(), $type) : $value->unwrap();
         };
 
-        foreach ($uuids->values(new MtRand) as $uuid) {
+        foreach ($uuids->values(Random::mersenneTwister) as $uuid) {
             $this->assertSame($uuid->unwrap(), $min($uuid, 'a'));
             $this->assertSame($uuid->unwrap(), $min($uuid, 'b'));
         }

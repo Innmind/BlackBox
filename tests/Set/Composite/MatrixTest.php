@@ -8,7 +8,7 @@ use Innmind\BlackBox\{
     Set\Composite\Combination,
     Set\FromGenerator,
     Set\Value,
-    Random\MtRand,
+    Random,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -87,7 +87,7 @@ class MatrixTest extends TestCase
             static function($combination) {
                 return $combination->unwrap();
             },
-            \iterator_to_array($matrix->values(new MtRand)),
+            \iterator_to_array($matrix->values(Random::mersenneTwister)),
         );
     }
 }

@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Set\Elements,
     Set,
     Set\Value,
-    Random\MtRand,
+    Random,
     Exception\EmptySet,
 };
 
@@ -15,7 +15,7 @@ class ElementsTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, new Elements(42));
+        $this->assertInstanceOf(Set::class, Elements::of(42));
     }
 
     public function testOf()
@@ -26,7 +26,7 @@ class ElementsTest extends TestCase
     public function testTake100ValuesByDefault()
     {
         $elements = Elements::of(...\range(0, 1000));
-        $values = $this->unwrap($elements->values(new MtRand));
+        $values = $this->unwrap($elements->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -35,8 +35,8 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...\range(0, 1000));
         $elements2 = $elements->take(10);
-        $aValues = $this->unwrap($elements->values(new MtRand));
-        $bValues = $this->unwrap($elements2->values(new MtRand));
+        $aValues = $this->unwrap($elements->values(Random::mersenneTwister));
+        $bValues = $this->unwrap($elements2->values(Random::mersenneTwister));
 
         $this->assertInstanceOf(Elements::class, $elements2);
         $this->assertNotSame($elements, $elements2);
@@ -58,14 +58,14 @@ class ElementsTest extends TestCase
         $this->assertNotSame($elements, $elements2);
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($elements2->values(new MtRand)),
+                $this->unwrap($elements2->values(Random::mersenneTwister)),
                 $containsEvenInt,
                 false,
             ),
         );
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($elements->values(new MtRand)),
+                $this->unwrap($elements->values(Random::mersenneTwister)),
                 $containsEvenInt,
                 false,
             ),
@@ -76,10 +76,10 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...\range(0, 1000));
 
-        $this->assertInstanceOf(\Generator::class, $elements->values(new MtRand));
-        $this->assertCount(100, $this->unwrap($elements->values(new MtRand)));
+        $this->assertInstanceOf(\Generator::class, $elements->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($elements->values(Random::mersenneTwister)));
 
-        foreach ($elements->values(new MtRand) as $value) {
+        foreach ($elements->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->isImmutable());
         }
@@ -89,7 +89,7 @@ class ElementsTest extends TestCase
     {
         $elements = Elements::of(...\range(0, 1000));
 
-        foreach ($elements->values(new MtRand) as $value) {
+        foreach ($elements->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->shrinkable());
         }
     }
@@ -97,7 +97,7 @@ class ElementsTest extends TestCase
     public function testThereIsAlwaysTheSpecifiedNumberOfElementsReturnedEvenThoughLessInjected()
     {
         $elements = Elements::of('foo', 'bar', 'baz');
-        $values = \iterator_to_array($elements->values(new MtRand));
+        $values = \iterator_to_array($elements->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
 
@@ -113,9 +113,11 @@ class ElementsTest extends TestCase
     {
         $this->assertCount(
             0,
-            Elements::of(1, 2, 3)
-                ->take(0)
-                ->values(new MtRand)
+            \iterator_to_array(
+                Elements::of(1, 2, 3)
+                    ->take(0)
+                    ->values(Random::mersenneTwister),
+            ),
         );
     }
 
@@ -125,7 +127,7 @@ class ElementsTest extends TestCase
 
         Elements::of(1)
             ->filter(static fn() => false)
-            ->values(new MtRand)
+            ->values(Random::mersenneTwister)
             ->current();
     }
 }

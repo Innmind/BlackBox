@@ -13,99 +13,120 @@ use Innmind\BlackBox\{
  */
 final class MadeOf implements Set
 {
-    /** @var non-empty-list<Set<string>> */
-    private array $sets;
-    private Integers $range;
-    private int $size = 100;
-    /** @var \Closure(string): bool */
-    private \Closure $predicate;
+    /** @var Set<string> */
+    private Set $chars;
 
     /**
+     * @psalm-mutation-free
+     *
+     * @no-named-arguments
+     *
+     * @param Set<string> $chars
+     */
+    private function __construct(Set $chars)
+    {
+        $this->chars = $chars;
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @no-named-arguments
      *
      * @param Set<string> $first
      * @param Set<string> $rest
      */
-    public function __construct(Set $first, Set ...$rest)
+    public static function of(Set $first, Set ...$rest): self
     {
-        $this->sets = [$first, ...$rest];
-        $this->range = Integers::between(0, 128);
-        $this->predicate = static fn(): bool => true;
-    }
+        $chars = $first;
 
-    public function between(int $minLength, int $maxLength): self
-    {
-        $self = clone $this;
-        $self->range = Integers::between($minLength, $maxLength);
+        if (\count($rest) > 0) {
+            $chars = Set\Either::any($first, ...$rest);
+        }
 
-        return $self;
-    }
-
-    public function atLeast(int $length): self
-    {
-        $self = clone $this;
-        $self->range = Integers::between($length, $length + 128);
-
-        return $self;
-    }
-
-    public function atMost(int $length): self
-    {
-        $self = clone $this;
-        $self->range = Integers::between(0, $length);
-
-        return $self;
-    }
-
-    public function take(int $size): Set
-    {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(string $value) use ($previous, $predicate): bool {
-            /** @psalm-suppress MixedArgumentTypeCoercion */
-            if (!$previous($value)) {
-                return false;
-            }
-
-            /** @psalm-suppress MixedArgumentTypeCoercion */
-            return $predicate($value);
-        };
-
-        return $self;
+        return new self($chars);
     }
 
     /**
-     * @psalm-suppress MixedReturnTypeCoercion
+     * @psalm-mutation-free
+     *
+     * @param 0|positive-int $minLength
+     * @param positive-int $maxLength
+     *
+     * @return Set<string>
      */
-    public function values(Random $rand): \Generator
+    public function between(int $minLength, int $maxLength): Set
     {
-        $chars = $this->sets[0];
+        return $this->build($minLength, $maxLength);
+    }
 
-        if (\count($this->sets) > 1) {
-            $chars = new Set\Either(...$this->sets);
-        }
+    /**
+     * @psalm-mutation-free
+     *
+     * @param positive-int $length
+     *
+     * @return Set<string>
+     */
+    public function atLeast(int $length): Set
+    {
+        return $this->build($length, $length + 128);
+    }
 
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
-         * @psalm-suppress InvalidArgument Same problem as above
-         * @var Set<string>
-         */
-        $set = Decorate::immutable(
-            static fn(array $chars): string => \implode('', $chars),
-            Sequence::of($chars, $this->range),
-        );
+    /**
+     * @psalm-mutation-free
+     *
+     * @param positive-int $length
+     *
+     * @return Set<string>
+     */
+    public function atMost(int $length): Set
+    {
+        return $this->build(0, $length);
+    }
 
-        yield from $set
-            ->take($this->size)
-            ->filter($this->predicate)
-            ->values($rand);
+    /**
+     * @psalm-mutation-free
+     */
+    public function take(int $size): Set
+    {
+        return $this->build(0, 128)->take($size);
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function filter(callable $predicate): Set
+    {
+        return $this->build(0, 128)->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function map(callable $map): Set
+    {
+        return Decorate::immutable($map, $this);
+    }
+
+    public function values(Random $random): \Generator
+    {
+        yield from $this
+            ->build(0, 128)
+            ->values($random);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param 0|positive-int $min
+     * @param positive-int $max
+     *
+     * @return Set<string>
+     */
+    private function build(int $min, int $max): Set
+    {
+        return Sequence::of($this->chars)
+            ->between($min, $max)
+            ->map(static fn(array $chars) => \implode('', $chars));
     }
 }

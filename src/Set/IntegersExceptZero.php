@@ -3,47 +3,17 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
-/**
- * @implements Set<int>
- */
-final class IntegersExceptZero implements Set
+final class IntegersExceptZero
 {
-    /** @var Set<int> */
-    private Set $set;
-
-    public function __construct()
+    /**
+     * @psalm-pure
+     *
+     * @return Set<int>
+     */
+    public static function any(): Set
     {
-        $this->set = Integers::any()->filter(static fn(int $value): bool => $value !== 0);
-    }
-
-    public static function any(): self
-    {
-        return new self;
-    }
-
-    public function take(int $size): Set
-    {
-        $self = clone $this;
-        $self->set = $this->set->take($size);
-
-        return $self;
-    }
-
-    public function filter(callable $predicate): Set
-    {
-        $self = clone $this;
-        $self->set = $this->set->filter($predicate);
-
-        return $self;
-    }
-
-    public function values(Random $rand): \Generator
-    {
-        yield from $this->set->values($rand);
+        return Integers::any()->filter(static fn(int $value): bool => $value !== 0);
     }
 }

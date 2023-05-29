@@ -8,11 +8,13 @@ use Innmind\BlackBox\Set;
 final class Email
 {
     /**
-     * @return Set<string>
+     * @psalm-pure
+     *
+     * @return Set<non-empty-string>
      */
     public static function any(): Set
     {
-        /** @var Set<string> */
+        /** @var Set<non-empty-string> */
         return Composite::immutable(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
@@ -28,7 +30,9 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @psalm-pure
+     *
+     * @return Set<non-empty-string>
      */
     private static function address(): Set
     {
@@ -36,7 +40,9 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @psalm-pure
+     *
+     * @return Set<non-empty-string>
      */
     private static function domain(): Set
     {
@@ -44,34 +50,28 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @psalm-pure
+     *
+     * @param int<3, max> $maxLength
+     * @param non-empty-string $extra
+     *
+     * @return Set<non-empty-string>
      */
     private static function string(int $maxLength, string ...$extra): Set
     {
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
-         * @psalm-suppress InvalidArgument Same problem as above
-         */
-        return new Set\Either(
+        /** @var Set<non-empty-string> */
+        return Set\Either::any(
             // either only with simple characters
-            Set\Decorate::immutable(
-                static fn(array $chars): string => \implode('', $chars),
-                Set\Sequence::of(
-                    self::letter(),
-                    Set\Integers::between(1, $maxLength),
-                ),
-            ),
+            Set\Sequence::of(self::letter())
+                ->between(1, $maxLength)
+                ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
             Set\Composite::immutable(
-                static fn(...$parts): string => \implode('', $parts),
+                static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
-                Set\Decorate::immutable(
-                    static fn(array $chars): string => \implode('', $chars),
-                    Set\Sequence::of(
-                        self::letter(...$extra),
-                        Set\Integers::between(1, $maxLength - 2),
-                    ),
-                ),
+                Set\Sequence::of(self::letter(...$extra))
+                    ->between(1, $maxLength - 2)
+                    ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
             )->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
@@ -80,32 +80,37 @@ final class Email
     }
 
     /**
-     * @return Set<string>
+     * @psalm-pure
+     *
+     * @return Set<non-empty-string>
      */
     private static function tld(): Set
     {
         /**
-         * @psalm-suppress MixedArgumentTypeCoercion Due to array not being a list
-         * @psalm-suppress InvalidArgument Same problem as above
+         * @var Set<non-empty-string>
          */
-        return Set\Decorate::immutable(
-            static fn(array $chars): string => \implode('', $chars),
-            Set\Sequence::of(
-                Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')),
-                Set\Integers::between(1, 63),
-            ),
-        );
+        return Set\Sequence::of(Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')))
+            ->between(1, 63)
+            ->map(static fn(array $chars): string => \implode('', $chars));
     }
 
     /**
-     * @return Set<string>
+     * @psalm-pure
+     *
+     * @param non-empty-string $extra
+     *
+     * @return Set<non-empty-string>
      */
     private static function letter(string ...$extra): Set
     {
+        /** @var Set<non-empty-string> */
         return Set\Elements::of(
             ...\range('a', 'z'),
             ...\range('A', 'Z'),
-            ...\range(0, 9),
+            ...\array_map(
+                static fn($i) => (string) $i,
+                \range(0, 9),
+            ),
             ...$extra,
         );
     }
