@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.0 - 2023-07-14
+
+### Added
+
+- `Innmind\BlackBox\Set\Call`
+
 ## 5.0.0 - 2023-05-29
 
 ### Added
