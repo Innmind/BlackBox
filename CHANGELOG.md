@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.1 - 2023-07-29
+
+### Changed
+
+- `Innmind\BlackBox\Set\Call` now regenerate the value when shrinking
+
 ## 5.1.0 - 2023-07-14
 
 ### Added
