@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.2 - 2023-07-30
+
+### Fixed
+
+- Increased the randomness between scenarii to avoid collisions when validating a model with state.
+
 ## 5.1.1 - 2023-07-29
 
 ### Changed
