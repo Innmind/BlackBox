@@ -46,6 +46,7 @@ abstract class TestCase
             }
 
             if ($this->expectedException) {
+                /** @psalm-suppress ArgumentTypeCoercion */
                 self::$assert
                     ->object($e)
                     ->instance($this->expectedException);

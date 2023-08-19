@@ -27,6 +27,7 @@ final class Load
          */
         foreach ($files as $path => $file) {
             if ($file->isFile() && \str_ends_with($path, 'Test.php')) {
+                /** @psalm-suppress UnresolvableInclude */
                 require_once $path;
             }
         }
@@ -48,6 +49,10 @@ final class Load
                 if (isset($attributes[0])) {
                     $provider = $attributes[0]->newInstance()->methodName();
 
+                    /**
+                     * @var int|string $name
+                     * @var list<mixed> $data
+                     */
                     foreach ([$class, $provider]() as $name => $data) {
                         $test = Proof::of($class, $method->getName(), $data);
 
