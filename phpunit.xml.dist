@@ -10,7 +10,7 @@
   </extensions>
   <testsuites>
     <testsuite name="Test suite">
-      <directory>./tests</directory>
+      <directory>./phpunit</directory>
     </testsuite>
   </testsuites>
   <source>
@@ -18,7 +18,7 @@
       <directory>.</directory>
     </include>
     <exclude>
-      <directory>./tests</directory>
+      <directory>./phpunit</directory>
       <directory>./vendor</directory>
     </exclude>
   </source>
