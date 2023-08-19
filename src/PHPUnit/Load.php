@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class Load
 {
@@ -39,6 +40,18 @@ final class Load
 
             foreach ($refl->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 if (!\str_starts_with($method->getName(), 'test')) {
+                    continue;
+                }
+
+                $attributes = $method->getAttributes(DataProvider::class);
+
+                if (isset($attributes[0])) {
+                    $provider = $attributes[0]->newInstance()->methodName();
+
+                    foreach ([$class, $provider]() as $data) {
+                        yield Proof::of($class, $method->getName(), $data);
+                    }
+
                     continue;
                 }
 

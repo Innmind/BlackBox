@@ -28,12 +28,15 @@ abstract class TestCase
     {
     }
 
-    final public function executeTest(string $method): void
+    /**
+     * @param list<mixed> $args
+     */
+    final public function executeTest(string $method, array $args): void
     {
         $this->setUp();
 
         try {
-            $this->$method();
+            $this->$method(...$args);
             $this->tearDown();
         } catch (Assert\Failure|Scenario\Failure $e) {
             throw $e;

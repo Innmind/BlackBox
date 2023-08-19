@@ -17,28 +17,37 @@ final class Proof implements ProofInterface
     private string $class;
     /** @var non-empty-string */
     private string $method;
+    /** @var list<mixed> */
+    private array $args;
     /** @var list<\UnitEnum> */
     private array $tags;
 
     /**
      * @param class-string<TestCase> $class
      * @param non-empty-string $method
+     * @param list<mixed> $args
      * @param list<\UnitEnum> $tags
      */
-    private function __construct(string $class, string $method, array $tags)
-    {
+    private function __construct(
+        string $class,
+        string $method,
+        array $args,
+        array $tags,
+    ) {
         $this->class = $class;
         $this->method = $method;
+        $this->args = $args;
         $this->tags = $tags;
     }
 
     /**
      * @param class-string<TestCase> $class
      * @param non-empty-string $method
+     * @param list<mixed> $args
      */
-    public static function of(string $class, string $method): self
+    public static function of(string $class, string $method, array $args = []): self
     {
-        return new self($class, $method, []);
+        return new self($class, $method, $args, []);
     }
 
     public function name(): Name
@@ -59,6 +68,7 @@ final class Proof implements ProofInterface
         return new self(
             $this->class,
             $this->method,
+            $this->args,
             [...$this->tags, ...$tags],
         );
     }
@@ -71,6 +81,10 @@ final class Proof implements ProofInterface
     public function scenarii(int $count): Set
     {
         /** @var Set<Scenario> */
-        return Set\Elements::of(Proof\Scenario::of($this->class, $this->method))->take(1);
+        return Set\Elements::of(Proof\Scenario::of(
+            $this->class,
+            $this->method,
+            $this->args,
+        ))->take(1);
     }
 }

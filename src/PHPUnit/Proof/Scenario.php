@@ -19,22 +19,26 @@ final class Scenario implements ScenarioInterface
     private string $class;
     /** @var non-empty-string */
     private string $method;
+    /** @var list<mixed> */
+    private array $args;
 
     /**
      * @param class-string<TestCase> $class
      * @param non-empty-string $method
+     * @param list<mixed> $args
      */
-    private function __construct(string $class, string $method)
+    private function __construct(string $class, string $method, array $args)
     {
         $this->class = $class;
         $this->method = $method;
+        $this->args = $args;
     }
 
     public function __invoke(Assert $assert): mixed
     {
         try {
             $test = new ($this->class)($assert);
-            $test->executeTest($this->method);
+            $test->executeTest($this->method, $this->args);
         } catch (Failure $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -49,9 +53,10 @@ final class Scenario implements ScenarioInterface
     /**
      * @param class-string<TestCase> $class
      * @param non-empty-string $method
+     * @param list<mixed> $args
      */
-    public static function of(string $class, string $method): self
+    public static function of(string $class, string $method, array $args): self
     {
-        return new self($class, $method);
+        return new self($class, $method, $args);
     }
 }

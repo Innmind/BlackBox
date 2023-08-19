@@ -5,12 +5,10 @@ namespace Tests\Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
+    PHPUnit\Framework\TestCase,
     Set,
 };
-use PHPUnit\Framework\{
-    TestCase,
-    Attributes\DataProvider,
-};
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class BlackBoxTest extends TestCase
 {
