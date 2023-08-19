@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     Runner\Proof,
     Runner\Proof\Scenario,
     Set\Value,
+    Random,
 };
 
 final class Compatibility
@@ -60,6 +61,22 @@ final class Compatibility
             $this->app,
             $this->given->filter($predicate),
         );
+    }
+
+    /**
+     * This method returns an iterable that can be used as a PHPUnit data provider
+     *
+     * Note that using this feature you won't be able to use shrinking
+     *
+     * @return iterable<list<mixed>>
+     */
+    public function asDataProvider(): iterable
+    {
+        $values = $this->given->set()->values(Random::default);
+
+        foreach ($values as $value) {
+            yield $value->unwrap();
+        }
     }
 
     /**

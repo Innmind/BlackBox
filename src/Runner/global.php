@@ -1,8 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Runner;
-
 use Innmind\BlackBox\{
     Set,
     Runner\Proof,
@@ -21,11 +19,7 @@ function proof(
     Given $given,
     callable $test,
 ): Proof {
-    return Proof\Inline::of(
-        Proof\Name::of($name),
-        $given,
-        \Closure::fromCallable($test),
-    );
+    return \Innmind\BlackBox\Runner\proof($name, $given, $test);
 }
 
 /**
@@ -34,10 +28,7 @@ function proof(
  */
 function test(string $name, callable $test): Proof
 {
-    return Proof\Inline::test(
-        Proof\Name::of($name),
-        \Closure::fromCallable($test),
-    );
+    return \Innmind\BlackBox\Runner\test($name, $test);
 }
 
 /**
@@ -45,19 +36,7 @@ function test(string $name, callable $test): Proof
  */
 function given(Set $first, Set ...$rest): Given
 {
-    /** @var Set<list<mixed>> */
-    $given = $first->map(static fn(mixed $value) => [$value]);
-
-    if (\count($rest) > 0) {
-        /** @var Set<list<mixed>> */
-        $given = Set\Composite::immutable(
-            static fn(mixed ...$args) => $args,
-            $first,
-            ...$rest,
-        );
-    }
-
-    return Given::of(Set\Randomize::of($given));
+    return \Innmind\BlackBox\Runner\given($first, ...$rest);
 }
 
 /**
@@ -67,8 +46,8 @@ function given(Set $first, Set ...$rest): Given
 function property(
     string $property,
     Set $systemUnderTest,
-): Proof\Property {
-    return Proof\Property::of($property, $systemUnderTest);
+): Proof {
+    return \Innmind\BlackBox\Runner\property($property, $systemUnderTest);
 }
 
 /**
@@ -81,9 +60,5 @@ function properties(
     Set $properties,
     Set $systemUnderTest,
 ): Proof {
-    return Proof\Properties::of(
-        Proof\Name::of($name),
-        $properties,
-        $systemUnderTest,
-    );
+    return \Innmind\BlackBox\Runner\properties($name, $properties, $systemUnderTest);
 }

@@ -12,7 +12,7 @@ use Innmind\BlackBox\{
 
 trait BlackBox
 {
-    protected function forAll(Set $first, Set ...$rest): Compatibility
+    protected static function forAll(Set $first, Set ...$rest): Compatibility
     {
         $app = Application::new([]);
 

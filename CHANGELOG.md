@@ -1,5 +1,22 @@
 # Changelog
 
+## 5.2.0 - 2023-08-19
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Compatibility::asDataProvider()`
+- `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Runner\proof` function
+- `Innmind\BlackBox\Runner\test` function
+- `Innmind\BlackBox\Runner\given` function
+- `Innmind\BlackBox\Runner\property` function
+- `Innmind\BlackBox\Runner\properties` function
+- PHPUnit extension now prints the generated data that resulted in an error
+
+### Changed
+
+- `Innmind\BlackBox\PHPUnit\BlackBox::forAll()` is now a `static` method
+
 ## 5.1.2 - 2023-07-30
 
 ### Fixed

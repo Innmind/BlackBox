@@ -71,3 +71,19 @@ Application::new([])
     ->tryToProve(Load::everythingIn('proofs/'))
     ->exit();
 ```
+
+## Disable global functions
+
+By default the framework exposes the `proof`, `test`, `property`, `properties` and `given` global functions but if you don't want them to avoid collisions with your own methods you can use the namespaced functions (available in the `Innmind\BlackBox\Runner` namespace).
+
+```php
+use Innmind\BlackBox\{
+    Application,
+    Runner\Load,
+};
+
+Application::new([])
+    ->disableGlobalFunctions()
+    ->tryToProve(Load::everythingIn('proofs/'))
+    ->exit();
+```

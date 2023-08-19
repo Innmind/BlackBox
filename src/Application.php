@@ -31,6 +31,7 @@ final class Application
     private array $args;
     /** @var positive-int */
     private int $scenariiPerProof;
+    private bool $useGlobalFunctions;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
@@ -47,6 +48,7 @@ final class Application
         ?CodeCoverage $codeCoverage,
         array $args,
         int $scenariiPerProof,
+        bool $useGlobalFunctions,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -57,6 +59,7 @@ final class Application
         $this->codeCoverage = $codeCoverage;
         $this->args = $args;
         $this->scenariiPerProof = $scenariiPerProof;
+        $this->useGlobalFunctions = $useGlobalFunctions;
     }
 
     /**
@@ -74,6 +77,7 @@ final class Application
             null,
             $args,
             100,
+            true,
         );
     }
 
@@ -92,6 +96,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -110,6 +115,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -128,6 +134,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -146,6 +153,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -164,6 +172,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -184,6 +193,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -204,6 +214,7 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $count,
+            $this->useGlobalFunctions,
         );
     }
 
@@ -222,6 +233,26 @@ final class Application
             $codeCoverage,
             $this->args,
             $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function disableGlobalFunctions(): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            false,
         );
     }
 
@@ -230,7 +261,9 @@ final class Application
      */
     public function tryToProve(callable $proofs): Result
     {
-        require_once __DIR__.'/Runner/functions.php';
+        if ($this->useGlobalFunctions) {
+            require_once __DIR__.'/Runner/global.php';
+        }
 
         $tags = \array_map($this->parseTag, $this->args);
         $tags = \array_filter($tags, static fn($tag) => $tag instanceof \UnitEnum);

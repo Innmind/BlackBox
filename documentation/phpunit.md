@@ -54,3 +54,38 @@ And to be able to see the data generated for a failing scenario you need to add 
 You can change the number of scenarii per test for the whole test suite via the `BLACKBOX_SET_SIZE` environment variable (default to `100`).
 
 You can also disable shrinking for the whole test suite via the `BLACKBOX_DISABLE_SHRINKING` environment variable with the value `'1'`.
+
+## Data provider
+
+You can also use BlackBox as a data provider meaning that you can replace your hard coded cases by generated ones by BlackBox. The example above would look like this with a data provider:
+
+```php
+use PHPUnit\Framework\Attributes\DataProvider;
+
+final class MyTestCase extends TestCase
+{
+    use BlackBox;
+
+    #[DataProvider('ints')]
+    public function testAddIsCommutative(int $a, int $b)
+    {
+        $this->assertSame(
+            add($a, $b),
+            add($b, $a),
+        );
+    }
+
+    public static function ints(): iterable
+    {
+        return self::forAll(
+            Set\Integers::any(),
+            Set\Integers::any(),
+        )->asDataProvider();
+    }
+}
+```
+
+**Warning**: By using BlackBox as a data provider you enter into some limitations:
+- you won't benefit from the [shrinking mechanism](proof.md#the-power-of-shrinking)
+- you won't benefit from the output of the generated data that make you test fail
+- you may run out of memory (since PHPUnit keep in memory all scenarii data)
