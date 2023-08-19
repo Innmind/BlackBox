@@ -51,6 +51,8 @@ final class Scenario implements ScenarioInterface
     }
 
     /**
+     * @internal
+     *
      * @param class-string<TestCase> $class
      * @param non-empty-string $method
      * @param list<mixed> $args

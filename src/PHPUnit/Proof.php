@@ -44,6 +44,8 @@ final class Proof implements ProofInterface
     }
 
     /**
+     * @internal
+     *
      * @param class-string<TestCase> $class
      * @param non-empty-string $method
      * @param list<mixed> $args
