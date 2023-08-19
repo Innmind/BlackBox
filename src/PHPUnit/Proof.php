@@ -73,7 +73,7 @@ final class Proof implements ProofInterface
             $this->method,
             $name,
             $this->args,
-            $this->tags
+            $this->tags,
         );
     }
 
