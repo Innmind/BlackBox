@@ -5,6 +5,12 @@
 ### Added
 
 - `Innmind\BlackBox\PHPUnit\Compatibility::asDataProvider()`
+- `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Runner\proof` function
+- `Innmind\BlackBox\Runner\test` function
+- `Innmind\BlackBox\Runner\given` function
+- `Innmind\BlackBox\Runner\property` function
+- `Innmind\BlackBox\Runner\properties` function
 
 ### Changed
 

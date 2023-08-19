@@ -25,7 +25,10 @@
     "autoload": {
         "psr-4": {
             "Innmind\\BlackBox\\": "src/"
-        }
+        },
+        "files": [
+            "src/Runner/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
