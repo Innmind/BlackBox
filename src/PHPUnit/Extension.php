@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     PHPUnit\Extension\SelectCurrentTest,
     PHPUnit\Extension\EraseCurrentTest,
     PHPUnit\Extension\RecordFailures,
+    PHPUnit\Extension\RecordErrors,
     PHPUnit\Extension\PrintFailures,
     Runner\Proof\Scenario,
     Set\Value,
@@ -34,6 +35,7 @@ final class Extension implements ExtensionInterface
     /** @var \SplQueue<TestMethod> */
     private \SplQueue $tests;
     private RecordFailures $recordFailures;
+    private RecordErrors $recordErrors;
     private PrintFailures $printFailures;
 
     public function __construct()
@@ -48,6 +50,7 @@ final class Extension implements ExtensionInterface
         $this->tests = new \SplQueue;
         $this->tests->setIteratorMode(\SplQueue::IT_MODE_FIFO);
         $this->recordFailures = new RecordFailures($this->tests);
+        $this->recordErrors = new RecordErrors($this->tests);
         $this->printFailures = new PrintFailures($this->scenarii, $this->tests);
     }
 
@@ -76,6 +79,7 @@ final class Extension implements ExtensionInterface
         $facade->registerSubscriber($this->selectCurrentTest);
         $facade->registerSubscriber($this->eraseCurrentTest);
         $facade->registerSubscriber($this->recordFailures);
+        $facade->registerSubscriber($this->recordErrors);
         $facade->registerSubscriber($this->printFailures);
     }
 }

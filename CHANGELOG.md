@@ -11,6 +11,7 @@
 - `Innmind\BlackBox\Runner\given` function
 - `Innmind\BlackBox\Runner\property` function
 - `Innmind\BlackBox\Runner\properties` function
+- PHPUnit extension now prints the generated data that resulted in an error
 
 ### Changed
 
