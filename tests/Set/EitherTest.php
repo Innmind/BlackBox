@@ -18,8 +18,8 @@ class EitherTest extends TestCase
         $this->assertInstanceOf(
             Set::class,
             Either::any(
-                $this->createMock(Set::class),
-                $this->createMock(Set::class),
+                Set\Elements::of(''),
+                Set\Elements::of(''),
             ),
         );
     }

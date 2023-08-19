@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set\Value;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Innmind\BlackBox\PHPUnit\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
