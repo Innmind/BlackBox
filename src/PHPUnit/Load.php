@@ -48,8 +48,14 @@ final class Load
                 if (isset($attributes[0])) {
                     $provider = $attributes[0]->newInstance()->methodName();
 
-                    foreach ([$class, $provider]() as $data) {
-                        yield Proof::of($class, $method->getName(), $data);
+                    foreach ([$class, $provider]() as $name => $data) {
+                        $test = Proof::of($class, $method->getName(), $data);
+
+                        if (\is_string($name)) {
+                            $test = $test->named($name);
+                        }
+
+                        yield $test;
                     }
 
                     continue;

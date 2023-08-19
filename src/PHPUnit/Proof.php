@@ -17,6 +17,7 @@ final class Proof implements ProofInterface
     private string $class;
     /** @var non-empty-string */
     private string $method;
+    private ?string $name;
     /** @var list<mixed> */
     private array $args;
     /** @var list<\UnitEnum> */
@@ -31,11 +32,13 @@ final class Proof implements ProofInterface
     private function __construct(
         string $class,
         string $method,
+        ?string $name,
         array $args,
         array $tags,
     ) {
         $this->class = $class;
         $this->method = $method;
+        $this->name = $name;
         $this->args = $args;
         $this->tags = $tags;
     }
@@ -47,16 +50,31 @@ final class Proof implements ProofInterface
      */
     public static function of(string $class, string $method, array $args = []): self
     {
-        return new self($class, $method, $args, []);
+        return new self($class, $method, null, $args, []);
     }
 
     public function name(): Name
     {
         return Name::of(\sprintf(
-            '%s::%s',
+            '%s::%s%s',
             $this->class,
             $this->method,
+            match ($this->name) {
+                null => '',
+                default => "({$this->name})",
+            },
         ));
+    }
+
+    public function named(string $name): self
+    {
+        return new self(
+            $this->class,
+            $this->method,
+            $name,
+            $this->args,
+            $this->tags
+        );
     }
 
     /**
@@ -68,6 +86,7 @@ final class Proof implements ProofInterface
         return new self(
             $this->class,
             $this->method,
+            $this->name,
             $this->args,
             [...$this->tags, ...$tags],
         );
