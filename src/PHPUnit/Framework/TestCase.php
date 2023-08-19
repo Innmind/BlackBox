@@ -85,11 +85,37 @@ abstract class TestCase
             ->same($actual, $message);
     }
 
+    final public static function assertEquals(mixed $expected, mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->expected($expected)
+            ->equals($actual, $message);
+    }
+
+    final public static function assertNotEquals(mixed $expected, mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->expected($expected)
+            ->not()
+            ->equals($actual, $message);
+    }
+
     final public static function assertInstanceOf(string $expected, mixed $actual, string $message = ''): void
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         self::$assert
             ->object($actual)
+            ->instance($expected, $message);
+    }
+
+    final public static function assertNotInstanceOf(string $expected, mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->object($actual)
+            ->not()
             ->instance($expected, $message);
     }
 
@@ -102,6 +128,15 @@ abstract class TestCase
         self::$assert->count($expectedCount, $haystack, $message);
     }
 
+    final public static function assertNotCount(int $expectedCount, \Countable|iterable $haystack, string $message = ''): void
+    {
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         * @psalm-suppress PossiblyInvalidArgument
+         */
+        self::$assert->not()->count($expectedCount, $haystack, $message);
+    }
+
     final public static function assertTrue(mixed $condition, string $message = ''): void
     {
         /** @psalm-suppress ArgumentTypeCoercion */
@@ -112,6 +147,12 @@ abstract class TestCase
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         self::$assert->false($condition, $message);
+    }
+
+    final public static function assertNotTrue(mixed $condition, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert->not()->true($condition, $message);
     }
 
     final public static function assertNotFalse(mixed $condition, string $message = ''): void
@@ -178,6 +219,15 @@ abstract class TestCase
             ->startsWith($prefix, $message);
     }
 
+    final public static function assertStringStartsNotWith(string $prefix, string $string, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->string($string)
+            ->not()
+            ->startsWith($prefix, $message);
+    }
+
     final public static function assertStringEndsWith(string $suffix, string $string, string $message = ''): void
     {
         /** @psalm-suppress ArgumentTypeCoercion */
@@ -186,11 +236,29 @@ abstract class TestCase
             ->endsWith($suffix, $message);
     }
 
+    final public static function assertStringEndsNotWith(string $suffix, string $string, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->string($string)
+            ->not()
+            ->endsWith($suffix, $message);
+    }
+
     final public static function assertStringContainsString(string $needle, string $haystack, string $message = ''): void
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         self::$assert
             ->string($haystack)
+            ->contains($needle, $message);
+    }
+
+    final public static function assertStringNotContainsString(string $needle, string $haystack, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->string($haystack)
+            ->not()
             ->contains($needle, $message);
     }
 
@@ -219,10 +287,47 @@ abstract class TestCase
             ->int($message);
     }
 
+    final public static function assertIsFloat(mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->number($actual)
+            ->float($message);
+    }
+
     final public static function assertIsString(mixed $actual, string $message = ''): void
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         self::$assert->true(\is_string($actual), $message);
+    }
+
+    final public static function assertIsBool(mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert->bool($actual, $message);
+    }
+
+    final public static function assertIsNotBool(mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert->not()->bool($actual, $message);
+    }
+
+    final public static function assertNull(mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert->null($actual, $message);
+    }
+
+    final public static function assertNotNull(mixed $actual, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert->not()->null($actual, $message);
+    }
+
+    final public static function assertIsResource(mixed $actual): void
+    {
+        self::$assert->resource($actual);
     }
 
     final public static function assertMatchesRegularExpression(string $pattern, string $string, string $message = ''): void
@@ -231,6 +336,38 @@ abstract class TestCase
         self::$assert
             ->string($string)
             ->matches($pattern, $message);
+    }
+
+    final public static function assertDoesNotMatchRegularExpression(string $pattern, string $string, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->string($string)
+            ->not()
+            ->matches($pattern, $message);
+    }
+
+    final public static function assertArrayHasKey(int|string $key, array $array, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->array($array)
+            ->hasKey($key, $message);
+    }
+
+    final public static function assertArrayNotHasKey(int|string $key, array $array, string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert
+            ->array($array)
+            ->not()
+            ->hasKey($key, $message);
+    }
+
+    final public static function fail(string $message = ''): void
+    {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        self::$assert->fail($message);
     }
 
     final public function expectException(string $exception): void
