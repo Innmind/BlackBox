@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Compatibility::asDataProvider()`
+
+### Changed
+
+- `Innmind\BlackBox\PHPUnit\BlackBox::forAll()` is now a `static` method
+
 ## 5.1.2 - 2023-07-30
 
 ### Fixed

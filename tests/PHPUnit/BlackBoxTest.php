@@ -7,7 +7,10 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     Set,
 };
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
+};
 
 class BlackBoxTest extends TestCase
 {
@@ -49,5 +52,20 @@ class BlackBoxTest extends TestCase
 
                 throw $exception;
             });
+    }
+
+    #[DataProvider('ints')]
+    public function testDataProviderCompatibility($a, $b)
+    {
+        $this->assertIsInt($a);
+        $this->assertIsInt($b);
+    }
+
+    public static function ints(): iterable
+    {
+        return self::forAll(
+            Set\Integers::any(),
+            Set\Integers::any(),
+        )->asDataProvider();
     }
 }
