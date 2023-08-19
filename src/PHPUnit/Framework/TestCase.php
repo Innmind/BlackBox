@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\PHPUnit;
+namespace Innmind\BlackBox\PHPUnit\Framework;
 
 use Innmind\BlackBox\{
     Runner\Assert,

@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit;
 
+use Innmind\BlackBox\PHPUnit\Framework\TestCase;
+
 final class Load
 {
     private string $path;

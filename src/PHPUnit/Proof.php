@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     Runner\Proof as ProofInterface,
     Runner\Proof\Name,
     Runner\Proof\Scenario,
