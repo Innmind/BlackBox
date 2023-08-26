@@ -5,6 +5,7 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     Application,
+    Runner\Assert,
     Runner\Given,
     Runner\Proof,
     Runner\Proof\Scenario,
@@ -16,14 +17,29 @@ final class Compatibility
 {
     private Application $app;
     private Given $given;
+    private bool $blackbox;
+
+    private function __construct(Application $app, Given $given, bool $blackbox)
+    {
+        $this->app = $app;
+        $this->given = $given;
+        $this->blackbox = $blackbox;
+    }
 
     /**
      * @internal
      */
-    public function __construct(Application $app, Given $given)
+    public static function phpunit(Application $app, Given $given): self
     {
-        $this->app = $app;
-        $this->given = $given;
+        return new self($app, $given, false);
+    }
+
+    /**
+     * @internal
+     */
+    public static function blackbox(Application $app, Given $given): self
+    {
+        return new self($app, $given, true);
     }
 
     /**
@@ -34,6 +50,7 @@ final class Compatibility
         return new self(
             $this->app->disableShrinking(),
             $this->given,
+            $this->blackbox,
         );
     }
 
@@ -47,6 +64,7 @@ final class Compatibility
         return new self(
             $this->app->scenariiPerProof($size),
             $this->given,
+            $this->blackbox,
         );
     }
 
@@ -60,6 +78,7 @@ final class Compatibility
         return new self(
             $this->app,
             $this->given->filter($predicate),
+            $this->blackbox,
         );
     }
 
@@ -95,10 +114,15 @@ final class Compatibility
                 yield Proof\Inline::of(
                     Proof\Name::of('name does not matter here'),
                     $this->given,
-                    static function($assert, ...$args) use ($test) {
+                    function($assert, ...$args) use ($test) {
                         $assert->not()->throws(
                             static fn() => $test(...$args),
                         );
+                        // This is here to force capturing the $this context and
+                        // for the cs fixer to not enforce a static callable.
+                        // The capturing is used in Proof\Scenario\Inline to
+                        // determine the correct list of arguments
+                        $_ = $this;
                     },
                 );
             });
@@ -106,6 +130,10 @@ final class Compatibility
         if (!$failures->isEmpty()) {
             /** @var mixed $failure */
             [$failure, $scenario] = $failures->dequeue();
+
+            if ($failure instanceof Assert\Failure && $this->blackbox) {
+                throw Scenario\Failure::of($failure, $scenario);
+            }
 
             if ($failure instanceof \Throwable) {
                 Extension::record($test, $scenario);

@@ -6,8 +6,8 @@ namespace Innmind\BlackBox\PHPUnit\Proof;
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Assert,
-    Runner\Assert\Failure,
     Runner\Proof\Scenario as ScenarioInterface,
+    Runner\Proof\Scenario\Failure,
 };
 
 /**
@@ -39,7 +39,7 @@ final class Scenario implements ScenarioInterface
         try {
             $test = new ($this->class)($assert);
             $test->executeTest($this->method, $this->args);
-        } catch (Failure $e) {
+        } catch (Failure|Assert\Failure $e) {
             throw $e;
         } catch (\Throwable $e) {
             $assert->not()->throws(static function() use ($e) {

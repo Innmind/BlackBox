@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Random,
     Application,
     Runner\Given,
+    PHPUnit\Framework\TestCase,
 };
 
 trait BlackBox
@@ -39,6 +40,12 @@ trait BlackBox
             );
         }
 
-        return new Compatibility($app, Given::of(Set\Randomize::of($given)));
+        $given = Given::of(Set\Randomize::of($given));
+
+        if (\is_a(self::class, TestCase::class, true)) {
+            return Compatibility::blackbox($app, $given);
+        }
+
+        return Compatibility::phpunit($app, $given);
     }
 }
