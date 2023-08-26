@@ -57,6 +57,10 @@ final class Inline implements Scenario
         $testThis = $reflection->getClosureThis();
 
         if ($testThis instanceof Compatibility) {
+            /**
+             * @psalm-suppress MixedArrayAccess
+             * @var \Closure
+             */
             $innerTest = $reflection->getClosureUsedVariables()['test'];
             $parameters = (new \ReflectionFunction($innerTest))->getParameters();
         } else {
