@@ -15,6 +15,9 @@ abstract class TestCase
     private null|int|string $expectedExceptionCode = null;
     private ?string $expectedExceptionMessage = null;
 
+    /**
+     * @internal
+     */
     final public function __construct(Assert $assert)
     {
         self::$assert = $assert;
