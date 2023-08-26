@@ -29,6 +29,8 @@ abstract class TestCase
     }
 
     /**
+     * @internal
+     *
      * @param list<mixed> $args
      */
     final public function executeTest(string $method, array $args): void
