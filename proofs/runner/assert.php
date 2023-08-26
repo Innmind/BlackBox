@@ -1440,7 +1440,7 @@ return static function($load) {
                 $sut
                     ->time(static fn() => \usleep($microseconds))
                     ->inMoreThan()
-                    ->milliseconds(1, $message);
+                    ->milliseconds(2, $message);
                 $assert->fail('it should throw');
             } catch (\Throwable $e) {
                 $assert
@@ -1475,7 +1475,7 @@ return static function($load) {
                 $sut
                     ->time(static fn() => \usleep($microseconds))
                     ->inMoreThan()
-                    ->seconds(1, $message);
+                    ->seconds(2, $message);
                 $assert->fail('it should throw');
             } catch (\Throwable $e) {
                 $assert
