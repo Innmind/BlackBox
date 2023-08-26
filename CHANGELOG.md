@@ -9,6 +9,7 @@
 - `Innmind\BlackBox\Application::disableMemoryLimit()`
 - `Innmind\BlackBox\Runner\Assert::matches()`
 - `Innmind\BlackBox\Runner\Assert::time()`
+- `Innmind\BlackBox\Runner\Assert::memory()`
 
 ### Fixed
 

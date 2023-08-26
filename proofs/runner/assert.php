@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+declare(ticks = 1);
 
 use Innmind\BlackBox\{
     Runner\Assert,
@@ -1475,6 +1476,210 @@ return static function($load) {
                     ->time(static fn() => \usleep($microseconds))
                     ->inMoreThan()
                     ->seconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->memory()->inLessThan()->bytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static fn() => null)
+                ->inLessThan()
+                ->bytes(1);
+
+            try {
+                $sut
+                    ->memory(static function() {
+                        $foo = \str_repeat('a', 2);
+                    })
+                    ->inLessThan()
+                    ->bytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->memory()->inLessThan()->kiloBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static fn() => null)
+                ->inLessThan()
+                ->kiloBytes(1);
+
+            try {
+                $sut
+                    ->memory(static function() {
+                        $foo = \str_repeat('a', 1_100);
+                    })
+                    ->inLessThan()
+                    ->kiloBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->memory()->inLessThan()->megaBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static fn() => null)
+                ->inLessThan()
+                ->megaBytes(1);
+
+            try {
+                $sut
+                    ->memory(static function() {
+                        $foo = \str_repeat('a', 1_100_000);
+                    })
+                    ->inLessThan()
+                    ->megaBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->memory()->inMoreThan()->bytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static function() {
+                    $foo = \str_repeat('a', 2);
+                })
+                ->inMoreThan()
+                ->bytes(1);
+
+            try {
+                $sut
+                    ->memory(static fn() => null)
+                    ->inMoreThan()
+                    ->bytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->memory()->inMoreThan()->kiloBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static function() {
+                    $foo = \str_repeat('a', 1_100);
+                })
+                ->inMoreThan()
+                ->kiloBytes(1);
+
+            try {
+                $sut
+                    ->memory(static fn() => null)
+                    ->inMoreThan()
+                    ->kiloBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->memory()->inMoreThan()->megaBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static function() {
+                    $foo = \str_repeat('a', 1_100_000);
+                })
+                ->inMoreThan()
+                ->megaBytes(1);
+
+            try {
+                $sut
+                    ->memory(static fn() => null)
+                    ->inMoreThan()
+                    ->megaBytes(1, $message);
                 $assert->fail('it should throw');
             } catch (\Throwable $e) {
                 $assert

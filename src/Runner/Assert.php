@@ -325,4 +325,12 @@ final class Assert
     {
         return Assert\Time::of($this->stats, $action);
     }
+
+    /**
+     * @param callable(): void $action
+     */
+    public function memory(callable $action): Assert\Memory
+    {
+        return Assert\Memory::of($this->stats, $action);
+    }
 }
