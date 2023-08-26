@@ -47,7 +47,7 @@ final class PrintFailures implements FinishedSubscriber
     {
         /** @var callable(string): void */
         $output = IO\Standard::output;
-        $output("\nFailing scenarii:\n\n");
+        $printed = false;
 
         foreach ($this->tests as $test) {
             [$callable, $scenario] = $this->scenarii[$test] ?? [null, null];
@@ -60,6 +60,11 @@ final class PrintFailures implements FinishedSubscriber
 
             if (!($concrete instanceof Scenario\Inline)) {
                 continue;
+            }
+
+            if (!$printed) {
+                $output("\nFailing scenarii:\n\n");
+                $printed = true;
             }
 
             // We need to re-analyse the parameters name because the ones

@@ -7,6 +7,10 @@
 - `Innmind\BlackBox\PHPUnit\Framework\TestCase`
 - `Innmind\BlackBox\PHPUnit\Load`
 
+### Fixed
+
+- The message `Failing scenarii:` was always printed in PHPUnit output even when there was no failures
+
 ## 5.2.0 - 2023-08-19
 
 ### Added
