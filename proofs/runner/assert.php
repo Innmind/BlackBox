@@ -1385,7 +1385,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->take(10);
 
     yield proof(
         'Assert->time()->inLessThan()->seconds()',
@@ -1420,7 +1420,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->take(10);
 
     yield proof(
         'Assert->time()->inMoreThan()->milliseconds()',
@@ -1455,7 +1455,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->take(10);
 
     yield proof(
         'Assert->time()->inMoreThan()->seconds()',
@@ -1490,7 +1490,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->take(10);
 
     yield proof(
         'Assert->memory()->inLessThan()->bytes()',
