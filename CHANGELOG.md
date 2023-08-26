@@ -11,6 +11,7 @@
 - `Innmind\BlackBox\Runner\Assert::time()`
 - `Innmind\BlackBox\Runner\Assert::memory()`
 - `Innmind\BlackBox\Set\Slice`
+- `Innmind\BlackBox\Set\MutuallyExclusive`
 
 ### Fixed
 
