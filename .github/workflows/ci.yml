@@ -26,29 +26,6 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
         run: php blackbox.php
-  phpunit_emulation:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-        php-version: ['8.2']
-        dependency-versions: ['lowest', 'highest']
-    name: 'PHPUnit emulation'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl
-          coverage: none
-      - name: Composer
-        uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: ${{ matrix.dependencies }}
-      - name: BlackBox
-        run: php phpunit.php
   coverage:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -72,34 +49,6 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
         run: php blackbox.php
-        env:
-          ENABLE_COVERAGE: 'true'
-      - uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-  phpunit_emulation_coverage:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-        php-version: ['8.2']
-        dependency-versions: ['lowest', 'highest']
-    name: 'Emulation Coverage'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl
-          coverage: xdebug
-      - name: Composer
-        uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: ${{ matrix.dependencies }}
-      - name: BlackBox
-        run: php phpunit.php
         env:
           ENABLE_COVERAGE: 'true'
       - uses: codecov/codecov-action@v1

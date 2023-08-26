@@ -75,4 +75,9 @@ final class Load
     {
         return new self($path);
     }
+
+    public static function testsAt(string $path): \Generator
+    {
+        yield from self::directory($path)();
+    }
 }
