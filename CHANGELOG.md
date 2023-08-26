@@ -8,6 +8,7 @@
 - `Innmind\BlackBox\PHPUnit\Load`
 - `Innmind\BlackBox\Application::disableMemoryLimit()`
 - `Innmind\BlackBox\Runner\Assert::matches()`
+- `Innmind\BlackBox\Runner\Assert::time()`
 
 ### Fixed
 

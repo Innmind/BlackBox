@@ -317,4 +317,12 @@ final class Assert
 
         return Assert\Arr::of($this->stats, $actual);
     }
+
+    /**
+     * @param callable(): void $action
+     */
+    public function time(callable $action): Assert\Time
+    {
+        return Assert\Time::of($this->stats, $action);
+    }
 }

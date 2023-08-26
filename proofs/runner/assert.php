@@ -1350,4 +1350,144 @@ return static function($load) {
                 ->same($stats->assertions());
         },
     );
+
+    yield proof(
+        'Assert->time()->inLessThan()->milliseconds()',
+        given(
+            Set\Integers::between(0, 800),
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds))
+                ->inLessThan()
+                ->milliseconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds + 2_000))
+                    ->inLessThan()
+                    ->milliseconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->time()->inLessThan()->seconds()',
+        given(
+            Set\Integers::between(0, 800_000),
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds))
+                ->inLessThan()
+                ->seconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds + 2_000_000))
+                    ->inLessThan()
+                    ->seconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->time()->inMoreThan()->milliseconds()',
+        given(
+            Set\Integers::between(1, 800), // no need to go higher
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds + 1_000))
+                ->inMoreThan()
+                ->milliseconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds))
+                    ->inMoreThan()
+                    ->milliseconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
+
+    yield proof(
+        'Assert->time()->inMoreThan()->seconds()',
+        given(
+            Set\Integers::between(1, 800_000), // no need to go higher
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds + 1_000_000))
+                ->inMoreThan()
+                ->seconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds))
+                    ->inMoreThan()
+                    ->seconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    );
 };
