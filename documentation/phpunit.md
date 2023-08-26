@@ -89,3 +89,42 @@ final class MyTestCase extends TestCase
 - you won't benefit from the [shrinking mechanism](proof.md#the-power-of-shrinking)
 - you won't benefit from the output of the generated data that make you test fail
 - you may run out of memory (since PHPUnit keep in memory all scenarii data)
+
+## Running your tests via BlackBox
+
+If you wish to migrate to BlackBox but don't want to rewrite all your existing tests you can run them directly via BlackBox.
+
+The first step is to prefix the `PHPUnit\Framework\TestCase` class with `Innmind\BlackBox\`.
+
+The second step is to load the tests like this:
+
+```php
+use Innmind\BlackBox\{
+    Application,
+    PHPUnit\Load,
+};
+
+Application::new()
+    ->tryToProve(function() {
+        yield from Load::testsAt('path/to/your/tests');
+    })
+    ->exit();
+```
+
+If you want to take a look at a migration you can look at [BlackBox's own PHPUnit tests](../tests/) that are now run via BlackBox itself.
+
+**Note**: Running BlackBox's PHPUnit tests via BlackBox increase execution speed by 35% (from ~7.1s down to ~4.6s) on a MackBook Pro M1 Max.
+
+### Feature coverage
+
+PHPUnit is a very large testing framework with lots of features. BlackBox doesn't support all its features when running your tests.
+
+Supported features:
+- test `setUp()`/`tearDown()`
+- assertions that have a correspondance in BlackBox
+- data providers declared with an attribute
+
+Some important features that are not supported:
+- mocks
+- classes `setUpBeforeClass()`/`tearDownAfterClass()`
+- assertions that don't have a correspondance in BlackBox (such as files assertions)
