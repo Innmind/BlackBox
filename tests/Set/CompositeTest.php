@@ -12,7 +12,7 @@ use Innmind\BlackBox\{
     Random,
     PHPUnit\BlackBox,
     Exception\EmptySet,
-    Runner\Assert\Failure,
+    Runner\Proof\Scenario\Failure,
 };
 
 class CompositeTest extends TestCase
@@ -379,7 +379,7 @@ class CompositeTest extends TestCase
         } catch (Failure $e) {
             $this->assertStringContainsString(
                 '[-1,0]',
-                $e->kind()->message(),
+                $e->assertion()->kind()->message(),
             );
         }
     }
