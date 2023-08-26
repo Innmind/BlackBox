@@ -114,4 +114,37 @@ return static function() {
                 ->contains('SF', 'The shrinking has not been disabled');
         },
     );
+
+    yield test(
+        'BlackBox can disable the memory limit',
+        static function($assert) {
+            $io = Collect::new();
+
+            $assert
+                ->expected('-1')
+                ->not()
+                ->same(\ini_get('memory_limit'));
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->disableMemoryLimit()
+                ->tryToProve(static function() {
+                    yield test(
+                        'example',
+                        static fn($assert) => $assert->same(
+                            '-1',
+                            \ini_get('memory_limit'),
+                        ),
+                    );
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->expected('-1')
+                ->not()
+                ->same(\ini_get('memory_limit'));
+        },
+    );
 };

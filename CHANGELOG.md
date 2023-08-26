@@ -6,6 +6,7 @@
 
 - `Innmind\BlackBox\PHPUnit\Framework\TestCase`
 - `Innmind\BlackBox\PHPUnit\Load`
+- `Innmind\BlackBox\Application::disableMemoryLimit()`
 
 ### Fixed
 

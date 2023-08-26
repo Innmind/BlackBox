@@ -32,6 +32,7 @@ final class Application
     /** @var positive-int */
     private int $scenariiPerProof;
     private bool $useGlobalFunctions;
+    private bool $disableMemoryLimit;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
@@ -49,6 +50,7 @@ final class Application
         array $args,
         int $scenariiPerProof,
         bool $useGlobalFunctions,
+        bool $disableMemoryLimit,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -60,6 +62,7 @@ final class Application
         $this->args = $args;
         $this->scenariiPerProof = $scenariiPerProof;
         $this->useGlobalFunctions = $useGlobalFunctions;
+        $this->disableMemoryLimit = $disableMemoryLimit;
     }
 
     /**
@@ -78,6 +81,7 @@ final class Application
             $args,
             100,
             true,
+            false,
         );
     }
 
@@ -97,6 +101,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -116,6 +121,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -135,6 +141,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -154,6 +161,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -173,6 +181,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -194,6 +203,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -215,6 +225,7 @@ final class Application
             $this->args,
             $count,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -234,6 +245,7 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
         );
     }
 
@@ -253,6 +265,27 @@ final class Application
             $this->args,
             $this->scenariiPerProof,
             false,
+            $this->disableMemoryLimit,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function disableMemoryLimit(): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+            true,
         );
     }
 
@@ -277,6 +310,7 @@ final class Application
             $this->runner,
             $filter($proofs()),
             $this->scenariiPerProof,
+            $this->disableMemoryLimit,
         );
         $stats = Stats::new();
         $assert = Assert::of($stats);

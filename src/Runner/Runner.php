@@ -24,6 +24,7 @@ final class Runner
     private \Generator $proofs;
     /** @var positive-int */
     private int $scenariiPerProof;
+    private bool $disableMemoryLimit;
 
     /**
      * @param \Generator<Proof> $proofs
@@ -37,6 +38,7 @@ final class Runner
         WithShrinking|WithoutShrinking $run,
         \Generator $proofs,
         int $scenariiPerProof,
+        bool $disableMemoryLimit,
     ) {
         $this->random = $random;
         $this->print = $print;
@@ -45,6 +47,7 @@ final class Runner
         $this->run = $run;
         $this->proofs = $proofs;
         $this->scenariiPerProof = $scenariiPerProof;
+        $this->disableMemoryLimit = $disableMemoryLimit;
     }
 
     public function __invoke(
@@ -52,6 +55,12 @@ final class Runner
         Assert $assert,
         ?CodeCoverage $codeCoverage,
     ): void {
+        if ($this->disableMemoryLimit) {
+            /** @var string|false */
+            $memoryLimit = \ini_get('memory_limit');
+            \ini_set('memory_limit', '-1');
+        }
+
         $coverage = $codeCoverage?->build();
         $this->print->start($this->output, $this->error);
 
@@ -104,6 +113,10 @@ final class Runner
 
         $this->print->end($this->output, $this->error, $stats);
         $coverage?->dump();
+
+        if (isset($memoryLimit) && \is_string($memoryLimit)) {
+            \ini_set('memory_limit', $memoryLimit);
+        }
     }
 
     /**
@@ -118,6 +131,7 @@ final class Runner
         WithShrinking|WithoutShrinking $run,
         \Generator $proofs,
         int $scenariiPerProof,
+        bool $disableMemoryLimit,
     ): self {
         return new self(
             $random,
@@ -127,6 +141,7 @@ final class Runner
             $run,
             $proofs,
             $scenariiPerProof,
+            $disableMemoryLimit,
         );
     }
 }
