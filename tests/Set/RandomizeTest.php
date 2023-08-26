@@ -16,7 +16,7 @@ class RandomizeTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            Randomize::of($this->createMock(Set::class)),
+            Randomize::of(Set\Elements::of('')),
         );
     }
 
@@ -65,17 +65,13 @@ class RandomizeTest extends TestCase
 
     public function testAlwaysTakeTheFirstValueGeneratedByTheUnderlyingSet()
     {
+        $expected = new \stdClass;
         $set = Randomize::of(
-            $inner = $this->createMock(Set::class),
+            Set\FromGenerator::of(static fn() => yield $expected),
         );
-        $expected = Value::immutable(new \stdClass);
-        $inner
-            ->expects($this->exactly(100))
-            ->method('values')
-            ->willReturn((static fn() => yield $expected)());
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertSame($expected, $value);
+            $this->assertSame($expected, $value->unwrap());
         }
     }
 

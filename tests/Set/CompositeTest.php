@@ -12,8 +12,8 @@ use Innmind\BlackBox\{
     Random,
     PHPUnit\BlackBox,
     Exception\EmptySet,
+    Runner\Assert\Failure,
 };
-use PHPUnit\Framework\ExpectationFailedException;
 
 class CompositeTest extends TestCase
 {
@@ -376,10 +376,10 @@ class CompositeTest extends TestCase
                     );
                 });
             $this->fail('The assertion should fail');
-        } catch (ExpectationFailedException $e) {
+        } catch (Failure $e) {
             $this->assertStringContainsString(
                 '[-1,0]',
-                $e->getMessage(),
+                $e->kind()->message(),
             );
         }
     }

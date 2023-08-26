@@ -93,7 +93,8 @@ final class Standard implements Proof
             // composer
             if (
                 \str_contains($frame['file'], 'innmind/black-box/src/Runner') ||
-                \str_contains($frame['file'], 'innmind/black-box/src/Application.php')
+                \str_contains($frame['file'], 'innmind/black-box/src/Application.php') ||
+                \str_contains($frame['file'], 'innmind/black-box/src/PHPUnit')
             ) {
                 continue;
             }
@@ -101,7 +102,8 @@ final class Standard implements Proof
             // same goal as above but for the GitHub Actions
             if (
                 \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/Runner') ||
-                \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/Application.php')
+                \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/Application.php') ||
+                \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/PHPUnit')
             ) {
                 continue;
             }

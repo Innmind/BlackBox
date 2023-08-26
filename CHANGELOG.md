@@ -1,5 +1,12 @@
 # Changelog
 
+# [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase`
+- `Innmind\BlackBox\PHPUnit\Load`
+
 ## 5.2.0 - 2023-08-19
 
 ### Added
