@@ -101,9 +101,9 @@ final class Standard implements Proof
 
             // same goal as above but for the GitHub Actions
             if (
-                \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/Runner') ||
-                \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/Application.php') ||
-                \str_contains($frame['file'], '/home/runner/work/BlackBox/BlackBox/src/PHPUnit')
+                \str_contains($frame['file'], '/runner/work/BlackBox/BlackBox/src/Runner') ||
+                \str_contains($frame['file'], '/runner/work/BlackBox/BlackBox/src/Application.php') ||
+                \str_contains($frame['file'], '/runner/work/BlackBox/BlackBox/src/PHPUnit')
             ) {
                 continue;
             }
