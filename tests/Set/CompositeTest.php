@@ -365,17 +365,23 @@ class CompositeTest extends TestCase
     public function testShrinksAsFastAsPossible()
     {
         try {
+            $smallestA = null;
+            $smallestB = null;
+
             $this
                 ->forAll(Set\Integers::below(0), Set\Integers::above(0))
                 ->filter(fn($a, $b) => $a !== 0)
-                ->then(function($a, $b) {
+                ->then(function($a, $b) use (&$smallestA, &$smallestB) {
+                    $smallestA = $a;
+                    $smallestB = $b;
+
                     $this->assertGreaterThanOrEqual(
                         0,
                         $a + $b,
                         "[$a,$b]",
                     );
                 });
-            $this->fail('The assertion should fail');
+            $this->fail("The assertion should fail, got [$smallestA,$smallestB]");
         } catch (Failure $e) {
             $this->assertStringContainsString(
                 '[-1,0]',
