@@ -1315,4 +1315,39 @@ return static function($load) {
                 ->same($stats->assertions());
         },
     );
+
+    yield proof(
+        'Assert->matches()',
+        given(
+            Set\Type::any(),
+            Set\Strings::any(),
+        ),
+        static function($assert, $value, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $assert->same(
+                $value,
+                $sut->matches(static function($sut) use ($value) {
+                    $sut->true(true);
+
+                    return $value;
+                }),
+            );
+
+            try {
+                $sut->matches(static fn($sut) => $sut->fail($message));
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(1)
+                ->same($stats->assertions());
+        },
+    );
 };

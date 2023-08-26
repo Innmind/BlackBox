@@ -19,4 +19,5 @@ composer require --dev innmind/black-box
 - [Organize your proofs](organize.md)
 - [Using tags](tags.md)
 - [Configuring the test runner](config.md)
+- [Adding assertions](own_assertions.md)
 - [Compatibility with PHPUnit](phpunit.md)

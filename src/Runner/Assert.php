@@ -28,6 +28,18 @@ final class Assert
         return new self($stats);
     }
 
+    /**
+     * @template R
+     *
+     * @param callable(self): R $assert
+     *
+     * @return R
+     */
+    public function matches(callable $assert): mixed
+    {
+        return $assert($this);
+    }
+
     public function not(): Assert\Not
     {
         return Assert\Not::of($this->stats);
