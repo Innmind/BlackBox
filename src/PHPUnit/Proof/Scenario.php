@@ -6,8 +6,8 @@ namespace Innmind\BlackBox\PHPUnit\Proof;
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Assert,
+    Runner\Assert\Failure,
     Runner\Proof\Scenario as ScenarioInterface,
-    Runner\Proof\Scenario\Failure,
 };
 
 /**
