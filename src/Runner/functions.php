@@ -20,7 +20,7 @@ function proof(
     string $name,
     Given $given,
     callable $test,
-): Proof {
+): Proof\Inline {
     return Proof\Inline::of(
         Proof\Name::of($name),
         $given,

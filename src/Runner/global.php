@@ -18,7 +18,7 @@ function proof(
     string $name,
     Given $given,
     callable $test,
-): Proof {
+): Proof\Inline {
     return \Innmind\BlackBox\Runner\proof($name, $given, $test);
 }
 
