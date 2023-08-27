@@ -33,7 +33,7 @@ return static function() {
 
             $assert->same(["BlackBox\n"], $io->written());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->end() on success',
         given(
@@ -78,7 +78,7 @@ return static function() {
                 $written[3],
             );
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->end() on failure',
         given(
@@ -128,7 +128,7 @@ return static function() {
                 $written[3],
             );
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()',
         given(
@@ -153,7 +153,7 @@ return static function() {
                 ->string($written)
                 ->contains($name);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->emptySet()',
         given(
@@ -174,7 +174,7 @@ return static function() {
                 ->expected("No scenario found\n")
                 ->same(\end($written));
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->success()',
         given(
@@ -195,7 +195,7 @@ return static function() {
                 ->expected('.')
                 ->same(\end($written));
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->shrunk()',
         given(
@@ -216,7 +216,7 @@ return static function() {
                 ->expected('S')
                 ->same(\end($written));
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->failure() for Failure\Truth',
         given(
@@ -247,7 +247,7 @@ return static function() {
                 ->contains($val)
                 ->contains($truth);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->failure() for Failure\Property',
         given(
@@ -284,7 +284,7 @@ return static function() {
                 ->contains($val)
                 ->contains($message);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->failure() for Failure\Comparison',
         given(
@@ -325,7 +325,7 @@ return static function() {
                 ->contains($val)
                 ->contains($message);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->failure() for Scenario\Property',
         given(
@@ -357,7 +357,7 @@ return static function() {
                 ->contains('Fixtures\Innmind\BlackBox\Counter')
                 ->contains($message);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->failure() for Scenario\Properties',
         given(
@@ -389,7 +389,7 @@ return static function() {
                 ->contains('Fixtures\Innmind\BlackBox\Counter')
                 ->contains($message);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Printer->proof()->end()',
         given(
@@ -410,5 +410,5 @@ return static function() {
                 ->expected("\n\n")
                 ->same(\end($written));
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 };

@@ -1,7 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Tag,
+};
 
 return static function() {
     yield proof(
@@ -40,5 +43,5 @@ return static function() {
                 ->contains($b)
                 ->contains($c);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 };

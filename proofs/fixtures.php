@@ -1,7 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Tag,
+};
 use Fixtures\Innmind\BlackBox\{
     Counter,
     DownAndUpIsAnIdentityFunction,
@@ -20,7 +23,7 @@ return static function() {
             static fn($initial) => new Counter($initial),
             Set\Integers::between(1, 100),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield property(
         DownChangeState::class,
@@ -28,12 +31,12 @@ return static function() {
             static fn($initial) => new Counter($initial),
             Set\Integers::between(1, 100),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield property(
         LowerBoundAtZero::class,
         Set\Elements::of(new Counter),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield property(
         RaiseBy::class,
@@ -41,7 +44,7 @@ return static function() {
             static fn($initial) => new Counter($initial),
             Set\Integers::between(0, 99),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield property(
         UpAndDownIsAnIdentityFunction::class,
@@ -49,7 +52,7 @@ return static function() {
             static fn($initial) => new Counter($initial),
             Set\Integers::between(0, 98),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield property(
         UpChangeState::class,
@@ -57,12 +60,12 @@ return static function() {
             static fn($initial) => new Counter($initial),
             Set\Integers::between(0, 99),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield property(
         UpperBoundAtHundred::class,
         Set\Elements::of(new Counter(99), new Counter(100)),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield properties(
         'Counter properties',
@@ -79,5 +82,5 @@ return static function() {
             static fn($initial) => new Counter($initial),
             Set\Integers::between(0, 100),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 };

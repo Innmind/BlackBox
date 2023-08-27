@@ -1,7 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Tag,
+};
 
 return static function() {
     yield proof(
@@ -25,7 +28,7 @@ return static function() {
                     ->in($values);
             }
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Set\Slice min length',
@@ -40,5 +43,5 @@ return static function() {
                 ->number(\count($subset))
                 ->greaterThanOrEqual(2);
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 };

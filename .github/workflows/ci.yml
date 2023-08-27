@@ -26,7 +26,7 @@ jobs:
         with:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
-        run: php blackbox.php
+        run: php blackbox.php ci
   coverage:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -50,7 +50,7 @@ jobs:
         with:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
-        run: php blackbox.php
+        run: php blackbox.php ci
         env:
           ENABLE_COVERAGE: 'true'
           BLACKBOX_SET_SIZE: '1'

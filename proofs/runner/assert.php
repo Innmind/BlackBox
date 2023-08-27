@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Runner\Assert\Failure,
     Runner\Stats,
     Set,
+    Tag,
 };
 
 return static function($load) {
@@ -31,7 +32,7 @@ return static function($load) {
                 ->expected(0)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->that()',
         given(Set\Strings::any()),
@@ -57,7 +58,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->throws()',
         given(
@@ -84,7 +85,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->throws()',
         given(
@@ -111,7 +112,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->count()',
         given(
@@ -142,7 +143,7 @@ return static function($load) {
                 ->expected(3)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->count()',
         given(
@@ -173,7 +174,7 @@ return static function($load) {
                 ->expected(3)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->true()',
         given(
@@ -202,7 +203,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->true()',
         given(
@@ -231,7 +232,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->false()',
         given(
@@ -260,7 +261,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->false()',
         given(
@@ -289,7 +290,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->bool()',
         given(
@@ -319,7 +320,7 @@ return static function($load) {
                 ->expected(3)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->bool()',
         given(
@@ -349,7 +350,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->null()',
         given(
@@ -378,7 +379,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->null()',
         given(
@@ -407,7 +408,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->resource()',
         given(
@@ -436,7 +437,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->same()',
         given(
@@ -466,7 +467,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->same()',
         given(
@@ -496,7 +497,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->equals()',
         given(Set\Strings::any()),
@@ -522,7 +523,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->equals()',
         given(Set\Strings::any()),
@@ -548,7 +549,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->in()',
         given(
@@ -579,7 +580,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->in()',
         given(
@@ -610,7 +611,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()',
         given(
@@ -640,7 +641,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()->instance()',
         given(Set\Strings::any()),
@@ -667,7 +668,7 @@ return static function($load) {
                 ->expected(6)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()->not()->instance()',
         given(Set\Strings::any()),
@@ -693,7 +694,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()',
         given(
@@ -726,7 +727,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->int()',
         given(
@@ -755,7 +756,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->float()',
         given(
@@ -789,7 +790,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->greaterThan()',
         given(
@@ -819,7 +820,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->greaterThanOrEqual()',
         given(
@@ -849,7 +850,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->lessThan()',
         given(
@@ -879,7 +880,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->lessThanOrEqual()',
         given(
@@ -909,7 +910,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()',
         given(
@@ -939,7 +940,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->empty()',
         given(
@@ -968,7 +969,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->empty()',
         given(
@@ -997,7 +998,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->contains()',
         given(
@@ -1028,7 +1029,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->contains()',
         given(
@@ -1059,7 +1060,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->matches()',
         given(Set\Strings::any()),
@@ -1085,7 +1086,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->matches()',
         given(Set\Strings::any()),
@@ -1111,7 +1112,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->startsWith()',
         given(
@@ -1141,7 +1142,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->startsWith()',
         given(
@@ -1171,7 +1172,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->endsWith()',
         given(
@@ -1201,7 +1202,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->endsWith()',
         given(
@@ -1231,7 +1232,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()',
         given(
@@ -1261,7 +1262,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()->hasKey',
         given(Set\Strings::any()),
@@ -1288,7 +1289,7 @@ return static function($load) {
                 ->expected(6)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()->not()->hasKey',
         given(Set\Strings::any()),
@@ -1315,7 +1316,7 @@ return static function($load) {
                 ->expected(6)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Assert->matches()',
@@ -1350,8 +1351,10 @@ return static function($load) {
                 ->expected(1)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
+    // For now time assertions are not verified inside the CI because it doesn't
+    // seem to respect the usleep
     yield proof(
         'Assert->time()->inLessThan()->milliseconds()',
         given(
@@ -1385,7 +1388,9 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    )->take(10);
+    )
+        ->take(10)
+        ->tag(Tag::local);
 
     yield proof(
         'Assert->time()->inLessThan()->seconds()',
@@ -1420,7 +1425,9 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    )->take(10);
+    )
+        ->take(10)
+        ->tag(Tag::local);
 
     yield proof(
         'Assert->time()->inMoreThan()->milliseconds()',
@@ -1455,7 +1462,9 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    )->take(10);
+    )
+        ->take(10)
+        ->tag(Tag::local);
 
     yield proof(
         'Assert->time()->inMoreThan()->seconds()',
@@ -1490,7 +1499,9 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    )->take(10);
+    )
+        ->take(10)
+        ->tag(Tag::local);
 
     yield proof(
         'Assert->memory()->inLessThan()->bytes()',
@@ -1524,7 +1535,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Assert->memory()->inLessThan()->kiloBytes()',
@@ -1558,7 +1569,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Assert->memory()->inLessThan()->megaBytes()',
@@ -1592,7 +1603,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Assert->memory()->inMoreThan()->bytes()',
@@ -1626,7 +1637,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Assert->memory()->inMoreThan()->kiloBytes()',
@@ -1660,7 +1671,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'Assert->memory()->inMoreThan()->megaBytes()',
@@ -1694,5 +1705,5 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 };
