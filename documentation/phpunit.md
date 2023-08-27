@@ -123,6 +123,7 @@ Supported features:
 - test `setUp()`/`tearDown()`
 - assertions that have a correspondance in BlackBox
 - data providers declared with an attribute
+- groups declared with an attribute (the name must have a correspondance in `Innmind\BlackBox\Tag`)
 
 Some important features that are not supported:
 - mocks

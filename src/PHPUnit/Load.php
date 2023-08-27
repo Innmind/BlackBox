@@ -3,8 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit;
 
-use Innmind\BlackBox\PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
+    Tag,
+};
+use PHPUnit\Framework\Attributes\{
+    DataProvider,
+    Group,
+};
 
 final class Load
 {
@@ -45,6 +51,17 @@ final class Load
                 }
 
                 $attributes = $method->getAttributes(DataProvider::class);
+                $groups = \array_map(
+                    static fn($group) => $group->newInstance()->name(),
+                    $method->getAttributes(Group::class),
+                );
+                $tags = \array_values(\array_filter(
+                    \array_map(
+                        Tag::of(...),
+                        $groups,
+                    ),
+                    static fn($tag) => $tag instanceof Tag,
+                ));
 
                 if (isset($attributes[0])) {
                     $provider = $attributes[0]->newInstance()->methodName();
@@ -60,13 +77,13 @@ final class Load
                             $test = $test->named($name);
                         }
 
-                        yield $test;
+                        yield $test->tag(...$tags);
                     }
 
                     continue;
                 }
 
-                yield Proof::of($class, $method->getName());
+                yield Proof::of($class, $method->getName())->tag(...$tags);
             }
         }
     }
