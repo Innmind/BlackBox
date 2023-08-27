@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Proof\Scenario;
 
-use Innmind\BlackBox\Runner\{
-    Assert,
-    Proof\Scenario,
+use Innmind\BlackBox\{
+    Runner\Assert,
+    Runner\Proof\Scenario,
+    PHPUnit\Compatibility,
 };
 
 final class Inline implements Scenario
@@ -52,10 +53,21 @@ final class Inline implements Scenario
      */
     public function parameters(): array
     {
-        $reflection = new \ReflectionObject($this->test);
-        $method = $reflection->getMethod('__invoke');
-        $parameters = $method->getParameters();
-        \array_shift($parameters); // to remove the Assert parameter
+        $reflection = new \ReflectionFunction($this->test);
+        $testThis = $reflection->getClosureThis();
+
+        if ($testThis instanceof Compatibility) {
+            /**
+             * @psalm-suppress MixedArrayAccess
+             * @var \Closure
+             */
+            $innerTest = $reflection->getClosureUsedVariables()['test'];
+            $parameters = (new \ReflectionFunction($innerTest))->getParameters();
+        } else {
+            $parameters = $reflection->getParameters();
+            \array_shift($parameters); // to remove the Assert parameter
+        }
+
         $parameters = \array_map(
             static fn($parameter) => $parameter->getName(),
             $parameters,

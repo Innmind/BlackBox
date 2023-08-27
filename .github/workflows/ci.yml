@@ -20,12 +20,13 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: none
+          ini-values: memory_limit=256M
       - name: Composer
         uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
-        run: php blackbox.php
+        run: php blackbox.php ci
   coverage:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -43,18 +44,20 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, intl
           coverage: xdebug
+          ini-values: memory_limit=256M
       - name: Composer
         uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: ${{ matrix.dependencies }}
       - name: BlackBox
-        run: php blackbox.php
+        run: php blackbox.php ci
         env:
           ENABLE_COVERAGE: 'true'
+          BLACKBOX_SET_SIZE: '1'
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-  phpunit_latest:
+  phpunit:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

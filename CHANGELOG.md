@@ -1,5 +1,24 @@
 # Changelog
 
+# 5.3.0 - 2023-08-27
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase`
+- `Innmind\BlackBox\PHPUnit\Load`
+- `Innmind\BlackBox\Application::disableMemoryLimit()`
+- `Innmind\BlackBox\Runner\Assert::matches()`
+- `Innmind\BlackBox\Runner\Assert::time()`
+- `Innmind\BlackBox\Runner\Assert::memory()`
+- `Innmind\BlackBox\Set\Slice`
+- `Innmind\BlackBox\Set\MutuallyExclusive`
+- `Innmind\BlackBox\Tag::ci`
+- `Innmind\BlackBox\Tag::local`
+
+### Fixed
+
+- The message `Failing scenarii:` was always printed in PHPUnit output even when there was no failures
+
 ## 5.2.0 - 2023-08-19
 
 ### Added

@@ -28,6 +28,18 @@ final class Assert
         return new self($stats);
     }
 
+    /**
+     * @template R
+     *
+     * @param callable(self): R $assert
+     *
+     * @return R
+     */
+    public function matches(callable $assert): mixed
+    {
+        return $assert($this);
+    }
+
     public function not(): Assert\Not
     {
         return Assert\Not::of($this->stats);
@@ -304,5 +316,21 @@ final class Assert
         }
 
         return Assert\Arr::of($this->stats, $actual);
+    }
+
+    /**
+     * @param callable(): void $action
+     */
+    public function time(callable $action): Assert\Time
+    {
+        return Assert\Time::of($this->stats, $action);
+    }
+
+    /**
+     * @param callable(): void $action
+     */
+    public function memory(callable $action): Assert\Memory
+    {
+        return Assert\Memory::of($this->stats, $action);
     }
 }

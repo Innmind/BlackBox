@@ -4,6 +4,7 @@ declare(strict_types = 1);
 use Innmind\BlackBox\{
     Set,
     Random,
+    Tag,
 };
 
 return static function() {
@@ -19,7 +20,7 @@ return static function() {
                 ->not()
                 ->same($set->current()->unwrap());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield test(
         'Set\Call regenerate the value when shrinking',
         static function($assert) {
@@ -31,5 +32,5 @@ return static function() {
                 ->not()
                 ->same($current->shrink()->a()->unwrap());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
 };

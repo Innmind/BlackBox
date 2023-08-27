@@ -11,6 +11,8 @@ enum Tag
     case positive;
     case negative;
     case wip;
+    case ci;
+    case local;
 
     public static function of(string $name): ?self
     {
@@ -21,6 +23,8 @@ enum Tag
             'positive' => self::positive,
             'negative' => self::negative,
             'wip' => self::wip,
+            'ci' => self::ci,
+            'local' => self::local,
             default => null,
         };
     }

@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
     Random,
     PHPUnit\BlackBox,
 };
+use Fixtures\Innmind\BlackBox\LowerBoundAtZero;
 
 class PropertiesTest extends TestCase
 {
@@ -21,7 +22,7 @@ class PropertiesTest extends TestCase
         $this->assertInstanceOf(
             Set::class,
             Properties::any(
-                Set\Elements::of($this->createMock(Property::class)),
+                Set\Elements::of(new LowerBoundAtZero),
             ),
         );
     }
@@ -29,7 +30,7 @@ class PropertiesTest extends TestCase
     public function testGenerate100ScenariiByDefault()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         );
 
         $this->assertCount(100, \iterator_to_array($properties->values(Random::mersenneTwister)));
@@ -38,7 +39,7 @@ class PropertiesTest extends TestCase
     public function testGeneratePropertiesModel()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         );
 
         foreach ($properties->values(Random::mersenneTwister) as $scenario) {
@@ -49,7 +50,7 @@ class PropertiesTest extends TestCase
     public function testValuesAreConsideredImmutable()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         );
 
         foreach ($properties->values(Random::mersenneTwister) as $scenario) {
@@ -60,7 +61,7 @@ class PropertiesTest extends TestCase
     public function testScenariiAreOfDifferentSizes()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         );
         $sizes = [];
 
@@ -74,7 +75,7 @@ class PropertiesTest extends TestCase
     public function testTake()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         );
         $properties2 = $properties->take(50);
 
@@ -87,7 +88,7 @@ class PropertiesTest extends TestCase
     public function testFilter()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         );
         $properties2 = $properties->filter(static fn($scenario) => \count($scenario->properties()) > 50);
 
@@ -115,7 +116,7 @@ class PropertiesTest extends TestCase
     public function testMaxNumberOfPropertiesGeneratedAtOnce()
     {
         $properties = Properties::any(
-            Set\Elements::of($this->createMock(Property::class)),
+            Set\Elements::of(new LowerBoundAtZero),
         )->atMost(50);
         $sizes = [];
 

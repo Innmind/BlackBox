@@ -26,7 +26,7 @@ return static function() {
 
             $assert->true($result->successful());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'BlackBox can run with a specified number of scenarii per proof',
         given(Set\Integers::between(1, 10_000)), // limit to 10k so it doesn't take too mush time
@@ -50,7 +50,7 @@ return static function() {
                 ->string($io->toString())
                 ->contains("Scenarii: $scenarii");
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield test(
         'BlackBox can shrink the values of the proofs by default',
         static function($assert) {
@@ -79,7 +79,7 @@ return static function() {
                 ->contains('$a = 0') // as it is always the smallest value
                 ->contains('$b = 0'); // as it is always the smallest value
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield test(
         'BlackBox can disable the shrinking mechanism',
         static function($assert) {
@@ -113,5 +113,38 @@ return static function() {
                 ->not()
                 ->contains('SF', 'The shrinking has not been disabled');
         },
-    );
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'BlackBox can disable the memory limit',
+        static function($assert) {
+            $io = Collect::new();
+
+            $assert
+                ->expected('-1')
+                ->not()
+                ->same(\ini_get('memory_limit'));
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->disableMemoryLimit()
+                ->tryToProve(static function() {
+                    yield test(
+                        'example',
+                        static fn($assert) => $assert->same(
+                            '-1',
+                            \ini_get('memory_limit'),
+                        ),
+                    );
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->expected('-1')
+                ->not()
+                ->same(\ini_get('memory_limit'));
+        },
+    )->tag(Tag::ci, Tag::local);
 };

@@ -87,6 +87,20 @@ final class Inline implements Proof
         );
     }
 
+    /**
+     * @param positive-int $take
+     */
+    public function take(int $take): self
+    {
+        return new self(
+            $this->name,
+            $this->values,
+            $this->test,
+            $this->tags,
+            $take,
+        );
+    }
+
     public function tags(): array
     {
         return $this->tags;

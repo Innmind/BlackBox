@@ -1,7 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Tag,
+};
 
 function add($a, $b): string
 {
@@ -16,7 +19,7 @@ return static function() {
             Set\Integers::any(),
         ),
         static fn($assert, $a, $b) => $assert->same(add($a, $b), add($b, $a)),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'add is associative',
@@ -29,11 +32,11 @@ return static function() {
             add(add($a, $b), $c),
             add($a, add($b, $c)),
         ),
-    );
+    )->tag(Tag::ci, Tag::local);
 
     yield proof(
         'add is an identity function',
         given(Set\Integers::any()),
         static fn($assert, $a) => $assert->same((string) $a, add($a, 0)),
-    );
+    )->tag(Tag::ci, Tag::local);
 };

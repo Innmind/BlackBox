@@ -1,11 +1,13 @@
 <?php
 declare(strict_types = 1);
+declare(ticks = 1);
 
 use Innmind\BlackBox\{
     Runner\Assert,
     Runner\Assert\Failure,
     Runner\Stats,
     Set,
+    Tag,
 };
 
 return static function($load) {
@@ -30,7 +32,7 @@ return static function($load) {
                 ->expected(0)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->that()',
         given(Set\Strings::any()),
@@ -56,7 +58,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->throws()',
         given(
@@ -83,7 +85,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->throws()',
         given(
@@ -110,7 +112,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->count()',
         given(
@@ -141,7 +143,7 @@ return static function($load) {
                 ->expected(3)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->count()',
         given(
@@ -172,7 +174,7 @@ return static function($load) {
                 ->expected(3)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->true()',
         given(
@@ -201,7 +203,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->true()',
         given(
@@ -230,7 +232,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->false()',
         given(
@@ -259,7 +261,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->false()',
         given(
@@ -288,7 +290,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->bool()',
         given(
@@ -318,7 +320,7 @@ return static function($load) {
                 ->expected(3)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->bool()',
         given(
@@ -348,7 +350,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->null()',
         given(
@@ -377,7 +379,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->not()->null()',
         given(
@@ -406,7 +408,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->resource()',
         given(
@@ -435,7 +437,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->same()',
         given(
@@ -465,7 +467,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->same()',
         given(
@@ -495,7 +497,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->equals()',
         given(Set\Strings::any()),
@@ -521,7 +523,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->equals()',
         given(Set\Strings::any()),
@@ -547,7 +549,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->in()',
         given(
@@ -578,7 +580,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->in()',
         given(
@@ -609,7 +611,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()',
         given(
@@ -639,7 +641,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()->instance()',
         given(Set\Strings::any()),
@@ -666,7 +668,7 @@ return static function($load) {
                 ->expected(6)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()->not()->instance()',
         given(Set\Strings::any()),
@@ -692,7 +694,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()',
         given(
@@ -725,7 +727,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->int()',
         given(
@@ -754,7 +756,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->float()',
         given(
@@ -788,7 +790,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->greaterThan()',
         given(
@@ -818,7 +820,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->greaterThanOrEqual()',
         given(
@@ -848,7 +850,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->lessThan()',
         given(
@@ -878,7 +880,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->number()->lessThanOrEqual()',
         given(
@@ -908,7 +910,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()',
         given(
@@ -938,7 +940,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->empty()',
         given(
@@ -967,7 +969,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->empty()',
         given(
@@ -996,7 +998,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->contains()',
         given(
@@ -1027,7 +1029,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->contains()',
         given(
@@ -1058,7 +1060,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->matches()',
         given(Set\Strings::any()),
@@ -1084,7 +1086,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->matches()',
         given(Set\Strings::any()),
@@ -1110,7 +1112,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->startsWith()',
         given(
@@ -1140,7 +1142,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->startsWith()',
         given(
@@ -1170,7 +1172,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->endsWith()',
         given(
@@ -1200,7 +1202,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->endsWith()',
         given(
@@ -1230,7 +1232,7 @@ return static function($load) {
                 ->expected(4)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()',
         given(
@@ -1260,7 +1262,7 @@ return static function($load) {
                 ->expected(2)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()->hasKey',
         given(Set\Strings::any()),
@@ -1287,7 +1289,7 @@ return static function($load) {
                 ->expected(6)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()->not()->hasKey',
         given(Set\Strings::any()),
@@ -1314,5 +1316,394 @@ return static function($load) {
                 ->expected(6)
                 ->same($stats->assertions());
         },
-    );
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->matches()',
+        given(
+            Set\Type::any(),
+            Set\Strings::any(),
+        ),
+        static function($assert, $value, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $assert->same(
+                $value,
+                $sut->matches(static function($sut) use ($value) {
+                    $sut->true(true);
+
+                    return $value;
+                }),
+            );
+
+            try {
+                $sut->matches(static fn($sut) => $sut->fail($message));
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(1)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    // For now time assertions are not verified inside the CI because it doesn't
+    // seem to respect the usleep
+    yield proof(
+        'Assert->time()->inLessThan()->milliseconds()',
+        given(
+            Set\Integers::between(0, 800),
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds))
+                ->inLessThan()
+                ->milliseconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds + 2_000))
+                    ->inLessThan()
+                    ->milliseconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )
+        ->take(10)
+        ->tag(Tag::local);
+
+    yield proof(
+        'Assert->time()->inLessThan()->seconds()',
+        given(
+            Set\Integers::between(0, 800_000),
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds))
+                ->inLessThan()
+                ->seconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds + 2_000_000))
+                    ->inLessThan()
+                    ->seconds(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )
+        ->take(10)
+        ->tag(Tag::local);
+
+    yield proof(
+        'Assert->time()->inMoreThan()->milliseconds()',
+        given(
+            Set\Integers::between(1, 800), // no need to go higher
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds + 1_000))
+                ->inMoreThan()
+                ->milliseconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds))
+                    ->inMoreThan()
+                    ->milliseconds(2, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )
+        ->take(10)
+        ->tag(Tag::local);
+
+    yield proof(
+        'Assert->time()->inMoreThan()->seconds()',
+        given(
+            Set\Integers::between(1, 800_000), // no need to go higher
+            Set\Strings::any(),
+        ),
+        static function($assert, $microseconds, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->time(static fn() => \usleep($microseconds + 1_000_000))
+                ->inMoreThan()
+                ->seconds(1);
+
+            try {
+                $sut
+                    ->time(static fn() => \usleep($microseconds))
+                    ->inMoreThan()
+                    ->seconds(2, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )
+        ->take(10)
+        ->tag(Tag::local);
+
+    yield proof(
+        'Assert->memory()->inLessThan()->bytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static fn() => null)
+                ->inLessThan()
+                ->bytes(1);
+
+            try {
+                $sut
+                    ->memory(static function() {
+                        $foo = \str_repeat('a', 2);
+                    })
+                    ->inLessThan()
+                    ->bytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->memory()->inLessThan()->kiloBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static fn() => null)
+                ->inLessThan()
+                ->kiloBytes(1);
+
+            try {
+                $sut
+                    ->memory(static function() {
+                        $foo = \str_repeat('a', 1_100);
+                    })
+                    ->inLessThan()
+                    ->kiloBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->memory()->inLessThan()->megaBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static fn() => null)
+                ->inLessThan()
+                ->megaBytes(1);
+
+            try {
+                $sut
+                    ->memory(static function() {
+                        $foo = \str_repeat('a', 1_100_000);
+                    })
+                    ->inLessThan()
+                    ->megaBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->memory()->inMoreThan()->bytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static function() {
+                    $foo = \str_repeat('a', 2);
+                })
+                ->inMoreThan()
+                ->bytes(1);
+
+            try {
+                $sut
+                    ->memory(static fn() => null)
+                    ->inMoreThan()
+                    ->bytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->memory()->inMoreThan()->kiloBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static function() {
+                    $foo = \str_repeat('a', 1_100);
+                })
+                ->inMoreThan()
+                ->kiloBytes(1);
+
+            try {
+                $sut
+                    ->memory(static fn() => null)
+                    ->inMoreThan()
+                    ->kiloBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->memory()->inMoreThan()->megaBytes()',
+        given(Set\Strings::any()),
+        static function($assert, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $sut
+                ->memory(static function() {
+                    $foo = \str_repeat('a', 1_100_000);
+                })
+                ->inMoreThan()
+                ->megaBytes(1);
+
+            try {
+                $sut
+                    ->memory(static fn() => null)
+                    ->inMoreThan()
+                    ->megaBytes(1, $message);
+                $assert->fail('it should throw');
+            } catch (\Throwable $e) {
+                $assert
+                    ->object($e)
+                    ->instance(Failure::class);
+                $assert
+                    ->expected($message)
+                    ->same($e->kind()->message());
+            }
+
+            $assert
+                ->expected(2)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
 };
