@@ -12,6 +12,8 @@
 - `Innmind\BlackBox\Runner\Assert::memory()`
 - `Innmind\BlackBox\Set\Slice`
 - `Innmind\BlackBox\Set\MutuallyExclusive`
+- `Innmind\BlackBox\Tag::ci`
+- `Innmind\BlackBox\Tag::local`
 
 ### Fixed
 
