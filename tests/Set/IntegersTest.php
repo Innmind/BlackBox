@@ -215,7 +215,12 @@ class IntegersTest extends TestCase
 
     public function testShrinkingStrategiesNeverProduceTheSameResultTwice()
     {
-        $integer = Integers::between(-1000, 1000)->values(Random::mersenneTwister)->current();
+        foreach (Integers::between(-1000, 1000)->values(Random::mersenneTwister) as $integer) {
+            if ($integer->shrinkable()) {
+                break;
+            }
+        }
+
         $previous = $integer;
         $integer = $integer->shrink()->a();
 
@@ -225,7 +230,12 @@ class IntegersTest extends TestCase
             $integer = $integer->shrink()->a();
         }
 
-        $integer = Integers::between(-1000, 1000)->values(Random::mersenneTwister)->current();
+        foreach (Integers::between(-1000, 1000)->values(Random::mersenneTwister) as $integer) {
+            if ($integer->shrinkable()) {
+                break;
+            }
+        }
+
         $previous = $integer;
         $integer = $integer->shrink()->b();
 
