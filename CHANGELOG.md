@@ -1,6 +1,12 @@
 # Changelog
 
-# 5.3.0 - 2023-08-27
+## [Unreleased]
+
+### Added
+
+- For iTerm users a mark is now placed on failures allowing you to directly jump between errors
+
+## 5.3.0 - 2023-08-27
 
 ### Added
 
