@@ -18,11 +18,13 @@ final class Standard implements Printer
 {
     private Timer $timer;
     private bool $withColors;
+    private bool $addMarks;
 
     private function __construct(bool $withColors)
     {
         $this->timer = new Timer;
         $this->withColors = $withColors;
+        $this->addMarks = \getenv('LC_TERMINAL') === 'iTerm2';
     }
 
     /**
@@ -61,7 +63,7 @@ final class Standard implements Printer
 
         $output($proof->toString().":\n");
 
-        return Printer\Proof\Standard::new($this->withColors);
+        return Printer\Proof\Standard::new($this->withColors, $this->addMarks);
     }
 
     public function end(IO $output, IO $error, Stats $stats): void

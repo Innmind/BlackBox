@@ -24,18 +24,20 @@ final class Standard implements Proof
 {
     private CliDumper $dumper;
     private VarCloner $cloner;
+    private bool $addMarks;
     private int $scenarii = 0;
 
-    private function __construct(bool $withColors)
+    private function __construct(bool $withColors, bool $addMarks)
     {
         $this->dumper = new CliDumper;
         $this->cloner = new VarCloner;
+        $this->addMarks = $addMarks;
         $this->dumper->setColors($withColors);
     }
 
-    public static function new(bool $withColors): self
+    public static function new(bool $withColors, bool $addMarks): self
     {
-        return new self($withColors);
+        return new self($withColors, $addMarks);
     }
 
     public function emptySet(IO $output, IO $error): void
@@ -78,6 +80,10 @@ final class Standard implements Proof
          */
         $trace = $failure->assertion()->getTrace();
         $output("\n");
+
+        if ($this->addMarks) {
+            $output("\x1b]1337;SetMark\x07");
+        }
 
         foreach ($trace as $frame) {
             if (!\array_key_exists('file', $frame)) {
