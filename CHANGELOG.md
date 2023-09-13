@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.5.1 - 2023-09-13
+
+### Fixed
+
+- Custom tags loaded from PHPUnit groups were discarded
+
 ## 5.5.0 - 2023-09-13
 
 ### Added

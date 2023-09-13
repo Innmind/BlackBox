@@ -68,7 +68,7 @@ final class Load
                         $this->parseTag,
                         $groups,
                     ),
-                    static fn($tag) => $tag instanceof Tag,
+                    static fn($tag) => $tag instanceof \UnitEnum,
                 ));
 
                 if (isset($attributes[0])) {
