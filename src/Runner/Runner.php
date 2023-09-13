@@ -25,6 +25,7 @@ final class Runner
     /** @var positive-int */
     private int $scenariiPerProof;
     private bool $disableMemoryLimit;
+    private bool $stopOnFailure;
 
     /**
      * @param \Generator<Proof> $proofs
@@ -39,6 +40,7 @@ final class Runner
         \Generator $proofs,
         int $scenariiPerProof,
         bool $disableMemoryLimit,
+        bool $stopOnFailure,
     ) {
         $this->random = $random;
         $this->print = $print;
@@ -48,6 +50,7 @@ final class Runner
         $this->proofs = $proofs;
         $this->scenariiPerProof = $scenariiPerProof;
         $this->disableMemoryLimit = $disableMemoryLimit;
+        $this->stopOnFailure = $stopOnFailure;
     }
 
     public function __invoke(
@@ -109,6 +112,10 @@ final class Runner
 
             $print->end($this->output, $this->error);
             $coverage?->stop();
+
+            if ($this->stopOnFailure && !$stats->successful()) {
+                break;
+            }
         }
 
         $this->print->end($this->output, $this->error, $stats);
@@ -132,6 +139,7 @@ final class Runner
         \Generator $proofs,
         int $scenariiPerProof,
         bool $disableMemoryLimit,
+        bool $stopOnFailure,
     ): self {
         return new self(
             $random,
@@ -142,6 +150,7 @@ final class Runner
             $proofs,
             $scenariiPerProof,
             $disableMemoryLimit,
+            $stopOnFailure,
         );
     }
 }

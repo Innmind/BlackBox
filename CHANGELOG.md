@@ -5,6 +5,7 @@
 ### Added
 
 - `Innmind\BlackBox\PHPUnit\Load::parseTagWith()`
+- `Innmind\BlackBox\Application::stopOnFailure()`
 
 ## 5.4.0 - 2023-09-02
 
