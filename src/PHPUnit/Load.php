@@ -15,10 +15,18 @@ use PHPUnit\Framework\Attributes\{
 final class Load
 {
     private string $path;
+    /** @var callable(string): ?\UnitEnum */
+    private $parseTag;
 
-    private function __construct(string $path)
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(string): ?\UnitEnum $parseTag
+     */
+    private function __construct(string $path, callable $parseTag)
     {
         $this->path = $path;
+        $this->parseTag = $parseTag;
     }
 
     public function __invoke()
@@ -57,7 +65,7 @@ final class Load
                 );
                 $tags = \array_values(\array_filter(
                     \array_map(
-                        Tag::of(...),
+                        $this->parseTag,
                         $groups,
                     ),
                     static fn($tag) => $tag instanceof Tag,
@@ -88,9 +96,19 @@ final class Load
         }
     }
 
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(string): ?\UnitEnum $parser
+     */
+    public function parseTagWith(callable $parser): self
+    {
+        return new self($this->path, $parser);
+    }
+
     public static function directory(string $path): self
     {
-        return new self($path);
+        return new self($path, Tag::of(...));
     }
 
     public static function testsAt(string $path): \Generator

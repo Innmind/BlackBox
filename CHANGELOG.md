@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Load::parseTagWith()`
+
 ## 5.4.0 - 2023-09-02
 
 ### Added
