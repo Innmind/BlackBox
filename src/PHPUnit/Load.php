@@ -103,7 +103,10 @@ final class Load
      */
     public function parseTagWith(callable $parser): self
     {
-        return new self($this->path, $parser);
+        return new self(
+            $this->path,
+            fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
+        );
     }
 
     public static function directory(string $path): self
