@@ -336,6 +336,19 @@ final class Application
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @param callable(self): self $map
+     */
+    public function when(bool $active, callable $map): self
+    {
+        return match ($active) {
+            true => $this->map($map),
+            false => $this,
+        };
+    }
+
+    /**
      * @param callable(): \Generator<Proof> $proofs
      */
     public function tryToProve(callable $proofs): Result
