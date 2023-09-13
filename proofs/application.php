@@ -182,4 +182,42 @@ return static function() {
                 ->contains('Proofs: 2,');
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Application::map()',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->map(
+                    static fn($app) => $app
+                        ->displayOutputVia($io)
+                        ->displayErrorVia($io)
+                        ->usePrinter(Standard::withoutColors())
+                        ->stopOnFailure(),
+                )
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => $assert->number($i),
+                    );
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => $assert->true(false),
+                    );
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => $assert->number($i),
+                    );
+                });
+
+            $assert->false($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('Proofs: 2,');
+        },
+    )->tag(Tag::ci, Tag::local);
 };

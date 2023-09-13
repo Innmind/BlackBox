@@ -6,6 +6,7 @@
 
 - `Innmind\BlackBox\PHPUnit\Load::parseTagWith()`
 - `Innmind\BlackBox\Application::stopOnFailure()`
+- `Innmind\BlackBox\Application::map()`
 
 ## 5.4.0 - 2023-09-02
 

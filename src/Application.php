@@ -325,6 +325,17 @@ final class Application
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @param callable(self): self $map
+     */
+    public function map(callable $map): self
+    {
+        /** @psalm-suppress ImpureFunctionCall */
+        return $map($this);
+    }
+
+    /**
      * @param callable(): \Generator<Proof> $proofs
      */
     public function tryToProve(callable $proofs): Result
