@@ -33,6 +33,7 @@ final class Application
     private int $scenariiPerProof;
     private bool $useGlobalFunctions;
     private bool $disableMemoryLimit;
+    private bool $stopOnFailure;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
@@ -51,6 +52,7 @@ final class Application
         int $scenariiPerProof,
         bool $useGlobalFunctions,
         bool $disableMemoryLimit,
+        bool $stopOnFailure,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -63,6 +65,7 @@ final class Application
         $this->scenariiPerProof = $scenariiPerProof;
         $this->useGlobalFunctions = $useGlobalFunctions;
         $this->disableMemoryLimit = $disableMemoryLimit;
+        $this->stopOnFailure = $stopOnFailure;
     }
 
     /**
@@ -81,6 +84,7 @@ final class Application
             $args,
             100,
             true,
+            false,
             false,
         );
     }
@@ -102,6 +106,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -122,6 +127,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -142,6 +148,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -162,6 +169,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -182,6 +190,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -204,6 +213,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -226,6 +236,7 @@ final class Application
             $count,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -246,6 +257,7 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -266,6 +278,7 @@ final class Application
             $this->scenariiPerProof,
             false,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
     }
 
@@ -286,7 +299,53 @@ final class Application
             $this->scenariiPerProof,
             $this->useGlobalFunctions,
             true,
+            $this->stopOnFailure,
         );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function stopOnFailure(): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
+            true,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(self): self $map
+     */
+    public function map(callable $map): self
+    {
+        /** @psalm-suppress ImpureFunctionCall */
+        return $map($this);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(self): self $map
+     */
+    public function when(bool $active, callable $map): self
+    {
+        return match ($active) {
+            true => $this->map($map),
+            false => $this,
+        };
     }
 
     /**
@@ -311,6 +370,7 @@ final class Application
             $filter($proofs()),
             $this->scenariiPerProof,
             $this->disableMemoryLimit,
+            $this->stopOnFailure,
         );
         $stats = Stats::new();
         $assert = Assert::of($stats);
