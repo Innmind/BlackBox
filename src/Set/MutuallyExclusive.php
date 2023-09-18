@@ -35,7 +35,7 @@ final class MutuallyExclusive
                         continue;
                     }
 
-                    if (\str_contains($a, $b)) {
+                    if (\str_contains(\strtolower($a), \strtolower($b))) {
                         return false;
                     }
                 }

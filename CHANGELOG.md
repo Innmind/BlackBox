@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.5.2 - 2023-09-18
+
+### Fixed
+
+- `Innmind\BlackBox\Set\MutuallyExclusive` wasn't excluding strings in a different case
+
 ## 5.5.1 - 2023-09-13
 
 ### Fixed

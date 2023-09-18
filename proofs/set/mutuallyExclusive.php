@@ -16,7 +16,7 @@ return static function() {
             Set\Strings::madeOf(Set\Unicode::any(), Set\Chars::any()),
         )),
         static function($assert, $values) {
-            [$a, $b, $c, $d] = $values;
+            [$a, $b, $c, $d] = \array_map(\strtolower(...), $values);
 
             $assert
                 ->string($a)
