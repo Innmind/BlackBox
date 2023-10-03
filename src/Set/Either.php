@@ -94,8 +94,6 @@ final class Either implements Set
                 $this->rest,
             ),
         );
-
-        return $self;
     }
 
     /**
