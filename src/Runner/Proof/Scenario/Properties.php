@@ -25,9 +25,11 @@ final class Properties implements Scenario
 
     public function __invoke(Assert $assert): mixed
     {
-        $this->properties->ensureHeldBy(
-            $assert,
-            $this->systemUnderTest,
+        $assert->not()->throws(
+            fn() => $this->properties->ensureHeldBy(
+                $assert,
+                $this->systemUnderTest,
+            ),
         );
 
         return null;

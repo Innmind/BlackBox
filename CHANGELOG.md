@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Uncaught exceptions in properties no longer crash the process
+
 ## 5.5.2 - 2023-09-18
 
 ### Fixed
