@@ -7,8 +7,8 @@ use Innmind\BlackBox\{
     Set\Sequence,
     Set,
     Random,
+    PHPUnit\Framework\TestCase,
 };
-use PHPUnit\Framework\TestCase;
 
 class SequenceTest extends TestCase
 {

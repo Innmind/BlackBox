@@ -9,8 +9,8 @@ use Innmind\BlackBox\{
     Set\FromGenerator,
     Set\Value,
     Random,
+    PHPUnit\Framework\TestCase,
 };
-use PHPUnit\Framework\TestCase;
 
 class MatrixTest extends TestCase
 {
