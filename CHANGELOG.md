@@ -6,6 +6,12 @@
 
 - Uncaught exceptions in properties no longer crash the process
 
+### Deprecated
+
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase::expectException()`
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase::expectExceptionCode()`
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase::expectExceptionMessage()`
+
 ## 5.5.2 - 2023-09-18
 
 ### Fixed

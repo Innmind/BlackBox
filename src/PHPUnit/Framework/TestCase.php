@@ -375,16 +375,25 @@ abstract class TestCase
         self::$assert->fail($message);
     }
 
+    /**
+     * @deprecated Use a try/catch in your test instead
+     */
     final public function expectException(string $exception): void
     {
         $this->expectedException = $exception;
     }
 
+    /**
+     * @deprecated Use a try/catch in your test instead
+     */
     final public function expectExceptionCode(int|string $code): void
     {
         $this->expectedExceptionCode = $code;
     }
 
+    /**
+     * @deprecated Use a try/catch in your test instead
+     */
     final public function expectExceptionMessage(string $message): void
     {
         $this->expectedExceptionMessage = $message;
