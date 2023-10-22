@@ -88,6 +88,7 @@ jobs:
     strategy:
       matrix:
         php-version: ['8.2', '8.3']
+        dependency-versions: ['lowest', 'highest']
     name: 'Psalm'
     steps:
       - name: Checkout
@@ -99,6 +100,8 @@ jobs:
           extensions: mbstring, intl
       - name: Composer
         uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
       - name: Psalm
         run: vendor/bin/psalm --shepherd
   cs:
