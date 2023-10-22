@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\BlackBox\Set\Composite;
 
-use Innmind\BlackBox\Set\{
-    Composite\Combination,
-    Value,
-    Dichotomy,
+use Innmind\BlackBox\{
+    Set\Composite\Combination,
+    Set\Value,
+    Set\Dichotomy,
+    PHPUnit\Framework\TestCase,
 };
-use PHPUnit\Framework\TestCase;
 
 class CombinationTest extends TestCase
 {

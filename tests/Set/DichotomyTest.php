@@ -3,14 +3,12 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set\{
-    Dichotomy,
-    Value,
-};
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     Set,
+    Set\Dichotomy,
+    Set\Value,
+    PHPUnit\Framework\TestCase,
 };
 
 class DichotomyTest extends TestCase

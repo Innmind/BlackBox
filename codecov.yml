@@ -1,3 +1,4 @@
 ignore:
     - 'blackbox.php'
+    - 'BlackBox.php'
     - '.php-cs-fixer.dist.php'

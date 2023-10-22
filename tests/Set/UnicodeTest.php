@@ -6,8 +6,8 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Unicode,
     PHPUnit\BlackBox,
+    PHPUnit\Framework\TestCase,
 };
-use PHPUnit\Framework\TestCase;
 
 class UnicodeTest extends TestCase
 {

@@ -33,6 +33,7 @@ final class Standard implements Proof
         $this->cloner = new VarCloner;
         $this->addMarks = $addMarks;
         $this->dumper->setColors($withColors);
+        $this->cloner->setMinDepth(100);
     }
 
     public static function new(bool $withColors, bool $addMarks): self

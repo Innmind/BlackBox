@@ -54,6 +54,7 @@ Application::new($argv)
             __DIR__.'/src/',
             __DIR__.'/proofs/',
             __DIR__.'/fixtures/',
+            __DIR__.'/tests/',
         )
             ->dumpTo('coverage.clover')
             ->enableWhen(\getenv('ENABLE_COVERAGE') !== false),
