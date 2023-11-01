@@ -28,9 +28,13 @@ final class Property implements Scenario
             $assert->fail('The property is not applicable to the system under test.');
         }
 
-        $assert->not()->throws(
-            fn() => $this->property->ensureHeldBy($assert, $this->systemUnderTest),
-        );
+        try {
+            $this->property->ensureHeldBy($assert, $this->systemUnderTest);
+        } catch (Assert\Failure $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            $assert->not()->throws(static fn() => $e);
+        }
 
         return null;
     }
