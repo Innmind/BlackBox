@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.5.4 - 2023-11-01
+
+### Fixed
+
+- Assertion failures in properties were displayed as unexpected exceptions
+
 ## 5.5.3 - 2023-10-22
 
 ### Fixed
