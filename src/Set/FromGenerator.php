@@ -39,10 +39,6 @@ final class FromGenerator implements Set
         \Closure $predicate,
         bool $immutable,
     ) {
-        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
-            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
-        }
-
         $this->generatorFactory = \Closure::fromCallable($generatorFactory);
         $this->size = $size;
         $this->predicate = $predicate;
@@ -58,7 +54,12 @@ final class FromGenerator implements Set
      */
     public static function of(callable $generatorFactory): self
     {
-        return new self($generatorFactory, 100, static fn(): bool => true, true);
+        return new self(
+            self::guard($generatorFactory),
+            100,
+            static fn(): bool => true,
+            true,
+        );
     }
 
     /**
@@ -70,7 +71,12 @@ final class FromGenerator implements Set
      */
     public static function mutable(callable $generatorFactory): self
     {
-        return new self($generatorFactory, 100, static fn(): bool => true, false);
+        return new self(
+            self::guard($generatorFactory),
+            100,
+            static fn(): bool => true,
+            false,
+        );
     }
 
     /**
@@ -144,5 +150,21 @@ final class FromGenerator implements Set
         if ($iterations === 0) {
             throw new EmptySet;
         }
+    }
+
+    /**
+     * @template A
+     *
+     * @param callable(Random): \Generator<A> $generatorFactory
+     *
+     * @return callable(Random): \Generator<A>
+     */
+    private static function guard(callable $generatorFactory): callable
+    {
+        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
+            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
+        }
+
+        return $generatorFactory;
     }
 }
