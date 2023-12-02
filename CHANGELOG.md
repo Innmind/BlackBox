@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Support for `symfony/var-dumper:~7.0`
+
 ## 5.5.4 - 2023-11-01
 
 ### Fixed
