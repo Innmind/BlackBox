@@ -92,6 +92,13 @@ final class Runner
                             $scenario,
                         );
                     } catch (Proof\Scenario\Failure $e) {
+                        // We unset the initial scenario here to free any object
+                        // that may be kept in a WeakReference or WeakMap inside
+                        // an object inside. This prevents displaying values
+                        // that were generated during the shrinking but no
+                        // longer used in the final failing scenario.
+                        unset($scenario);
+
                         $stats->incrementFailures();
                         $print->failed(
                             $this->output,

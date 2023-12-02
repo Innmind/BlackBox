@@ -6,6 +6,10 @@
 
 - When disabling memory limit it now longer tries to reset the memory limit to the previous value. (It seems PHP prevents setting the limit lower to the peak memory usage)
 
+### Fixed
+
+- Clear the memory before printing a failing scenarion to make sure no values bleed between scenarii.
+
 ## 5.6.0 - 2023-12-02
 
 ### Added
