@@ -6,6 +6,10 @@
 
 - Support for `symfony/var-dumper:~7.0`
 
+### Fixed
+
+- Stats are correctly displayed in GitHub Actions even in case of a failure
+
 ## 5.5.4 - 2023-11-01
 
 ### Fixed
