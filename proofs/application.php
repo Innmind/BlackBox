@@ -141,9 +141,10 @@ return static function() {
                 });
 
             $assert->true($result->successful());
+            // It seems PHP prevents setting the limit lower to the peak memory
+            // usage so we can't reset the limit to the previous value
             $assert
                 ->expected('-1')
-                ->not()
                 ->same(\ini_get('memory_limit'));
         },
     )->tag(Tag::ci, Tag::local);

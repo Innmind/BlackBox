@@ -59,8 +59,6 @@ final class Runner
         ?CodeCoverage $codeCoverage,
     ): void {
         if ($this->disableMemoryLimit) {
-            /** @var string|false */
-            $memoryLimit = \ini_get('memory_limit');
             \ini_set('memory_limit', '-1');
         }
 
@@ -120,10 +118,6 @@ final class Runner
 
         $this->print->end($this->output, $this->error, $stats);
         $coverage?->dump();
-
-        if (isset($memoryLimit) && \is_string($memoryLimit)) {
-            \ini_set('memory_limit', $memoryLimit);
-        }
     }
 
     /**
