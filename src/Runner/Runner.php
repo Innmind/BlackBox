@@ -59,8 +59,6 @@ final class Runner
         ?CodeCoverage $codeCoverage,
     ): void {
         if ($this->disableMemoryLimit) {
-            /** @var string|false */
-            $memoryLimit = \ini_get('memory_limit');
             \ini_set('memory_limit', '-1');
         }
 
@@ -94,6 +92,13 @@ final class Runner
                             $scenario,
                         );
                     } catch (Proof\Scenario\Failure $e) {
+                        // We unset the initial scenario here to free any object
+                        // that may be kept in a WeakReference or WeakMap inside
+                        // an object inside. This prevents displaying values
+                        // that were generated during the shrinking but no
+                        // longer used in the final failing scenario.
+                        unset($scenario);
+
                         $stats->incrementFailures();
                         $print->failed(
                             $this->output,
@@ -120,10 +125,6 @@ final class Runner
 
         $this->print->end($this->output, $this->error, $stats);
         $coverage?->dump();
-
-        if (isset($memoryLimit) && \is_string($memoryLimit)) {
-            \ini_set('memory_limit', $memoryLimit);
-        }
     }
 
     /**

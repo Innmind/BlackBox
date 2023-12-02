@@ -22,7 +22,17 @@ return static function() {
         },
     )->tag(Tag::ci, Tag::local);
     yield test(
-        'Set\Call regenerate the value when shrinking',
+        'Set\Call is not shrinkable',
+        static function($assert) {
+            $set = Set\Call::of(static fn() => new \stdClass)->values(Random::default);
+            $current = $set->current();
+
+            $assert->false($current->shrinkable());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set\Call regenerate the value each time it is accessed',
         static function($assert) {
             $set = Set\Call::of(static fn() => new \stdClass)->values(Random::default);
             $current = $set->current();
@@ -30,7 +40,7 @@ return static function() {
             $assert
                 ->expected($current->unwrap())
                 ->not()
-                ->same($current->shrink()->a()->unwrap());
+                ->same($current->unwrap());
         },
     )->tag(Tag::ci, Tag::local);
 };

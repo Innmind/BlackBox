@@ -24,6 +24,7 @@ final class FromGenerator implements Set
     private \Closure $generatorFactory;
     /** @var \Closure(T): bool */
     private \Closure $predicate;
+    private bool $immutable;
 
     /**
      * @psalm-mutation-free
@@ -36,10 +37,12 @@ final class FromGenerator implements Set
         callable $generatorFactory,
         int $size,
         \Closure $predicate,
+        bool $immutable,
     ) {
         $this->generatorFactory = \Closure::fromCallable($generatorFactory);
         $this->size = $size;
         $this->predicate = $predicate;
+        $this->immutable = $immutable;
     }
 
     /**
@@ -51,11 +54,29 @@ final class FromGenerator implements Set
      */
     public static function of(callable $generatorFactory): self
     {
-        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
-            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
-        }
+        return new self(
+            self::guard($generatorFactory),
+            100,
+            static fn(): bool => true,
+            true,
+        );
+    }
 
-        return new self($generatorFactory, 100, static fn(): bool => true);
+    /**
+     * @template V
+     *
+     * @param callable(Random): \Generator<V> $generatorFactory
+     *
+     * @return self<V>
+     */
+    public static function mutable(callable $generatorFactory): self
+    {
+        return new self(
+            self::guard($generatorFactory),
+            100,
+            static fn(): bool => true,
+            false,
+        );
     }
 
     /**
@@ -67,6 +88,7 @@ final class FromGenerator implements Set
             $this->generatorFactory,
             $size,
             $this->predicate,
+            $this->immutable,
         );
     }
 
@@ -90,6 +112,7 @@ final class FromGenerator implements Set
 
                 return $predicate($value);
             },
+            $this->immutable,
         );
     }
 
@@ -98,7 +121,10 @@ final class FromGenerator implements Set
      */
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this);
+        return match ($this->immutable) {
+            true => Decorate::immutable($map, $this),
+            false => Decorate::mutable($map, $this),
+        };
     }
 
     public function values(Random $random): \Generator
@@ -110,7 +136,10 @@ final class FromGenerator implements Set
             $value = $generator->current();
 
             if (($this->predicate)($value)) {
-                yield Value::immutable($value);
+                yield match ($this->immutable) {
+                    true => Value::immutable($value),
+                    false => Value::mutable(static fn() => $value),
+                };
 
                 ++$iterations;
             }
@@ -121,5 +150,21 @@ final class FromGenerator implements Set
         if ($iterations === 0) {
             throw new EmptySet;
         }
+    }
+
+    /**
+     * @template A
+     *
+     * @param callable(Random): \Generator<A> $generatorFactory
+     *
+     * @return callable(Random): \Generator<A>
+     */
+    private static function guard(callable $generatorFactory): callable
+    {
+        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
+            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
+        }
+
+        return $generatorFactory;
     }
 }

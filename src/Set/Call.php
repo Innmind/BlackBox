@@ -16,6 +16,10 @@ final class Call
      */
     public static function of(callable $call): Set
     {
-        return Integers::any()->map(static fn() => $call());
+        return FromGenerator::mutable(static function() use ($call) {
+            while (true) {
+                yield $call;
+            }
+        })->map(static fn($call) => $call());
     }
 }
