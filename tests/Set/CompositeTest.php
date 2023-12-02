@@ -373,7 +373,7 @@ class CompositeTest extends TestCase
         try {
             $this
                 ->forAll(Set\Integers::below(0), Set\Integers::above(0))
-                ->filter(fn($a, $b) => $a !== 0)
+                ->filter(static fn($a, $b) => $a !== 0)
                 ->then(function($a, $b) {
                     $this->assertGreaterThanOrEqual(
                         0,
