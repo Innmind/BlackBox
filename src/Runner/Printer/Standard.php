@@ -80,7 +80,7 @@ final class Standard implements Printer
 
         match ($stats->successful()) {
             true => $output("OK\n$statsToPrint\n"),
-            false => $error("Failed\n$statsToPrint, Failures: {$stats->failures()}\n"),
+            false => $output("Failed\n$statsToPrint, Failures: {$stats->failures()}\n"),
         };
     }
 }
