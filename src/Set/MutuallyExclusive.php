@@ -23,7 +23,7 @@ final class MutuallyExclusive
         Set ...$rest,
     ): Set {
         /** @var Set<list<string>> */
-        return Set\Composite::immutable(
+        return Composite::immutable(
             static fn(string ...$args) => $args,
             $first,
             $second,

@@ -60,16 +60,16 @@ final class Email
     private static function string(int $maxLength, string ...$extra): Set
     {
         /** @var Set<non-empty-string> */
-        return Set\Either::any(
+        return Either::any(
             // either only with simple characters
-            Set\Sequence::of(self::letter())
+            Sequence::of(self::letter())
                 ->between(1, $maxLength)
                 ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
-            Set\Composite::immutable(
+            Composite::immutable(
                 static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
-                Set\Sequence::of(self::letter(...$extra))
+                Sequence::of(self::letter(...$extra))
                     ->between(1, $maxLength - 2)
                     ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
@@ -89,7 +89,7 @@ final class Email
         /**
          * @var Set<non-empty-string>
          */
-        return Set\Sequence::of(Set\Elements::of(...\range('a', 'z'), ...\range('A', 'Z')))
+        return Sequence::of(Elements::of(...\range('a', 'z'), ...\range('A', 'Z')))
             ->between(1, 63)
             ->map(static fn(array $chars): string => \implode('', $chars));
     }
@@ -104,7 +104,7 @@ final class Email
     private static function letter(string ...$extra): Set
     {
         /** @var Set<non-empty-string> */
-        return Set\Elements::of(
+        return Elements::of(
             ...\range('a', 'z'),
             ...\range('A', 'Z'),
             ...\array_map(

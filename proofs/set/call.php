@@ -11,7 +11,7 @@ return static function() {
     yield test(
         'Set\Call always return a new value',
         static function($assert) {
-            $set = Set\Call::of(static fn() => new \stdClass)->values(Random::default);
+            $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
             $current = $set->current()->unwrap();
             $set->next();
 
@@ -24,7 +24,7 @@ return static function() {
     yield test(
         'Set\Call is not shrinkable',
         static function($assert) {
-            $set = Set\Call::of(static fn() => new \stdClass)->values(Random::default);
+            $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
             $current = $set->current();
 
             $assert->false($current->shrinkable());
@@ -34,7 +34,7 @@ return static function() {
     yield test(
         'Set\Call regenerate the value each time it is accessed',
         static function($assert) {
-            $set = Set\Call::of(static fn() => new \stdClass)->values(Random::default);
+            $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
             $current = $set->current();
 
             $assert

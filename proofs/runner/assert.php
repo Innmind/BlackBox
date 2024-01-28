@@ -19,7 +19,7 @@ return static function($load) {
 
             try {
                 $sut->fail($message);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -41,7 +41,7 @@ return static function($load) {
 
             try {
                 $sut->that(static fn() => true);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert->fail('it should not throw');
             }
 
@@ -62,7 +62,7 @@ return static function($load) {
     yield proof(
         'Assert->throws()',
         given(
-            Set\Elements::of(\RuntimeException::class, \LogicException::class, \DomainException::class),
+            Set\Elements::of(RuntimeException::class, LogicException::class, DomainException::class),
             Set\Strings::any(),
         ),
         static function($assert, $kind, $message) {
@@ -89,7 +89,7 @@ return static function($load) {
     yield proof(
         'Assert->not()->throws()',
         given(
-            Set\Elements::of(\RuntimeException::class, \LogicException::class, \DomainException::class),
+            Set\Elements::of(RuntimeException::class, LogicException::class, DomainException::class),
             Set\Strings::any(),
         ),
         static function($assert, $kind, $message) {
@@ -124,7 +124,7 @@ return static function($load) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->count(\count($values), $values);
-            $sut->count(\count($values), new \ArrayObject($values));
+            $sut->count(\count($values), new ArrayObject($values));
 
             try {
                 $sut->count($count, $values);
@@ -155,7 +155,7 @@ return static function($load) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->count($count, $values);
-            $sut->not()->count($count, new \ArrayObject($values));
+            $sut->not()->count($count, new ArrayObject($values));
 
             try {
                 $sut->not()->count(\count($values), $values);
@@ -648,11 +648,11 @@ return static function($load) {
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
-            $sut->object(new \stdClass)->instance(\stdClass::class);
-            $sut->object(new \LogicException)->instance(\LogicException::class);
+            $sut->object(new stdClass)->instance(stdClass::class);
+            $sut->object(new LogicException)->instance(LogicException::class);
 
             try {
-                $sut->object(new \stdClass)->instance(\LogicException::class);
+                $sut->object(new stdClass)->instance(LogicException::class);
                 $assert->fail($message);
             } catch (Failure $e) {
                 $assert
@@ -675,10 +675,10 @@ return static function($load) {
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
-            $sut->object(new \stdClass)->not()->instance(\LogicException::class);
+            $sut->object(new stdClass)->not()->instance(LogicException::class);
 
             try {
-                $sut->object(new \stdClass)->not()->instance(\stdClass::class);
+                $sut->object(new stdClass)->not()->instance(stdClass::class);
                 $assert->fail($message);
             } catch (Failure $e) {
                 $assert
@@ -698,7 +698,7 @@ return static function($load) {
     yield proof(
         'Assert->number()',
         given(
-            Set\Elements::of(new \stdClass, null, true, false, \tmpfile(), []),
+            Set\Elements::of(new stdClass, null, true, false, \tmpfile(), []),
             Set\Either::any(
                 Set\Integers::any(),
                 Set\RealNumbers::any(),
@@ -915,7 +915,7 @@ return static function($load) {
         'Assert->string()',
         given(
             Set\Strings::any(),
-            Set\Elements::of([], true, null, new \ArrayObject),
+            Set\Elements::of([], true, null, new ArrayObject),
             Set\Strings::any(),
         ),
         static function($assert, $string, $value, $message) {
@@ -1237,7 +1237,7 @@ return static function($load) {
         'Assert->array()',
         given(
             Set\Sequence::of(Set\Type::any()),
-            Set\Elements::of('', true, null, new \ArrayObject),
+            Set\Elements::of('', true, null, new ArrayObject),
             Set\Strings::any(),
         ),
         static function($assert, $array, $value, $message) {
@@ -1338,7 +1338,7 @@ return static function($load) {
 
             try {
                 $sut->matches(static fn($sut) => $sut->fail($message));
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1375,7 +1375,7 @@ return static function($load) {
                     ->inLessThan()
                     ->milliseconds(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1412,7 +1412,7 @@ return static function($load) {
                     ->inLessThan()
                     ->seconds(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1449,7 +1449,7 @@ return static function($load) {
                     ->inMoreThan()
                     ->milliseconds(2, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1486,7 +1486,7 @@ return static function($load) {
                     ->inMoreThan()
                     ->seconds(2, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1522,7 +1522,7 @@ return static function($load) {
                     ->inLessThan()
                     ->bytes(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1556,7 +1556,7 @@ return static function($load) {
                     ->inLessThan()
                     ->kiloBytes(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1590,7 +1590,7 @@ return static function($load) {
                     ->inLessThan()
                     ->megaBytes(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1624,7 +1624,7 @@ return static function($load) {
                     ->inMoreThan()
                     ->bytes(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1658,7 +1658,7 @@ return static function($load) {
                     ->inMoreThan()
                     ->kiloBytes(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
@@ -1692,7 +1692,7 @@ return static function($load) {
                     ->inMoreThan()
                     ->megaBytes(1, $message);
                 $assert->fail('it should throw');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $assert
                     ->object($e)
                     ->instance(Failure::class);
