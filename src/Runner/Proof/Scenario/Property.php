@@ -33,7 +33,7 @@ final class Property implements Scenario
         } catch (Assert\Failure $e) {
             throw $e;
         } catch (\Throwable $e) {
-            $assert->not()->throws(static fn() => $e);
+            $assert->not()->throws(static fn() => throw $e);
         }
 
         return null;

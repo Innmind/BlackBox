@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Thrown exceptions in properties weren't failing proofs
+
 ## 5.6.1 - 2023-12-02
 
 ### Changed
