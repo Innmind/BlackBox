@@ -50,21 +50,21 @@ abstract class TestCase
                 throw $e;
             }
 
-            if ($this->expectedException) {
+            if (!\is_null($this->expectedException)) {
                 /** @psalm-suppress ArgumentTypeCoercion */
                 self::$assert
                     ->object($e)
                     ->instance($this->expectedException);
             }
 
-            if ($this->expectedExceptionCode) {
+            if (!\is_null($this->expectedExceptionCode)) {
                 self::$assert->same(
                     $this->expectedExceptionCode,
                     $e->getCode(),
                 );
             }
 
-            if ($this->expectedExceptionMessage) {
+            if (!\is_null($this->expectedExceptionMessage)) {
                 self::$assert->same(
                     $this->expectedExceptionMessage,
                     $e->getMessage(),

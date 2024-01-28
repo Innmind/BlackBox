@@ -14,14 +14,14 @@ final class Uuid
      */
     public static function any(): Set
     {
-        $chars = Set\Elements::of(...\range('a', 'f'), ...\range(0, 9));
+        $chars = Elements::of(...\range('a', 'f'), ...\range(0, 9));
         /** @psalm-suppress ArgumentTypeCoercion */
         $part = static fn(int $length): Set => Sequence::of($chars)
             ->between($length, $length)
             ->map(static fn(array $chars): string => \implode('', $chars));
 
         /** @var Set<non-empty-string> */
-        return Set\Composite::immutable(
+        return Composite::immutable(
             static fn(string ...$parts): string => \implode('-', $parts),
             $part(8),
             $part(4),
