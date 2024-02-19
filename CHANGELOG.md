@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.6.3 - 2024-02-19
+
+### Fixed
+
+- The global function `property` return type is now `Innmind\BlackBox\Runner\Proof\Property` allowing you to name the property
+
 ## 5.6.2 - 2024-01-28
 
 ### Fixed

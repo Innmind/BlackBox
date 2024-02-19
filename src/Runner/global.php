@@ -46,7 +46,7 @@ function given(Set $first, Set ...$rest): Given
 function property(
     string $property,
     Set $systemUnderTest,
-): Proof {
+): Proof\Property {
     return \Innmind\BlackBox\Runner\property($property, $systemUnderTest);
 }
 
