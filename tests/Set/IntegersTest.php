@@ -242,8 +242,8 @@ class IntegersTest extends TestCase
         do {
             $this->assertNotSame($previous->unwrap(), $integer->unwrap());
             $previous = $integer;
-            $integer = $integer->shrink()->b();
-        } while ($integer->shrinkable());
+            $integer = $integer->shrink()?->b();
+        } while ($integer?->shrinkable() ?? false);
     }
 
     public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
