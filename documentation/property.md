@@ -103,6 +103,6 @@ This will create a random sequence of steps from the provided properties and app
 
 This approach is extremely powerful as it can find sequences of steps you can't think on your own or have the time and patience to write manually, meaning it would probably your users that would encounter such bugs. And writing a non regression test also becomes very simple as the framework shows you the code to write.
 
-![](non-regression.png)
+![](assets/non-regression.png)
 
 And like with any proof BlackBox will find the smallest sequence of steps it can that lead to the failure.

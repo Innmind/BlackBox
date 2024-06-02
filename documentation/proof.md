@@ -45,4 +45,4 @@ The result is that BlackBox helps you pinpoint the root of the problem by elimin
 
 You can visualize this operation because it will print an `S` each time it's able to shrink the problem.
 
-![](shrinking.png)
+![](assets/shrinking.png)
