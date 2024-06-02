@@ -2,7 +2,7 @@
 
 Most of the time writing a [proof](proof.md) is enough if you want to verify a unit of code (a function, an object or a whole application). But if you want to verify the behaviour of multiple implementation you can do this with a `Property`.
 
-For this exercice we'll use the `Counter` provided in the [fixtures](../fixtures/Counter.php) as the implementation we want to prove. This `Counter` is a simple class where we can increment or decrement the internal counter value, and this value can't go below `0` or above `100`. One of its properties is that if the counter is below `100` then after calling the `up()` method the new value is higher than the previous one. We can write this property like this:
+For this exercice we'll use the `Counter` provided in the [fixtures](https://github.com/Innmind/BlackBox/tree/master/fixtures/Counter.php) as the implementation we want to prove. This `Counter` is a simple class where we can increment or decrement the internal counter value, and this value can't go below `0` or above `100`. One of its properties is that if the counter is below `100` then after calling the `up()` method the new value is higher than the previous one. We can write this property like this:
 
 ```php
 use Innmind\BlackBox\{
@@ -103,6 +103,6 @@ This will create a random sequence of steps from the provided properties and app
 
 This approach is extremely powerful as it can find sequences of steps you can't think on your own or have the time and patience to write manually, meaning it would probably your users that would encounter such bugs. And writing a non regression test also becomes very simple as the framework shows you the code to write.
 
-![](non-regression.png)
+![](assets/non-regression.png)
 
 And like with any proof BlackBox will find the smallest sequence of steps it can that lead to the failure.
