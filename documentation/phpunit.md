@@ -85,10 +85,12 @@ final class MyTestCase extends TestCase
 }
 ```
 
-**Warning**: By using BlackBox as a data provider you enter into some limitations:
-- you won't benefit from the [shrinking mechanism](proof.md#the-power-of-shrinking)
-- you won't benefit from the output of the generated data that make you test fail
-- you may run out of memory (since PHPUnit keep in memory all scenarii data)
+!!! warning ""
+    By using BlackBox as a data provider you enter into some limitations:
+
+    - you won't benefit from the [shrinking mechanism](proof.md#the-power-of-shrinking)
+    - you won't benefit from the output of the generated data that make you test fail
+    - you may run out of memory (since PHPUnit keep in memory all scenarii data)
 
 ## Running your tests via BlackBox
 
@@ -113,19 +115,22 @@ Application::new()
 
 If you want to take a look at a migration you can look at [BlackBox's own PHPUnit tests](../tests/) that are now run via BlackBox itself.
 
-**Note**: Running BlackBox's PHPUnit tests via BlackBox increase execution speed by 35% (from ~7.1s down to ~4.6s) on a MackBook Pro M1 Max.
+!!! note ""
+    Running BlackBox's PHPUnit tests via BlackBox increase execution speed by 35% (from ~7.1s down to ~4.6s) on a MackBook Pro M1 Max.
 
 ### Feature coverage
 
 PHPUnit is a very large testing framework with lots of features. BlackBox doesn't support all its features when running your tests.
 
 Supported features:
+
 - test `setUp()`/`tearDown()`
 - assertions that have a correspondance in BlackBox
 - data providers declared with an attribute
 - groups declared with an attribute (the name must have a correspondance in `Innmind\BlackBox\Tag`)
 
 Some important features that are not supported:
+
 - mocks
 - classes `setUpBeforeClass()`/`tearDownAfterClass()`
 - assertions that don't have a correspondance in BlackBox (such as files assertions)

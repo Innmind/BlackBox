@@ -36,4 +36,5 @@ yield proof(
 );
 ```
 
-**Note**: this example proof will fail because generated values are not uuids.
+!!! note ""
+    This example proof will fail because generated values are not uuids.

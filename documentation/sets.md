@@ -52,7 +52,8 @@ This `Set` can generate strings containing a single character.
 - `Integers::above(min)`
 - `Integers::below(max)`
 
-> **Note** The bounds are included in the values that can be generated
+!!! note ""
+    The bounds are included in the values that can be generated
 
 ### IntegersExceptZero
 
@@ -77,7 +78,8 @@ This `Set` can generate strings containing a single character.
 - `RealNumbers::above(min)`
 - `RealNumbers::below(max)`
 
-> **Note** The bounds are included in the values that can be generated
+!!! note ""
+    The bounds are included in the values that can be generated
 
 ### Strings
 
@@ -124,7 +126,10 @@ This `Set` allows to aggregate multiple values to a new one. For example let say
 
 ```php
 Set\Composite::immutable(
-    static fn(string $firstname, string $lastname) => new User($firstname, $lastname),
+    static fn(string $firstname, string $lastname) => new User(
+        $firstname,
+        $lastname,
+    ),
     Strings::atLeast(1),
     Strings::atLeast(1),
 );
@@ -134,7 +139,7 @@ Any addition `Set` provided will give access to a new argument to the callable p
 
 ### Either
 
-You can think of this `Set` as a _OR_. `Either::any(Integers::any(), Strings::any())` describes any integers or strings.
+You can think of this `Set` as an _OR_. `Either::any(Integers::any(), Strings::any())` describes any integers or strings.
 
 ### Sequence
 
@@ -142,7 +147,8 @@ You can think of this `Set` as a _OR_. `Either::any(Integers::any(), Strings::an
 
 By default the list contains between `0` and `100` elements, you can change this via `Sequence::of(Set)->between(min, max)`.
 
-> **Note** the bounds are included
+!!! note ""
+    The bounds are included.
 
 ## Specific types
 

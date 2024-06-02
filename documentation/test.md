@@ -4,7 +4,7 @@ If you landed here you're probably familiar with writing tests via tools (such a
 
 Let's say you have a `add` function you want to test, you can do it via:
 
-```php
+```php title="blackbox.php"
 use Innmind\BlackBox\{
     Application,
     Runner\Assert,
@@ -22,7 +22,7 @@ Application::new([])
     ->exit();
 ```
 
-To run the tests you have execute this file via `php blackbox.php` (assuming you put the above code in a `blackbox.php` file).
+To run the tests you have execute this file via `php blackbox.php`.
 
 If your test is successful the command will return a `0` exit code, and `1` on failure.
 
