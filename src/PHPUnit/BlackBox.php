@@ -5,7 +5,6 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     Set,
-    Random,
     Application,
     Runner\Given,
     PHPUnit\Framework\TestCase,

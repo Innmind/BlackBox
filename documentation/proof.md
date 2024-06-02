@@ -1,6 +1,7 @@
 # Writing your first proof
 
 A proof is described by:
+
 - a name
 - [`Set`s](sets.md) to describe the inputs
 - a function that test a code and must always be true no matter the values passed as input
@@ -42,6 +43,6 @@ For integers this means shrinking towards `0`, for strings removing characters f
 
 The result is that BlackBox helps you pinpoint the root of the problem by eliminating automatically possibilities.
 
-You can visualize this operation because it will print an `S` each time is able to shrink the problem.
+You can visualize this operation because it will print an `S` each time it's able to shrink the problem.
 
-![](shrinking.png)
+![](assets/shrinking.png)

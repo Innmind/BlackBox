@@ -5,7 +5,6 @@ namespace Innmind\BlackBox\Runner\Assert;
 
 use Innmind\BlackBox\Runner\{
     Stats,
-    Assert\Failure\Truth,
     Assert\Failure\Property,
     Assert\Failure\Comparison,
 };

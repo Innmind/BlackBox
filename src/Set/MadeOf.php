@@ -41,7 +41,7 @@ final class MadeOf implements Set
         $chars = $first;
 
         if (\count($rest) > 0) {
-            $chars = Set\Either::any($first, ...$rest);
+            $chars = Either::any($first, ...$rest);
         }
 
         return new self($chars);

@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
 final class Chars
 {
@@ -67,7 +64,7 @@ final class Chars
      */
     public static function alphanumerical(): Set
     {
-        return Set\Either::any(
+        return Either::any(
             self::lowercaseLetter(),
             self::uppercaseLetter(),
             self::number(),
