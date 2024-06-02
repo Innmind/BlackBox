@@ -6,7 +6,7 @@ nav:
   - Getting started: index.md
   - First steps:
     - Writing your first test with BlackBox: test.md
-    - Discovering `Set`s: sets.md
+    - Discovering Sets: sets.md
     - Writing your first proof: proof.md
     - Writing your first property: property.md
     - Organize your proofs: organize.md
