@@ -113,7 +113,7 @@ Application::new()
     ->exit();
 ```
 
-If you want to take a look at a migration you can look at [BlackBox's own PHPUnit tests](../tests/) that are now run via BlackBox itself.
+If you want to take a look at a migration you can look at [BlackBox's own PHPUnit tests](https://github.com/Innmind/BlackBox/tree/master/tests/) that are now run via BlackBox itself.
 
 !!! note ""
     Running BlackBox's PHPUnit tests via BlackBox increase execution speed by 35% (from ~7.1s down to ~4.6s) on a MackBook Pro M1 Max.

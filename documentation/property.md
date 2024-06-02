@@ -2,7 +2,7 @@
 
 Most of the time writing a [proof](proof.md) is enough if you want to verify a unit of code (a function, an object or a whole application). But if you want to verify the behaviour of multiple implementation you can do this with a `Property`.
 
-For this exercice we'll use the `Counter` provided in the [fixtures](../fixtures/Counter.php) as the implementation we want to prove. This `Counter` is a simple class where we can increment or decrement the internal counter value, and this value can't go below `0` or above `100`. One of its properties is that if the counter is below `100` then after calling the `up()` method the new value is higher than the previous one. We can write this property like this:
+For this exercice we'll use the `Counter` provided in the [fixtures](https://github.com/Innmind/BlackBox/tree/master/fixtures/Counter.php) as the implementation we want to prove. This `Counter` is a simple class where we can increment or decrement the internal counter value, and this value can't go below `0` or above `100`. One of its properties is that if the counter is below `100` then after calling the `up()` method the new value is higher than the previous one. We can write this property like this:
 
 ```php
 use Innmind\BlackBox\{

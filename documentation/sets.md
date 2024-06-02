@@ -9,28 +9,28 @@ Each `Set` can be altered via 2 methods `map` and `filter`. If you want only squ
 BlackBox comes built-in with a wide range of `Set`s (but you can find more on [Packagist](https://packagist.org/providers/innmind/black-box-sets)).
 
 - Primitives
-    - [`Innmind\BlackBox\Set\Chars`](../src/Set/Chars.php)
-    - [`Innmind\BlackBox\Set\Integers`](../src/Set/Integers.php)
-    - [`Innmind\BlackBox\Set\IntegersExceptZero`](../src/Set/IntegersExceptZero.php)
-    - [`Innmind\BlackBox\Set\NaturalNumbers`](../src/Set/NaturalNumbers.php)
-    - [`Innmind\BlackBox\Set\NaturalNumbersExceptZero`](../src/Set/NaturalNumbersExceptZero.php)
-    - [`Innmind\BlackBox\Set\Nullable`](../src/Set/Nullable.php)
-    - [`Innmind\BlackBox\Set\RealNumbers`](../src/Set/RealNumbers.php)
-    - [`Innmind\BlackBox\Set\Strings`](../src/Set/Strings.php)
-    - [`Innmind\BlackBox\Set\Type`](../src/Set/Type.php)
-    - [`Innmind\BlackBox\Set\Unicode`](../src/Set/Unicode.php)
-    - [`Innmind\BlackBox\Set\UnsafeStrings`](../src/Set/UnsafeStrings.php)
+    - [`Innmind\BlackBox\Set\Chars`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Chars.php)
+    - [`Innmind\BlackBox\Set\Integers`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Integers.php)
+    - [`Innmind\BlackBox\Set\IntegersExceptZero`](https://github.com/Innmind/BlackBox/tree/master/src/Set/IntegersExceptZero.php)
+    - [`Innmind\BlackBox\Set\NaturalNumbers`](https://github.com/Innmind/BlackBox/tree/master/src/Set/NaturalNumbers.php)
+    - [`Innmind\BlackBox\Set\NaturalNumbersExceptZero`](https://github.com/Innmind/BlackBox/tree/master/src/Set/NaturalNumbersExceptZero.php)
+    - [`Innmind\BlackBox\Set\Nullable`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Nullable.php)
+    - [`Innmind\BlackBox\Set\RealNumbers`](https://github.com/Innmind/BlackBox/tree/master/src/Set/RealNumbers.php)
+    - [`Innmind\BlackBox\Set\Strings`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Strings.php)
+    - [`Innmind\BlackBox\Set\Type`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Type.php)
+    - [`Innmind\BlackBox\Set\Unicode`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Unicode.php)
+    - [`Innmind\BlackBox\Set\UnsafeStrings`](https://github.com/Innmind/BlackBox/tree/master/src/Set/UnsafeStrings.php)
 - User defined values
-    - [`Innmind\BlackBox\Set\Element`](../src/Set/Element.php)
-    - [`Innmind\BlackBox\Set\FromGenerator`](../src/Set/FromGenerator.php)
+    - [`Innmind\BlackBox\Set\Element`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Element.php)
+    - [`Innmind\BlackBox\Set\FromGenerator`](https://github.com/Innmind/BlackBox/tree/master/src/Set/FromGenerator.php)
 - Higher order `Set`s
-    - [`Innmind\BlackBox\Set\Decorate`](../src/Set/Decorate.php)
-    - [`Innmind\BlackBox\Set\Composite`](../src/Set/Composite.php)
-    - [`Innmind\BlackBox\Set\Either`](../src/Set/Either.php)
-    - [`Innmind\BlackBox\Set\Sequence`](../src/Set/Sequence.php)
+    - [`Innmind\BlackBox\Set\Decorate`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Decorate.php)
+    - [`Innmind\BlackBox\Set\Composite`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Composite.php)
+    - [`Innmind\BlackBox\Set\Either`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Either.php)
+    - [`Innmind\BlackBox\Set\Sequence`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Sequence.php)
 - Specific types
-    - [`Innmind\BlackBox\Set\Email`](../src/Set/Email.php)
-    - [`Innmind\BlackBox\Set\Uuid`](../src/Set/Uuid.php)
+    - [`Innmind\BlackBox\Set\Email`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Email.php)
+    - [`Innmind\BlackBox\Set\Uuid`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Uuid.php)
 
 ## Primitives
 
