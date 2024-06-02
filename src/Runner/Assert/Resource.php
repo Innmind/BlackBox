@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Assert;
 
-use Innmind\BlackBox\Runner\{
-    Stats,
-    Assert\Failure\Comparison,
-};
+use Innmind\BlackBox\Runner\Stats;
 
 final class Resource
 {

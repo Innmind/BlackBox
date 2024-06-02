@@ -6,7 +6,6 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Properties,
     Set,
-    Property,
     Properties as PropertiesModel,
     Random,
     PHPUnit\BlackBox,
