@@ -104,12 +104,12 @@ final class Slice implements Set
      */
     private function collapse(): Set
     {
-        return Set\Composite::immutable(
+        return Composite::immutable(
             Util::of(...),
-            Set\Integers::between($this->min, $this->max),
-            Set\Integers::between($this->atLeast, $this->max - $this->min),
-            Set\Elements::of($this->atLeast),
-            Set\Elements::of(true, false),
+            Integers::between($this->min, $this->max),
+            Integers::between($this->atLeast, $this->max - $this->min),
+            Elements::of($this->atLeast),
+            Elements::of(true, false),
         );
     }
 }

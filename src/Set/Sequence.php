@@ -170,12 +170,12 @@ final class Sequence implements Set
                 }
 
                 if ($immutable) {
-                    yield Set\Value::immutable(
+                    yield Value::immutable(
                         $this->wrap($values),
                         $this->shrinkFast(false, $values),
                     );
                 } else {
-                    yield Set\Value::mutable(
+                    yield Value::mutable(
                         fn() => $this->wrap($values),
                         $this->shrinkFast(true, $values),
                     );

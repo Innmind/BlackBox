@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Runner\Proof;
 use Innmind\BlackBox\{
     Set,
     Runner\Proof,
-    Runner\Assert,
     Property as Concrete,
 };
 

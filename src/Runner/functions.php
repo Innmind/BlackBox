@@ -5,9 +5,6 @@ namespace Innmind\BlackBox\Runner;
 
 use Innmind\BlackBox\{
     Set,
-    Runner\Proof,
-    Runner\Assert,
-    Runner\Given,
     Property,
     Properties,
 };
