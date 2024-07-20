@@ -32,8 +32,8 @@ return static function() {
                                     }
 
                                     return false;
-                                }
-                            )
+                                },
+                            ),
                         ),
                         static function($assert, $values) {
                             foreach ($values as $value) {
