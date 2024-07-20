@@ -73,6 +73,11 @@ abstract class TestCase
         }
     }
 
+    final public function assert(): Assert
+    {
+        return self::$assert;
+    }
+
     final public static function assertSame(mixed $expected, mixed $actual, string $message = null): void
     {
         /** @psalm-suppress ArgumentTypeCoercion */
