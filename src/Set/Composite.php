@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Set\Composite\Matrix,
-    Set\Composite\Combination,
     Random,
     Exception\EmptySet,
 };
@@ -24,6 +23,7 @@ final class Composite implements Set
     /** @var list<Set> */
     private array $sets;
     private ?int $size;
+    /** @var \Closure(C): bool */
     private \Closure $predicate;
     private bool $immutable;
 
@@ -139,7 +139,7 @@ final class Composite implements Set
 
         while ($matrix->valid() && $this->continue($iterations)) {
             $combination = $matrix->current();
-            $value = ($this->aggregate)(...$combination->unwrap());
+            $value = $combination->detonate($this->aggregate);
             $matrix->next();
 
             if (!($this->predicate)($value)) {
@@ -149,7 +149,12 @@ final class Composite implements Set
             if ($combination->immutable() && $this->immutable) {
                 yield Value::immutable(
                     $value,
-                    $this->shrink(false, $combination),
+                    Composite\RecursiveNthShrink::of(
+                        false,
+                        $this->predicate,
+                        $this->aggregate,
+                        $combination,
+                    ),
                 );
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
@@ -157,8 +162,13 @@ final class Composite implements Set
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 yield Value::mutable(
-                    fn() => ($this->aggregate)(...$combination->unwrap()),
-                    $this->shrink(true, $combination),
+                    fn() => $combination->detonate($this->aggregate),
+                    Composite\RecursiveNthShrink::of(
+                        true,
+                        $this->predicate,
+                        $this->aggregate,
+                        $combination,
+                    ),
                 );
             }
 
@@ -191,65 +201,5 @@ final class Composite implements Set
         }
 
         return $iterations < $this->size;
-    }
-
-    /**
-     * @return Dichotomy<C>|null
-     */
-    private function shrink(bool $mutable, Combination $combination): ?Dichotomy
-    {
-        if (!$combination->shrinkable()) {
-            return null;
-        }
-
-        $shrinked = $combination->shrink();
-
-        return new Dichotomy(
-            $this->shrinkWithStrategy($mutable, $combination, $shrinked['a']),
-            $this->shrinkWithStrategy($mutable, $combination, $shrinked['b']),
-        );
-    }
-
-    /**
-     * @return callable(): Value<C>
-     */
-    private function shrinkWithStrategy(
-        bool $mutable,
-        Combination $combination,
-        Combination $strategy,
-    ): callable {
-        $shrinked = ($this->aggregate)(...$strategy->unwrap());
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($mutable, $combination);
-        }
-
-        if ($mutable) {
-            return fn(): Value => Value::mutable(
-                fn() => ($this->aggregate)(...$strategy->unwrap()),
-                $this->shrink(true, $strategy),
-            );
-        }
-
-        return fn(): Value => Value::immutable(
-            $shrinked,
-            $this->shrink(false, $strategy),
-        );
-    }
-
-    /**
-     * @return callable(): Value<C>
-     */
-    private function identity(bool $mutable, Combination $combination): callable
-    {
-        if ($mutable) {
-            return fn(): Value => Value::mutable(
-                fn() => ($this->aggregate)(...$combination->unwrap()),
-            );
-        }
-
-        return fn(): Value => Value::immutable(
-            ($this->aggregate)(...$combination->unwrap()),
-        );
     }
 }
