@@ -15,6 +15,9 @@ nav:
     - Asserting memory usage: assert_memory.md
     - Adding assertions: own_assertions.md
     - Compatibility with PHPUnit: phpunit.md
+  - Internals:
+    - internals/index.md
+    - Shrinking: internals/shrinking.md
 
 theme:
   name: material
@@ -84,6 +87,11 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra_css:
   - assets/stylesheets/extra.css
