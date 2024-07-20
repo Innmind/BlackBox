@@ -22,8 +22,8 @@ class MatrixTest extends TestCase
                 yield 'b';
             }),
             FromGenerator::of(static function() {
-                yield new Combination(Value::immutable('c'));
-                yield new Combination(Value::immutable('d'));
+                yield Combination::startWith(Value::immutable('c'));
+                yield Combination::startWith(Value::immutable('d'));
             }),
         );
 
@@ -46,8 +46,8 @@ class MatrixTest extends TestCase
                 yield 'b';
             }),
             FromGenerator::of(static function() {
-                yield new Combination(Value::immutable('c'));
-                yield new Combination(Value::immutable('d'));
+                yield Combination::startWith(Value::immutable('c'));
+                yield Combination::startWith(Value::immutable('d'));
             }),
         );
         $matrix2 = $matrix->dot(FromGenerator::of(static function() {
