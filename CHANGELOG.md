@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- `$assert->same()` message not being used
+
 ## 5.6.3 - 2024-02-19
 
 ### Fixed
