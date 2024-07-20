@@ -51,12 +51,16 @@ final class Combination
         return $this->values;
     }
 
-    public function unwrap(): array
+    /**
+     * @template T
+     *
+     * @param callable(mixed...): T $aggregate
+     *
+     * @return T
+     */
+    public function detonate(callable $aggregate): mixed
     {
-        return \array_map(
-            static fn(Value $value): mixed => $value->unwrap(),
-            $this->values,
-        );
+        return $aggregate(...$this->unwrap());
     }
 
     /**
@@ -101,6 +105,14 @@ final class Combination
             $this->values,
             static fn(bool $shrinkable, Value $value): bool => $shrinkable || $value->shrinkable(),
             false,
+        );
+    }
+
+    private function unwrap(): array
+    {
+        return \array_map(
+            static fn(Value $value): mixed => $value->unwrap(),
+            $this->values,
         );
     }
 }

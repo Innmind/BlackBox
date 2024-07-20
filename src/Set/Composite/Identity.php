@@ -25,10 +25,10 @@ final class Identity
     ): callable {
         return match ($mutable) {
             true => static fn() => Value::mutable(
-                static fn() => $aggregate(...$combination->unwrap()),
+                static fn() => $combination->detonate($aggregate),
             ),
             false => static fn() => Value::immutable(
-                $aggregate(...$combination->unwrap()),
+                $combination->detonate($aggregate),
             ),
         };
     }

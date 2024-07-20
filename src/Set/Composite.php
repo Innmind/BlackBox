@@ -139,7 +139,7 @@ final class Composite implements Set
 
         while ($matrix->valid() && $this->continue($iterations)) {
             $combination = $matrix->current();
-            $value = ($this->aggregate)(...$combination->unwrap());
+            $value = $combination->detonate($this->aggregate);
             $matrix->next();
 
             if (!($this->predicate)($value)) {
@@ -162,7 +162,7 @@ final class Composite implements Set
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 yield Value::mutable(
-                    fn() => ($this->aggregate)(...$combination->unwrap()),
+                    fn() => $combination->detonate($this->aggregate),
                     Composite\RecursiveNthShrink::of(
                         true,
                         $this->predicate,

@@ -50,7 +50,7 @@ final class ShrinkANth
 
         $shrunk = $combination->aShrinkNth($n);
 
-        if (!$predicate($aggregate(...$shrunk->unwrap()))) {
+        if (!$predicate($shrunk->detonate($aggregate))) {
             return self::of(
                 $mutable,
                 $predicate,
@@ -62,7 +62,7 @@ final class ShrinkANth
 
         return match ($mutable) {
             true => static fn() => Value::mutable(
-                static fn() => $aggregate(...$shrunk->unwrap()),
+                static fn() => $shrunk->detonate($aggregate),
                 RecursiveNthShrink::of(
                     $mutable,
                     $predicate,
@@ -72,7 +72,7 @@ final class ShrinkANth
                 ),
             ),
             false => static fn() => Value::immutable(
-                $aggregate(...$shrunk->unwrap()),
+                $shrunk->detonate($aggregate),
                 RecursiveNthShrink::of(
                     $mutable,
                     $predicate,

@@ -27,7 +27,7 @@ final class RecursiveNthShrink
         Combination $combination,
         int $n = 0,
     ): ?Dichotomy {
-        if (!$predicate($aggregate(...$combination->unwrap()))) {
+        if (!$predicate($combination->detonate($aggregate))) {
             return null;
         }
 
