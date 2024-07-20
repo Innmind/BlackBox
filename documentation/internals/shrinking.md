@@ -23,7 +23,7 @@ graph TB
     RecursiveNthShrink -->|"b(n+1)"| ShrinkANth
     ShrinkANth -->|When n overflows| ShrinkBNth[Shrink nth element with strategy B]
     ShrinkBNth -->|Next| RecursiveNthShrink
-    RecursiveNthShrink -->|When no longer shrinkable| Identity
+    ShrinkBNth -->|When no longer shrinkable| Identity
 ```
 
 This design makes sure all elements are shrunk to their minimum values. It's assured when shrinking elements of the `array` with their `a` or `b` strategy. When we apply a strategy makes the test pass we try to shrink the next available value in the array. This privileges first shrinking values that do not affect the test.
