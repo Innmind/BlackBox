@@ -10,6 +10,7 @@
 ### Fixed
 
 - `$assert->same()` message not being used
+- `Innmind\BlackBox\Set\Sequence` shrinking process now correctly shrinks all values that do not affect the test
 
 ## 5.6.3 - 2024-02-19
 
