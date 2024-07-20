@@ -5,6 +5,7 @@
 ### Added
 
 - `Innmind\BlackBox\PHPUnit\Framework\TestCase::assert()`
+- `Innmind\BlackBox\Set\Tuple`
 
 ### Fixed
 
