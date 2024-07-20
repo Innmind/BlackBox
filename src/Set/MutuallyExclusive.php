@@ -15,16 +15,15 @@ final class MutuallyExclusive
      * @param Set<string> $second
      * @param Set<string> $rest
      *
-     * @return Set<list<string>>
+     * @return Set<non-empty-list<string>>
      */
     public static function of(
         Set $first,
         Set $second,
         Set ...$rest,
     ): Set {
-        /** @var Set<list<string>> */
-        return Composite::immutable(
-            static fn(string ...$args) => $args,
+        /** @var Set<non-empty-list<string>> */
+        return Tuple::of(
             $first,
             $second,
             ...$rest,
