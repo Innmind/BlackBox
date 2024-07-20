@@ -21,23 +21,13 @@ return static function() {
                 ->usePrinter(Standard::withoutColors())
                 ->tryToProve(static function() {
                     yield proof(
-                        'must not contain an "a"',
+                        'must not contain a "0"',
                         given(
-                            Set\Sequence::of(Set\Strings::any())->filter(
-                                static function($values) {
-                                    foreach ($values as $value) {
-                                        if (\str_contains($value, 'a')) {
-                                            return true;
-                                        }
-                                    }
-
-                                    return false;
-                                },
-                            ),
+                            Set\Sequence::of(Set\Integers::above(0))->atLeast(1),
                         ),
                         static function($assert, $values) {
                             foreach ($values as $value) {
-                                $assert->string($value)->not()->contains('a');
+                                $assert->same(0, $value);
                             }
                         },
                     );
@@ -48,7 +38,7 @@ return static function() {
                 ->string($io->toString())
                 ->contains(<<<EXPECTED
                 \$values = array:1 [
-                  0 => "a"
+                  0 => 1
                 ]
                 EXPECTED);
         },
