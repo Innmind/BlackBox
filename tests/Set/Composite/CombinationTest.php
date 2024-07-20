@@ -16,7 +16,7 @@ class CombinationTest extends TestCase
     {
         $combination = Combination::startWith(Value::immutable('foo'));
 
-        $this->assertSame(['foo'], $combination->unwrap());
+        $this->assertSame(['foo'], $combination->detonate(static fn(...$args) => $args));
     }
 
     public function testAdd()
@@ -26,8 +26,8 @@ class CombinationTest extends TestCase
 
         $this->assertInstanceOf(Combination::class, $combination2);
         $this->assertNotSame($combination, $combination2);
-        $this->assertSame(['foo'], $combination->unwrap());
-        $this->assertSame(['baz', 'foo'], $combination2->unwrap());
+        $this->assertSame(['foo'], $combination->detonate(static fn(...$args) => $args));
+        $this->assertSame(['baz', 'foo'], $combination2->detonate(static fn(...$args) => $args));
     }
 
     public function testIsImmutableIfAllValuesAreImmutable()

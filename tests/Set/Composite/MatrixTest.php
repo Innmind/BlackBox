@@ -85,7 +85,7 @@ class MatrixTest extends TestCase
     {
         return \array_map(
             static function($combination) {
-                return $combination->unwrap();
+                return $combination->detonate(static fn(...$args) => $args);
             },
             \iterator_to_array($matrix->values(Random::mersenneTwister)),
         );
