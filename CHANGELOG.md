@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase::assert()`
+
 ### Fixed
 
 - `$assert->same()` message not being used
