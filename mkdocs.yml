@@ -3,18 +3,29 @@ repo_name: Innmind/BlackBox
 docs_dir: documentation
 
 nav:
-  - Getting started: index.md
-  - First steps:
-    - Writing your first test with BlackBox: test.md
-    - Discovering Sets: sets.md
-    - Writing your first proof: proof.md
-    - Writing your first property: property.md
-    - Organize your proofs: organize.md
-    - Using tags: tags.md
-    - Configuring the test runner: config.md
-    - Asserting memory usage: assert_memory.md
-    - Adding assertions: own_assertions.md
-    - Compatibility with PHPUnit: phpunit.md
+  - Home: index.md
+  - Preface:
+    - Philosophy: preface/philosophy.md
+    - Terminology: preface/terminology.md
+  - Getting started:
+    - getting-started/index.md
+    - First test: getting-started/test.md
+    - First proof: getting-started/proof.md
+    - First property: getting-started/property.md
+  - Assert:
+    - assert/index.md
+    - Primitives: assert/primitives.md
+    - Objects: assert/objects.md
+    - Exceptions: assert/exceptions.md
+    - Time: assert/time.md
+    - Memory: assert/memory.md
+    - Write your own: assert/own.md
+  - Sets: sets.md
+  - Organization:
+    - organization/index.md
+    - Tags: organization/tags.md
+  - Config: config.md
+  - PHPUnit: phpunit.md
   - Internals:
     - internals/index.md
     - Shrinking: internals/shrinking.md
@@ -28,6 +39,8 @@ theme:
     - content.code.copy
     - content.code.annotate
     - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.indexes
@@ -103,6 +116,6 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Innmind
+      link: https://github.com/Innmind/BlackBox
     - icon: fontawesome/brands/x-twitter
       link: https://twitter.com/Baptouuuu
