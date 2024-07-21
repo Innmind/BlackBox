@@ -21,6 +21,9 @@ nav:
     - Memory: assert/memory.md
     - Write your own: assert/own.md
   - Sets: sets.md
+  - Organization:
+    - organization/index.md
+    - Tags: organization/tags.md
   - First steps:
     - Writing your first test with BlackBox: test.md
     - Discovering Sets: sets.md
