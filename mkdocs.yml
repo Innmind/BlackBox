@@ -28,6 +28,8 @@ theme:
     - content.code.copy
     - content.code.annotate
     - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.indexes
