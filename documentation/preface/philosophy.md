@@ -11,4 +11,4 @@ That's why BlackBox uses `Generator`s to provide tests/proofs. You can generate 
 
 _Composition_ is a building block to create any [data sets](terminology.md#set). But it also applies to every part of the framework. It doesn't use any global state.
 
-This allows the framework to [test itself](https://github.com/Innmind/BlackBox/blob/develop/proofs/application.php). To be used in other frameworks such as [PHPUnit](../phpunit/index.md). Or even create functions to [generate tests](../use-cases/databases.md).
+This allows the framework to [test itself](https://github.com/Innmind/BlackBox/blob/develop/proofs/application.php). To be used in other frameworks such as [PHPUnit](../phpunit.md). Or even create functions to generate tests.
