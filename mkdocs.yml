@@ -12,6 +12,14 @@ nav:
     - First test: getting-started/test.md
     - First proof: getting-started/proof.md
     - First property: getting-started/property.md
+  - Assert:
+    - assert/index.md
+    - Primitives: assert/primitives.md
+    - Objects: assert/objects.md
+    - Exceptions: assert/exceptions.md
+    - Time: assert/time.md
+    - Memory: assert/memory.md
+    - Write your own: assert/own.md
   - First steps:
     - Writing your first test with BlackBox: test.md
     - Discovering Sets: sets.md
