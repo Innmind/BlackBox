@@ -34,7 +34,10 @@ class BlackBoxTest extends TestCase
     public function testDataProviderCompatibility($a, $b)
     {
         $this->assertIsInt($a);
-        $this->assertIsInt($b);
+        $this
+            ->assert()
+            ->number($b)
+            ->int();
     }
 
     public static function ints(): iterable

@@ -14,25 +14,25 @@ class CombinationTest extends TestCase
 {
     public function testToArray()
     {
-        $combination = new Combination(Value::immutable('foo'));
+        $combination = Combination::startWith(Value::immutable('foo'));
 
-        $this->assertSame(['foo'], $combination->unwrap());
+        $this->assertSame(['foo'], $combination->detonate(static fn(...$args) => $args));
     }
 
     public function testAdd()
     {
-        $combination = new Combination(Value::immutable('foo'));
+        $combination = Combination::startWith(Value::immutable('foo'));
         $combination2 = $combination->add(Value::immutable('baz'));
 
         $this->assertInstanceOf(Combination::class, $combination2);
         $this->assertNotSame($combination, $combination2);
-        $this->assertSame(['foo'], $combination->unwrap());
-        $this->assertSame(['baz', 'foo'], $combination2->unwrap());
+        $this->assertSame(['foo'], $combination->detonate(static fn(...$args) => $args));
+        $this->assertSame(['baz', 'foo'], $combination2->detonate(static fn(...$args) => $args));
     }
 
     public function testIsImmutableIfAllValuesAreImmutable()
     {
-        $immutable = new Combination(Value::immutable(42));
+        $immutable = Combination::startWith(Value::immutable(42));
         $immutable = $immutable->add(Value::immutable(24));
         $mutable = $immutable->add(Value::mutable(static fn() => new \stdClass));
         $immutable = $immutable->add(Value::immutable(66));
@@ -43,13 +43,13 @@ class CombinationTest extends TestCase
 
     public function testCombinationIsShrinkableAsLongAsAtLeastOneValueIsShrinkable()
     {
-        $nonShrinkable = new Combination(Value::immutable(42));
+        $nonShrinkable = Combination::startWith(Value::immutable(42));
         $nonShrinkable = $nonShrinkable->add(Value::immutable(24));
         $nonShrinkable = $nonShrinkable->add(Value::immutable(66));
 
         $this->assertFalse($nonShrinkable->shrinkable());
 
-        $shrinkable = new Combination(Value::immutable(42));
+        $shrinkable = Combination::startWith(Value::immutable(42));
         $shrinkable = $shrinkable->add(Value::immutable(
             24,
             new Dichotomy(
@@ -60,55 +60,5 @@ class CombinationTest extends TestCase
         $shrinkable = $shrinkable->add(Value::immutable(66));
 
         $this->assertTrue($shrinkable->shrinkable());
-    }
-
-    public function testShrinkUsesFirstTwoValuesThatAreShrinkableToBuildItsOwnDichotomy()
-    {
-        $combination = new Combination(Value::immutable(
-            66,
-            new Dichotomy(
-                static fn() => Value::immutable(33),
-                static fn() => Value::immutable(65),
-            ),
-        ));
-        $combination = $combination->add(Value::immutable(
-            24,
-            new Dichotomy(
-                static fn() => Value::immutable(12),
-                static fn() => Value::immutable(23),
-            ),
-        ));
-        $combination = $combination->add(Value::immutable(42));
-
-        $shrinked = $combination->shrink();
-
-        $this->assertIsArray($shrinked);
-        $this->assertCount(2, $shrinked);
-        $this->assertInstanceOf(Combination::class, $shrinked['a']);
-        $this->assertInstanceOf(Combination::class, $shrinked['b']);
-        $this->assertSame(
-            [42, 12, 66],
-            $shrinked['a']->unwrap(),
-        );
-        $this->assertSame(
-            [42, 24, 33],
-            $shrinked['b']->unwrap(),
-        );
-        $this->assertSame(
-            [42, 12, 33],
-            $shrinked['a']->shrink()['a']->unwrap(),
-        );
-        $this->assertSame(
-            [42, 12, 65],
-            $shrinked['a']->shrink()['b']->unwrap(),
-        );
-        $this->assertSame(
-            [42, 23, 33],
-            $shrinked['b']->shrink()['b']->unwrap(),
-        );
-        $this->assertSame(
-            [42, 12, 33],
-            $shrinked['b']->shrink()['a']->unwrap(),
-        );
     }
 }

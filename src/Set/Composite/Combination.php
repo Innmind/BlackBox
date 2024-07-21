@@ -13,9 +13,17 @@ final class Combination
     /** @var non-empty-list<Value<mixed>> */
     private array $values;
 
-    public function __construct(Value $right)
+    /**
+     * @param non-empty-list<Value<mixed>> $values
+     */
+    private function __construct(array $values)
     {
-        $this->values = [$right];
+        $this->values = $values;
+    }
+
+    public static function startWith(Value $right): self
+    {
+        return new self([$right]);
     }
 
     public function add(Value $left): self
@@ -35,12 +43,60 @@ final class Combination
         );
     }
 
-    public function unwrap(): array
+    /**
+     * @return list<Value>
+     */
+    public function values(): array
     {
-        return \array_map(
-            static fn(Value $value): mixed => $value->unwrap(),
-            $this->values,
-        );
+        return $this->values;
+    }
+
+    /**
+     * @template T
+     *
+     * @param callable(mixed...): T $aggregate
+     *
+     * @return T
+     */
+    public function detonate(callable $aggregate): mixed
+    {
+        return $aggregate(...$this->unwrap());
+    }
+
+    /**
+     * @param 0|positive-int $n
+     */
+    public function aShrinkNth(int $n): self
+    {
+        $shrunk = [];
+
+        foreach ($this->values as $i => $value) {
+            if ($i === $n) {
+                $value = $value->shrink()->a();
+            }
+
+            $shrunk[] = $value;
+        }
+
+        return new self($shrunk);
+    }
+
+    /**
+     * @param 0|positive-int $n
+     */
+    public function bShrinkNth(int $n): self
+    {
+        $shrunk = [];
+
+        foreach ($this->values as $i => $value) {
+            if ($i === $n) {
+                $value = $value->shrink()->b();
+            }
+
+            $shrunk[] = $value;
+        }
+
+        return new self($shrunk);
     }
 
     public function shrinkable(): bool
@@ -52,71 +108,11 @@ final class Combination
         );
     }
 
-    /**
-     * @return array{a: self, b: self}
-     */
-    public function shrink(): array
+    private function unwrap(): array
     {
-        return ['a' => $this->shrinkFirst(), 'b' => $this->shrinkSecond()];
-    }
-
-    /**
-     * @param 'a'|'b' $strategy
-     */
-    private function shrinkFirst(string $strategy = 'a'): self
-    {
-        $values = [];
-        $foundOne = false;
-
-        foreach ($this->values as $value) {
-            if (!$foundOne && $value->shrinkable()) {
-                /** @var Value */
-                $values[] = $value->shrink()->{$strategy}();
-                $foundOne = true;
-            } else {
-                $values[] = $value;
-            }
-        }
-
-        return self::of(...\array_reverse($values));
-    }
-
-    /**
-     * Will try to shrink the second value that can be shrunk
-     *
-     * It will fallback to shrinking the first one with the "b" strategy if
-     * there is only one shrinkable value
-     */
-    private function shrinkSecond(): self
-    {
-        $values = [];
-        $found = 0;
-
-        foreach ($this->values as $value) {
-            if ($value->shrinkable()) {
-                $found++;
-            }
-
-            if ($found === 2 && $value->shrinkable()) {
-                $values[] = $value->shrink()->a();
-            } else {
-                $values[] = $value;
-            }
-        }
-
-        if ($found >= 2) {
-            return self::of(...\array_reverse($values));
-        }
-
-        return $this->shrinkFirst('b');
-    }
-
-    private static function of(Value $value, Value ...$values): self
-    {
-        return \array_reduce(
-            $values,
-            static fn(self $combination, Value $value): self => $combination->add($value),
-            new self($value),
+        return \array_map(
+            static fn(Value $value): mixed => $value->unwrap(),
+            $this->values,
         );
     }
 }

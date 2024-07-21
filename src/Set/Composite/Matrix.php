@@ -32,7 +32,7 @@ final class Matrix
         /** @var Set<Combination> */
         $combinations = Set\FromGenerator::of(static function(Random $rand) use ($b): \Generator {
             foreach ($b->values($rand) as $value) {
-                yield new Combination($value);
+                yield Combination::startWith($value);
             }
         });
 

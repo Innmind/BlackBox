@@ -1,3 +1,8 @@
+---
+hide:
+    - navigation
+---
+
 # Configuring the test runner
 
 ## Changing the number of scenarii for each proof

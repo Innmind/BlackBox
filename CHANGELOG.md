@@ -1,5 +1,18 @@
 # Changelog
 
+## 5.7.0 - 2024-07-21
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Framework\TestCase::assert()`
+- `Innmind\BlackBox\Set\Tuple`
+
+### Fixed
+
+- `$assert->same()` message not being used
+- `Innmind\BlackBox\Set\Sequence` shrinking process now correctly shrinks all values that do not affect the test
+- `Innmind\BlackBox\Set\Composite` shrinking process now correctly shrinks all values that do not affect the test
+
 ## 5.6.3 - 2024-02-19
 
 ### Fixed

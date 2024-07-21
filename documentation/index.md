@@ -1,16 +1,56 @@
 ---
 hide:
+    - navigation
     - toc
 ---
 
-# Getting started
+# Welcome to BlackBox
 
-Property Based Testing leverages randomness to prove the correctness of our code. Each time you run the tests it will generated a new set of data, the result is that the more you run your tests the more confident in the correctness of your code.
+BlackBox is a [Property Based Testing](https://en.wikipedia.org/wiki/Software_testing#Property_testing) framework.
 
-When it finds a scenario that fails it will print all the input data that lead to the failure so you can write a non regression test.
+It leverages randomness ti prove the correctness of your code.
 
-## Installation
+It's the main testing framework for the [Innmind ecosystem](https://innmind.github.io/documentation/).
 
-```sh
-composer require --dev innmind/black-box
-```
+It allows to:
+
+<div class="annotate" markdown>
+- write [tests](preface/terminology.md#test) (1)
+- write [proofs](preface/terminology.md#proof)
+- write [properties](preface/terminology.md#property)
+- generate [random data](preface/terminology.md#set)
+</div>
+
+1. Like any other PHP testing framework
+
+Its Functional[^1] design also allows you to use it for your own scenarii.
+
+??? example "Sneak peek"
+    ```php title="tests.php"
+    use Innmind\BlackBox\{
+        Application
+        Set,
+        Runner\Assert,
+    };
+
+    Application::new([])
+        ->scenariiPerProof(1_000)
+        ->tryToProve(static function() {
+            yield proof(
+                'Add is commutative',
+                given(
+                    Set\Integers::any(),
+                    Set\Integers::any(),
+                ),
+                static function(Assert $assert, int $a, int $b) {
+                    $assert->same(
+                        add($a, $b),
+                        add($b, $a),
+                    );
+                },
+            );
+        })
+        ->exit();
+    ```
+
+[^1]: As in Functional Programming

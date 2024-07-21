@@ -86,7 +86,7 @@ final class Assert
      */
     public function same(mixed $a, mixed $b, string $message = null): self
     {
-        $this->expected($a)->same($b);
+        $this->expected($a)->same($b, $message);
 
         return $this;
     }
