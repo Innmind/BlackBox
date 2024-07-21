@@ -1,12 +1,11 @@
-# Discovering `Set`s
+---
+hide:
+    - navigation
+---
 
-Before diving into [proofs](proof.md) you first need to understand the way to describe the _range_ of data that will be fed to your proofs.
+# `Set`s
 
-If we take back the example of some `add` function that accepts 2 arguments of type `int` you need a way to describe all the `int`s that can be used for this function. This is what is called a `Set`.
-
-Each `Set` can be altered via 2 methods `map` and `filter`. If you want only squares for your proof you would use `#!php Integers::any()->map(static fn($i) => $i ** 2)` or if you want only even integers `#!php Integers::any()->filter(static fn($i) => $i % 2 === 0)`.
-
-BlackBox comes built-in with a wide range of `Set`s (but you can find more on [Packagist](https://packagist.org/providers/innmind/black-box-sets)).
+So far you've seen hardcoded `Set`s via `Set\Element` and integers one via `Set\Integers`. But there are much more.
 
 - Primitives
     - [`Innmind\BlackBox\Set\Chars`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Chars.php)
@@ -28,9 +27,46 @@ BlackBox comes built-in with a wide range of `Set`s (but you can find more on [P
     - [`Innmind\BlackBox\Set\Composite`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Composite.php)
     - [`Innmind\BlackBox\Set\Either`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Either.php)
     - [`Innmind\BlackBox\Set\Sequence`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Sequence.php)
+    - [`Innmind\BlackBox\Set\Tuple`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Tuple.php)
+    - [`Innmind\BlackBox\Set\Call`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Call.php)
 - Specific types
     - [`Innmind\BlackBox\Set\Email`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Email.php)
     - [`Innmind\BlackBox\Set\Uuid`](https://github.com/Innmind/BlackBox/tree/master/src/Set/Uuid.php)
+
+??? tip
+    You can find more on [Packagist](https://packagist.org/providers/innmind/black-box-sets).
+
+## Common methods
+
+### Map
+
+For all `Set` objects you can transform the generated values with a function of your own.
+
+Let's say the code you want to prove needs a `Password` object. You can wrap strings in your object like this:
+
+```php
+use Innmind\BlackBox\Set;
+
+$set = Set\Strings::any()
+    ->map(static fn(string $string) => new Password($string));
+```
+
+Now if you use `$set` in a proof it will generate instances of `Password` with a random string inside it.
+
+### Filter
+
+To reuse the password example from above. Say that your password needs to contain the character `$`. You can do:
+
+```php
+use Innmind\BlackBox\Set;
+
+$set = Set\Strings::any()
+    ->filter(static fn(string $string) => \str_contains($string, '$'))
+    ->map(static fn(string $string) => new Password($string));
+```
+
+??? warning
+    This is an example. You should not enforce your passwords to have a specific value in it. The strength is based on length. ([US](https://www.cisa.gov/secure-our-world/use-strong-passwords) and [French](https://cyber.gouv.fr/publications/recommandations-relatives-lauthentification-multifacteur-et-aux-mots-de-passe) recommendations)
 
 ## Primitives
 
@@ -38,17 +74,17 @@ BlackBox comes built-in with a wide range of `Set`s (but you can find more on [P
 
 This `Set` can generate strings containing a single character.
 
-- `#!php Chars::any()` describe any chars that can be returned by the `\chr()` function
-- `#!php Chars::lowercaseLetter()` describe the range `a..z`
-- `#!php Chars::uppercaseLetter()` describe the range `A..Z`
-- `#!php Chars::number()` describe the range `0..9`
-- `#!php Chars::ascii()` describe any character that you can typically find on your keyboard
-- `#!php Chars::alphanumerical()` describe any character from `::lowercaseLetter()`, `::uppercaseLetter()` or `::number()`
+- `#!php Chars::any()` describes any chars that can be returned by the `\chr()` function
+- `#!php Chars::lowercaseLetter()` describes the range `a..z`
+- `#!php Chars::uppercaseLetter()` describes the range `A..Z`
+- `#!php Chars::number()` describes the range `0..9`
+- `#!php Chars::ascii()` describes any character that you can typically find on your keyboard
+- `#!php Chars::alphanumerical()` describes any character from `::lowercaseLetter()`, `::uppercaseLetter()` or `::number()`
 
 ### Integers
 
-- `#!php Integers::any()` describe any integer between `\PHP_INT_MIN` and `\PHP_INT_MAX`
-- `#!php Integers::between(min, max)` describe any integer between the bounds you specify
+- `#!php Integers::any()` describes any integer between `\PHP_INT_MIN` and `\PHP_INT_MAX`
+- `#!php Integers::between(min, max)` describes any integer between the bounds you specify
 - `#!php Integers::above(min)`
 - `#!php Integers::below(max)`
 
@@ -57,7 +93,7 @@ This `Set` can generate strings containing a single character.
 
 ### IntegersExceptZero
 
-`#!php IntegersExceptZero::any()` describe any integer except `0`
+`#!php IntegersExceptZero::any()` describes any integer except `0`
 
 ### NaturalNumbers
 
@@ -69,12 +105,12 @@ This `Set` can generate strings containing a single character.
 
 ### Nullable
 
-`#!php Nullable::of(Set)` describe all the values that can be generated by the `Set` passed as argument and `null`
+`#!php Nullable::of(Set)` describes all the values that can be generated by the `Set` passed as argument and `null`
 
 ### RealNumbers
 
-- `#!php RealNumbers::any()` describe any float between `\PHP_INT_MIN` and `\PHP_INT_MAX`
-- `#!php RealNumbers::between(min, max)` describe any float between the bounds you specify
+- `#!php RealNumbers::any()` describes any float between `\PHP_INT_MIN` and `\PHP_INT_MAX`
+- `#!php RealNumbers::between(min, max)` describes any float between the bounds you specify
 - `#!php RealNumbers::above(min)`
 - `#!php RealNumbers::below(max)`
 
@@ -83,46 +119,48 @@ This `Set` can generate strings containing a single character.
 
 ### Strings
 
-- `#!php Strings::any()` describe any string of a length between `0` and `128` containing any character from `Chars::any()`
+- `#!php Strings::any()` describes any string of a length between `0` and `128` containing any character from `Chars::any()`
 - `#!php Strings::between(min, max)` same as `::any()` but you specify the length range
 - `#!php Strings::atMost(max)`
 - `#!php Strings::atLeast(min)`
-- `#!php Strings::madeOf(Set)` describe any string made of the characters you specify (ie `#!php Strings::madeOf(Chars::alphanumerical())`)
+- `#!php Strings::madeOf(Set)` describes any string made of the characters you specify (ie `#!php Strings::madeOf(Chars::alphanumerical())`)
     - you can specify the length range via `#!php Strings::madeOf(Set)->between(min, max)`
 
 ### Type
 
-`Type::any()` describe any type that is supported by PHP. This is useful to prove a code doesn't depend on the type of its arguments.
+`Type::any()` describes any type that is supported by PHP. This is useful to prove a code doesn't depend on the type of its arguments.
 
 ### Unicode
 
 - `#!php Unicode::strings()` is the same as `#!php Strings::madeOf(Unicode::any())`
-- `#!php Unicode::any()` describe any single unicode character
+- `#!php Unicode::any()` describes any single unicode character
 - `#!php Unicode` provides all the [unicode blocks](https://unicode-table.com/en/blocks/)
 
 ### UnsafeStrings
 
-`#!php UnsafeStrings::any()` describe any string that could break your code. You can use this to test the robustness of your code.
+`#!php UnsafeStrings::any()` describes any string that could break your code. You can use this to test the robustness of your code.
 
 ## User defined values
 
 ### Elements
 
-`#!php Elements::of(...values)` describe all the values that you put in (ie `#!php Elements::of(true, false)` to describe booleans)
+`#!php Elements::of(...values)` describes all the values that you put in (ie `#!php Elements::of(true, false)` to describe booleans)
 
 ### FromGenerator
 
-`#!php FromGenerator::of(callable)` describe values that you will provide via a `Generator`
+`#!php FromGenerator::of(callable)` describes values that you will provide via a `Generator`
 
 ## Higher order `Set`s
 
 ### Decorate
 
-`#!php Decorate::immutable(callable, Set)` is a way to transform the values that can be generated by the given `Set` (ie `#!php Decorate::immutable(\chr(...), Integers::between(0, 255))` describe all the strings that can be generated by `\chr()`)
+`#!php Decorate::immutable(callable, Set)` is a way to transform the values that can be generated by the given `Set` (ie `#!php Decorate::immutable(\chr(...), Integers::between(0, 255))` describes all the strings that can be generated by `\chr()`)
+
+This is the same as `Integers::between(0, 255)->map(\chr(...))`.
 
 ### Composite
 
-This `Set` allows to aggregate multiple values to a new one. For example let say you have a `User` class, you could desribe it via:
+This `Set` allows to aggregate multiple values to a new one. Let's say you have a `User` class, you could desribe it via:
 
 ```php
 Set\Composite::immutable(
@@ -135,11 +173,11 @@ Set\Composite::immutable(
 );
 ```
 
-Any addition `Set` provided will give access to a new argument to the callable passed as first argument.
+Any additionnal `Set` provided will give access to a new argument to the callable.
 
 ### Either
 
-You can think of this `Set` as an _OR_. `#!php Either::any(Integers::any(), Strings::any())` describes any integers or strings.
+You can think of this `Set` as an _OR_. `#!php Either::any(Integers::any(), Strings::any())` describes any integer or string.
 
 ### Sequence
 
@@ -149,6 +187,37 @@ By default the list contains between `0` and `100` elements, you can change this
 
 !!! note ""
     The bounds are included.
+
+### Tuple
+
+This is a special case of `Composite`. Both examples does the same thing.
+
+=== "Tuple"
+    ```php
+    Tuple::of(
+        Integers::any(),
+        Integers::any(),
+    )
+    ```
+
+=== "Composite"
+    ```php
+    Composite::immutable(
+        static fn(int $a, int $b) => [$a, $b],
+        Integers::any(),
+        Integers::any(),
+    )
+    ```
+
+### Call
+
+```php
+Call::of(static function() {
+    return $someValue;
+})
+```
+
+This set is useful when building the Model to tests via [properties](getting-started/property.md). If BlackBox [shrinks](preface/terminology.md#shrinking) properties it will call the provided callable at each shrinking step. This allows to get rid of any state inside your Model between each run.
 
 ## Specific types
 

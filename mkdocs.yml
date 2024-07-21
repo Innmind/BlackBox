@@ -20,6 +20,7 @@ nav:
     - Time: assert/time.md
     - Memory: assert/memory.md
     - Write your own: assert/own.md
+  - Sets: sets.md
   - First steps:
     - Writing your first test with BlackBox: test.md
     - Discovering Sets: sets.md
