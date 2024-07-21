@@ -7,6 +7,11 @@ nav:
   - Preface:
     - Philosophy: preface/philosophy.md
     - Terminology: preface/terminology.md
+  - Getting started:
+    - getting-started/index.md
+    - First test: getting-started/test.md
+    - First proof: getting-started/proof.md
+    - First property: getting-started/property.md
   - First steps:
     - Writing your first test with BlackBox: test.md
     - Discovering Sets: sets.md
