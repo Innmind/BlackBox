@@ -3,7 +3,10 @@ repo_name: Innmind/BlackBox
 docs_dir: documentation
 
 nav:
-  - Getting started: index.md
+  - Home: index.md
+  - Preface:
+    - Philosophy: preface/philosophy.md
+    - Terminology: preface/terminology.md
   - First steps:
     - Writing your first test with BlackBox: test.md
     - Discovering Sets: sets.md
