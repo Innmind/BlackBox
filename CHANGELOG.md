@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `$assert->array()->contains()`
+- `$assert->array()->not()->contains()`
+
 ## 5.7.0 - 2024-07-21
 
 ### Added

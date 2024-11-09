@@ -1319,6 +1319,82 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
 
     yield proof(
+        'Assert->array()->contains()',
+        given(
+            Set\Type::any(),
+            Set\Sequence::of(Set\Type::any()),
+            Set\Sequence::of(Set\Type::any()),
+            Set\Strings::any(),
+        )->filter(
+            static fn($expected, $prefix, $suffix) => !\in_array($expected, $prefix, true) &&
+                !\in_array($expected, $suffix, true),
+        ),
+        static function($assert, $expected, $prefix, $suffix, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $array = [...$prefix, ...[$expected], ...$suffix];
+
+            $sut->array($array)->contains($expected);
+
+            try {
+                $sut->array([...$prefix, ...$suffix])->contains($expected);
+                $assert->fail($message);
+            } catch (Failure $e) {
+                $assert
+                    ->expected($message)
+                    ->not()
+                    ->same($e->kind()->message());
+                $assert->same(
+                    'Failed to assert an array contains a value',
+                    $e->kind()->message(),
+                );
+            }
+
+            $assert
+                ->expected(4)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Assert->array()->not()->contains()',
+        given(
+            Set\Type::any(),
+            Set\Sequence::of(Set\Type::any()),
+            Set\Sequence::of(Set\Type::any()),
+            Set\Strings::any(),
+        )->filter(
+            static fn($expected, $prefix, $suffix) => !\in_array($expected, $prefix, true) &&
+                !\in_array($expected, $suffix, true),
+        ),
+        static function($assert, $expected, $prefix, $suffix, $message) {
+            $sut = Assert::of($stats = Stats::new());
+
+            $array = [...$prefix, ...[$expected], ...$suffix];
+
+            $sut->array([...$prefix, ...$suffix])->not()->contains($expected);
+
+            try {
+                $sut->array($array)->not()->contains($expected);
+                $assert->fail($message);
+            } catch (Failure $e) {
+                $assert
+                    ->expected($message)
+                    ->not()
+                    ->same($e->kind()->message());
+                $assert->same(
+                    'Failed to assert an array does not contain a value',
+                    $e->kind()->message(),
+                );
+            }
+
+            $assert
+                ->expected(4)
+                ->same($stats->assertions());
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
         'Assert->matches()',
         given(
             Set\Type::any(),

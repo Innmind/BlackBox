@@ -241,8 +241,13 @@ class IntegersTest extends TestCase
 
         do {
             $this->assertNotSame($previous->unwrap(), $integer->unwrap());
+
+            if (!$integer->shrinkable()) {
+                return;
+            }
+
             $previous = $integer;
-            $integer = $integer->shrink()?->b();
+            $integer = $integer->shrink()->b();
         } while ($integer?->shrinkable() ?? false);
     }
 
