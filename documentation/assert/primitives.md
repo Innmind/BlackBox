@@ -230,6 +230,25 @@ static function(Assert $assert) {
     }
     ```
 
+=== "Contains a value"
+    ```php
+    static function(Assert $assert) {
+        $assert
+            ->array($array)
+            ->contains($value, 'Optional error message');
+    }
+    ```
+
+=== "Doesn't contain a value"
+    ```php
+    static function(Assert $assert) {
+        $assert
+            ->array($array)
+            ->not()
+            ->contains($value, 'Optional error message');
+    }
+    ```
+
 === "Count"
     ```php
     static function(Assert $assert) {
@@ -243,24 +262,5 @@ static function(Assert $assert) {
         $assert
             ->not()
             ->count($count, $array, 'Optional error message');
-    }
-    ```
-
-=== "Contains a value"
-    ```php
-    static function(Assert $assert) {
-        $assert
-            ->expected($someValue)
-            ->in($iterable, 'Optional error message');
-    }
-    ```
-
-=== "Doesn't contain a value"
-    ```php
-    static function(Assert $assert) {
-        $assert
-            ->expected($someValue)
-            ->not()
-            ->in($iterable, 'Optional error message');
     }
     ```

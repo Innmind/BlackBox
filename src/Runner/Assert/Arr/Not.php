@@ -7,6 +7,7 @@ use Innmind\BlackBox\Runner\{
     Stats,
     Assert\Failure,
     Assert\Failure\Property,
+    Assert\Failure\Comparison,
 };
 
 final class Not
@@ -45,6 +46,26 @@ final class Not
                     'Failed to assert an array does not have the key "%s"',
                     $key,
                 ),
+            ));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param non-empty-string $message
+     *
+     * @throws Failure
+     */
+    public function contains(mixed $value, string $message = null): self
+    {
+        $this->stats->incrementAssertions();
+
+        if (\in_array($value, $this->value, true)) {
+            throw Failure::of(Comparison::of(
+                $value,
+                $this->value,
+                $message ?? 'Failed to assert an array does not contain a value',
             ));
         }
 
