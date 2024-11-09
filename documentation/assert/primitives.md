@@ -250,8 +250,8 @@ static function(Assert $assert) {
     ```php
     static function(Assert $assert) {
         $assert
-            ->expected($someValue)
-            ->in($iterable, 'Optional error message');
+            ->array($array)
+            ->contains($value, 'Optional error message');
     }
     ```
 
@@ -259,8 +259,8 @@ static function(Assert $assert) {
     ```php
     static function(Assert $assert) {
         $assert
-            ->expected($someValue)
+            ->array($array)
             ->not()
-            ->in($iterable, 'Optional error message');
+            ->contains($value, 'Optional error message');
     }
     ```
