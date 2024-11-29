@@ -16,6 +16,7 @@ return static function() {
         'Failing on purpose',
         static fn($assert) => $assert->true(false),
     );
+    var_dump(getenv());
 
     yield proof(
         'BlackBox can run with any of the random strategies',
