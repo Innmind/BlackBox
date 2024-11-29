@@ -146,7 +146,7 @@ final class Standard implements Proof
             $output("::endgroup::\n");
 
             if ($this->failed) {
-                $output("::error ::Failing proof 👆\n");
+                $output("::error title=Error title::Failing proof 👆\n");
             }
         }
     }
