@@ -92,3 +92,22 @@ Application::new([])
     ->tryToProve(Load::everythingIn('proofs/'))
     ->exit();
 ```
+
+## Disable GitHub Action output
+
+When it detects it's run inside a GitHub Action the framework groups each proof output to make the output more compact for large suites. It also adds annotations to quickly jump to each failing proof.
+
+You can disable such behaviour like this:
+
+```php hl_lines="4 8"
+use Innmind\BlackBox\{
+    Application,
+    Runner\Load,
+    Runner\Printer\Standard,
+};
+
+Application::new([])
+    ->usePrinter(Standard::new()->disableGitHubOutput())
+    ->tryToProve(Load::everythingIn('proofs/'))
+    ->exit();
+```

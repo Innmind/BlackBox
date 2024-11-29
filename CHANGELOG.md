@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.9.0 - 2024-11-29
+
+### Added
+
+- By default the printer groups the proofs output in a GitHub Action
+- `Innmind\BlackBox\Runner\Printer\Standard::disableGitHubOutput()`
+
 ## 5.8.0 - 2024-11-09
 
 ### Added

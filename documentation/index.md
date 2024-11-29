@@ -8,7 +8,7 @@ hide:
 
 BlackBox is a [Property Based Testing](https://en.wikipedia.org/wiki/Software_testing#Property_testing) framework.
 
-It leverages randomness ti prove the correctness of your code.
+It leverages randomness to prove the correctness of your code.
 
 It's the main testing framework for the [Innmind ecosystem](https://innmind.github.io/documentation/).
 
