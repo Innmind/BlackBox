@@ -218,11 +218,11 @@ return static function() {
                 ->proof($io, $io, Name::of($name), $tags)
                 ->emptySet($io, $io);
 
-            $written = $io->written();
+            $written = \implode('', $io->written());
 
             $assert
-                ->expected("No scenario found\n::endgroup::\n")
-                ->same(\end($written));
+                ->string($written)
+                ->endsWith("No scenario found\n::endgroup::\n");
         },
     )->tag(Tag::ci);
 
@@ -477,11 +477,11 @@ return static function() {
                 ->proof($io, $io, Name::of($name), $tags)
                 ->end($io, $io);
 
-            $written = $io->written();
+            $written = \implode('', $io->written());
 
             $assert
-                ->expected("\n\n::endgroup::\n")
-                ->same(\end($written));
+                ->string($written)
+                ->endsWith("\n\n::endgroup::\n");
         },
     )->tag(Tag::ci);
 };
