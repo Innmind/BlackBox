@@ -19,12 +19,18 @@ final class Standard implements Printer
     private Timer $timer;
     private bool $withColors;
     private bool $addMarks;
+    private bool $addGroups;
 
-    private function __construct(bool $withColors)
-    {
-        $this->timer = new Timer;
+    private function __construct(
+        bool $withColors,
+        ?Timer $timer = null,
+        ?bool $addMarks = null,
+        ?bool $addGroups = null,
+    ) {
+        $this->timer = $timer ?? new Timer;
         $this->withColors = $withColors;
-        $this->addMarks = \getenv('LC_TERMINAL') === 'iTerm2';
+        $this->addMarks = $addMarks ?? \getenv('LC_TERMINAL') === 'iTerm2';
+        $this->addGroups = $addGroups ?? \getenv('GITHUB_ACTIONS') === 'true';
     }
 
     /**
@@ -40,6 +46,16 @@ final class Standard implements Printer
         return new self(false);
     }
 
+    public function disableGitHubOutput(): self
+    {
+        return new self(
+            $this->withColors,
+            $this->timer,
+            $this->addMarks,
+            false,
+        );
+    }
+
     public function start(IO $output, IO $error): void
     {
         $this->timer->start();
@@ -53,17 +69,29 @@ final class Standard implements Printer
         Proof\Name $proof,
         array $tags,
     ): Printer\Proof {
+        $header = '';
+
         foreach ($tags as $tag) {
-            $output("[{$tag->name}]");
+            $header .= "[{$tag->name}]";
         }
 
         if (\count($tags) > 0) {
-            $output(' ');
+            $header .= ' ';
         }
 
-        $output($proof->toString().":\n");
+        $header .= $proof->toString().":\n";
 
-        return Printer\Proof\Standard::new($this->withColors, $this->addMarks);
+        if ($this->addGroups) {
+            $header = '::group::'.$header;
+        }
+
+        $output($header);
+
+        return Printer\Proof\Standard::new(
+            $this->withColors,
+            $this->addMarks,
+            $this->addGroups,
+        );
     }
 
     public function end(IO $output, IO $error, Stats $stats): void

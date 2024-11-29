@@ -136,7 +136,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer->proof($io, $io, Name::of($name), $tags);
@@ -154,6 +154,34 @@ return static function() {
                 ->contains($name);
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof() in GitHub Action',
+        given(
+            Set\Strings::any(),
+            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+        ),
+        static function($assert, $name, $tags) {
+            $printer = Standard::new();
+            $io = Collect::new();
+
+            $printer->proof($io, $io, Name::of($name), $tags);
+
+            $written = $io->toString();
+
+            foreach ($tags as $tag) {
+                $assert
+                    ->string($written)
+                    ->contains($tag->name);
+            }
+
+            $assert
+                ->string($written)
+                ->startsWith('::group::')
+                ->contains($name);
+        },
+    )->tag(Tag::ci);
+
     yield proof(
         'Printer->proof()->emptySet()',
         given(
@@ -161,7 +189,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -175,6 +203,29 @@ return static function() {
                 ->same(\end($written));
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof()->emptySet() in GitHub Action',
+        given(
+            Set\Strings::any(),
+            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+        ),
+        static function($assert, $name, $tags) {
+            $printer = Standard::new();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), $tags)
+                ->emptySet($io, $io);
+
+            $written = \implode('', $io->written());
+
+            $assert
+                ->string($written)
+                ->endsWith("No scenario found\n::endgroup::\n");
+        },
+    )->tag(Tag::ci);
+
     yield proof(
         'Printer->proof()->success()',
         given(
@@ -225,7 +276,7 @@ return static function() {
             Set\Strings::any(),
         ),
         static function($assert, $name, $val, $truth) {
-            $printer = Standard::new();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -248,8 +299,80 @@ return static function() {
                 ->contains($truth);
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof()->failure() for Failure\Truth in GitHub Action',
+        given(
+            Set\Strings::any(),
+            Set\Strings::madeOf(Set\Chars::alphanumerical()),
+            Set\Strings::any(),
+        ),
+        static function($assert, $name, $val, $truth) {
+            $printer = Standard::new();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), [])
+                ->failed($io, $io, Failure::of(
+                    Assert\Failure::of(Truth::of($truth)),
+                    Value::immutable(Scenario\Inline::of(
+                        [$val],
+                        static fn($assert, $foo) => null,
+                    )),
+                ));
+
+            $written = $io->toString();
+
+            $assert
+                ->string($written)
+                ->contains("F\n\n")
+                ->contains('$foo = ')
+                ->contains($val)
+                ->contains('::error ::')
+                ->contains($truth);
+        },
+    )->tag(Tag::ci);
+
     yield proof(
         'Printer->proof()->failure() for Failure\Property',
+        given(
+            Set\Strings::any(),
+            Set\Strings::madeOf(Set\Chars::alphanumerical()),
+            Set\Strings::madeOf(Set\Chars::alphanumerical()),
+            Set\Strings::any(),
+        ),
+        static function($assert, $name, $property, $val, $message) {
+            $printer = Standard::new()->disableGitHubOutput();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), [])
+                ->failed($io, $io, Failure::of(
+                    Assert\Failure::of(Property::of(
+                        $property,
+                        $message,
+                    )),
+                    Value::immutable(Scenario\Inline::of(
+                        [$val],
+                        static fn($assert, $foo) => null,
+                    )),
+                ));
+
+            $written = $io->toString();
+
+            $assert
+                ->string($written)
+                ->contains("F\n\n")
+                ->contains('$variable = ')
+                ->contains($property)
+                ->contains('$foo = ')
+                ->contains($val)
+                ->contains($message);
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof()->failure() for Failure\Property in GitHub Action',
         given(
             Set\Strings::any(),
             Set\Strings::madeOf(Set\Chars::alphanumerical()),
@@ -282,11 +405,55 @@ return static function() {
                 ->contains($property)
                 ->contains('$foo = ')
                 ->contains($val)
+                ->contains('::error ::')
+                ->contains($message);
+        },
+    )->tag(Tag::ci);
+
+    yield proof(
+        'Printer->proof()->failure() for Failure\Comparison',
+        given(
+            Set\Strings::any(),
+            Set\Strings::madeOf(Set\Chars::alphanumerical()),
+            Set\Strings::madeOf(Set\Chars::alphanumerical()),
+            Set\Strings::madeOf(Set\Chars::alphanumerical()),
+            Set\Strings::any(),
+        ),
+        static function($assert, $name, $expected, $actual, $val, $message) {
+            $printer = Standard::new()->disableGitHubOutput();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), [])
+                ->failed($io, $io, Failure::of(
+                    Assert\Failure::of(Comparison::of(
+                        $expected,
+                        $actual,
+                        $message,
+                    )),
+                    Value::immutable(Scenario\Inline::of(
+                        [$val],
+                        static fn($assert, $foo) => null,
+                    )),
+                ));
+
+            $written = $io->toString();
+
+            $assert
+                ->string($written)
+                ->contains("F\n\n")
+                ->contains('$expected = ')
+                ->contains($expected)
+                ->contains('$actual = ')
+                ->contains($actual)
+                ->contains('$foo = ')
+                ->contains($val)
                 ->contains($message);
         },
     )->tag(Tag::ci, Tag::local);
+
     yield proof(
-        'Printer->proof()->failure() for Failure\Comparison',
+        'Printer->proof()->failure() for Failure\Comparison in GitHub Action',
         given(
             Set\Strings::any(),
             Set\Strings::madeOf(Set\Chars::alphanumerical()),
@@ -323,9 +490,11 @@ return static function() {
                 ->contains($actual)
                 ->contains('$foo = ')
                 ->contains($val)
+                ->contains('::error ::')
                 ->contains($message);
         },
-    )->tag(Tag::ci, Tag::local);
+    )->tag(Tag::ci);
+
     yield proof(
         'Printer->proof()->failure() for Scenario\Property',
         given(
@@ -397,7 +566,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -411,4 +580,26 @@ return static function() {
                 ->same(\end($written));
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof()->end() in GitHub Action',
+        given(
+            Set\Strings::any(),
+            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+        ),
+        static function($assert, $name, $tags) {
+            $printer = Standard::new();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), $tags)
+                ->end($io, $io);
+
+            $written = \implode('', $io->written());
+
+            $assert
+                ->string($written)
+                ->endsWith("\n\n::endgroup::\n");
+        },
+    )->tag(Tag::ci);
 };

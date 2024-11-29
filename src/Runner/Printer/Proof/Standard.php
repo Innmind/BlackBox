@@ -25,25 +25,37 @@ final class Standard implements Proof
     private CliDumper $dumper;
     private VarCloner $cloner;
     private bool $addMarks;
+    private bool $addGroups;
     private int $scenarii = 0;
 
-    private function __construct(bool $withColors, bool $addMarks)
-    {
+    private function __construct(
+        bool $withColors,
+        bool $addMarks,
+        bool $addGroups,
+    ) {
         $this->dumper = new CliDumper;
         $this->cloner = new VarCloner;
         $this->addMarks = $addMarks;
+        $this->addGroups = $addGroups;
         $this->dumper->setColors($withColors);
         $this->cloner->setMinDepth(100);
     }
 
-    public static function new(bool $withColors, bool $addMarks): self
-    {
-        return new self($withColors, $addMarks);
+    public static function new(
+        bool $withColors,
+        bool $addMarks,
+        bool $addGroups,
+    ): self {
+        return new self($withColors, $addMarks, $addGroups);
     }
 
     public function emptySet(IO $output, IO $error): void
     {
         $error("No scenario found\n");
+
+        if ($this->addGroups) {
+            $output("::endgroup::\n");
+        }
     }
 
     public function success(IO $output, IO $error): void
@@ -69,7 +81,11 @@ final class Standard implements Proof
         $this->renderFailure($output, $failure->assertion()->kind());
 
         $output(\sprintf(
-            "\n%s\n",
+            "\n%s%s\n",
+            match ($this->addGroups) {
+                true => '::error ::',
+                false => '',
+            },
             $failure->assertion()->kind()->message(),
         ));
 
@@ -126,6 +142,10 @@ final class Standard implements Proof
     public function end(IO $output, IO $error): void
     {
         $output("\n\n");
+
+        if ($this->addGroups) {
+            $output("::endgroup::\n");
+        }
     }
 
     private function newLine(IO $output): void
