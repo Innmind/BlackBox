@@ -136,7 +136,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubGrouping();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer->proof($io, $io, Name::of($name), $tags);
@@ -189,7 +189,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubGrouping();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -276,7 +276,7 @@ return static function() {
             Set\Strings::any(),
         ),
         static function($assert, $name, $val, $truth) {
-            $printer = Standard::new()->disableGitHubGrouping();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -342,7 +342,7 @@ return static function() {
             Set\Strings::any(),
         ),
         static function($assert, $name, $property, $val, $message) {
-            $printer = Standard::new()->disableGitHubGrouping();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -420,7 +420,7 @@ return static function() {
             Set\Strings::any(),
         ),
         static function($assert, $name, $expected, $actual, $val, $message) {
-            $printer = Standard::new()->disableGitHubGrouping();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -566,7 +566,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubGrouping();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer

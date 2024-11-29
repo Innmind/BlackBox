@@ -46,7 +46,7 @@ final class Standard implements Printer
         return new self(false);
     }
 
-    public function disableGitHubGrouping(): self
+    public function disableGitHubOutput(): self
     {
         return new self(
             $this->withColors,
