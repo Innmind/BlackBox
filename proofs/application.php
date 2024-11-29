@@ -12,11 +12,6 @@ use Innmind\BlackBox\{
 };
 
 return static function() {
-    yield test(
-        'Failing on purpose',
-        static fn($assert) => $assert->true(false),
-    )->tag(Tag::ci);
-
     yield proof(
         'BlackBox can run with any of the random strategies',
         given(Set\Elements::of(...Random::cases())),
