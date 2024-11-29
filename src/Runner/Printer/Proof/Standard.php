@@ -38,6 +38,7 @@ final class Standard implements Proof
     ) {
         $this->dumper = new CliDumper;
         $this->cloner = new VarCloner;
+        $this->proof = $proof;
         $this->addMarks = $addMarks;
         $this->addGroups = $addGroups;
         $this->dumper->setColors($withColors);
