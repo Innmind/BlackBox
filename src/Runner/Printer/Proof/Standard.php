@@ -24,12 +24,14 @@ final class Standard implements Proof
 {
     private CliDumper $dumper;
     private VarCloner $cloner;
+    private string $proof;
     private bool $addMarks;
     private bool $addGroups;
     private int $scenarii = 0;
     private bool $failed = false;
 
     private function __construct(
+        string $proof,
         bool $withColors,
         bool $addMarks,
         bool $addGroups,
@@ -43,11 +45,12 @@ final class Standard implements Proof
     }
 
     public static function new(
+        string $proof,
         bool $withColors,
         bool $addMarks,
         bool $addGroups,
     ): self {
-        return new self($withColors, $addMarks, $addGroups);
+        return new self($proof, $withColors, $addMarks, $addGroups);
     }
 
     public function emptySet(IO $output, IO $error): void
@@ -146,7 +149,7 @@ final class Standard implements Proof
             $output("::endgroup::\n");
 
             if ($this->failed) {
-                $output("::error ::Failing proof 👆\n");
+                $output("::error ::{$this->proof} failed 👆\n");
             }
         }
     }

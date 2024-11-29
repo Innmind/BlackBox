@@ -88,6 +88,7 @@ final class Standard implements Printer
         $output($header);
 
         return Printer\Proof\Standard::new(
+            $proof->toString(),
             $this->withColors,
             $this->addMarks,
             $this->addGroups,
