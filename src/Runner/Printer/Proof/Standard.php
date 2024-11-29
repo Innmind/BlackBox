@@ -135,9 +135,7 @@ final class Standard implements Proof
 
             if ($this->addGroups && !$githubErrorRendered) {
                 $output(\sprintf(
-                    '::error file=%s,line=%s,title=%s::',
-                    $frame['file'],
-                    $frame['line'],
+                    '::error title=%s::',
                     $this->proof,
                 ));
                 $githubErrorRendered = true;
