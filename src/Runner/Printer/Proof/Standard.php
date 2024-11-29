@@ -133,6 +133,10 @@ final class Standard implements Proof
                 $frame['line'],
             ));
         }
+
+        if ($this->addGroups) {
+            $output("::error ::Failing proof");
+        }
     }
 
     public function end(IO $output, IO $error): void
