@@ -136,7 +136,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer->proof($io, $io, Name::of($name), $tags);
@@ -154,8 +154,58 @@ return static function() {
                 ->contains($name);
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof() in GitHub Action',
+        given(
+            Set\Strings::any(),
+            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+        ),
+        static function($assert, $name, $tags) {
+            $printer = Standard::new();
+            $io = Collect::new();
+
+            $printer->proof($io, $io, Name::of($name), $tags);
+
+            $written = $io->toString();
+
+            foreach ($tags as $tag) {
+                $assert
+                    ->string($written)
+                    ->contains($tag->name);
+            }
+
+            $assert
+                ->string($written)
+                ->startsWith('::group::')
+                ->contains($name);
+        },
+    )->tag(Tag::ci);
+
     yield proof(
         'Printer->proof()->emptySet()',
+        given(
+            Set\Strings::any(),
+            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+        ),
+        static function($assert, $name, $tags) {
+            $printer = Standard::new()->disableGitHubOutput();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), $tags)
+                ->emptySet($io, $io);
+
+            $written = $io->written();
+
+            $assert
+                ->expected("No scenario found\n")
+                ->same(\end($written));
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof()->emptySet() in GitHub Action',
         given(
             Set\Strings::any(),
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
@@ -171,10 +221,11 @@ return static function() {
             $written = $io->written();
 
             $assert
-                ->expected("No scenario found\n")
+                ->expected("No scenario found\n::endgroup::\n")
                 ->same(\end($written));
         },
-    )->tag(Tag::ci, Tag::local);
+    )->tag(Tag::ci);
+
     yield proof(
         'Printer->proof()->success()',
         given(
@@ -397,7 +448,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -408,6 +459,28 @@ return static function() {
 
             $assert
                 ->expected("\n\n")
+                ->same(\end($written));
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Printer->proof()->end() in GitHub Action',
+        given(
+            Set\Strings::any(),
+            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+        ),
+        static function($assert, $name, $tags) {
+            $printer = Standard::new();
+            $io = Collect::new();
+
+            $printer
+                ->proof($io, $io, Name::of($name), $tags)
+                ->end($io, $io);
+
+            $written = $io->written();
+
+            $assert
+                ->expected("\n\n::endgroup::\n")
                 ->same(\end($written));
         },
     )->tag(Tag::ci, Tag::local);

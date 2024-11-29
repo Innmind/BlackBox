@@ -21,12 +21,16 @@ final class Standard implements Printer
     private bool $addMarks;
     private bool $addGroups;
 
-    private function __construct(bool $withColors)
-    {
-        $this->timer = new Timer;
+    private function __construct(
+        bool $withColors,
+        ?Timer $timer = null,
+        ?bool $addMarks = null,
+        ?bool $addGroups = null,
+    ) {
+        $this->timer = $timer ?? new Timer;
         $this->withColors = $withColors;
-        $this->addMarks = \getenv('LC_TERMINAL') === 'iTerm2';
-        $this->addGroups = \getenv('GITHUB_ACTIONS') === 'true';
+        $this->addMarks = $addMarks ?? \getenv('LC_TERMINAL') === 'iTerm2';
+        $this->addGroups = $addGroups ?? \getenv('GITHUB_ACTIONS') === 'true';
     }
 
     /**
@@ -40,6 +44,16 @@ final class Standard implements Printer
     public static function withoutColors(): self
     {
         return new self(false);
+    }
+
+    public function disableGitHubGrouping(): self
+    {
+        return new self(
+            $this->withColors,
+            $this->timer,
+            $this->addMarks,
+            false,
+        );
     }
 
     public function start(IO $output, IO $error): void
