@@ -28,7 +28,6 @@ final class Standard implements Proof
     private bool $addMarks;
     private bool $addGroups;
     private int $scenarii = 0;
-    private bool $failed = false;
 
     private function __construct(
         string $proof,
@@ -103,6 +102,8 @@ final class Standard implements Proof
             $output("\x1b]1337;SetMark\x07");
         }
 
+        $githubErrorRendered = false;
+
         foreach ($trace as $frame) {
             if (!\array_key_exists('file', $frame)) {
                 continue;
@@ -132,14 +133,22 @@ final class Standard implements Proof
                 continue;
             }
 
+            if ($this->addGroups && !$githubErrorRendered) {
+                $output(\sprintf(
+                    '::error file=%s,line=%s,title=%s::',
+                    $frame['file'],
+                    $frame['line'],
+                    $this->proof,
+                ));
+                $githubErrorRendered = true;
+            }
+
             $output(\sprintf(
                 "%s:%s\n",
                 $frame['file'],
                 $frame['line'],
             ));
         }
-
-        $this->failed = true;
     }
 
     public function end(IO $output, IO $error): void
@@ -148,10 +157,6 @@ final class Standard implements Proof
 
         if ($this->addGroups) {
             $output("::endgroup::\n");
-
-            if ($this->failed) {
-                $output("::error ::🚨 {$this->proof} failed 🚨\n");
-            }
         }
     }
 
