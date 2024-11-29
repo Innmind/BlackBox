@@ -85,7 +85,11 @@ final class Standard implements Proof
         $this->renderFailure($output, $failure->assertion()->kind());
 
         $output(\sprintf(
-            "\n%s\n",
+            "\n%s%s\n",
+            match ($this->addGroups) {
+                true => '::error ::',
+                false => '',
+            },
             $failure->assertion()->kind()->message(),
         ));
 
@@ -101,8 +105,6 @@ final class Standard implements Proof
         if ($this->addMarks) {
             $output("\x1b]1337;SetMark\x07");
         }
-
-        $githubErrorRendered = false;
 
         foreach ($trace as $frame) {
             if (!\array_key_exists('file', $frame)) {
@@ -131,14 +133,6 @@ final class Standard implements Proof
                 \str_contains($frame['file'], '/runner/work/BlackBox/BlackBox/src/PHPUnit')
             ) {
                 continue;
-            }
-
-            if ($this->addGroups && !$githubErrorRendered) {
-                $output(\sprintf(
-                    '::error title=%s::',
-                    $this->proof,
-                ));
-                $githubErrorRendered = true;
             }
 
             $output(\sprintf(
