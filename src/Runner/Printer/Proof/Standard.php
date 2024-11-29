@@ -27,6 +27,7 @@ final class Standard implements Proof
     private bool $addMarks;
     private bool $addGroups;
     private int $scenarii = 0;
+    private bool $failed = false;
 
     private function __construct(
         bool $withColors,
@@ -134,9 +135,7 @@ final class Standard implements Proof
             ));
         }
 
-        if ($this->addGroups) {
-            $output("::error ::Failing proof");
-        }
+        $this->failed = true;
     }
 
     public function end(IO $output, IO $error): void
@@ -145,6 +144,10 @@ final class Standard implements Proof
 
         if ($this->addGroups) {
             $output("::endgroup::\n");
+
+            if ($this->failed) {
+                $output("::error ::Failing proof 👆");
+            }
         }
     }
 
