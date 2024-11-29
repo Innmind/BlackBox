@@ -136,7 +136,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Standard::new()->disableGitHubGrouping();
             $io = Collect::new();
 
             $printer->proof($io, $io, Name::of($name), $tags);
@@ -189,7 +189,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Standard::new()->disableGitHubGrouping();
             $io = Collect::new();
 
             $printer
@@ -448,7 +448,7 @@ return static function() {
             Set\Sequence::of(Set\Elements::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Standard::new()->disableGitHubGrouping();
             $io = Collect::new();
 
             $printer
