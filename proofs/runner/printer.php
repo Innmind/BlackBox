@@ -483,5 +483,5 @@ return static function() {
                 ->expected("\n\n::endgroup::\n")
                 ->same(\end($written));
         },
-    )->tag(Tag::ci, Tag::local);
+    )->tag(Tag::ci);
 };
