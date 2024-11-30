@@ -106,7 +106,7 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
           composer-options: '--no-dev'
       - name: 'Remove conflict on Psalm'
-        run: composer remove --dev vimeo/psalm
+        run: composer remove --dev vimeo/psalm && composer update
       - name: PHPUnit
         run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover
       - uses: codecov/codecov-action@v4
