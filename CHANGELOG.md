@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.10.0 - 2024-11-30
+
+### Added
+
+- Support for PHPUnit 11
+
 ## 5.9.0 - 2024-11-29
 
 ### Added
