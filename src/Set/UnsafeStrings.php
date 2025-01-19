@@ -82,8 +82,14 @@ final class UnsafeStrings implements Set
 
     public function values(Random $random): \Generator
     {
+        $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
+
+        if ($json === false) {
+            throw new \RuntimeException('Unable to load unsafe strings dictionary');
+        }
+
         /** @var list<string> */
-        $values = Json::decode(\file_get_contents(__DIR__.'/unsafeStrings.json'));
+        $values = Json::decode($json);
         $values = \array_values(\array_filter(
             $values,
             $this->predicate,

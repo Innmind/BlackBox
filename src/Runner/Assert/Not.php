@@ -38,7 +38,7 @@ final class Not
      */
     public function throws(
         callable $attempt,
-        string $message = null,
+        ?string $message = null,
     ): mixed {
         $this->stats->incrementAssertions();
 
@@ -61,7 +61,7 @@ final class Not
     public function count(
         int $expected,
         \Countable|array $collection,
-        string $message = null,
+        ?string $message = null,
     ): self {
         $this->stats->incrementAssertions();
 
@@ -86,7 +86,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function true(mixed $actual, string $message = null): self
+    public function true(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -105,7 +105,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function false(mixed $actual, string $message = null): self
+    public function false(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -124,7 +124,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function bool(mixed $actual, string $message = null): self
+    public function bool(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -143,7 +143,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function null(mixed $actual, string $message = null): self
+    public function null(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

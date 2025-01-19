@@ -48,7 +48,7 @@ final class Load
 
             /** @var \SplFileInfo $file */
             foreach ($files as $path => $file) {
-                if ($file->isFile()) {
+                if ($file->isFile() && \is_string($path)) {
                     yield from $load($path);
                 }
             }

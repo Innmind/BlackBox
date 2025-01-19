@@ -33,8 +33,8 @@ final class Sequence implements Set
     private function __construct(
         Set $set,
         Integers $sizes,
-        int $size = null,
-        \Closure $predicate = null,
+        ?int $size = null,
+        ?\Closure $predicate = null,
     ) {
         $this->set = $set;
         $this->sizes = $sizes;
@@ -153,7 +153,7 @@ final class Sequence implements Set
 
     public function values(Random $random): \Generator
     {
-        $immutable = $this->set->values($random)->current()->isImmutable();
+        $immutable = $this->set->values($random)->current()?->isImmutable() ?? false;
         $yielded = 0;
 
         do {

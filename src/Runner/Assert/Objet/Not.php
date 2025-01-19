@@ -34,7 +34,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function instance(string $class, string $message = null): self
+    public function instance(string $class, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

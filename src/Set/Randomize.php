@@ -91,6 +91,10 @@ final class Randomize implements Set
                 continue;
             }
 
+            if (\is_null($value)) {
+                continue;
+            }
+
             yield $value;
             ++$iterations;
         }
