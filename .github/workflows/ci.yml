@@ -5,9 +5,13 @@ on: [push, pull_request]
 jobs:
   blackbox:
     uses: innmind/github-workflows/.github/workflows/black-box-matrix.yml@main
+    with:
+      ini-values: memory_limit=256M
   coverage:
     uses: innmind/github-workflows/.github/workflows/coverage-matrix.yml@main
     secrets: inherit
+    with:
+      ini-values: memory_limit=256M
   phpunit:
     runs-on: ${{ matrix.os }}
     strategy:
