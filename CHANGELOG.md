@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 5.10.1 - 2025-01-19
 
 ### Fixed
 
