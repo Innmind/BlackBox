@@ -7,11 +7,13 @@ jobs:
     uses: innmind/github-workflows/.github/workflows/black-box-matrix.yml@main
     with:
       ini-values: memory_limit=256M
+      tags: ci
   coverage:
     uses: innmind/github-workflows/.github/workflows/coverage-matrix.yml@main
     secrets: inherit
     with:
       ini-values: memory_limit=256M
+      tags: ci
   phpunit:
     runs-on: ${{ matrix.os }}
     strategy:
