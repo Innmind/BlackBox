@@ -37,7 +37,7 @@ final class Str
      *
      * @throws Failure
      */
-    public function empty(string $message = null): self
+    public function empty(?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -57,7 +57,7 @@ final class Str
      *
      * @throws Failure
      */
-    public function contains(string $needle, string $message = null): self
+    public function contains(string $needle, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -80,7 +80,7 @@ final class Str
      *
      * @throws Failure
      */
-    public function matches(string $regex, string $message = null): self
+    public function matches(string $regex, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -103,7 +103,7 @@ final class Str
      *
      * @throws Failure
      */
-    public function startsWith(string $needle, string $message = null): self
+    public function startsWith(string $needle, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -126,7 +126,7 @@ final class Str
      *
      * @throws Failure
      */
-    public function endsWith(string $needle, string $message = null): self
+    public function endsWith(string $needle, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

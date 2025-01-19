@@ -40,7 +40,7 @@ final class InMoreThan
      *
      * @throws Failure
      */
-    public function milliseconds(int $expected, string $message = null): void
+    public function milliseconds(int $expected, ?string $message = null): void
     {
         $this->stats->incrementAssertions();
         /** @var array{0|positive-int, 0|positive-int} */
@@ -69,7 +69,7 @@ final class InMoreThan
      *
      * @throws Failure
      */
-    public function seconds(int $expected, string $message = null): void
+    public function seconds(int $expected, ?string $message = null): void
     {
         $this->stats->incrementAssertions();
         /** @var array{0|positive-int, 0|positive-int} */

@@ -29,8 +29,8 @@ final class Integers implements Set
     private function __construct(
         int $lowerBound,
         int $upperBound,
-        int $size = null,
-        \Closure $predicate = null,
+        ?int $size = null,
+        ?\Closure $predicate = null,
     ) {
         $this->lowerBound = $lowerBound;
         $this->upperBound = $upperBound;

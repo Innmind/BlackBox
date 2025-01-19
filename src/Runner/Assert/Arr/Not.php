@@ -34,7 +34,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function hasKey(int|string $key, string $message = null): self
+    public function hasKey(int|string $key, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -57,7 +57,7 @@ final class Not
      *
      * @throws Failure
      */
-    public function contains(mixed $value, string $message = null): self
+    public function contains(mixed $value, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

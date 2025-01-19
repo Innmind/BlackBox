@@ -40,7 +40,7 @@ final class InMoreThan
      *
      * @throws Failure
      */
-    public function bytes(int $expected, string $message = null): void
+    public function bytes(int $expected, ?string $message = null): void
     {
         $this->assert(
             $expected,
@@ -55,7 +55,7 @@ final class InMoreThan
      *
      * @throws Failure
      */
-    public function kiloBytes(int $expected, string $message = null): void
+    public function kiloBytes(int $expected, ?string $message = null): void
     {
         $this->assert(
             $expected,
@@ -70,7 +70,7 @@ final class InMoreThan
      *
      * @throws Failure
      */
-    public function megaBytes(int $expected, string $message = null): void
+    public function megaBytes(int $expected, ?string $message = null): void
     {
         $this->assert(
             $expected,

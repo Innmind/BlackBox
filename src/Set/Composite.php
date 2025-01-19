@@ -138,6 +138,7 @@ final class Composite implements Set
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
+            /** @var Composite\Combination */
             $combination = $matrix->current();
             $value = $combination->detonate($this->aggregate);
             $matrix->next();
@@ -187,6 +188,7 @@ final class Composite implements Set
         $first = \array_shift($sets);
         $second = \array_shift($sets);
 
+        /** @psalm-suppress PossiblyNullArgument */
         return \array_reduce(
             $sets,
             static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
