@@ -37,7 +37,7 @@ final class Expected
      *
      * @throws Failure
      */
-    public function same(mixed $value, string $message = null): self
+    public function same(mixed $value, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -57,7 +57,7 @@ final class Expected
      *
      * @throws Failure
      */
-    public function equals(mixed $value, string $message = null): self
+    public function equals(mixed $value, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -77,7 +77,7 @@ final class Expected
      *
      * @throws Failure
      */
-    public function in(iterable $collection, string $message = null): self
+    public function in(iterable $collection, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

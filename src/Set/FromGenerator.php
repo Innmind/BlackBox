@@ -133,6 +133,7 @@ final class FromGenerator implements Set
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {
+            /** @var T */
             $value = $generator->current();
 
             if (($this->predicate)($value)) {

@@ -126,6 +126,10 @@ final class Either implements Set
             try {
                 $value = $sets[$setToChoose]->values($random)->current();
 
+                if (\is_null($value)) {
+                    continue;
+                }
+
                 yield $value;
             } catch (EmptySet $e) {
                 unset($sets[$setToChoose]);

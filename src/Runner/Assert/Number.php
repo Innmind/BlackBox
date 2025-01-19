@@ -33,7 +33,7 @@ final class Number
      *
      * @throws Failure
      */
-    public function int(string $message = null): self
+    public function int(?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -52,7 +52,7 @@ final class Number
      *
      * @throws Failure
      */
-    public function float(string $message = null): self
+    public function float(?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -71,7 +71,7 @@ final class Number
      *
      * @throws Failure
      */
-    public function greaterThan(int|float $actual, string $message = null): self
+    public function greaterThan(int|float $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -91,7 +91,7 @@ final class Number
      *
      * @throws Failure
      */
-    public function greaterThanOrEqual(int|float $actual, string $message = null): self
+    public function greaterThanOrEqual(int|float $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -111,7 +111,7 @@ final class Number
      *
      * @throws Failure
      */
-    public function lessThan(int|float $actual, string $message = null): self
+    public function lessThan(int|float $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -131,7 +131,7 @@ final class Number
      *
      * @throws Failure
      */
-    public function lessThanOrEqual(int|float $actual, string $message = null): self
+    public function lessThanOrEqual(int|float $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

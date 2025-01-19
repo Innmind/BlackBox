@@ -63,7 +63,7 @@ final class Assert
      */
     public function that(
         callable $assertion,
-        string $message = null,
+        ?string $message = null,
     ): self {
         $this->stats->incrementAssertions();
 
@@ -84,7 +84,7 @@ final class Assert
      *
      * @throws Failure
      */
-    public function same(mixed $a, mixed $b, string $message = null): self
+    public function same(mixed $a, mixed $b, ?string $message = null): self
     {
         $this->expected($a)->same($b, $message);
 
@@ -99,8 +99,8 @@ final class Assert
      */
     public function throws(
         callable $attempt,
-        string $class = null,
-        string $message = null,
+        ?string $class = null,
+        ?string $message = null,
     ): self {
         $this->stats->incrementAssertions();
 
@@ -137,7 +137,7 @@ final class Assert
     public function count(
         int $expected,
         \Countable|array $collection,
-        string $message = null,
+        ?string $message = null,
     ): self {
         $this->stats->incrementAssertions();
 
@@ -162,7 +162,7 @@ final class Assert
      *
      * @throws Failure
      */
-    public function true(mixed $actual, string $message = null): self
+    public function true(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -181,7 +181,7 @@ final class Assert
      *
      * @throws Failure
      */
-    public function false(mixed $actual, string $message = null): self
+    public function false(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -200,7 +200,7 @@ final class Assert
      *
      * @throws Failure
      */
-    public function bool(mixed $actual, string $message = null): self
+    public function bool(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 
@@ -219,7 +219,7 @@ final class Assert
      *
      * @throws Failure
      */
-    public function null(mixed $actual, string $message = null): self
+    public function null(mixed $actual, ?string $message = null): self
     {
         $this->stats->incrementAssertions();
 

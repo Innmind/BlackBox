@@ -38,7 +38,7 @@ final class Value
      *
      * @return self<V>
      */
-    public static function immutable($value, Dichotomy $dichotomy = null): self
+    public static function immutable($value, ?Dichotomy $dichotomy = null): self
     {
         return new self(true, static fn() => $value, $dichotomy);
     }
@@ -51,7 +51,7 @@ final class Value
      *
      * @return self<V>
      */
-    public static function mutable(callable $unwrap, Dichotomy $dichotomy = null): self
+    public static function mutable(callable $unwrap, ?Dichotomy $dichotomy = null): self
     {
         return new self(false, $unwrap, $dichotomy);
     }
