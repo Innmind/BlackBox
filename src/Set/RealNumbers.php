@@ -123,7 +123,7 @@ final class RealNumbers implements Set
         while ($iterations < $this->size) {
             // simulate the function lcg_value()
             $lcg = ($random->between(0, 100) / 100);
-            /** @var float */
+            /** @psalm-suppress InvalidOperand Don't know why it complains */
             $value = $random->between($this->lowerBound, $this->upperBound) * $lcg;
 
             if (!($this->predicate)($value)) {
@@ -155,6 +155,7 @@ final class RealNumbers implements Set
      */
     private function divideByTwo(float $value): callable
     {
+        /** @psalm-suppress InvalidOperand Don't know why it complains */
         $shrinked = $value / 2;
 
         if (!($this->predicate)($shrinked)) {
@@ -171,6 +172,7 @@ final class RealNumbers implements Set
     {
         // add one when the value is negative, otherwise subtract one
         $reduce = ($value <=> 0) * -1;
+        /** @psalm-suppress InvalidOperand Don't know why it complains */
         $shrinked = $value + $reduce;
 
         if (!($this->predicate)($shrinked)) {
