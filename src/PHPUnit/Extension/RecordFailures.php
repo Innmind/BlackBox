@@ -25,6 +25,7 @@ final class RecordFailures implements FailedSubscriber
         $this->tests = $tests;
     }
 
+    #[\Override]
     public function notify(Failed $event): void
     {
         $test = $event->test();

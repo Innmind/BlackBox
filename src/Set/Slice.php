@@ -71,6 +71,7 @@ final class Slice implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): Set
     {
         return $this->collapse()->take($size);
@@ -79,6 +80,7 @@ final class Slice implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         return $this->collapse()->filter($predicate);
@@ -87,11 +89,13 @@ final class Slice implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return $this->collapse()->map($map);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         yield from $this->collapse()->values($random);

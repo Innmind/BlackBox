@@ -60,6 +60,7 @@ final class Properties implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): Set
     {
         return $this->ensure(100)->take($size);
@@ -68,6 +69,7 @@ final class Properties implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         return $this->ensure(100)->filter($predicate);
@@ -76,6 +78,7 @@ final class Properties implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this->ensure(100));
@@ -84,6 +87,7 @@ final class Properties implements Set
     /**
      * @return \Generator<Value<Ensure>>
      */
+    #[\Override]
     public function values(Random $random): \Generator
     {
         yield from $this->ensure(100)->values($random);

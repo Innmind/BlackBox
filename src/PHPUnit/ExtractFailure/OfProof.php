@@ -28,21 +28,25 @@ final class OfProof implements Proof
         $this->failures = $failures;
     }
 
+    #[\Override]
     public function emptySet(IO $output, IO $error): void
     {
         // pass
     }
 
+    #[\Override]
     public function success(IO $output, IO $error): void
     {
         // pass
     }
 
+    #[\Override]
     public function shrunk(IO $output, IO $error): void
     {
         // pass
     }
 
+    #[\Override]
     public function failed(IO $output, IO $error, Failure $failure): void
     {
         if (!($failure->assertion()->kind() instanceof Property)) {
@@ -55,6 +59,7 @@ final class OfProof implements Proof
         ]);
     }
 
+    #[\Override]
     public function end(IO $output, IO $error): void
     {
         // pass

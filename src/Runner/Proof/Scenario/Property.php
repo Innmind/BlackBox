@@ -22,6 +22,7 @@ final class Property implements Scenario
         $this->systemUnderTest = $systemUnderTest;
     }
 
+    #[\Override]
     public function __invoke(Assert $assert): mixed
     {
         if (!$this->property->applicableTo($this->systemUnderTest)) {

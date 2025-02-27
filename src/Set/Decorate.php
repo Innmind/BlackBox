@@ -69,6 +69,7 @@ final class Decorate implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): Set
     {
         return new self(
@@ -81,6 +82,7 @@ final class Decorate implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         /** @psalm-suppress MixedArgument */
@@ -94,11 +96,13 @@ final class Decorate implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): self
     {
         return self::immutable($map, $this);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         foreach ($this->set->values($random) as $value) {

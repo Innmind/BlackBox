@@ -28,11 +28,13 @@ final class ExtractFailure implements Printer
         $this->failures = $failures;
     }
 
+    #[\Override]
     public function start(IO $output, IO $error): void
     {
         // pass
     }
 
+    #[\Override]
     public function proof(
         IO $output,
         IO $error,
@@ -42,6 +44,7 @@ final class ExtractFailure implements Printer
         return new ExtractFailure\OfProof($this->failures);
     }
 
+    #[\Override]
     public function end(IO $output, IO $error, Stats $stats): void
     {
         // pass

@@ -21,6 +21,7 @@ final class Collect implements IO
         $this->written = $written;
     }
 
+    #[\Override]
     public function __invoke(string $data): void
     {
         $this->written[] = $data;

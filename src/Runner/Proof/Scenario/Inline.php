@@ -28,6 +28,7 @@ final class Inline implements Scenario
         $this->test = $test;
     }
 
+    #[\Override]
     public function __invoke(Assert $assert): mixed
     {
         ($this->test)($assert, ...$this->args);

@@ -67,6 +67,7 @@ final class Inline implements Proof
         );
     }
 
+    #[\Override]
     public function name(): Name
     {
         return $this->name;
@@ -76,6 +77,7 @@ final class Inline implements Proof
      * @psalm-mutation-free
      * @no-named-arguments
      */
+    #[\Override]
     public function tag(\UnitEnum ...$tags): self
     {
         return new self(
@@ -101,11 +103,13 @@ final class Inline implements Proof
         );
     }
 
+    #[\Override]
     public function tags(): array
     {
         return $this->tags;
     }
 
+    #[\Override]
     public function scenarii(int $count): Set
     {
         /** @var Set<Scenario> */

@@ -73,6 +73,7 @@ final class RealNumbers implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): Set
     {
         return new self(
@@ -86,6 +87,7 @@ final class RealNumbers implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -107,11 +109,13 @@ final class RealNumbers implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $iterations = 0;

@@ -81,6 +81,7 @@ final class Integers implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): self
     {
         return new self(
@@ -94,6 +95,7 @@ final class Integers implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
@@ -115,11 +117,13 @@ final class Integers implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $iterations = 0;

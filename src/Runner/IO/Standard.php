@@ -10,6 +10,7 @@ enum Standard implements IO
     case output;
     case error;
 
+    #[\Override]
     public function __invoke(string $data): void
     {
         match ($this) {

@@ -87,6 +87,7 @@ final class MadeOf implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): Set
     {
         return $this->build(0, 128)->take($size);
@@ -95,6 +96,7 @@ final class MadeOf implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         return $this->build(0, 128)->filter($predicate);
@@ -103,11 +105,13 @@ final class MadeOf implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         yield from $this

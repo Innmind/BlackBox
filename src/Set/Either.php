@@ -67,6 +67,7 @@ final class Either implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function take(int $size): Set
     {
         return new self(
@@ -83,6 +84,7 @@ final class Either implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         return new self(
@@ -99,11 +101,13 @@ final class Either implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $iterations = 0;

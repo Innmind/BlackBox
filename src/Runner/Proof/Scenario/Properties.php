@@ -23,6 +23,7 @@ final class Properties implements Scenario
         $this->systemUnderTest = $systemUnderTest;
     }
 
+    #[\Override]
     public function __invoke(Assert $assert): mixed
     {
         try {

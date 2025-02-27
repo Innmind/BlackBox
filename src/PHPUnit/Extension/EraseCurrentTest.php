@@ -20,6 +20,7 @@ final class EraseCurrentTest implements FinishedSubscriber
         $this->currentTest = $currentTest;
     }
 
+    #[\Override]
     public function notify(Finished $event): void
     {
         $this->currentTest->erase();

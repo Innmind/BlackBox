@@ -43,6 +43,7 @@ final class PrintFailures implements FinishedSubscriber
         $this->dumper->setColors(true);
     }
 
+    #[\Override]
     public function notify(Finished $event): void
     {
         /** @var callable(string): void */

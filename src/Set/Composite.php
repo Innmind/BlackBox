@@ -91,6 +91,7 @@ final class Composite implements Set
      *
      * @return Set<C>
      */
+    #[\Override]
     public function take(int $size): Set
     {
         $self = clone $this;
@@ -106,6 +107,7 @@ final class Composite implements Set
      *
      * @return Set<C>
      */
+    #[\Override]
     public function filter(callable $predicate): Set
     {
         $previous = $this->predicate;
@@ -127,11 +129,13 @@ final class Composite implements Set
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function map(callable $map): Set
     {
         return Decorate::immutable($map, $this);
     }
 
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $matrix = $this->matrix()->values($random);
