@@ -36,7 +36,7 @@ final class Type
          * @psalm-suppress InvalidArgument Don't why it complains
          * @var Set<mixed>
          */
-        return Set::of(Either::any(
+        return Set::either(
             Set::elements(true, false, null),
             Integers::any(),
             RealNumbers::any(),
@@ -58,6 +58,6 @@ final class Type
                     yield static fn() => null;
                 }
             }),
-        ));
+        );
     }
 }
