@@ -12,7 +12,7 @@ use Innmind\BlackBox\{
 use function Innmind\BlackBox\Runner\test;
 
 // This test has to be done here because other tests use global functions
-$result = Application::new($argv)
+$result = Application::new([])
     ->codeCoverage(
         CodeCoverage::of(
             __DIR__.'/src/',
