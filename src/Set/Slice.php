@@ -115,8 +115,8 @@ final class Slice implements Provider
     {
         return Set::of(Composite::immutable(
             Util::of(...),
-            Set::integers($this->min, $this->max),
-            Set::integers($this->atLeast, $this->max - $this->min),
+            Set::integers()->between($this->min, $this->max),
+            Set::integers()->between($this->atLeast, $this->max - $this->min),
             Set::elements($this->atLeast),
             Set::elements(true, false),
         ));

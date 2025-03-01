@@ -15,6 +15,8 @@ final class NaturalNumbersExceptZero
     public static function any(): Set
     {
         /** @var Set<positive-int> */
-        return Set::integers(1);
+        return Set::integers()
+            ->above(1)
+            ->toSet();
     }
 }

@@ -42,9 +42,12 @@ final class Integers implements Implementation
      * @internal
      * @psalm-pure
      */
-    public static function implementation(int $lowerBound, int $upperBound): self
+    public static function implementation(?int $lowerBound, ?int $upperBound): self
     {
-        return new self($lowerBound, $upperBound);
+        return new self(
+            $lowerBound ?? \PHP_INT_MIN,
+            $upperBound ?? \PHP_INT_MAX,
+        );
     }
 
     /**
@@ -54,7 +57,7 @@ final class Integers implements Implementation
      */
     public static function any(): Set
     {
-        return Set::integers();
+        return Set::integers()->toSet();
     }
 
     /**
@@ -64,7 +67,9 @@ final class Integers implements Implementation
      */
     public static function between(int $lowerBound, int $upperBound): Set
     {
-        return Set::integers($lowerBound, $upperBound);
+        return Set::integers()
+            ->between($lowerBound, $upperBound)
+            ->toSet();
     }
 
     /**
@@ -74,7 +79,9 @@ final class Integers implements Implementation
      */
     public static function above(int $lowerBound): Set
     {
-        return Set::integers($lowerBound, \PHP_INT_MAX);
+        return Set::integers()
+            ->above($lowerBound)
+            ->toSet();
     }
 
     /**
@@ -84,7 +91,9 @@ final class Integers implements Implementation
      */
     public static function below(int $upperBound): Set
     {
-        return Set::integers(\PHP_INT_MIN, $upperBound);
+        return Set::integers()
+            ->below($upperBound)
+            ->toSet();
     }
 
     /**

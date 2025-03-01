@@ -2801,7 +2801,9 @@ final class Unicode
     private static function between(int $min, int $max): Set
     {
         /** @var Set<string> */
-        return Set::integers($min, $max)
+        return Set::integers()
+            ->between($min, $max)
+            ->toSet()
             ->map(\IntlChar::chr(...))
             ->filter(static fn($char) => \is_string($char));
     }
