@@ -3,16 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
 /**
- * @implements Set<string>
  * @implements Provider<string>
  */
-final class MadeOf implements Set, Provider
+final class MadeOf implements Provider
 {
     /** @var Set<string> */
     private Set $chars;
@@ -87,8 +83,11 @@ final class MadeOf implements Set, Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<string>
      */
-    #[\Override]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -96,8 +95,11 @@ final class MadeOf implements Set, Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(string): bool $predicate
+     *
+     * @return Set<string>
      */
-    #[\Override]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -105,19 +107,16 @@ final class MadeOf implements Set, Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(string): V $map
+     *
+     * @return Set<V>
      */
-    #[\Override]
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this);
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
-    {
-        yield from $this
-            ->toSet()
-            ->values($random);
+        return $this->toSet()->map($map);
     }
 
     /**

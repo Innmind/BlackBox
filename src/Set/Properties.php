@@ -4,17 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Random,
     Set,
     Property as Concrete,
     Properties as Ensure,
 };
 
 /**
- * @implements Set<Ensure>
  * @implements Provider<Ensure>
  */
-final class Properties implements Set, Provider
+final class Properties implements Provider
 {
     /** @var Set<Concrete> */
     private Set $properties;
@@ -60,8 +58,11 @@ final class Properties implements Set, Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<Ensure>
      */
-    #[\Override]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -69,8 +70,11 @@ final class Properties implements Set, Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(Ensure): bool $predicate
+     *
+     * @return Set<Ensure>
      */
-    #[\Override]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -78,20 +82,16 @@ final class Properties implements Set, Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Ensure): V $map
+     *
+     * @return Set<V>
      */
-    #[\Override]
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this->toSet());
-    }
-
-    /**
-     * @return \Generator<Value<Ensure>>
-     */
-    #[\Override]
-    public function values(Random $random): \Generator
-    {
-        yield from $this->toSet()->values($random);
+        return $this->toSet()->map($map);
     }
 
     /**
