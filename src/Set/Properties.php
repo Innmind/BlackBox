@@ -33,13 +33,13 @@ final class Properties implements Set
      *
      * @no-named-arguments
      *
-     * @param Set<Concrete> $first
-     * @param Set<Concrete> $properties
+     * @param Set<Concrete>|Provider<Concrete> $first
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    public static function any(Set $first, Set ...$properties): self
+    public static function any(Set|Provider $first, Set|Provider ...$properties): self
     {
         if (\count($properties) === 0) {
-            return new self($first);
+            return new self(Collapse::of($first));
         }
 
         return new self(Either::any($first, ...$properties));

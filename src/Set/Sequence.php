@@ -47,13 +47,13 @@ final class Sequence implements Set
      *
      * @template U
      *
-     * @param Set<U> $set
+     * @param Set<U>|Provider<U> $set
      *
      * @return self<U>
      */
-    public static function of(Set $set): self
+    public static function of(Set|Provider $set): self
     {
-        return new self($set, Integers::between(0, 100));
+        return new self(Collapse::of($set), Integers::between(0, 100));
     }
 
     /**

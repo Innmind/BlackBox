@@ -33,18 +33,18 @@ final class MadeOf implements Set
      *
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $rest
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $rest
      */
-    public static function of(Set $first, Set ...$rest): self
+    public static function of(Set|Provider $first, Set|Provider ...$rest): self
     {
         $chars = $first;
 
         if (\count($rest) > 0) {
-            $chars = Either::any($first, ...$rest);
+            return new self(Either::any($first, ...$rest));
         }
 
-        return new self($chars);
+        return new self(Collapse::of($chars));
     }
 
     /**

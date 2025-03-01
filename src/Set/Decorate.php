@@ -25,12 +25,12 @@ final class Decorate implements Set
      * @psalm-mutation-free
      *
      * @param \Closure(I): D $decorate
-     * @param Set<I> $set
+     * @param Set<I>|Provider<I> $set
      */
-    private function __construct(bool $immutable, \Closure $decorate, Set $set)
+    private function __construct(bool $immutable, \Closure $decorate, Set|Provider $set)
     {
         $this->decorate = $decorate;
-        $this->set = $set;
+        $this->set = Collapse::of($set);
         $this->immutable = $immutable;
     }
 
@@ -41,11 +41,11 @@ final class Decorate implements Set
      * @template V
      *
      * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
-     * @param Set<V> $set
+     * @param Set<V>|Provider<V> $set
      *
      * @return self<T,V>
      */
-    public static function immutable(callable $decorate, Set $set): self
+    public static function immutable(callable $decorate, Set|Provider $set): self
     {
         return new self(true, \Closure::fromCallable($decorate), $set);
     }
@@ -57,11 +57,11 @@ final class Decorate implements Set
      * @template V
      *
      * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
-     * @param Set<V> $set
+     * @param Set<V>|Provider<V> $set
      *
      * @return self<T,V>
      */
-    public static function mutable(callable $decorate, Set $set): self
+    public static function mutable(callable $decorate, Set|Provider $set): self
     {
         return new self(false, \Closure::fromCallable($decorate), $set);
     }
