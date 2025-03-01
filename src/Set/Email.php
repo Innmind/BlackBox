@@ -15,14 +15,16 @@ final class Email
     public static function any(): Set
     {
         /** @var Set<non-empty-string> */
-        return Set::of(Composite::immutable(
+        return Set::composite(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
             },
             self::address(),
             self::domain(),
             self::tld(),
-        ))
+        )
+            ->immutable()
+            ->toSet()
             ->take(100)
             ->filter(static function(string $email): bool {
                 return !\preg_match('~(\-.|\.\-)~', $email);
@@ -66,16 +68,19 @@ final class Email
                 ->between(1, $maxLength)
                 ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
-            Set::of(Composite::immutable(
+            Set::composite(
                 static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
                 Sequence::of(self::letter(...$extra))
                     ->between(1, $maxLength - 2)
                     ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
-            ))->filter(static function(string $string): bool {
-                return !\preg_match('~\.\.~', $string);
-            }),
+            )
+                ->immutable()
+                ->toSet()
+                ->filter(static function(string $string): bool {
+                    return !\preg_match('~\.\.~', $string);
+                }),
         );
     }
 

@@ -21,13 +21,16 @@ final class Uuid
             ->map(static fn(array $chars): string => \implode('', $chars));
 
         /** @var Set<non-empty-string> */
-        return Set::of(Composite::immutable(
+        return Set::composite(
             static fn(string ...$parts): string => \implode('-', $parts),
             $part(8),
             $part(4),
             $part(4),
             $part(4),
             $part(12),
-        ))->take(100);
+        )
+            ->immutable()
+            ->toSet()
+            ->take(100);
     }
 }

@@ -105,10 +105,14 @@ final class Property implements Proof
          * @psalm-suppress MixedArgument
          * @var Set<Scenario>
          */
-        return Set::randomize(Set::of(Set\Composite::immutable(
-            Scenario\Property::of(...),
-            ([$this->property, 'any'])(),
-            $this->systemUnderTest,
-        )))->take($count);
+        return Set::randomize(
+            Set::composite(
+                Scenario\Property::of(...),
+                ([$this->property, 'any'])(),
+                $this->systemUnderTest,
+            )
+                ->immutable()
+                ->toSet(),
+        )->take($count);
     }
 }

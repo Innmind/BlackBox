@@ -49,11 +49,13 @@ function given(Set|Provider $first, Set|Provider ...$rest): Given
 
     if (\count($rest) > 0) {
         /** @var Set<list<mixed>> */
-        $given = Set::of(Set\Composite::immutable(
+        $given = Set::composite(
             static fn(mixed ...$args) => $args,
             $first,
             ...$rest,
-        ));
+        )
+            ->immutable()
+            ->toSet();
     }
 
     return Given::of(Set::randomize($given));

@@ -49,6 +49,7 @@ final class Composite implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @template T
@@ -58,13 +59,14 @@ final class Composite implements Implementation
      *
      * @return self<T>
      */
-    public static function immutable(
+    public static function implementation(
+        bool $immutable,
         callable $aggregate,
         Set|Provider $first,
         Set|Provider $second,
         Set|Provider ...$sets,
     ): self {
-        return new self(true, $aggregate, $first, $second, ...$sets);
+        return new self($immutable, $aggregate, $first, $second, ...$sets);
     }
 
     /**
@@ -75,15 +77,38 @@ final class Composite implements Implementation
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *
-     * @return self<T>
+     * @return Set<T>
+     */
+    public static function immutable(
+        callable $aggregate,
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$sets,
+    ): Set {
+        return Set::composite($aggregate, $first, $second, ...$sets)
+            ->immutable()
+            ->toSet();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @template T
+     * @no-named-arguments
+     *
+     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
+     *
+     * @return Set<T>
      */
     public static function mutable(
         callable $aggregate,
         Set|Provider $first,
         Set|Provider $second,
         Set|Provider ...$sets,
-    ): self {
-        return new self(false, $aggregate, $first, $second, ...$sets);
+    ): Set {
+        return Set::composite($aggregate, $first, $second, ...$sets)
+            ->mutable()
+            ->toSet();
     }
 
     /**

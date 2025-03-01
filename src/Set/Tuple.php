@@ -27,11 +27,13 @@ final class Tuple
         Set|Provider ...$rest,
     ): Set {
         /** @var Set<non-empty-list<A|B|C>> */
-        return Set::of(Composite::immutable(
+        return Set::composite(
             static fn(mixed ...$args) => $args,
             $first,
             $second,
             ...$rest,
-        ));
+        )
+            ->immutable()
+            ->toSet();
     }
 }

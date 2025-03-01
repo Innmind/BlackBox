@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Implementation,
     Set\Provider,
     Set\Value,
+    Set\Collapse,
     Exception\EmptySet,
 };
 
@@ -75,6 +76,37 @@ final class Set
     {
         /** @psalm-suppress InvalidArgument */
         return Provider\RealNumbers::of(self::of(...));
+    }
+
+    /**
+     * By default the value created by this composition is considered immutable.
+     *
+     * @psalm-pure
+     *
+     * @template A
+     * @no-named-arguments
+     *
+     * @param callable(mixed...): A $aggregate It must be a pure function (no randomness, no side effects)
+     *
+     * @return Provider\Composite<A>
+     */
+    public static function composite(
+        callable $aggregate,
+        self|Provider $first,
+        self|Provider $second,
+        self|Provider ...$rest,
+    ): Provider\Composite {
+        /** @psalm-suppress InvalidArgument */
+        return Provider\Composite::of(
+            self::of(...),
+            $aggregate,
+            Collapse::of($first),
+            Collapse::of($second),
+            ...\array_map(
+                Collapse::of(...),
+                $rest,
+            ),
+        );
     }
 
     /**
