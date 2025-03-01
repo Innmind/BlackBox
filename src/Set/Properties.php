@@ -4,16 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Random,
     Set,
     Property as Concrete,
     Properties as Ensure,
 };
 
 /**
- * @implements Set<Ensure>
+ * @implements Provider<Ensure>
  */
-final class Properties implements Set
+final class Properties implements Provider
 {
     /** @var Set<Concrete> */
     private Set $properties;
@@ -33,13 +32,13 @@ final class Properties implements Set
      *
      * @no-named-arguments
      *
-     * @param Set<Concrete> $first
-     * @param Set<Concrete> $properties
+     * @param Set<Concrete>|Provider<Concrete> $first
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    public static function any(Set $first, Set ...$properties): self
+    public static function any(Set|Provider $first, Set|Provider ...$properties): self
     {
         if (\count($properties) === 0) {
-            return new self($first);
+            return new self(Collapse::of($first));
         }
 
         return new self(Either::any($first, ...$properties));
@@ -59,38 +58,51 @@ final class Properties implements Set
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<Ensure>
      */
-    #[\Override]
     public function take(int $size): Set
     {
-        return $this->ensure(100)->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(Ensure): bool $predicate
+     *
+     * @return Set<Ensure>
      */
-    #[\Override]
     public function filter(callable $predicate): Set
     {
-        return $this->ensure(100)->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Ensure): V $map
+     *
+     * @return Set<V>
      */
-    #[\Override]
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this->ensure(100));
+        return $this->toSet()->map($map);
     }
 
     /**
-     * @return \Generator<Value<Ensure>>
+     * @psalm-mutation-free
+     *
+     * @return Set<Ensure>
      */
     #[\Override]
-    public function values(Random $random): \Generator
+    public function toSet(): Set
     {
-        yield from $this->ensure(100)->values($random);
+        return $this->ensure(100);
     }
 
     /**

@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\Set\Provider` to allow classes to be factories of `Set`s without having to implement the `Set` interface
+
+### Changed
+
+- BlackBox now also accepts instances of `Set\Provider` as input where it accepts `Set`s
+
 ## 5.10.1 - 2025-01-19
 
 ### Fixed

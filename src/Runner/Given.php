@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Set\Provider,
+    Set\Collapse,
+};
 
 /**
  * @psalm-immutable
@@ -24,11 +28,11 @@ final class Given
     /**
      * @psalm-pure
      *
-     * @param Set<list<mixed>> $args
+     * @param Set<list<mixed>>|Provider<list<mixed>> $args
      */
-    public static function of(Set $args): self
+    public static function of(Set|Provider $args): self
     {
-        return new self($args);
+        return new self(Collapse::of($args));
     }
 
     /**

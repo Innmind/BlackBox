@@ -11,9 +11,9 @@ use Innmind\BlackBox\Runner\Assert;
 interface Property
 {
     /**
-     * @return Set<static>
+     * @return Set<static>|Set\Provider<static>
      */
-    public static function any(): Set;
+    public static function any(): Set|Set\Provider;
 
     /**
      * @param T $systemUnderTest

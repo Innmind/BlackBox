@@ -34,18 +34,18 @@ final class Composite implements Set
     private function __construct(
         bool $immutable,
         callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$sets,
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$sets,
     ) {
         $this->immutable = $immutable;
         /** @var \Closure(mixed...): C */
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->size = null; // by default allow all combinations
         $this->predicate = static fn(): bool => true;
-        $this->first = $first;
-        $this->second = $second;
-        $this->sets = $sets;
+        $this->first = Collapse::of($first);
+        $this->second = Collapse::of($second);
+        $this->sets = \array_map(Collapse::of(...), $sets);
     }
 
     /**
@@ -60,9 +60,9 @@ final class Composite implements Set
      */
     public static function immutable(
         callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$sets,
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$sets,
     ): self {
         return new self(true, $aggregate, $first, $second, ...$sets);
     }
@@ -79,9 +79,9 @@ final class Composite implements Set
      */
     public static function mutable(
         callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$sets,
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$sets,
     ): self {
         return new self(false, $aggregate, $first, $second, ...$sets);
     }

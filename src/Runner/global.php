@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
     Runner\Proof,
     Runner\Assert,
     Runner\Given,
@@ -34,31 +35,31 @@ function test(string $name, callable $test): Proof
 /**
  * @no-named-arguments
  */
-function given(Set $first, Set ...$rest): Given
+function given(Set|Provider $first, Set|Provider ...$rest): Given
 {
     return \Innmind\BlackBox\Runner\given($first, ...$rest);
 }
 
 /**
  * @param class-string<Property> $property
- * @param Set<object> $systemUnderTest
+ * @param Set<object>|Provider<object> $systemUnderTest
  */
 function property(
     string $property,
-    Set $systemUnderTest,
+    Set|Provider $systemUnderTest,
 ): Proof\Property {
     return \Innmind\BlackBox\Runner\property($property, $systemUnderTest);
 }
 
 /**
  * @param non-empty-string $name
- * @param Set<Properties> $properties
- * @param Set<object> $systemUnderTest
+ * @param Set<Properties>|Provider<Properties> $properties
+ * @param Set<object>|Provider<object> $systemUnderTest
  */
 function properties(
     string $name,
-    Set $properties,
-    Set $systemUnderTest,
+    Set|Provider $properties,
+    Set|Provider $systemUnderTest,
 ): Proof {
     return \Innmind\BlackBox\Runner\properties($name, $properties, $systemUnderTest);
 }

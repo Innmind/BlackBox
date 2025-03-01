@@ -32,15 +32,20 @@ final class Either implements Set
      * @no-named-arguments
      *
      * @param positive-int $size
-     * @param Set<T> $first
-     * @param Set<U> $second
-     * @param Set<V> $rest
+     * @param Set<T>|Provider<T> $first
+     * @param Set<U>|Provider<U> $second
+     * @param Set<V>|Provider<V> $rest
      */
-    private function __construct(int $size, Set $first, Set $second, Set ...$rest)
-    {
-        $this->first = $first;
-        $this->second = $second;
-        $this->rest = $rest;
+    private function __construct(
+        int $size,
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$rest,
+    ) {
+        $this->first = Collapse::of($first);
+        $this->second = Collapse::of($second);
+        /** @psalm-suppress PossiblyInvalidArgument */
+        $this->rest = \array_map(Collapse::of(...), $rest);
         $this->size = $size;
     }
 
@@ -53,14 +58,17 @@ final class Either implements Set
      * @template B
      * @template C
      *
-     * @param Set<A> $first
-     * @param Set<B> $second
-     * @param Set<C> $rest
+     * @param Set<A>|Provider<A> $first
+     * @param Set<B>|Provider<B> $second
+     * @param Set<C>|Provider<C> $rest
      *
      * @return self<A, B, C>
      */
-    public static function any(Set $first, Set $second, Set ...$rest): self
-    {
+    public static function any(
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$rest,
+    ): self {
         return new self(100, $first, $second, ...$rest);
     }
 

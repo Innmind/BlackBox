@@ -3,15 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
 /**
- * @implements Set<string>
+ * @implements Provider<string>
  */
-final class MadeOf implements Set
+final class MadeOf implements Provider
 {
     /** @var Set<string> */
     private Set $chars;
@@ -33,18 +30,18 @@ final class MadeOf implements Set
      *
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $rest
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $rest
      */
-    public static function of(Set $first, Set ...$rest): self
+    public static function of(Set|Provider $first, Set|Provider ...$rest): self
     {
         $chars = $first;
 
         if (\count($rest) > 0) {
-            $chars = Either::any($first, ...$rest);
+            return new self(Either::any($first, ...$rest));
         }
 
-        return new self($chars);
+        return new self(Collapse::of($chars));
     }
 
     /**
@@ -86,37 +83,51 @@ final class MadeOf implements Set
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<string>
      */
-    #[\Override]
     public function take(int $size): Set
     {
-        return $this->build(0, 128)->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(string): bool $predicate
+     *
+     * @return Set<string>
      */
-    #[\Override]
     public function filter(callable $predicate): Set
     {
-        return $this->build(0, 128)->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(string): V $map
+     *
+     * @return Set<V>
      */
-    #[\Override]
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this);
+        return $this->toSet()->map($map);
     }
 
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<string>
+     */
     #[\Override]
-    public function values(Random $random): \Generator
+    public function toSet(): Set
     {
-        yield from $this
-            ->build(0, 128)
-            ->values($random);
+        return $this->build(0, 128);
     }
 
     /**

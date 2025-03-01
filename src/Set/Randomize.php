@@ -41,13 +41,13 @@ final class Randomize implements Set
      *
      * @template T
      *
-     * @param Set<T> $set
+     * @param Set<T>|Provider<T> $set
      *
      * @return self<T>
      */
-    public static function of(Set $set): self
+    public static function of(Set|Provider $set): self
     {
-        return new self($set, 100);
+        return new self(Collapse::of($set), 100);
     }
 
     /**

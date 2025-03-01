@@ -6,6 +6,7 @@ namespace Tests\Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set\Strings,
     Set\Chars,
+    Set\Collapse,
     Set,
     Set\Value,
     Random,
@@ -206,7 +207,7 @@ class StringsTest extends TestCase
         $set = Strings::madeOf(Chars::lowercaseLetter());
         $allowed = \range('a', 'z');
 
-        foreach ($set->values(Random::mersenneTwister) as $value) {
+        foreach (Collapse::of($set)->values(Random::mersenneTwister) as $value) {
             if (\strlen($value->unwrap()) === 0) {
                 continue;
             }
@@ -221,7 +222,7 @@ class StringsTest extends TestCase
         $set = Strings::madeOf(Chars::lowercaseLetter(), Chars::uppercaseLetter());
         $allowed = [...\range('a', 'z'), ...\range('A', 'Z')];
 
-        foreach ($set->values(Random::mersenneTwister) as $value) {
+        foreach (Collapse::of($set)->values(Random::mersenneTwister) as $value) {
             if (\strlen($value->unwrap()) === 0) {
                 continue;
             }
@@ -284,7 +285,7 @@ class StringsTest extends TestCase
         $set = Strings::madeOf(Chars::any());
         $set2 = $set->take(50);
 
-        $this->assertCount(100, \iterator_to_array($set->values(Random::mersenneTwister)));
-        $this->assertCount(50, \iterator_to_array($set2->values(Random::mersenneTwister)));
+        $this->assertCount(100, \iterator_to_array(Collapse::of($set)->values(Random::mersenneTwister)));
+        $this->assertCount(50, \iterator_to_array(Collapse::of($set2)->values(Random::mersenneTwister)));
     }
 }

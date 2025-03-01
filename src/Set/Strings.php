@@ -61,10 +61,10 @@ final class Strings
      *
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $rest
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $rest
      */
-    public static function madeOf(Set $first, Set ...$rest): MadeOf
+    public static function madeOf(Set|Provider $first, Set|Provider ...$rest): MadeOf
     {
         return MadeOf::of($first, ...$rest);
     }

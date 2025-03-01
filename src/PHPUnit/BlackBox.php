@@ -5,6 +5,8 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
+    Set\Collapse,
     Application,
     Runner\Given,
     PHPUnit\Framework\TestCase,
@@ -12,8 +14,10 @@ use Innmind\BlackBox\{
 
 trait BlackBox
 {
-    protected static function forAll(Set $first, Set ...$rest): Compatibility
-    {
+    protected static function forAll(
+        Set|Provider $first,
+        Set|Provider ...$rest,
+    ): Compatibility {
         $app = Application::new([]);
 
         $size = \getenv('BLACKBOX_SET_SIZE');
@@ -28,7 +32,7 @@ trait BlackBox
         }
 
         /** @var Set<list<mixed>> */
-        $given = $first->map(static fn(mixed $value) => [$value]);
+        $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
 
         if (\count($rest) > 0) {
             /** @var Set<list<mixed>> */

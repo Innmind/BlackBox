@@ -5,22 +5,25 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\Set;
 
-final class Nullable
+/**
+ * @internal
+ */
+final class Collapse
 {
     /**
-     * @psalm-pure
-     *
      * @template T
+     * @psalm-pure
      *
      * @param Set<T>|Provider<T> $set
      *
-     * @return Set<?T>
+     * @return Set<T>
      */
     public static function of(Set|Provider $set): Set
     {
-        return Either::any(
-            $set,
-            Elements::of(null),
-        );
+        if ($set instanceof Provider) {
+            return $set->toSet();
+        }
+
+        return $set;
     }
 }
