@@ -17,21 +17,38 @@ final class Decorate implements Implementation
 {
     /** @var \Closure(I): D */
     private \Closure $decorate;
-    /** @var Set<I> */
-    private Set $set;
-    private bool $immutable;
+    /** @var Implementation<I> */
+    private Implementation $set;
 
     /**
      * @psalm-mutation-free
      *
      * @param \Closure(I): D $decorate
-     * @param Set<I>|Provider<I> $set
+     * @param Implementation<I> $set
      */
-    private function __construct(bool $immutable, \Closure $decorate, Set|Provider $set)
+    private function __construct(\Closure $decorate, Implementation $set)
     {
         $this->decorate = $decorate;
-        $this->set = Collapse::of($set);
-        $this->immutable = $immutable;
+        $this->set = $set;
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     *
+     * @template T
+     * @template V
+     *
+     * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
+     * @param Implementation<V> $set
+     *
+     * @return self<T,V>
+     */
+    public static function implementation(
+        callable $decorate,
+        Implementation $set,
+    ): self {
+        return new self(\Closure::fromCallable($decorate), $set);
     }
 
     /**
@@ -43,14 +60,17 @@ final class Decorate implements Implementation
      * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
      * @param Set<V>|Provider<V> $set
      *
-     * @return self<T,V>
+     * @return Set<T>
      */
-    public static function immutable(callable $decorate, Set|Provider $set): self
+    public static function immutable(callable $decorate, Set|Provider $set): Set
     {
-        return new self(true, \Closure::fromCallable($decorate), $set);
+        return Collapse::of($set)->map($decorate);
     }
 
     /**
+     * Mutability is now only derived from the underlying generated value
+     *
+     * @deprecated
      * @psalm-pure
      *
      * @template T
@@ -59,11 +79,11 @@ final class Decorate implements Implementation
      * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
      * @param Set<V>|Provider<V> $set
      *
-     * @return self<T,V>
+     * @return Set<T>
      */
-    public static function mutable(callable $decorate, Set|Provider $set): self
+    public static function mutable(callable $decorate, Set|Provider $set): Set
     {
-        return new self(false, \Closure::fromCallable($decorate), $set);
+        return Collapse::of($set)->map($decorate);
     }
 
     /**
@@ -73,7 +93,6 @@ final class Decorate implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $this->immutable,
             $this->decorate,
             $this->set->take($size),
         );
@@ -87,7 +106,6 @@ final class Decorate implements Implementation
     {
         /** @psalm-suppress MixedArgument */
         return new self(
-            $this->immutable,
             $this->decorate,
             $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value))),
         );
@@ -99,14 +117,17 @@ final class Decorate implements Implementation
     #[\Override]
     public function map(callable $map): self
     {
-        return self::immutable($map, Set::of($this));
+        return self::implementation(
+            $map,
+            $this,
+        );
     }
 
     #[\Override]
     public function values(Random $random): \Generator
     {
         foreach ($this->set->values($random) as $value) {
-            if ($value->isImmutable() && $this->immutable) {
+            if ($value->isImmutable()) {
                 $decorated = ($this->decorate)($value->unwrap());
 
                 yield Value::immutable(

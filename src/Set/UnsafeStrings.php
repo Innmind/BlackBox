@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set,
     Random,
     Exception\EmptySet,
 };
@@ -80,7 +79,7 @@ final class UnsafeStrings implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, Set::of($this));
+        return Decorate::implementation($map, $this);
     }
 
     #[\Override]
