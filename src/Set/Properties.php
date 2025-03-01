@@ -12,8 +12,9 @@ use Innmind\BlackBox\{
 
 /**
  * @implements Set<Ensure>
+ * @implements Provider<Ensure>
  */
-final class Properties implements Set
+final class Properties implements Set, Provider
 {
     /** @var Set<Concrete> */
     private Set $properties;
@@ -63,7 +64,7 @@ final class Properties implements Set
     #[\Override]
     public function take(int $size): Set
     {
-        return $this->ensure(100)->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
@@ -72,7 +73,7 @@ final class Properties implements Set
     #[\Override]
     public function filter(callable $predicate): Set
     {
-        return $this->ensure(100)->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
@@ -81,7 +82,7 @@ final class Properties implements Set
     #[\Override]
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this->ensure(100));
+        return Decorate::immutable($map, $this->toSet());
     }
 
     /**
@@ -90,7 +91,18 @@ final class Properties implements Set
     #[\Override]
     public function values(Random $random): \Generator
     {
-        yield from $this->ensure(100)->values($random);
+        yield from $this->toSet()->values($random);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<Ensure>
+     */
+    #[\Override]
+    public function toSet(): Set
+    {
+        return $this->ensure(100);
     }
 
     /**

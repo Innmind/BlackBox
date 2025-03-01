@@ -10,8 +10,9 @@ use Innmind\BlackBox\{
 
 /**
  * @implements Set<string>
+ * @implements Provider<string>
  */
-final class MadeOf implements Set
+final class MadeOf implements Set, Provider
 {
     /** @var Set<string> */
     private Set $chars;
@@ -90,7 +91,7 @@ final class MadeOf implements Set
     #[\Override]
     public function take(int $size): Set
     {
-        return $this->build(0, 128)->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
@@ -99,7 +100,7 @@ final class MadeOf implements Set
     #[\Override]
     public function filter(callable $predicate): Set
     {
-        return $this->build(0, 128)->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
@@ -115,8 +116,19 @@ final class MadeOf implements Set
     public function values(Random $random): \Generator
     {
         yield from $this
-            ->build(0, 128)
+            ->toSet()
             ->values($random);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<string>
+     */
+    #[\Override]
+    public function toSet(): Set
+    {
+        return $this->build(0, 128);
     }
 
     /**
