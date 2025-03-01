@@ -13,9 +13,9 @@ use Innmind\BlackBox\{
  * @template T
  * @template U
  * @template V
- * @implements Set<T|U|V>
+ * @implements Implementation<T|U|V>
  */
-final class Either implements Set
+final class Either implements Implementation
 {
     /** @var Set<T> */
     private Set $first;
@@ -76,7 +76,7 @@ final class Either implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $size,
@@ -93,7 +93,7 @@ final class Either implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         return new self(
             $this->size,
@@ -110,7 +110,7 @@ final class Either implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

@@ -4,16 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set,
     Random,
     Exception\EmptySet,
 };
 use Innmind\Json\Json;
 
 /**
- * @implements Set<string>
+ * @implements Implementation<string>
  */
-final class UnsafeStrings implements Set
+final class UnsafeStrings implements Implementation
 {
     /** @var positive-int */
     private int $size;
@@ -46,7 +45,7 @@ final class UnsafeStrings implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $size,
@@ -58,7 +57,7 @@ final class UnsafeStrings implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -78,7 +77,7 @@ final class UnsafeStrings implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

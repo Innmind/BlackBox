@@ -15,9 +15,9 @@ use Innmind\BlackBox\{
  *
  * @template T
  * @template U
- * @implements Set<T|U>
+ * @implements Implementation<T|U>
  */
-final class Elements implements Set
+final class Elements implements Implementation
 {
     /** @var positive-int */
     private int $size;
@@ -70,7 +70,7 @@ final class Elements implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $size,
@@ -84,7 +84,7 @@ final class Elements implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -107,7 +107,7 @@ final class Elements implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

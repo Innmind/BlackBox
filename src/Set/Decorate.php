@@ -11,9 +11,9 @@ use Innmind\BlackBox\{
 /**
  * @template D
  * @template I
- * @implements Set<D>
+ * @implements Implementation<D>
  */
-final class Decorate implements Set
+final class Decorate implements Implementation
 {
     /** @var \Closure(I): D */
     private \Closure $decorate;
@@ -70,7 +70,7 @@ final class Decorate implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->immutable,
@@ -83,7 +83,7 @@ final class Decorate implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         /** @psalm-suppress MixedArgument */
         return new self(

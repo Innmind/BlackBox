@@ -3,15 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
- * @implements Set<int>
+ * @implements Implementation<int>
  */
-final class Integers implements Set
+final class Integers implements Implementation
 {
     private int $lowerBound;
     private int $upperBound;
@@ -118,7 +115,7 @@ final class Integers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

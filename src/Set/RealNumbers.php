@@ -3,15 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
- * @implements Set<float>
+ * @implements Implementation<float>
  */
-final class RealNumbers implements Set
+final class RealNumbers implements Implementation
 {
     private int $lowerBound;
     private int $upperBound;
@@ -74,7 +71,7 @@ final class RealNumbers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->lowerBound,
@@ -88,7 +85,7 @@ final class RealNumbers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -110,7 +107,7 @@ final class RealNumbers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

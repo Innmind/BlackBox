@@ -15,9 +15,9 @@ use Innmind\BlackBox\{
  * It will allow to test more diverse combinations for a given set
  *
  * @template I
- * @implements Set<I>
+ * @implements Implementation<I>
  */
-final class Randomize implements Set
+final class Randomize implements Implementation
 {
     /** @var Set<I> */
     private Set $set;
@@ -54,7 +54,7 @@ final class Randomize implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->set,
@@ -66,7 +66,7 @@ final class Randomize implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         return new self(
             $this->set->filter($predicate),
@@ -78,7 +78,7 @@ final class Randomize implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

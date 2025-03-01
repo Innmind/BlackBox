@@ -12,9 +12,9 @@ use Innmind\BlackBox\{
 
 /**
  * @template C
- * @implements Set<C>
+ * @implements Implementation<C>
  */
-final class Composite implements Set
+final class Composite implements Implementation
 {
     /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
@@ -89,10 +89,10 @@ final class Composite implements Set
     /**
      * @psalm-mutation-free
      *
-     * @return Set<C>
+     * @return self<C>
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         $self = clone $this;
         $self->size = $size;
@@ -105,10 +105,10 @@ final class Composite implements Set
      *
      * @param callable(C): bool $predicate
      *
-     * @return Set<C>
+     * @return self<C>
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
         $self = clone $this;
@@ -130,7 +130,7 @@ final class Composite implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }

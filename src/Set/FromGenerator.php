@@ -14,9 +14,9 @@ use Innmind\BlackBox\{
  * class, so it can't be re-generated on the fly
  *
  * @template T
- * @implements Set<T>
+ * @implements Implementation<T>
  */
-final class FromGenerator implements Set
+final class FromGenerator implements Implementation
 {
     /** @var positive-int */
     private int $size;
@@ -83,7 +83,7 @@ final class FromGenerator implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->generatorFactory,
@@ -97,7 +97,7 @@ final class FromGenerator implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -122,7 +122,7 @@ final class FromGenerator implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return match ($this->immutable) {
             true => Decorate::immutable($map, $this),

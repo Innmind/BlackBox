@@ -11,9 +11,9 @@ use Innmind\BlackBox\{
 /**
  *
  * @template I
- * @implements Set<list<I>>
+ * @implements Implementation<list<I>>
  */
-final class Sequence implements Set
+final class Sequence implements Implementation
 {
     /** @var Set<I> */
     private Set $set;
@@ -112,7 +112,7 @@ final class Sequence implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->set,
@@ -126,7 +126,7 @@ final class Sequence implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -149,7 +149,7 @@ final class Sequence implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
         return Decorate::immutable($map, $this);
     }
