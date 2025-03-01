@@ -18,9 +18,6 @@ final class Nullable
      */
     public static function of(Set|Provider $set): Set
     {
-        return Set::either(
-            $set,
-            Set::elements(null),
-        );
+        return Collapse::of($set)->nullable();
     }
 }

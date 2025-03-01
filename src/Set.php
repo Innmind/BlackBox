@@ -99,6 +99,16 @@ final class Set
     /**
      * @psalm-mutation-free
      *
+     * @return self<?T>
+     */
+    public function nullable(): self
+    {
+        return self::either($this, self::elements(null));
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @param positive-int $size
      *
      * @return self<T>
