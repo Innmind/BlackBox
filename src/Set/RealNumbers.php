@@ -41,33 +41,58 @@ final class RealNumbers implements Implementation
     /**
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(?int $lowerBound, ?int $upperBound): self
     {
-        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
+        return new self(
+            $lowerBound ?? \PHP_INT_MIN,
+            $upperBound ?? \PHP_INT_MAX,
+        );
     }
 
     /**
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function between(int $lowerBound, int $upperBound): self
+    public static function any(): Set
     {
-        return new self($lowerBound, $upperBound);
+        return Set::realNumbers()->toSet();
     }
 
     /**
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function above(int $lowerBound): self
+    public static function between(int $lowerBound, int $upperBound): Set
     {
-        return new self($lowerBound, \PHP_INT_MAX);
+        return Set::realNumbers()
+            ->between($lowerBound, $upperBound)
+            ->toSet();
     }
 
     /**
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function below(int $upperBound): self
+    public static function above(int $lowerBound): Set
     {
-        return new self(\PHP_INT_MIN, $upperBound);
+        return Set::realNumbers()
+            ->above($lowerBound)
+            ->toSet();
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Set<float>
+     */
+    public static function below(int $upperBound): Set
+    {
+        return Set::realNumbers()
+            ->below($upperBound)
+            ->toSet();
     }
 
     /**

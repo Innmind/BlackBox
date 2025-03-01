@@ -70,6 +70,15 @@ final class Set
 
     /**
      * @psalm-pure
+     */
+    public static function realNumbers(): Provider\RealNumbers
+    {
+        /** @psalm-suppress InvalidArgument */
+        return Provider\RealNumbers::of(self::of(...));
+    }
+
+    /**
+     * @psalm-pure
      *
      * @template A
      *
