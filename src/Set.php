@@ -74,6 +74,29 @@ final class Set
     }
 
     /**
+     * @psalm-pure
+     *
+     * @no-named-arguments
+     *
+     * @template A
+     * @template B
+     * @template C
+     *
+     * @param self<A>|Provider<A> $first
+     * @param self<B>|Provider<B> $second
+     * @param self<C>|Provider<C> $rest
+     *
+     * @return self<A|B|C>
+     */
+    public static function either(
+        self|Provider $first,
+        self|Provider $second,
+        self|Provider ...$rest,
+    ): self {
+        return new self(Set\Either::implementation($first, $second, ...$rest));
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @param positive-int $size

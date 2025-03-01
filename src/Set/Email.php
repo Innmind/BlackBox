@@ -60,7 +60,7 @@ final class Email
     private static function string(int $maxLength, string ...$extra): Set
     {
         /** @var Set<non-empty-string> */
-        return Set::of(Either::any(
+        return Set::either(
             // either only with simple characters
             Sequence::of(self::letter())
                 ->between(1, $maxLength)
@@ -76,7 +76,7 @@ final class Email
             ))->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
             }),
-        ));
+        );
     }
 
     /**

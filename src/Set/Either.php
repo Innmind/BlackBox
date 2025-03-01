@@ -50,6 +50,7 @@ final class Either implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @no-named-arguments
@@ -64,12 +65,35 @@ final class Either implements Implementation
      *
      * @return self<A, B, C>
      */
-    public static function any(
+    public static function implementation(
         Set|Provider $first,
         Set|Provider $second,
         Set|Provider ...$rest,
     ): self {
         return new self(100, $first, $second, ...$rest);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @no-named-arguments
+     *
+     * @template A
+     * @template B
+     * @template C
+     *
+     * @param Set<A>|Provider<A> $first
+     * @param Set<B>|Provider<B> $second
+     * @param Set<C>|Provider<C> $rest
+     *
+     * @return Set<A|B|C>
+     */
+    public static function any(
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$rest,
+    ): Set {
+        return Set::either($first, $second, ...$rest);
     }
 
     /**

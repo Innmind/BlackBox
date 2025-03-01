@@ -64,10 +64,10 @@ final class Chars
      */
     public static function alphanumerical(): Set
     {
-        return Set::of(Either::any(
+        return Set::either(
             self::lowercaseLetter(),
             self::uppercaseLetter(),
             self::number(),
-        ));
+        );
     }
 }
