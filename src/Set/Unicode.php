@@ -40,7 +40,7 @@ final class Unicode
             $methods,
         );
 
-        return Either::any(...$sets);
+        return Set::of(Either::any(...$sets));
     }
 
     /**

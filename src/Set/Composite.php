@@ -132,7 +132,7 @@ final class Composite implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::immutable($map, Set::of($this));
     }
 
     #[\Override]

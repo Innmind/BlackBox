@@ -41,7 +41,7 @@ final class Properties implements Provider
             return new self(Collapse::of($first));
         }
 
-        return new self(Either::any($first, ...$properties));
+        return new self(Set::of(Either::any($first, ...$properties)));
     }
 
     /**

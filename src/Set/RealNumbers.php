@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Random;
+use Innmind\BlackBox\{
+    Set,
+    Random,
+};
 
 /**
  * @implements Implementation<float>
@@ -109,7 +112,7 @@ final class RealNumbers implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::immutable($map, Set::of($this));
     }
 
     #[\Override]

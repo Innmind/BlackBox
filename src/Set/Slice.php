@@ -113,12 +113,12 @@ final class Slice implements Provider
     #[\Override]
     public function toSet(): Set
     {
-        return Composite::immutable(
+        return Set::of(Composite::immutable(
             Util::of(...),
-            Integers::between($this->min, $this->max),
-            Integers::between($this->atLeast, $this->max - $this->min),
-            Elements::of($this->atLeast),
-            Elements::of(true, false),
-        );
+            Set::of(Integers::between($this->min, $this->max)),
+            Set::of(Integers::between($this->atLeast, $this->max - $this->min)),
+            Set::of(Elements::of($this->atLeast)),
+            Set::of(Elements::of(true, false)),
+        ));
     }
 }

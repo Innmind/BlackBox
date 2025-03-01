@@ -125,8 +125,8 @@ final class FromGenerator implements Implementation
     public function map(callable $map): Implementation
     {
         return match ($this->immutable) {
-            true => Decorate::immutable($map, $this),
-            false => Decorate::mutable($map, $this),
+            true => Decorate::immutable($map, Set::of($this)),
+            false => Decorate::mutable($map, Set::of($this)),
         };
     }
 

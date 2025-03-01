@@ -99,7 +99,7 @@ final class Decorate implements Implementation
     #[\Override]
     public function map(callable $map): self
     {
-        return self::immutable($map, $this);
+        return self::immutable($map, Set::of($this));
     }
 
     #[\Override]

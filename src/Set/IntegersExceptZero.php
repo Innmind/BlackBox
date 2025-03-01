@@ -14,6 +14,6 @@ final class IntegersExceptZero
      */
     public static function any(): Set
     {
-        return Integers::any()->filter(static fn(int $value): bool => $value !== 0);
+        return Set::of(Integers::any())->filter(static fn(int $value): bool => $value !== 0);
     }
 }

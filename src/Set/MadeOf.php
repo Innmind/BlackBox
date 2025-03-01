@@ -38,7 +38,7 @@ final class MadeOf implements Provider
         $chars = $first;
 
         if (\count($rest) > 0) {
-            return new self(Either::any($first, ...$rest));
+            return new self(Set::of(Either::any($first, ...$rest)));
         }
 
         return new self(Collapse::of($chars));

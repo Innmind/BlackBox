@@ -66,14 +66,14 @@ final class Email
                 ->between(1, $maxLength)
                 ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
-            Composite::immutable(
+            Set::of(Composite::immutable(
                 static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
                 Sequence::of(self::letter(...$extra))
                     ->between(1, $maxLength - 2)
                     ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
-            )->filter(static function(string $string): bool {
+            ))->filter(static function(string $string): bool {
                 return !\preg_match('~\.\.~', $string);
             }),
         );
@@ -89,7 +89,7 @@ final class Email
         /**
          * @var Set<non-empty-string>
          */
-        return Sequence::of(Elements::of(...\range('a', 'z'), ...\range('A', 'Z')))
+        return Sequence::of(Set::of(Elements::of(...\range('a', 'z'), ...\range('A', 'Z'))))
             ->between(1, 63)
             ->map(static fn(array $chars): string => \implode('', $chars));
     }

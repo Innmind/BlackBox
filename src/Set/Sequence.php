@@ -65,12 +65,12 @@ final class Sequence implements Implementation
      */
     public function atLeast(int $size): Set
     {
-        return new self(
+        return Set::of(new self(
             $this->set,
             Integers::between($size, $size + 100),
             $this->size,
             null, // to make sure the lower bound is respected
-        );
+        ));
     }
 
     /**
@@ -82,12 +82,12 @@ final class Sequence implements Implementation
      */
     public function atMost(int $size): Set
     {
-        return new self(
+        return Set::of(new self(
             $this->set,
             Integers::between(0, $size),
             $this->size,
             null, // to make sure the lower bound is respected
-        );
+        ));
     }
 
     /**
@@ -100,12 +100,12 @@ final class Sequence implements Implementation
      */
     public function between(int $lower, int $upper): Set
     {
-        return new self(
+        return Set::of(new self(
             $this->set,
             Integers::between($lower, $upper),
             $this->size,
             null, // to make sure the lower bound is respected
-        );
+        ));
     }
 
     /**
@@ -151,7 +151,7 @@ final class Sequence implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::immutable($map, Set::of($this));
     }
 
     #[\Override]

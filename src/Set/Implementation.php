@@ -4,16 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set,
     Random,
     Exception\EmptySet,
 };
 
 /**
+ * @internal
  * @template T The type of data being generated
- * @extends Set<T>
  */
-interface Implementation extends Set
+interface Implementation
 {
     /**
      * @psalm-mutation-free
@@ -22,7 +21,6 @@ interface Implementation extends Set
      *
      * @return self<T>
      */
-    #[\Override]
     public function take(int $size): self;
 
     /**
@@ -32,7 +30,6 @@ interface Implementation extends Set
      *
      * @return self<T>
      */
-    #[\Override]
     public function filter(callable $predicate): self;
 
     /**
@@ -44,7 +41,6 @@ interface Implementation extends Set
      *
      * @return self<V>
      */
-    #[\Override]
     public function map(callable $map): self;
 
     /**
@@ -54,6 +50,5 @@ interface Implementation extends Set
      *
      * @return \Generator<Value<T>>
      */
-    #[\Override]
     public function values(Random $random): \Generator;
 }

@@ -18,9 +18,9 @@ final class Nullable
      */
     public static function of(Set|Provider $set): Set
     {
-        return Either::any(
+        return Set::of(Either::any(
             $set,
-            Elements::of(null),
-        );
+            Set::of(Elements::of(null)),
+        ));
     }
 }

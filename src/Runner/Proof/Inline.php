@@ -60,7 +60,9 @@ final class Inline implements Proof
     ): self {
         return new self(
             $name,
-            Given::of(Set\Elements::of([])),
+            Given::of(Set::of(
+                Set\Elements::of([]),
+            )),
             $test,
             [],
             1,
