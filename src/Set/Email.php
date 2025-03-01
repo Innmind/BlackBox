@@ -89,7 +89,7 @@ final class Email
         /**
          * @var Set<non-empty-string>
          */
-        return Sequence::of(Set::of(Elements::of(...\range('a', 'z'), ...\range('A', 'Z'))))
+        return Sequence::of(Set::elements(...\range('a', 'z'), ...\range('A', 'Z')))
             ->between(1, 63)
             ->map(static fn(array $chars): string => \implode('', $chars));
     }
@@ -104,7 +104,7 @@ final class Email
     private static function letter(string ...$extra): Set
     {
         /** @var Set<non-empty-string> */
-        return Elements::of(
+        return Set::elements(
             ...\range('a', 'z'),
             ...\range('A', 'Z'),
             ...\array_map(

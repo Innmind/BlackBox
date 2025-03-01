@@ -49,6 +49,7 @@ final class Elements implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @no-named-arguments
@@ -61,9 +62,27 @@ final class Elements implements Implementation
      *
      * @return self<A, B>
      */
-    public static function of($first, ...$elements): self
+    public static function implementation($first, ...$elements): self
     {
         return new self(100, static fn(): bool => true, $first, $elements);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @no-named-arguments
+     *
+     * @template A
+     * @template B
+     *
+     * @param A $first
+     * @param B $elements
+     *
+     * @return Set<A|B>
+     */
+    public static function of($first, ...$elements): Set
+    {
+        return Set::elements($first, ...$elements);
     }
 
     /**

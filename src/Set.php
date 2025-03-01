@@ -40,6 +40,25 @@ final class Set
     }
 
     /**
+     * @todo rename to ::of() when current self::of() will no longer be needed
+     * @psalm-pure
+     *
+     * @no-named-arguments
+     *
+     * @template A
+     * @template B
+     *
+     * @param A $first
+     * @param B $rest
+     *
+     * @return self<A|B>
+     */
+    public static function elements(mixed $first, mixed ...$rest): self
+    {
+        return new self(Set\Elements::implementation($first, ...$rest));
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @param positive-int $size

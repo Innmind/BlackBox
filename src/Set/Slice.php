@@ -117,8 +117,8 @@ final class Slice implements Provider
             Util::of(...),
             Set::of(Integers::between($this->min, $this->max)),
             Set::of(Integers::between($this->atLeast, $this->max - $this->min)),
-            Set::of(Elements::of($this->atLeast)),
-            Set::of(Elements::of(true, false)),
+            Set::elements($this->atLeast),
+            Set::elements(true, false),
         ));
     }
 }

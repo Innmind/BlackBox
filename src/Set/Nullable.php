@@ -20,7 +20,7 @@ final class Nullable
     {
         return Set::of(Either::any(
             $set,
-            Set::of(Elements::of(null)),
+            Set::elements(null),
         ));
     }
 }
