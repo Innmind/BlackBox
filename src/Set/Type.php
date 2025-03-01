@@ -16,13 +16,13 @@ final class Type
     public static function any(): Set
     {
         /** @var Set<mixed> */
-        return Either::any(
+        return Set::of(Either::any(
             self::primitives(),
             Sequence::of(self::primitives())->between(0, 1), // no more needed to prove type indifference
             Sequence::of(self::primitives())
                 ->between(0, 1) // no more needed to prove type indifference
                 ->map(static fn(array $array): \Iterator => new \ArrayIterator($array)),
-        );
+        ));
     }
 
     /**
@@ -36,7 +36,7 @@ final class Type
          * @psalm-suppress InvalidArgument Don't why it complains
          * @var Set<mixed>
          */
-        return Either::any(
+        return Set::of(Either::any(
             Set::elements(true, false, null),
             Integers::any(),
             RealNumbers::any(),
@@ -58,6 +58,6 @@ final class Type
                     yield static fn() => null;
                 }
             }),
-        );
+        ));
     }
 }

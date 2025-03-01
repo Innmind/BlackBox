@@ -36,11 +36,11 @@ trait BlackBox
 
         if (\count($rest) > 0) {
             /** @var Set<list<mixed>> */
-            $given = Set\Composite::immutable(
+            $given = Set::of(Set\Composite::immutable(
                 static fn(mixed ...$args) => $args,
                 $first,
                 ...$rest,
-            );
+            ));
         }
 
         $given = Given::of(Set\Randomize::of($given));

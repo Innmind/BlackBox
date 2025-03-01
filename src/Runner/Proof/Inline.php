@@ -113,7 +113,7 @@ final class Inline implements Proof
     public function scenarii(int $count): Set
     {
         /** @var Set<Scenario> */
-        return Set\Randomize::of($this->values->set())
+        return Set::of(Set\Randomize::of($this->values->set()))
             ->map(fn(array $args) => Scenario\Inline::of($args, $this->test))
             ->take($this->scenarii ?? $count);
     }

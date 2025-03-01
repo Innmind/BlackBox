@@ -15,6 +15,6 @@ final class NaturalNumbers
     public static function any(): Set
     {
         /** @var Set<0|positive-int> */
-        return Integers::above(0);
+        return Set::of(Integers::above(0));
     }
 }
