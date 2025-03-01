@@ -5,6 +5,7 @@ namespace Innmind\BlackBox;
 
 use Innmind\BlackBox\{
     Set\Implementation,
+    Set\Provider,
     Set\Value,
     Exception\EmptySet,
 };
@@ -56,6 +57,20 @@ final class Set
     public static function elements(mixed $first, mixed ...$rest): self
     {
         return new self(Set\Elements::implementation($first, ...$rest));
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @template A
+     *
+     * @param self<A>|Provider<A> $set
+     *
+     * @return self<A>
+     */
+    public static function randomize(self|Provider $set): self
+    {
+        return new self(Set\Randomize::implementation($set));
     }
 
     /**

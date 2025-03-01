@@ -37,6 +37,7 @@ final class Randomize implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @template T
@@ -45,9 +46,23 @@ final class Randomize implements Implementation
      *
      * @return self<T>
      */
-    public static function of(Set|Provider $set): self
+    public static function implementation(Set|Provider $set): self
     {
         return new self(Collapse::of($set), 100);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @template T
+     *
+     * @param Set<T>|Provider<T> $set
+     *
+     * @return Set<T>
+     */
+    public static function of(Set|Provider $set): Set
+    {
+        return Set::randomize($set);
     }
 
     /**

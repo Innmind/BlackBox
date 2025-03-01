@@ -56,7 +56,7 @@ function given(Set|Provider $first, Set|Provider ...$rest): Given
         ));
     }
 
-    return Given::of(Set::of(Set\Randomize::of($given)));
+    return Given::of(Set::randomize($given));
 }
 
 /**
