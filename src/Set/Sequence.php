@@ -53,7 +53,7 @@ final class Sequence implements Implementation
      */
     public static function of(Set|Provider $set): self
     {
-        return new self(Collapse::of($set), Integers::between(0, 100));
+        return new self(Collapse::of($set), Integers::implementation(0, 100));
     }
 
     /**
@@ -67,7 +67,7 @@ final class Sequence implements Implementation
     {
         return Set::of(new self(
             $this->set,
-            Integers::between($size, $size + 100),
+            Integers::implementation($size, $size + 100),
             $this->size,
             null, // to make sure the lower bound is respected
         ));
@@ -84,7 +84,7 @@ final class Sequence implements Implementation
     {
         return Set::of(new self(
             $this->set,
-            Integers::between(0, $size),
+            Integers::implementation(0, $size),
             $this->size,
             null, // to make sure the lower bound is respected
         ));
@@ -102,7 +102,7 @@ final class Sequence implements Implementation
     {
         return Set::of(new self(
             $this->set,
-            Integers::between($lower, $upper),
+            Integers::implementation($lower, $upper),
             $this->size,
             null, // to make sure the lower bound is respected
         ));

@@ -39,35 +39,52 @@ final class Integers implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
-    {
-        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
-    }
-
-    /**
-     * @psalm-pure
-     */
-    public static function between(int $lowerBound, int $upperBound): self
+    public static function implementation(int $lowerBound, int $upperBound): self
     {
         return new self($lowerBound, $upperBound);
     }
 
     /**
      * @psalm-pure
+     *
+     * @return Set<int>
      */
-    public static function above(int $lowerBound): self
+    public static function any(): Set
     {
-        return new self($lowerBound, \PHP_INT_MAX);
+        return Set::integers();
     }
 
     /**
      * @psalm-pure
+     *
+     * @return Set<int>
      */
-    public static function below(int $upperBound): self
+    public static function between(int $lowerBound, int $upperBound): Set
     {
-        return new self(\PHP_INT_MIN, $upperBound);
+        return Set::integers($lowerBound, $upperBound);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Set<int>
+     */
+    public static function above(int $lowerBound): Set
+    {
+        return Set::integers($lowerBound, \PHP_INT_MAX);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Set<int>
+     */
+    public static function below(int $upperBound): Set
+    {
+        return Set::integers(\PHP_INT_MIN, $upperBound);
     }
 
     /**

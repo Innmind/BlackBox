@@ -14,7 +14,7 @@ final class Chars
      */
     public static function any(): Set
     {
-        return Set::of(Integers::between(0, 255)->map(\chr(...)));
+        return Set::integers(0, 255)->map(\chr(...));
     }
 
     /**
@@ -24,7 +24,7 @@ final class Chars
      */
     public static function lowercaseLetter(): Set
     {
-        return Set::of(Integers::between(97, 122)->map(\chr(...)));
+        return Set::integers(97, 122)->map(\chr(...));
     }
 
     /**
@@ -34,7 +34,7 @@ final class Chars
      */
     public static function uppercaseLetter(): Set
     {
-        return Set::of(Integers::between(65, 90)->map(\chr(...)));
+        return Set::integers(65, 90)->map(\chr(...));
     }
 
     /**
@@ -44,7 +44,7 @@ final class Chars
      */
     public static function number(): Set
     {
-        return Set::of(Integers::between(48, 57)->map(\chr(...)));
+        return Set::integers(48, 57)->map(\chr(...));
     }
 
     /**
@@ -54,7 +54,7 @@ final class Chars
      */
     public static function ascii(): Set
     {
-        return Set::of(Integers::between(32, 126)->map(\chr(...)));
+        return Set::integers(32, 126)->map(\chr(...));
     }
 
     /**

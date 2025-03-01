@@ -62,6 +62,19 @@ final class Set
     /**
      * @psalm-pure
      *
+     * @return self<int>
+     */
+    public static function integers(?int $min = null, ?int $max = null): self
+    {
+        return new self(Set\Integers::implementation(
+            $min ?? \PHP_INT_MIN,
+            $max ?? \PHP_INT_MAX,
+        ));
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @template A
      *
      * @param self<A>|Provider<A> $set
