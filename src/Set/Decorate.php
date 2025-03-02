@@ -20,6 +20,7 @@ final class Decorate implements Implementation
     private \Closure $decorate;
     /** @var Implementation<I> */
     private Implementation $set;
+    private bool $immutable;
 
     /**
      * @psalm-mutation-free
@@ -27,10 +28,14 @@ final class Decorate implements Implementation
      * @param \Closure(I): D $decorate
      * @param Implementation<I> $set
      */
-    private function __construct(\Closure $decorate, Implementation $set)
-    {
+    private function __construct(
+        \Closure $decorate,
+        Implementation $set,
+        bool $immutable,
+    ) {
         $this->decorate = $decorate;
         $this->set = $set;
+        $this->immutable = $immutable;
     }
 
     /**
@@ -48,8 +53,9 @@ final class Decorate implements Implementation
     public static function implementation(
         callable $decorate,
         Implementation $set,
+        bool $immutable,
     ): self {
-        return new self(\Closure::fromCallable($decorate), $set);
+        return new self(\Closure::fromCallable($decorate), $set, $immutable);
     }
 
     /**
@@ -69,9 +75,6 @@ final class Decorate implements Implementation
     }
 
     /**
-     * Mutability is now only derived from the underlying generated value
-     *
-     * @deprecated
      * @psalm-pure
      *
      * @template T
@@ -84,7 +87,7 @@ final class Decorate implements Implementation
      */
     public static function mutable(callable $decorate, Set|Provider $set): Set
     {
-        return Collapse::of($set)->map($decorate);
+        return Set::decorate($decorate, $set);
     }
 
     /**
@@ -96,6 +99,7 @@ final class Decorate implements Implementation
         return new self(
             $this->decorate,
             $this->set->take($size),
+            $this->immutable,
         );
     }
 
@@ -109,6 +113,7 @@ final class Decorate implements Implementation
         return new self(
             $this->decorate,
             $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value))),
+            $this->immutable,
         );
     }
 
@@ -121,6 +126,7 @@ final class Decorate implements Implementation
         return self::implementation(
             $map,
             $this,
+            $this->immutable,
         );
     }
 
@@ -128,7 +134,7 @@ final class Decorate implements Implementation
     public function values(Random $random): \Generator
     {
         foreach ($this->set->values($random) as $value) {
-            if ($value->isImmutable()) {
+            if ($value->isImmutable() && $this->immutable) {
                 $decorated = ($this->decorate)($value->unwrap());
 
                 yield Value::immutable(

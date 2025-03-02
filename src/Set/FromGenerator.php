@@ -138,7 +138,7 @@ final class FromGenerator implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation($map, $this);
+        return Decorate::implementation($map, $this, true);
     }
 
     #[\Override]
