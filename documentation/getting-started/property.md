@@ -24,10 +24,10 @@ final class AddIsCommutative implements Property
      */
     public static function any(): Set
     {
-        return Set\Composite::immutable(
+        return Set::compose(
             static fn(int $a, int $b) => new self($a, $b),
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
         );
     }
 
@@ -101,7 +101,7 @@ You can run this property like this:
         ->tryToProve(static function(): \Generator {
             yield property(
                 AddIsCommutative::class,
-                Set\Elements::of(new Add),
+                Set::of(new Add),
             );
         })
         ->exit();
@@ -133,22 +133,22 @@ Application::new([])
                 AddIsCumulative::any(),
                 ZeroIsAnIdentityValue::any(),
             ),
-            Set\Elements::of(new Add),
+            Set::of(new Add),
         );
 
         yield property(
             AddIsCommutative::class,
-            Set\Elements::of(new Add),
+            Set::of(new Add),
         );
 
         yield property(
             AddIsCumulative::class,
-            Set\Elements::of(new Add),
+            Set::of(new Add),
         );
 
         yield property(
             ZeroIsAnIdentityValue::class,
-            Set\Elements::of(new Add),
+            Set::of(new Add),
         );
     })
     ->exit();

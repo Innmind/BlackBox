@@ -39,8 +39,8 @@ Its Functional[^1] design also allows you to use it for your own scenarii.
             yield proof(
                 'Add is commutative',
                 given(
-                    Set\Integers::any(),
-                    Set\Integers::any(),
+                    Set::integers(),
+                    Set::integers(),
                 ),
                 static function(Assert $assert, int $a, int $b) {
                     $assert->same(
