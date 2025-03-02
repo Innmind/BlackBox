@@ -71,7 +71,7 @@ final class Composite implements Implementation
     }
 
     /**
-     * @deprecated Use Set::compose() instead
+     * @deprecated Use Set::compose()->immutable() instead
      * @psalm-pure
      *
      * @template T
@@ -93,7 +93,7 @@ final class Composite implements Implementation
     }
 
     /**
-     * @deprecated Use Set::compose() instead
+     * @deprecated Use Set::compose()->mutable() instead
      * @psalm-pure
      *
      * @template T

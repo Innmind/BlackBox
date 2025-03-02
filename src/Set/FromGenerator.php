@@ -66,7 +66,7 @@ final class FromGenerator implements Implementation
     }
 
     /**
-     * @deprecated Use Set::generator() instead
+     * @deprecated Use Set::generator()->immutable() instead
      * @template V
      *
      * @param callable(Random): \Generator<V> $generatorFactory
@@ -81,7 +81,7 @@ final class FromGenerator implements Implementation
     }
 
     /**
-     * @deprecated Use Set::generator() instead
+     * @deprecated Use Set::generator()->mutable() instead
      * @template V
      *
      * @param callable(Random): \Generator<V> $generatorFactory
