@@ -27,8 +27,9 @@ final class Strings
      */
     public static function between(int $minLength, int $maxLength): Set
     {
-        return Sequence::of(Chars::any())
+        return Set::sequence(Chars::any())
             ->between($minLength, $maxLength)
+            ->toSet()
             ->map(static fn(array $chars): string => \implode('', $chars));
     }
 

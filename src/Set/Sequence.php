@@ -15,8 +15,8 @@ use Innmind\BlackBox\{
  */
 final class Sequence implements Implementation
 {
-    /** @var Set<I> */
-    private Set $set;
+    /** @var Implementation<I> */
+    private Implementation $set;
     private Integers $sizes;
     /** @var positive-int */
     private int $size;
@@ -26,12 +26,12 @@ final class Sequence implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param Set<I> $set
+     * @param Implementation<I> $set
      * @param positive-int $size
      * @param \Closure(list<I>): bool $predicate
      */
     private function __construct(
-        Set $set,
+        Implementation $set,
         Integers $sizes,
         ?int $size = null,
         ?\Closure $predicate = null,
@@ -43,69 +43,34 @@ final class Sequence implements Implementation
     }
 
     /**
+     * @internal
+     * @psalm-pure
+     *
+     * @template U
+     *
+     * @param Implementation<U> $set
+     *
+     * @return self<U>
+     */
+    public static function implementation(
+        Implementation $set,
+        Integers $sizes,
+    ): self {
+        return new self($set, $sizes);
+    }
+
+    /**
      * @psalm-pure
      *
      * @template U
      *
      * @param Set<U>|Provider<U> $set
      *
-     * @return self<U>
+     * @return Provider\Sequence<U>
      */
-    public static function of(Set|Provider $set): self
+    public static function of(Set|Provider $set): Provider\Sequence
     {
-        return new self(Collapse::of($set), Integers::implementation(0, 100));
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param positive-int $size
-     *
-     * @return Set<list<I>>
-     */
-    public function atLeast(int $size): Set
-    {
-        return Set::of(new self(
-            $this->set,
-            Integers::implementation($size, $size + 100),
-            $this->size,
-            null, // to make sure the lower bound is respected
-        ));
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param positive-int $size
-     *
-     * @return Set<list<I>>
-     */
-    public function atMost(int $size): Set
-    {
-        return Set::of(new self(
-            $this->set,
-            Integers::implementation(0, $size),
-            $this->size,
-            null, // to make sure the lower bound is respected
-        ));
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param 0|positive-int $lower
-     * @param positive-int $upper
-     *
-     * @return Set<list<I>>
-     */
-    public function between(int $lower, int $upper): Set
-    {
-        return Set::of(new self(
-            $this->set,
-            Integers::implementation($lower, $upper),
-            $this->size,
-            null, // to make sure the lower bound is respected
-        ));
+        return Set::sequence($set);
     }
 
     /**

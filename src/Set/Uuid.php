@@ -14,10 +14,12 @@ final class Uuid
      */
     public static function any(): Set
     {
+        /** @var Set<scalar> */
         $chars = Set::elements(...\range('a', 'f'), ...\range(0, 9));
         /** @psalm-suppress ArgumentTypeCoercion */
-        $part = static fn(int $length): Set => Sequence::of($chars)
+        $part = static fn(int $length): Set => Set::sequence($chars)
             ->between($length, $length)
+            ->toSet()
             ->map(static fn(array $chars): string => \implode('', $chars));
 
         /** @var Set<non-empty-string> */

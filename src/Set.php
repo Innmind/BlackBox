@@ -132,6 +132,27 @@ final class Set
     /**
      * @psalm-pure
      *
+     * @template V
+     *
+     * @param self<V>|Provider<V> $set
+     *
+     * @return Provider\Sequence<V>
+     */
+    public static function sequence(self|Provider $set): Provider\Sequence
+    {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
+         */
+        return Provider\Sequence::of(
+            self::of(...),
+            Collapse::of($set)->implementation,
+        );
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @template A
      *
      * @param self<A>|Provider<A> $set

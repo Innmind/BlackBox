@@ -64,15 +64,17 @@ final class Email
         /** @var Set<non-empty-string> */
         return Set::either(
             // either only with simple characters
-            Sequence::of(self::letter())
+            Set::sequence(self::letter())
                 ->between(1, $maxLength)
+                ->toSet()
                 ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
             Set::composite(
                 static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
-                Sequence::of(self::letter(...$extra))
+                Set::sequence(self::letter(...$extra))
                     ->between(1, $maxLength - 2)
+                    ->toSet()
                     ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
             )
@@ -94,8 +96,9 @@ final class Email
         /**
          * @var Set<non-empty-string>
          */
-        return Sequence::of(Set::elements(...\range('a', 'z'), ...\range('A', 'Z')))
+        return Set::sequence(Set::elements(...\range('a', 'z'), ...\range('A', 'Z')))
             ->between(1, 63)
+            ->toSet()
             ->map(static fn(array $chars): string => \implode('', $chars));
     }
 
