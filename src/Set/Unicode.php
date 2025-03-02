@@ -2803,7 +2803,6 @@ final class Unicode
         /** @var Set<string> */
         return Set::integers()
             ->between($min, $max)
-            ->toSet()
             ->map(\IntlChar::chr(...))
             ->filter(static fn($char) => \is_string($char));
     }

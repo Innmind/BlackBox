@@ -63,6 +63,44 @@ final class Integers implements Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param int<1, max> $size
+     *
+     * @return Set<int>
+     */
+    public function take(int $size): Set
+    {
+        return $this->toSet()->take($size);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(int): bool $predicate
+     *
+     * @return Set<int>
+     */
+    public function filter(callable $predicate): Set
+    {
+        return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(int): V $map
+     *
+     * @return Set<V>
+     */
+    public function map(callable $map): Set
+    {
+        return $this->toSet()->map($map);
+    }
+
+    /**
+     * @psalm-mutation-free
      */
     #[\Override]
     public function toSet(): Set

@@ -20,7 +20,6 @@ final class Type
             Set::sequence(self::primitives())->between(0, 1), // no more needed to prove type indifference
             Set::sequence(self::primitives())
                 ->between(0, 1) // no more needed to prove type indifference
-                ->toSet()
                 ->map(static fn(array $array): \Iterator => new \ArrayIterator($array)),
         );
     }

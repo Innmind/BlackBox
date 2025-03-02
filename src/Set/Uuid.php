@@ -18,7 +18,6 @@ final class Uuid
         /** @psalm-suppress ArgumentTypeCoercion */
         $part = static fn(int $length): Set => Set::sequence($chars)
             ->between($length, $length)
-            ->toSet()
             ->map(static fn(array $chars): string => \implode('', $chars));
 
         /** @var Set<non-empty-string> */
@@ -31,7 +30,6 @@ final class Uuid
             $part(12),
         )
             ->immutable()
-            ->toSet()
             ->take(100);
     }
 }

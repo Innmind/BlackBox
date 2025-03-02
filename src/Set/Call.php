@@ -22,7 +22,6 @@ final class Call
             }
         })
             ->mutable()
-            ->toSet()
             ->map(static fn($call) => $call());
     }
 }

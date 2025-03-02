@@ -140,7 +140,6 @@ final class MadeOf implements Provider
     {
         return Sequence::of($this->chars)
             ->between($min, $max)
-            ->toSet()
             ->map(static fn(array $chars) => \implode('', $chars));
     }
 }

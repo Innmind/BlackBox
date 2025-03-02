@@ -23,7 +23,6 @@ final class Email
             self::tld(),
         )
             ->immutable()
-            ->toSet()
             ->take(100)
             ->filter(static function(string $email): bool {
                 return !\preg_match('~(\-.|\.\-)~', $email);
@@ -65,7 +64,6 @@ final class Email
             // either only with simple characters
             Set::sequence(self::letter())
                 ->between(1, $maxLength)
-                ->toSet()
                 ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
             Set::composite(
@@ -73,12 +71,10 @@ final class Email
                 self::letter(),
                 Set::sequence(self::letter(...$extra))
                     ->between(1, $maxLength - 2)
-                    ->toSet()
                     ->map(static fn(array $chars): string => \implode('', $chars)),
                 self::letter(),
             )
                 ->immutable()
-                ->toSet()
                 ->filter(static function(string $string): bool {
                     return !\preg_match('~\.\.~', $string);
                 }),
@@ -97,7 +93,6 @@ final class Email
          */
         return Set::sequence(Set::of(...\range('a', 'z'), ...\range('A', 'Z')))
             ->between(1, 63)
-            ->toSet()
             ->map(static fn(array $chars): string => \implode('', $chars));
     }
 

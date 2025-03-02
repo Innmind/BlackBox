@@ -29,7 +29,6 @@ final class Strings
     {
         return Set::sequence(Chars::any())
             ->between($minLength, $maxLength)
-            ->toSet()
             ->map(static fn(array $chars): string => \implode('', $chars));
     }
 

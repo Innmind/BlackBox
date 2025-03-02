@@ -16,7 +16,6 @@ final class Chars
     {
         return Set::integers()
             ->between(0, 255)
-            ->toSet()
             ->map(\chr(...));
     }
 
@@ -29,7 +28,6 @@ final class Chars
     {
         return Set::integers()
             ->between(97, 122)
-            ->toSet()
             ->map(\chr(...));
     }
 
@@ -42,7 +40,6 @@ final class Chars
     {
         return Set::integers()
             ->between(65, 90)
-            ->toSet()
             ->map(\chr(...));
     }
 
@@ -55,7 +52,6 @@ final class Chars
     {
         return Set::integers()
             ->between(48, 57)
-            ->toSet()
             ->map(\chr(...));
     }
 
@@ -68,7 +64,6 @@ final class Chars
     {
         return Set::integers()
             ->between(32, 126)
-            ->toSet()
             ->map(\chr(...));
     }
 

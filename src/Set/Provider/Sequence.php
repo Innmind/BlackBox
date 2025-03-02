@@ -98,6 +98,44 @@ final class Sequence implements Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param int<1, max> $size
+     *
+     * @return Set<list<V>>
+     */
+    public function take(int $size): Set
+    {
+        return $this->toSet()->take($size);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(list<V>): bool $predicate
+     *
+     * @return Set<list<V>>
+     */
+    public function filter(callable $predicate): Set
+    {
+        return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @template U
+     *
+     * @param callable(list<V>): U $map
+     *
+     * @return Set<U>
+     */
+    public function map(callable $map): Set
+    {
+        return $this->toSet()->map($map);
+    }
+
+    /**
+     * @psalm-mutation-free
      */
     #[\Override]
     public function toSet(): Set
