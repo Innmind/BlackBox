@@ -40,35 +40,6 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-  phpunit_11:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-        php-version: ['8.2', '8.3', '8.4']
-        dependency-versions: ['lowest', 'highest']
-    name: 'PHPUnit 11'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl
-          coverage: xdebug
-      - name: Composer
-        uses: "ramsey/composer-install@v3"
-        with:
-          dependency-versions: ${{ matrix.dependencies }}
-          composer-options: '--no-dev'
-      - name: 'Remove conflict on Psalm'
-        run: composer remove --dev innmind/static-analysis && composer update
-      - name: PHPUnit
-        run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover
-      - uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
   psalm:
     uses: innmind/github-workflows/.github/workflows/psalm-matrix.yml@main
   cs:
