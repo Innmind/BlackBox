@@ -28,11 +28,8 @@ final class Decorate implements Implementation
      * @param \Closure(I): D $decorate
      * @param Implementation<I> $set
      */
-    private function __construct(
-        \Closure $decorate,
-        Implementation $set,
-        bool $immutable,
-    ) {
+    private function __construct(bool $immutable, \Closure $decorate, Implementation $set)
+    {
         $this->decorate = $decorate;
         $this->set = $set;
         $this->immutable = $immutable;
@@ -55,7 +52,7 @@ final class Decorate implements Implementation
         Implementation $set,
         bool $immutable,
     ): self {
-        return new self(\Closure::fromCallable($decorate), $set, $immutable);
+        return new self($immutable, \Closure::fromCallable($decorate), $set);
     }
 
     /**
@@ -99,9 +96,9 @@ final class Decorate implements Implementation
     public function take(int $size): self
     {
         return new self(
+            $this->immutable,
             $this->decorate,
             $this->set->take($size),
-            $this->immutable,
         );
     }
 
@@ -113,9 +110,9 @@ final class Decorate implements Implementation
     {
         /** @psalm-suppress MixedArgument */
         return new self(
+            $this->immutable,
             $this->decorate,
             $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value))),
-            $this->immutable,
         );
     }
 
