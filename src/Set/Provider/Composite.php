@@ -83,7 +83,7 @@ final class Composite implements Provider
             $this->first,
             $this->second,
             $this->rest,
-            true,
+            false,
         );
     }
 
