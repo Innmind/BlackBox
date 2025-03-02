@@ -74,7 +74,7 @@ final class Set
      *
      * @return Provider\Composite<A>
      */
-    public static function composite(
+    public static function compose(
         callable $aggregate,
         self|Provider $first,
         self|Provider $second,

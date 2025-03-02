@@ -86,7 +86,7 @@ final class Composite implements Implementation
         Set|Provider $second,
         Set|Provider ...$sets,
     ): Set {
-        return Set::composite($aggregate, $first, $second, ...$sets)
+        return Set::compose($aggregate, $first, $second, ...$sets)
             ->immutable()
             ->toSet();
     }
@@ -107,7 +107,7 @@ final class Composite implements Implementation
         Set|Provider $second,
         Set|Provider ...$sets,
     ): Set {
-        return Set::composite($aggregate, $first, $second, ...$sets)
+        return Set::compose($aggregate, $first, $second, ...$sets)
             ->mutable()
             ->toSet();
     }

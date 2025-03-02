@@ -14,7 +14,7 @@ final class Email
      */
     public static function any(): Set
     {
-        return Set::composite(
+        return Set::compose(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";
             },
@@ -66,7 +66,7 @@ final class Email
                 ->between(1, $maxLength)
                 ->map(static fn(array $chars): string => \implode('', $chars)),
             // or with some extra ones in the middle
-            Set::composite(
+            Set::compose(
                 static fn(string ...$parts): string => \implode('', $parts),
                 self::letter(),
                 Set::sequence(self::letter(...$extra))

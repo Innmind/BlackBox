@@ -78,7 +78,7 @@ final class Properties implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        return Set::composite(
+        return Set::compose(
             Scenario\Properties::of(...),
             $this->properties,
             $this->systemUnderTest,

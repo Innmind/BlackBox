@@ -102,7 +102,7 @@ final class Property implements Proof
     public function scenarii(int $count): Set
     {
         /** @psalm-suppress MixedArgument */
-        return Set::composite(
+        return Set::compose(
             Scenario\Property::of(...),
             ([$this->property, 'any'])(),
             $this->systemUnderTest,

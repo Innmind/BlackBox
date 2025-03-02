@@ -21,7 +21,7 @@ final class Uuid
             ->map(static fn(array $chars): string => \implode('', $chars));
 
         /** @var Set<non-empty-string> */
-        return Set::composite(
+        return Set::compose(
             static fn(string ...$parts): string => \implode('-', $parts),
             $part(8),
             $part(4),

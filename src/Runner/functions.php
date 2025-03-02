@@ -48,7 +48,7 @@ function given(Set|Provider $first, Set|Provider ...$rest): Given
 
     if (\count($rest) > 0) {
         /** @var Set<list<mixed>> */
-        $given = Set::composite(
+        $given = Set::compose(
             static fn(mixed ...$args) => $args,
             $first,
             ...$rest,

@@ -27,7 +27,7 @@ final class Tuple
         Set|Provider ...$rest,
     ): Set {
         /** @var Set<non-empty-list<A|B|C>> */
-        return Set::composite(
+        return Set::compose(
             static fn(mixed ...$args) => $args,
             $first,
             $second,
