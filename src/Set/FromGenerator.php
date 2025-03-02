@@ -46,19 +46,24 @@ final class FromGenerator implements Implementation
     }
 
     /**
+     * @internal
+     * @psalm-pure
+     *
      * @template V
      *
      * @param callable(Random): \Generator<V> $generatorFactory
      *
      * @return self<V>
      */
-    public static function of(callable $generatorFactory): self
-    {
+    public static function implementation(
+        callable $generatorFactory,
+        bool $immutable,
+    ): self {
         return new self(
-            self::guard($generatorFactory),
+            $generatorFactory,
             100,
             static fn(): bool => true,
-            true,
+            $immutable,
         );
     }
 
@@ -67,16 +72,27 @@ final class FromGenerator implements Implementation
      *
      * @param callable(Random): \Generator<V> $generatorFactory
      *
-     * @return self<V>
+     * @return Set<V>
      */
-    public static function mutable(callable $generatorFactory): self
+    public static function of(callable $generatorFactory): Set
     {
-        return new self(
-            self::guard($generatorFactory),
-            100,
-            static fn(): bool => true,
-            false,
-        );
+        return Set::generator(self::guard($generatorFactory))
+            ->immutable()
+            ->toSet();
+    }
+
+    /**
+     * @template V
+     *
+     * @param callable(Random): \Generator<V> $generatorFactory
+     *
+     * @return Set<V>
+     */
+    public static function mutable(callable $generatorFactory): Set
+    {
+        return Set::generator(self::guard($generatorFactory))
+            ->mutable()
+            ->toSet();
     }
 
     /**

@@ -16,10 +16,13 @@ final class Call
      */
     public static function of(callable $call): Set
     {
-        return Set::of(FromGenerator::mutable(static function() use ($call) {
+        return Set::generator(static function() use ($call) {
             while (true) {
                 yield $call;
             }
-        }))->map(static fn($call) => $call());
+        })
+            ->mutable()
+            ->toSet()
+            ->map(static fn($call) => $call());
     }
 }

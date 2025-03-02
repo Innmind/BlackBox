@@ -30,11 +30,13 @@ final class Matrix
     public static function of(Set $a, Set $b): self
     {
         /** @var Set<Combination> */
-        $combinations = Set::of(Set\FromGenerator::of(static function(Random $rand) use ($b): \Generator {
+        $combinations = Set::generator(static function(Random $rand) use ($b): \Generator {
             foreach ($b->values($rand) as $value) {
                 yield Combination::startWith($value);
             }
-        }));
+        })
+            ->immutable()
+            ->toSet();
 
         return new self($a, $combinations);
     }
@@ -42,9 +44,11 @@ final class Matrix
     public function dot(Set $set): self
     {
         /** @var Set<Combination> */
-        $combinations = Set::of(Set\FromGenerator::of(function(Random $rand): \Generator {
+        $combinations = Set::generator(function(Random $rand): \Generator {
             yield from $this->values($rand);
-        }));
+        })
+            ->immutable()
+            ->toSet();
 
         return new self($set, $combinations);
     }

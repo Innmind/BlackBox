@@ -110,6 +110,26 @@ final class Set
     }
 
     /**
+     * By default the value created by this generator is considered immutable.
+     *
+     * @psalm-pure
+     *
+     * @template V
+     *
+     * @param callable(Random): \Generator<V> $factory
+     *
+     * @return Provider\Generator<V>
+     */
+    public static function generator(callable $factory): Provider\Generator
+    {
+        /** @psalm-suppress InvalidArgument */
+        return Provider\Generator::of(
+            self::of(...),
+            $factory,
+        );
+    }
+
+    /**
      * @psalm-pure
      *
      * @template A
