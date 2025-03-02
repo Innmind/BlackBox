@@ -17,16 +17,11 @@ class RealNumbersTest extends TestCase
         $this->assertInstanceOf(Set::class, RealNumbers::any());
     }
 
-    public function testAny()
-    {
-        $this->assertInstanceOf(RealNumbers::class, RealNumbers::any());
-    }
-
     public function testBetween()
     {
         $numbers = RealNumbers::between(-100, 100);
 
-        $this->assertInstanceOf(RealNumbers::class, $numbers);
+        $this->assertInstanceOf(Set::class, $numbers);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertGreaterThanOrEqual(-100, $value->unwrap());
@@ -38,7 +33,7 @@ class RealNumbersTest extends TestCase
     {
         $numbers = RealNumbers::above(0);
 
-        $this->assertInstanceOf(RealNumbers::class, $numbers);
+        $this->assertInstanceOf(Set::class, $numbers);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertGreaterThanOrEqual(0, $value->unwrap());
@@ -49,7 +44,7 @@ class RealNumbersTest extends TestCase
     {
         $numbers = RealNumbers::below(0);
 
-        $this->assertInstanceOf(RealNumbers::class, $numbers);
+        $this->assertInstanceOf(Set::class, $numbers);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertLessThanOrEqual(0, $value->unwrap());
@@ -70,7 +65,7 @@ class RealNumbersTest extends TestCase
             return $float > 0;
         });
 
-        $this->assertInstanceOf(RealNumbers::class, $positive);
+        $this->assertInstanceOf(Set::class, $positive);
         $this->assertNotSame($values, $positive);
         $hasNegative = \array_reduce(
             $this->unwrap($values->values(Random::mersenneTwister)),
@@ -96,7 +91,7 @@ class RealNumbersTest extends TestCase
         $a = RealNumbers::any();
         $b = $a->take(50);
 
-        $this->assertInstanceOf(RealNumbers::class, $b);
+        $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
         $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));

@@ -18,11 +18,6 @@ class UnsafeStringsTest extends TestCase
         $this->assertInstanceOf(Set::class, UnsafeStrings::any());
     }
 
-    public function testAny()
-    {
-        $this->assertInstanceOf(UnsafeStrings::class, UnsafeStrings::any());
-    }
-
     public function testByDefault100ValuesAreGenerated()
     {
         $values = $this->unwrap(UnsafeStrings::any()->values(Random::mersenneTwister));
@@ -37,7 +32,7 @@ class UnsafeStringsTest extends TestCase
             return \strlen($value) < 10;
         });
 
-        $this->assertInstanceOf(UnsafeStrings::class, $others);
+        $this->assertInstanceOf(Set::class, $others);
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
             $this->unwrap($values->values(Random::mersenneTwister)),
@@ -63,7 +58,7 @@ class UnsafeStringsTest extends TestCase
         $a = UnsafeStrings::any();
         $b = $a->take(50);
 
-        $this->assertInstanceOf(UnsafeStrings::class, $b);
+        $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
         $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));

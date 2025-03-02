@@ -18,11 +18,6 @@ class ElementsTest extends TestCase
         $this->assertInstanceOf(Set::class, Elements::of(42));
     }
 
-    public function testOf()
-    {
-        $this->assertInstanceOf(Elements::class, Elements::of(42, 24));
-    }
-
     public function testTake100ValuesByDefault()
     {
         $elements = Elements::of(...\range(0, 1000));
@@ -38,7 +33,7 @@ class ElementsTest extends TestCase
         $aValues = $this->unwrap($elements->values(Random::mersenneTwister));
         $bValues = $this->unwrap($elements2->values(Random::mersenneTwister));
 
-        $this->assertInstanceOf(Elements::class, $elements2);
+        $this->assertInstanceOf(Set::class, $elements2);
         $this->assertNotSame($elements, $elements2);
         $this->assertCount(100, $aValues);
         $this->assertCount(10, $bValues);
@@ -54,7 +49,7 @@ class ElementsTest extends TestCase
             return $containsEvenInt || ($value % 2 === 1);
         };
 
-        $this->assertInstanceOf(Elements::class, $elements2);
+        $this->assertInstanceOf(Set::class, $elements2);
         $this->assertNotSame($elements, $elements2);
         $this->assertFalse(
             \array_reduce(

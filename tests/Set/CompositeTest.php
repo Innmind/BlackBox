@@ -51,7 +51,7 @@ class CompositeTest extends TestCase
     public function testImmutable()
     {
         $this->assertInstanceOf(
-            Composite::class,
+            Set::class,
             Composite::immutable(
                 static function() {},
                 FromGenerator::of(static function() {
@@ -179,12 +179,12 @@ class CompositeTest extends TestCase
 
                     return $std;
                 },
-                FromGenerator::of(static function() {
+                Set::generator(static function() {
                     yield 'ea';
                     yield 'fb';
                     yield 'gc';
                     yield 'eb';
-                }),
+                })->mutable(),
             ),
             FromGenerator::of(static function() {
                 yield 'c';
