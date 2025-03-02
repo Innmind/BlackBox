@@ -216,6 +216,25 @@ final class Set
     {
         return new self(Set\UnsafeStrings::implementation());
     }
+    /**
+     * @psalm-pure
+     *
+     * @template A
+     *
+     * @param callable(): A $call
+     *
+     * @return self<A>
+     */
+    public static function call(callable $call): self
+    {
+        return self::generator(static function() use ($call) {
+            while (true) {
+                yield $call;
+            }
+        })
+            ->mutable()
+            ->map(static fn($call) => $call());
+    }
 
     /**
      * @psalm-mutation-free

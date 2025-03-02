@@ -8,6 +8,7 @@ use Innmind\BlackBox\Set;
 final class Call
 {
     /**
+     * @deprecated Use Set::call() instead
      * @template T
      *
      * @param callable(): T $call
@@ -16,12 +17,6 @@ final class Call
      */
     public static function of(callable $call): Set
     {
-        return Set::generator(static function() use ($call) {
-            while (true) {
-                yield $call;
-            }
-        })
-            ->mutable()
-            ->map(static fn($call) => $call());
+        return Set::call($call);
     }
 }
