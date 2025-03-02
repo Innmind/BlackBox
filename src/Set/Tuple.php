@@ -8,6 +8,7 @@ use Innmind\BlackBox\Set;
 final class Tuple
 {
     /**
+     * @deprecated Use Set::tuple() instead
      * @psalm-pure
      * @no-named-arguments
      *
@@ -26,14 +27,6 @@ final class Tuple
         Set|Provider $second,
         Set|Provider ...$rest,
     ): Set {
-        /** @var Set<non-empty-list<A|B|C>> */
-        return Set::compose(
-            static fn(mixed ...$args) => $args,
-            $first,
-            $second,
-            ...$rest,
-        )
-            ->immutable()
-            ->toSet();
+        return Set::tuple($first, $second, ...$rest);
     }
 }
