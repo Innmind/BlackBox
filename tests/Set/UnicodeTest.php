@@ -21,4 +21,13 @@ class UnicodeTest extends TestCase
                 $this->assertIsString($string);
             });
     }
+
+    public function testChar()
+    {
+        $this
+            ->forAll(Unicode::any())
+            ->then(function($string) {
+                $this->assertIsString($string);
+            });
+    }
 }
