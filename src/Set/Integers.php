@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * @implements Implementation<int>
  */
 final class Integers implements Implementation

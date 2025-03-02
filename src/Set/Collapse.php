@@ -11,6 +11,7 @@ use Innmind\BlackBox\Set;
 final class Collapse
 {
     /**
+     * @internal
      * @template T
      * @psalm-pure
      *

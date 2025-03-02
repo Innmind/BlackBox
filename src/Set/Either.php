@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * @template T
  * @template U
  * @template V

@@ -28,6 +28,9 @@ final class Matrix
         $this->combinations = $combinations;
     }
 
+    /**
+     * @internal
+     */
     public static function of(Implementation $a, Implementation $b): self
     {
         /** @var Implementation<Combination> */

@@ -11,6 +11,7 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * @template C
  * @implements Implementation<C>
  */

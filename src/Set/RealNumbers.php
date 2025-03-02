@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * @implements Implementation<float>
  */
 final class RealNumbers implements Implementation
@@ -39,6 +40,7 @@ final class RealNumbers implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
     public static function implementation(?int $lowerBound, ?int $upperBound): self

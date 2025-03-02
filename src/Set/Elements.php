@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * This set can only contain immutable values as they're generated outside of the
  * class, so it can't be re-generated on the fly
  *

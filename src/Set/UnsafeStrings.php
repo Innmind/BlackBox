@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
 use Innmind\Json\Json;
 
 /**
+ * @internal
  * @implements Implementation<string>
  */
 final class UnsafeStrings implements Implementation

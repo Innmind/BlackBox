@@ -14,6 +14,7 @@ use Innmind\BlackBox\{
  *
  * It will allow to test more diverse combinations for a given set
  *
+ * @internal
  * @template I
  * @implements Implementation<I>
  */

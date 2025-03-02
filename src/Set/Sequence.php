@@ -9,7 +9,7 @@ use Innmind\BlackBox\{
 };
 
 /**
- *
+ * @internal
  * @template I
  * @implements Implementation<list<I>>
  */
