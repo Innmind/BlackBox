@@ -10,17 +10,15 @@ use Innmind\BlackBox\Set;
  */
 final class MadeOf implements Provider
 {
-    /** @var Set<string> */
-    private Set $chars;
+    /** @var Set<string>|Provider<string> */
+    private Set|Provider $chars;
 
     /**
      * @psalm-mutation-free
      *
-     * @no-named-arguments
-     *
-     * @param Set<string> $chars
+     * @param Set<string>|Provider<string> $chars
      */
-    private function __construct(Set $chars)
+    private function __construct(Set|Provider $chars)
     {
         $this->chars = $chars;
     }
@@ -41,7 +39,7 @@ final class MadeOf implements Provider
             return new self(Set::either($first, ...$rest));
         }
 
-        return new self(Collapse::of($chars));
+        return new self($chars);
     }
 
     /**
