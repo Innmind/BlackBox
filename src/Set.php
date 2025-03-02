@@ -199,6 +199,16 @@ final class Set
     }
 
     /**
+     * @psalm-pure
+     *
+     * @return self<string>
+     */
+    public static function unsafeStrings(): self
+    {
+        return new self(Set\UnsafeStrings::implementation());
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @return self<?T>

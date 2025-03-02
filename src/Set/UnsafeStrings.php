@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
+    Set,
     Random,
     Exception\EmptySet,
 };
@@ -35,11 +36,22 @@ final class UnsafeStrings implements Implementation
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(): self
     {
         return new self(100, static fn(): bool => true);
+    }
+
+    /**
+     * @psalm-pure
+     *
+     * @return Set<string>
+     */
+    public static function any(): Set
+    {
+        return Set::unsafeStrings();
     }
 
     /**
