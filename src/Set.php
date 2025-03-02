@@ -240,6 +240,61 @@ final class Set
     }
 
     /**
+     * @psalm-pure
+     *
+     * @return self<non-empty-string>
+     */
+    public static function email(): self
+    {
+        $letter = static fn(string ...$extra): self => self::of(
+            ...\range('a', 'z'),
+            ...\range('A', 'Z'),
+            ...\array_map(
+                static fn($i) => (string) $i,
+                \range(0, 9),
+            ),
+            ...$extra,
+        );
+        /** @psalm-suppress ArgumentTypeCoercion */
+        $string = static fn(int $maxLength, string ...$extra): self => self::either(
+            // either only with simple characters
+            self::sequence($letter())
+                ->between(1, $maxLength)
+                ->map(static fn(array $chars): string => \implode('', $chars)),
+            // or with some extra ones in the middle
+            self::compose(
+                static fn(string ...$parts): string => \implode('', $parts),
+                $letter(),
+                self::sequence($letter(...$extra))
+                    ->between(1, $maxLength - 2)
+                    ->map(static fn(array $chars): string => \implode('', $chars)),
+                $letter(),
+            )
+                ->immutable()
+                ->filter(static function(string $string): bool {
+                    return !\preg_match('~\.\.~', $string);
+                }),
+        );
+        $address = $string(64, '-', '.', '_');
+        $domain = $string(63, '-', '.');
+        $tld = self::sequence(self::of(...\range('a', 'z'), ...\range('A', 'Z')))
+            ->between(1, 63)
+            ->map(static fn(array $chars): string => \implode('', $chars));
+
+        return self::compose(
+            static fn(string $address, string $domain, string $tld) => "$address@$domain.$tld",
+            $address,
+            $domain,
+            $tld,
+        )
+            ->immutable()
+            ->take(100)
+            ->filter(static function(string $email): bool {
+                return !\preg_match('~(\-.|\.\-)~', $email);
+            });
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @return self<?T>
