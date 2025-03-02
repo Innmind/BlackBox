@@ -74,6 +74,7 @@ final class Either implements Implementation
     }
 
     /**
+     * @deprecated Use Set::either() instead
      * @psalm-pure
      *
      * @no-named-arguments

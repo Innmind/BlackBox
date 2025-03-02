@@ -59,6 +59,7 @@ final class Decorate implements Implementation
     }
 
     /**
+     * @deprecated Use $set->map() instead
      * @psalm-pure
      *
      * @template T
@@ -75,6 +76,7 @@ final class Decorate implements Implementation
     }
 
     /**
+     * @deprecated Use Set::decorate() instead
      * @psalm-pure
      *
      * @template T

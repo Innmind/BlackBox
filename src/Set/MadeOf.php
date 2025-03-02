@@ -138,7 +138,7 @@ final class MadeOf implements Provider
      */
     private function build(int $min, int $max): Set
     {
-        return Sequence::of($this->chars)
+        return Set::sequence($this->chars)
             ->between($min, $max)
             ->map(static fn(array $chars) => \implode('', $chars));
     }

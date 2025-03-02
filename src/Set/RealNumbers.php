@@ -52,6 +52,7 @@ final class RealNumbers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
      *
      * @return Set<float>
@@ -62,6 +63,7 @@ final class RealNumbers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
      *
      * @return Set<float>
@@ -74,6 +76,7 @@ final class RealNumbers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
      *
      * @return Set<float>
@@ -86,6 +89,7 @@ final class RealNumbers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
      *
      * @return Set<float>

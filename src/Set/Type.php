@@ -36,16 +36,16 @@ final class Type
          */
         return Set::either(
             Set::of(true, false, null),
-            Integers::any(),
-            RealNumbers::any(),
+            Set::integers(),
+            Set::realNumbers(),
             Unicode::strings(),
-            FromGenerator::of(static function() { // objects
+            Set::generator(static function() { // objects
                 while (true) {
                     yield new class {
                     };
                 }
             }),
-            FromGenerator::of(static function() { // callables
+            Set::generator(static function() { // callables
                 while (true) {
                     yield new class {
                         public function __invoke()

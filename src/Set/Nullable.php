@@ -8,6 +8,7 @@ use Innmind\BlackBox\Set;
 final class Nullable
 {
     /**
+     * @deprecated Use $set->nulable() instead
      * @psalm-pure
      *
      * @template T

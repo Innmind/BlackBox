@@ -52,6 +52,7 @@ final class Integers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::integers() instead
      * @psalm-pure
      *
      * @return Set<int>
@@ -62,6 +63,7 @@ final class Integers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::integers() instead
      * @psalm-pure
      *
      * @return Set<int>
@@ -74,6 +76,7 @@ final class Integers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::integers() instead
      * @psalm-pure
      *
      * @return Set<int>
@@ -86,6 +89,7 @@ final class Integers implements Implementation
     }
 
     /**
+     * @deprecated Use Set::integers() instead
      * @psalm-pure
      *
      * @return Set<int>

@@ -49,6 +49,7 @@ final class Randomize implements Implementation
     }
 
     /**
+     * @deprecated Use $set->randomize() instead
      * @psalm-pure
      *
      * @template T

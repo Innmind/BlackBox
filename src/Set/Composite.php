@@ -71,6 +71,7 @@ final class Composite implements Implementation
     }
 
     /**
+     * @deprecated Use Set::compose() instead
      * @psalm-pure
      *
      * @template T
@@ -92,6 +93,7 @@ final class Composite implements Implementation
     }
 
     /**
+     * @deprecated Use Set::compose() instead
      * @psalm-pure
      *
      * @template T

@@ -45,6 +45,7 @@ final class UnsafeStrings implements Implementation
     }
 
     /**
+     * @deprecated Use Set::unsafeStrings() instead
      * @psalm-pure
      *
      * @return Set<string>

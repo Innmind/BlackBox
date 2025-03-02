@@ -69,6 +69,7 @@ final class Elements implements Implementation
     }
 
     /**
+     * @deprecated Use Set::of() instead
      * @psalm-pure
      *
      * @no-named-arguments

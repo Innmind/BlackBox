@@ -115,7 +115,7 @@ final class Properties implements Provider
     private function ensure(int $max): Set
     {
         /** @var Set<non-empty-list<Concrete>> */
-        $sequences = Sequence::of($this->properties)->between(1, $max);
+        $sequences = Set::sequence($this->properties)->between(1, $max);
 
         return $sequences->map(
             static fn(array $properties): Ensure => Ensure::of(...$properties),

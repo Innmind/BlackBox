@@ -60,6 +60,7 @@ final class Sequence implements Implementation
     }
 
     /**
+     * @deprecated Use Set::sequence() instead
      * @psalm-pure
      *
      * @template U
