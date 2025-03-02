@@ -179,12 +179,12 @@ class CompositeTest extends TestCase
 
                     return $std;
                 },
-                Set::generator(static function() {
+                FromGenerator::of(static function() {
                     yield 'ea';
                     yield 'fb';
                     yield 'gc';
                     yield 'eb';
-                })->mutable(),
+                }),
             ),
             FromGenerator::of(static function() {
                 yield 'c';
