@@ -325,6 +325,49 @@ final class Set
     }
 
     /**
+     * Use this set to prove your code is indifferent to the value passed to it
+     *
+     * @return self<mixed>
+     */
+    public static function type(): self
+    {
+        // no resource is generated as it may result in a fatal error of too
+        // many opened resources
+        /** @psalm-suppress InvalidArgument Don't why it complains */
+        $primitives = self::either(
+            self::of(true, false, null),
+            self::integers(),
+            self::realNumbers(),
+            self::strings()->unicode(),
+            self::generator(static function() { // objects
+                while (true) {
+                    yield new class {
+                    };
+                }
+            }),
+            self::generator(static function() { // callables
+                while (true) {
+                    yield new class {
+                        public function __invoke()
+                        {
+                        }
+                    };
+                    yield static fn() => null;
+                    yield static fn() => null;
+                }
+            }),
+        );
+
+        return self::either(
+            $primitives,
+            self::sequence($primitives)->between(0, 1), // no more needed to prove type indifference
+            self::sequence($primitives)
+                ->between(0, 1) // no more needed to prove type indifference
+                ->map(static fn(array $array): \Iterator => new \ArrayIterator($array)),
+        );
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @return self<?T>
