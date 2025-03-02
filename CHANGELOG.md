@@ -5,6 +5,7 @@
 ### Added
 
 - `Innmind\BlackBox\Set\Provider` to allow classes to be factories of `Set`s without having to implement the `Set` interface
+- Support for PHPUnit `12`
 
 ### Changed
 
