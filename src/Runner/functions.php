@@ -44,7 +44,6 @@ function test(string $name, callable $test): Proof
  */
 function given(Set|Provider $first, Set|Provider ...$rest): Given
 {
-    /** @var Set<list<mixed>> */
     $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
 
     if (\count($rest) > 0) {

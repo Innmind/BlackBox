@@ -78,7 +78,6 @@ final class Properties implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
         return Set::randomize(
             Set::composite(
                 Scenario\Properties::of(...),

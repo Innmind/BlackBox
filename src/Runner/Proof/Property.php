@@ -101,10 +101,7 @@ final class Property implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        /**
-         * @psalm-suppress MixedArgument
-         * @var Set<Scenario>
-         */
+        /** @psalm-suppress MixedArgument */
         return Set::randomize(
             Set::composite(
                 Scenario\Property::of(...),

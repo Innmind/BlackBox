@@ -31,11 +31,9 @@ trait BlackBox
             $app = $app->disableShrinking();
         }
 
-        /** @var Set<list<mixed>> */
         $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
 
         if (\count($rest) > 0) {
-            /** @var Set<list<mixed>> */
             $given = Set::of(Set\Composite::immutable(
                 static fn(mixed ...$args) => $args,
                 $first,

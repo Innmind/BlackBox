@@ -14,7 +14,6 @@ final class Email
      */
     public static function any(): Set
     {
-        /** @var Set<non-empty-string> */
         return Set::composite(
             static function(string $address, string $domain, string $tld): string {
                 return "$address@$domain.$tld";

@@ -15,7 +15,6 @@ final class Type
      */
     public static function any(): Set
     {
-        /** @var Set<mixed> */
         return Set::either(
             self::primitives(),
             Set::sequence(self::primitives())->between(0, 1), // no more needed to prove type indifference
@@ -35,7 +34,6 @@ final class Type
         // many opened resources
         /**
          * @psalm-suppress InvalidArgument Don't why it complains
-         * @var Set<mixed>
          */
         return Set::either(
             Set::of(true, false, null),

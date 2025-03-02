@@ -14,7 +14,6 @@ final class Uuid
      */
     public static function any(): Set
     {
-        /** @var Set<scalar> */
         $chars = Set::of(...\range('a', 'f'), ...\range(0, 9));
         /** @psalm-suppress ArgumentTypeCoercion */
         $part = static fn(int $length): Set => Set::sequence($chars)

@@ -12,7 +12,7 @@ use Innmind\BlackBox\{
 };
 
 /**
- * @template T The type of data being generated
+ * @template-covariant T The type of data being generated
  */
 final class Set
 {

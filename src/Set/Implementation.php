@@ -10,7 +10,7 @@ use Innmind\BlackBox\{
 
 /**
  * @internal
- * @template T The type of data being generated
+ * @template-covariant T The type of data being generated
  */
 interface Implementation
 {
