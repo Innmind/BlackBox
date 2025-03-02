@@ -10,10 +10,6 @@ use Innmind\BlackBox\{
 };
 
 /**
- * Use this set to prevent iterating over all possible combinations of a composite set
- *
- * It will allow to test more diverse combinations for a given set
- *
  * @internal
  * @template I
  * @implements Implementation<I>

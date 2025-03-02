@@ -100,6 +100,9 @@ final class Set
     /**
      * By default the value created by this generator is considered immutable.
      *
+     * This set can only contain immutable values as they're generated outside of the
+     * class, so it can't be re-generated on the fly
+     *
      * @psalm-pure
      *
      * @template V
@@ -139,6 +142,10 @@ final class Set
     }
 
     /**
+     * Use this set to prevent iterating over all possible combinations of a composite set
+     *
+     * It will allow to test more diverse combinations for a given set
+     *
      * @psalm-pure
      *
      * @template A
