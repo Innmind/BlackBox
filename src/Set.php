@@ -368,6 +368,32 @@ final class Set
     }
 
     /**
+     * @psalm-pure
+     *
+     * @return self<non-empty-string>
+     */
+    public static function uuid(): self
+    {
+        $chars = self::of(...\range('a', 'f'), ...\range(0, 9));
+        /** @psalm-suppress ArgumentTypeCoercion */
+        $part = static fn(int $length): self => self::sequence($chars)
+            ->between($length, $length)
+            ->map(static fn(array $chars): string => \implode('', $chars));
+
+        /** @var self<non-empty-string> */
+        return self::compose(
+            static fn(string ...$parts): string => \implode('-', $parts),
+            $part(8),
+            $part(4),
+            $part(4),
+            $part(4),
+            $part(12),
+        )
+            ->immutable()
+            ->take(100);
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @return self<?T>
