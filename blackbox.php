@@ -13,15 +13,6 @@ use function Innmind\BlackBox\Runner\test;
 
 // This test has to be done here because other tests use global functions
 $result = Application::new([])
-    ->codeCoverage(
-        CodeCoverage::of(
-            __DIR__.'/src/',
-            __DIR__.'/proofs/',
-            __DIR__.'/fixtures/',
-        )
-            ->dumpTo('coverage.clover')
-            ->enableWhen(\getenv('ENABLE_COVERAGE') !== false),
-    )
     ->disableGlobalFunctions()
     ->tryToProve(function() {
         yield test(
