@@ -106,7 +106,7 @@ final class Proof implements ProofInterface
     public function scenarii(int $count): Set
     {
         /** @var Set<Scenario> */
-        return Set::elements(Proof\Scenario::of(
+        return Set::of(Proof\Scenario::of(
             $this->class,
             $this->method,
             $this->args,

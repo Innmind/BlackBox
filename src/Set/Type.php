@@ -38,7 +38,7 @@ final class Type
          * @var Set<mixed>
          */
         return Set::either(
-            Set::elements(true, false, null),
+            Set::of(true, false, null),
             Integers::any(),
             RealNumbers::any(),
             Unicode::strings(),

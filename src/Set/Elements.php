@@ -82,7 +82,7 @@ final class Elements implements Implementation
      */
     public static function of($first, ...$elements): Set
     {
-        return Set::elements($first, ...$elements);
+        return Set::of($first, ...$elements);
     }
 
     /**

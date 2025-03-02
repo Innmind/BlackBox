@@ -27,22 +27,6 @@ final class Set
     }
 
     /**
-     * @internal
-     * @template A
-     * @psalm-pure
-     * @todo Remove once all previous sets are flagged as internal
-     *
-     * @param Implementation<A> $implementation
-     *
-     * @return self<A>
-     */
-    public static function of(Implementation $implementation): self
-    {
-        return new self($implementation);
-    }
-
-    /**
-     * @todo rename to ::of() when current self::of() will no longer be needed
      * @psalm-pure
      *
      * @no-named-arguments
@@ -55,7 +39,7 @@ final class Set
      *
      * @return self<A|B>
      */
-    public static function elements(mixed $first, mixed ...$rest): self
+    public static function of(mixed $first, mixed ...$rest): self
     {
         return new self(Set\Elements::implementation($first, ...$rest));
     }
@@ -66,7 +50,7 @@ final class Set
     public static function integers(): Provider\Integers
     {
         /** @psalm-suppress InvalidArgument */
-        return Provider\Integers::of(self::of(...));
+        return Provider\Integers::of(self::build(...));
     }
 
     /**
@@ -75,7 +59,7 @@ final class Set
     public static function realNumbers(): Provider\RealNumbers
     {
         /** @psalm-suppress InvalidArgument */
-        return Provider\RealNumbers::of(self::of(...));
+        return Provider\RealNumbers::of(self::build(...));
     }
 
     /**
@@ -98,7 +82,7 @@ final class Set
     ): Provider\Composite {
         /** @psalm-suppress InvalidArgument */
         return Provider\Composite::of(
-            self::of(...),
+            self::build(...),
             $aggregate,
             Collapse::of($first),
             Collapse::of($second),
@@ -124,7 +108,7 @@ final class Set
     {
         /** @psalm-suppress InvalidArgument */
         return Provider\Generator::of(
-            self::of(...),
+            self::build(...),
             $factory,
         );
     }
@@ -145,7 +129,7 @@ final class Set
          * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
          */
         return Provider\Sequence::of(
-            self::of(...),
+            self::build(...),
             Collapse::of($set)->implementation,
         );
     }
@@ -194,7 +178,7 @@ final class Set
      */
     public function nullable(): self
     {
-        return self::either($this, self::elements(null));
+        return self::either($this, self::of(null));
     }
 
     /**
@@ -245,5 +229,18 @@ final class Set
     public function values(Random $random): \Generator
     {
         yield from $this->implementation->values($random);
+    }
+
+    /**
+     * @template A
+     * @psalm-pure
+     *
+     * @param Implementation<A> $implementation
+     *
+     * @return self<A>
+     */
+    private static function build(Implementation $implementation): self
+    {
+        return new self($implementation);
     }
 }
