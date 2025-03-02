@@ -63,7 +63,7 @@ final class Integers implements Implementation
     }
 
     /**
-     * @deprecated Use Set::integers() instead
+     * @deprecated Use Set::integers()->between() instead
      * @psalm-pure
      *
      * @return Set<int>
@@ -76,7 +76,7 @@ final class Integers implements Implementation
     }
 
     /**
-     * @deprecated Use Set::integers() instead
+     * @deprecated Use Set::integers()->above() instead
      * @psalm-pure
      *
      * @return Set<int>
@@ -89,7 +89,7 @@ final class Integers implements Implementation
     }
 
     /**
-     * @deprecated Use Set::integers() instead
+     * @deprecated Use Set::integers()->below() instead
      * @psalm-pure
      *
      * @return Set<int>

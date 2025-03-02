@@ -64,6 +64,44 @@ final class Integers implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @return Set<int>
+     */
+    public function exceptZero(): Set
+    {
+        return $this->filter(
+            static fn(int $value): bool => $value !== 0,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<int<0, max>>
+     */
+    public function naturalNumbers(): Set
+    {
+        /** @var Set<0|positive-int> */
+        return $this
+            ->above(0)
+            ->toSet();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<int<1, max>>
+     */
+    public function naturalNumbersExceptZero(): Set
+    {
+        /** @var Set<int<1, max>> */
+        return $this
+            ->above(1)
+            ->toSet();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @param int<1, max> $size
      *
      * @return Set<int>

@@ -8,15 +8,13 @@ use Innmind\BlackBox\Set;
 final class NaturalNumbersExceptZero
 {
     /**
+     * @deprecated Use Set::integers()->naturalNumbersExceptZero() instead
      * @psalm-pure
      *
      * @return Set<positive-int>
      */
     public static function any(): Set
     {
-        /** @var Set<positive-int> */
-        return Set::integers()
-            ->above(1)
-            ->toSet();
+        return Set::integers()->naturalNumbersExceptZero();
     }
 }
