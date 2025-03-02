@@ -16,8 +16,8 @@ Application::new([])
         yield proof(
             'Add is commutative',
             given(
-                Set\Elements::of(1),
-                Set\Elements::of(2),
+                Set::of(1),
+                Set::of(2),
             ),
             static function(Assert $assert, int $a, int $b): void {
                 $assert->same(
@@ -54,8 +54,8 @@ BlackBox by default runs a proof `100` times.
             yield proof(
                 'Add is commutative',
                 given(
-                    Set\Elements::of(1),
-                    Set\Elements::of(2),
+                    Set::of(1),
+                    Set::of(2),
                 ),
                 static function(Assert $assert, int $a, int $b): void {
                     $assert->same(
@@ -88,8 +88,8 @@ Application::new([])
         yield proof(
             'Add is commutative',
             given(
-                Set\Integers::any(),
-                Set\Integers::any(),
+                Set::integers(),
+                Set::integers(),
             ),
             static function(Assert $assert, int $a, int $b): void {
                 $assert->same(

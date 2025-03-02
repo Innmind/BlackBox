@@ -23,16 +23,6 @@ class FromGeneratorTest extends TestCase
         );
     }
 
-    public function testOf()
-    {
-        $this->assertInstanceOf(
-            FromGenerator::class,
-            FromGenerator::of(static function() {
-                yield 42;
-            }),
-        );
-    }
-
     public function testThrowWhenTheCallableDoesntReturnAGenerator()
     {
         $this->expectException(\TypeError::class);
@@ -53,7 +43,7 @@ class FromGeneratorTest extends TestCase
         $b = $a->take(50);
         $bValues = $this->unwrap($b->values(Random::mersenneTwister));
 
-        $this->assertInstanceOf(FromGenerator::class, $b);
+        $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $aValues);
         $this->assertCount(50, $bValues);
@@ -75,8 +65,8 @@ class FromGeneratorTest extends TestCase
         });
         $bValues = $this->unwrap($b->values(Random::mersenneTwister));
 
-        $this->assertInstanceOf(FromGenerator::class, $a);
-        $this->assertInstanceOf(FromGenerator::class, $b);
+        $this->assertInstanceOf(Set::class, $a);
+        $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
         $this->assertCount(100, $aValues);
         $this->assertCount(50, $bValues);

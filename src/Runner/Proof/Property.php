@@ -101,14 +101,14 @@ final class Property implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        /**
-         * @psalm-suppress MixedArgument
-         * @var Set<Scenario>
-         */
-        return Set\Randomize::of(Set\Composite::immutable(
+        /** @psalm-suppress MixedArgument */
+        return Set::compose(
             Scenario\Property::of(...),
             ([$this->property, 'any'])(),
             $this->systemUnderTest,
-        ))->take($count);
+        )
+            ->immutable()
+            ->take($count)
+            ->randomize();
     }
 }

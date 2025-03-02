@@ -10,17 +10,15 @@ use Innmind\BlackBox\Set;
  */
 final class MadeOf implements Provider
 {
-    /** @var Set<string> */
-    private Set $chars;
+    /** @var Set<string>|Provider<string> */
+    private Set|Provider $chars;
 
     /**
      * @psalm-mutation-free
      *
-     * @no-named-arguments
-     *
-     * @param Set<string> $chars
+     * @param Set<string>|Provider<string> $chars
      */
-    private function __construct(Set $chars)
+    private function __construct(Set|Provider $chars)
     {
         $this->chars = $chars;
     }
@@ -38,10 +36,10 @@ final class MadeOf implements Provider
         $chars = $first;
 
         if (\count($rest) > 0) {
-            return new self(Either::any($first, ...$rest));
+            return new self(Set::either($first, ...$rest));
         }
 
-        return new self(Collapse::of($chars));
+        return new self($chars);
     }
 
     /**
@@ -62,10 +60,11 @@ final class MadeOf implements Provider
      *
      * @param positive-int $length
      *
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public function atLeast(int $length): Set
     {
+        /** @var Set<non-empty-string> */
         return $this->build($length, $length + 128);
     }
 
@@ -140,7 +139,7 @@ final class MadeOf implements Provider
      */
     private function build(int $min, int $max): Set
     {
-        return Sequence::of($this->chars)
+        return Set::sequence($this->chars)
             ->between($min, $max)
             ->map(static fn(array $chars) => \implode('', $chars));
     }

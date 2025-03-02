@@ -9,9 +9,10 @@ use Innmind\BlackBox\{
 };
 
 /**
- * @implements Set<int>
+ * @internal
+ * @implements Implementation<int>
  */
-final class Integers implements Set
+final class Integers implements Implementation
 {
     private int $lowerBound;
     private int $upperBound;
@@ -39,35 +40,65 @@ final class Integers implements Set
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(?int $lowerBound, ?int $upperBound): self
     {
-        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
+        return new self(
+            $lowerBound ?? \PHP_INT_MIN,
+            $upperBound ?? \PHP_INT_MAX,
+        );
     }
 
     /**
+     * @deprecated Use Set::integers() instead
      * @psalm-pure
+     *
+     * @return Set<int>
      */
-    public static function between(int $lowerBound, int $upperBound): self
+    public static function any(): Set
     {
-        return new self($lowerBound, $upperBound);
+        return Set::integers()->toSet();
     }
 
     /**
+     * @deprecated Use Set::integers()->between() instead
      * @psalm-pure
+     *
+     * @return Set<int>
      */
-    public static function above(int $lowerBound): self
+    public static function between(int $lowerBound, int $upperBound): Set
     {
-        return new self($lowerBound, \PHP_INT_MAX);
+        return Set::integers()
+            ->between($lowerBound, $upperBound)
+            ->toSet();
     }
 
     /**
+     * @deprecated Use Set::integers()->above() instead
      * @psalm-pure
+     *
+     * @return Set<int>
      */
-    public static function below(int $upperBound): self
+    public static function above(int $lowerBound): Set
     {
-        return new self(\PHP_INT_MIN, $upperBound);
+        return Set::integers()
+            ->above($lowerBound)
+            ->toSet();
+    }
+
+    /**
+     * @deprecated Use Set::integers()->below() instead
+     * @psalm-pure
+     *
+     * @return Set<int>
+     */
+    public static function below(int $upperBound): Set
+    {
+        return Set::integers()
+            ->below($upperBound)
+            ->toSet();
     }
 
     /**
@@ -118,9 +149,9 @@ final class Integers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::implementation($map, $this, true);
     }
 
     #[\Override]

@@ -11,53 +11,11 @@ use Innmind\BlackBox\Set;
 final class Type
 {
     /**
+     * @deprecated Use Set::type() instead
      * @return Set<mixed>
      */
     public static function any(): Set
     {
-        /** @var Set<mixed> */
-        return Either::any(
-            self::primitives(),
-            Sequence::of(self::primitives())->between(0, 1), // no more needed to prove type indifference
-            Sequence::of(self::primitives())
-                ->between(0, 1) // no more needed to prove type indifference
-                ->map(static fn(array $array): \Iterator => new \ArrayIterator($array)),
-        );
-    }
-
-    /**
-     * @return Set<mixed>
-     */
-    private static function primitives(): Set
-    {
-        // no resource is generated as it may result in a fatal error of too
-        // many opened resources
-        /**
-         * @psalm-suppress InvalidArgument Don't why it complains
-         * @var Set<mixed>
-         */
-        return Either::any(
-            Elements::of(true, false, null),
-            Integers::any(),
-            RealNumbers::any(),
-            Unicode::strings(),
-            FromGenerator::of(static function() { // objects
-                while (true) {
-                    yield new class {
-                    };
-                }
-            }),
-            FromGenerator::of(static function() { // callables
-                while (true) {
-                    yield new class {
-                        public function __invoke()
-                        {
-                        }
-                    };
-                    yield static fn() => null;
-                    yield static fn() => null;
-                }
-            }),
-        );
+        return Set::type();
     }
 }

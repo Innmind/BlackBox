@@ -78,11 +78,13 @@ final class Properties implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
-        return Set\Randomize::of(Set\Composite::immutable(
+        return Set::compose(
             Scenario\Properties::of(...),
             $this->properties,
             $this->systemUnderTest,
-        ))->take($count);
+        )
+            ->immutable()
+            ->take($count)
+            ->randomize();
     }
 }

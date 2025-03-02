@@ -11,9 +11,10 @@ use Innmind\BlackBox\{
 use Innmind\Json\Json;
 
 /**
- * @implements Set<string>
+ * @internal
+ * @implements Implementation<string>
  */
-final class UnsafeStrings implements Set
+final class UnsafeStrings implements Implementation
 {
     /** @var positive-int */
     private int $size;
@@ -35,18 +36,30 @@ final class UnsafeStrings implements Set
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(): self
     {
         return new self(100, static fn(): bool => true);
+    }
+
+    /**
+     * @deprecated Use Set::strings()->unsafe() instead
+     * @psalm-pure
+     *
+     * @return Set<string>
+     */
+    public static function any(): Set
+    {
+        return Set::strings()->unsafe();
     }
 
     /**
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $size,
@@ -58,7 +71,7 @@ final class UnsafeStrings implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -78,9 +91,9 @@ final class UnsafeStrings implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::implementation($map, $this, true);
     }
 
     #[\Override]

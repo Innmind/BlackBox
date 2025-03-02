@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Proof as ProofInterface,
     Runner\Proof\Name,
-    Runner\Proof\Scenario,
     Set,
 };
 
@@ -105,8 +104,7 @@ final class Proof implements ProofInterface
     #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
-        return Set\Elements::of(Proof\Scenario::of(
+        return Set::of(Proof\Scenario::of(
             $this->class,
             $this->method,
             $this->args,

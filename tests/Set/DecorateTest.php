@@ -38,7 +38,7 @@ class DecorateTest extends TestCase
     public function testImmutable()
     {
         $this->assertInstanceOf(
-            Decorate::class,
+            Set::class,
             Decorate::immutable(
                 static function() {},
                 FromGenerator::of(static function() {

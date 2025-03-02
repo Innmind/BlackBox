@@ -21,6 +21,9 @@ final class Combination
         $this->values = $values;
     }
 
+    /**
+     * @internal
+     */
     public static function startWith(Value $right): self
     {
         return new self([$right]);

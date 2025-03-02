@@ -6,7 +6,7 @@ namespace Innmind\BlackBox\Set;
 /**
  * @psalm-immutable
  *
- * @template T
+ * @template-covariant T
  */
 final class Value
 {

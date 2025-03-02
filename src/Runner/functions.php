@@ -44,19 +44,20 @@ function test(string $name, callable $test): Proof
  */
 function given(Set|Provider $first, Set|Provider ...$rest): Given
 {
-    /** @var Set<list<mixed>> */
     $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
 
     if (\count($rest) > 0) {
         /** @var Set<list<mixed>> */
-        $given = Set\Composite::immutable(
+        $given = Set::compose(
             static fn(mixed ...$args) => $args,
             $first,
             ...$rest,
-        );
+        )
+            ->immutable()
+            ->toSet();
     }
 
-    return Given::of(Set\Randomize::of($given));
+    return Given::of($given->randomize());
 }
 
 /**

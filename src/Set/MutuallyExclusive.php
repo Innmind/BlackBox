@@ -23,7 +23,7 @@ final class MutuallyExclusive
         Set|Provider ...$rest,
     ): Set {
         /** @var Set<non-empty-list<string>> */
-        return Tuple::of(
+        return Set::tuple(
             $first,
             $second,
             ...$rest,

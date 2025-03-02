@@ -8,6 +8,7 @@ use Innmind\BlackBox\Set;
 final class Nullable
 {
     /**
+     * @deprecated Use $set->nulable() instead
      * @psalm-pure
      *
      * @template T
@@ -18,9 +19,6 @@ final class Nullable
      */
     public static function of(Set|Provider $set): Set
     {
-        return Either::any(
-            $set,
-            Elements::of(null),
-        );
+        return Collapse::of($set)->nullable();
     }
 }

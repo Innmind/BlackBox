@@ -14,15 +14,15 @@ use Innmind\BlackBox\{
  */
 final class Properties implements Provider
 {
-    /** @var Set<Concrete> */
-    private Set $properties;
+    /** @var Set<Concrete>|Provider<Concrete> */
+    private Set|Provider $properties;
 
     /**
      * @psalm-mutation-free
      *
-     * @param Set<Concrete> $properties
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    private function __construct(Set $properties)
+    private function __construct(Set|Provider $properties)
     {
         $this->properties = $properties;
     }
@@ -38,10 +38,10 @@ final class Properties implements Provider
     public static function any(Set|Provider $first, Set|Provider ...$properties): self
     {
         if (\count($properties) === 0) {
-            return new self(Collapse::of($first));
+            return new self($first);
         }
 
-        return new self(Either::any($first, ...$properties));
+        return new self(Set::either($first, ...$properties));
     }
 
     /**
@@ -115,7 +115,7 @@ final class Properties implements Provider
     private function ensure(int $max): Set
     {
         /** @var Set<non-empty-list<Concrete>> */
-        $sequences = Sequence::of($this->properties)->between(1, $max);
+        $sequences = Set::sequence($this->properties)->between(1, $max);
 
         return $sequences->map(
             static fn(array $properties): Ensure => Ensure::of(...$properties),

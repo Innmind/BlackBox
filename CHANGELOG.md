@@ -9,6 +9,53 @@
 ### Changed
 
 - BlackBox now also accepts instances of `Set\Provider` as input where it accepts `Set`s
+- `Innmind\BlackBox\Set` is now a `final class`
+- All classes that implemented the `Set` interface are now declared `@internal`
+- The template param of `Innmind\BlackBox\Set` is now covariant for more flexibility
+
+### Deprecated
+
+- `Innmind\BlackBox\Set\Call::of()`, use `Innmind\BlackBox\Set::call()` instead
+- `Innmind\BlackBox\Set\Chars::any()`, use `Innmind\BlackBox\Set::strings()->chars()` instead
+- `Innmind\BlackBox\Set\Chars::lowercaseLetter()`, use `Innmind\BlackBox\Set::strings()->chars()->lowercaseLetter()` instead
+- `Innmind\BlackBox\Set\Chars::uppercaseLetter()`, use `Innmind\BlackBox\Set::strings()->chars()->uppercaseLetter()` instead
+- `Innmind\BlackBox\Set\Chars::number()`, use `Innmind\BlackBox\Set::strings()->chars()->number()` instead
+- `Innmind\BlackBox\Set\Chars::ascii()`, use `Innmind\BlackBox\Set::strings()->chars()->ascii()` instead
+- `Innmind\BlackBox\Set\Chars::alphanumerical()`, use `Innmind\BlackBox\Set::strings()->chars()->alphanumerical()` instead
+- `Innmind\BlackBox\Set\Composite::immutable()`, use `Innmind\BlackBox\Set::compose()->immutable()` instead
+- `Innmind\BlackBox\Set\Composite::mutable()`, use `Innmind\BlackBox\Set::compose()->mutable()` instead
+- `Innmind\BlackBox\Set\Decorate::immutable()`, use `Innmind\BlackBox\Set->map()` instead
+- `Innmind\BlackBox\Set\Decorate::mutable()`, use `Innmind\BlackBox\Set::decorate()` instead
+- `Innmind\BlackBox\Set\Either::any()`, use `Innmind\BlackBox\Set::either()` instead
+- `Innmind\BlackBox\Set\Elements::of()`, use `Innmind\BlackBox\Set::of()` instead
+- `Innmind\BlackBox\Set\Email::any()`, use `Innmind\BlackBox\Set::email()` instead
+- `Innmind\BlackBox\Set\FromGenerator::of()`, use `Innmind\BlackBox\Set::generator()` instead
+- `Innmind\BlackBox\Set\FromGenerator::mutable()`, use `Innmind\BlackBox\Set::generator()->mutable()` instead
+- `Innmind\BlackBox\Set\Integers::any()`, use `Innmind\BlackBox\Set::integers()` instead
+- `Innmind\BlackBox\Set\Integers::between()`, use `Innmind\BlackBox\Set::integers()->between()` instead
+- `Innmind\BlackBox\Set\Integers::above()`, use `Innmind\BlackBox\Set::integers()->above()` instead
+- `Innmind\BlackBox\Set\Integers::below()`, use `Innmind\BlackBox\Set::integers()->below()` instead
+- `Innmind\BlackBox\Set\IntegersExceptZero::any()`, use `Innmind\BlackBox\Set::integers()->exceptZero()` instead
+- `Innmind\BlackBox\Set\NaturalNumbers::any()`, use `Innmind\BlackBox\Set::integers()->naturalNumbers()` instead
+- `Innmind\BlackBox\Set\NaturalNumbersExceptZero::any()`, use `Innmind\BlackBox\Set::integers()->naturalNumbersExceptZero()` instead
+- `Innmind\BlackBox\Set\Nullable::of()`, use `Innmind\BlackBox\Set->nullable()` instead
+- `Innmind\BlackBox\Set\Randomize::of()`, use `Innmind\BlackBox\Set->randomize()` instead
+- `Innmind\BlackBox\Set\RealNumbers::any()`, use `Innmind\BlackBox\Set::realNumbers()` instead
+- `Innmind\BlackBox\Set\RealNumbers::between()`, use `Innmind\BlackBox\Set::realNumbers()->between()` instead
+- `Innmind\BlackBox\Set\RealNumbers::above()`, use `Innmind\BlackBox\Set::realNumbers()->above()` instead
+- `Innmind\BlackBox\Set\RealNumbers::below()`, use `Innmind\BlackBox\Set::realNumbers()->below()` instead
+- `Innmind\BlackBox\Set\Sequence::of()`, use `Innmind\BlackBox\Set::sequence()` instead
+- `Innmind\BlackBox\Set\Strings::any()`, use `Innmind\BlackBox\Set::strings()` instead
+- `Innmind\BlackBox\Set\Strings::between()`, use `Innmind\BlackBox\Set::strings()->between()` instead
+- `Innmind\BlackBox\Set\Strings::atMost()`, use `Innmind\BlackBox\Set::strings()->atMost()` instead
+- `Innmind\BlackBox\Set\Strings::atLeast()`, use `Innmind\BlackBox\Set::strings()->atLeast()` instead
+- `Innmind\BlackBox\Set\Strings::madeOf()`, use `Innmind\BlackBox\Set::strings()->madeOf()` instead
+- `Innmind\BlackBox\Set\Tuple::of()`, use `Innmind\BlackBox\Set::tuple()` instead
+- `Innmind\BlackBox\Set\Type::any()`, use `Innmind\BlackBox\Set::type()` instead
+- `Innmind\BlackBox\Set\Unicode::strings()`, use `Innmind\BlackBox\Set::strings()->unicode()` instead
+- `Innmind\BlackBox\Set\Unicode::any()`, use `Innmind\BlackBox\Set::strings()->unicode()->char()` instead
+- `Innmind\BlackBox\Set\UnsafeStrings::any()`, use `Innmind\BlackBox\Set::strings()->unsafe()` instead
+- `Innmind\BlackBox\Set\Uuid::any()`, use `Innmind\BlackBox\Set::uuid()` instead
 
 ## 5.10.1 - 2025-01-19
 

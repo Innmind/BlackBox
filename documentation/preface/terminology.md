@@ -8,10 +8,10 @@ If you've used other PHP testing frameworks there is nothing new here.
 
 ## Set
 
-A _Set_ (1) represents any value that can BlackBox can generate. For example [`Integers::between(-100, 100)`](../sets.md) represents all the values from `-100` to `100`. You can think of it as `range(-100, 100)`. Except values are not pre-calculated. BlackBox will peak values randonly in the range.
+A _Set_ (1) represents any value that BlackBox can generate. For example [`Set::integers()->between(-100, 100)`](../sets.md) represents all the values from `-100` to `100`. You can think of it as `range(-100, 100)`. Except values are not pre-calculated. BlackBox will peak values randonly in the range.
 {.annotate}
 
-1. Described by the `Innmind\BlackBox\Set` interface.
+1. Described by the `Innmind\BlackBox\Set` class.
 
 Sets can describe primitive values as well as complex object trees.
 

@@ -35,8 +35,8 @@ final class MyTestCase extends TestCase
     public static function values(): iterable
     {
         return self::forAll(
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
         )->asDataProvider();
     }
 }
@@ -69,8 +69,8 @@ final class MyTestCase extends TestCase
     {
         $this
             ->forAll(
-                Set\Integers::any(),
-                Set\Integers::any(),
+                Set::integers(),
+                Set::integers(),
             )
             ->then(function(int $a, int $b) {
                 $this->assertSame(

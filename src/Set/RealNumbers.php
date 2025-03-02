@@ -9,9 +9,10 @@ use Innmind\BlackBox\{
 };
 
 /**
- * @implements Set<float>
+ * @internal
+ * @implements Implementation<float>
  */
-final class RealNumbers implements Set
+final class RealNumbers implements Implementation
 {
     private int $lowerBound;
     private int $upperBound;
@@ -39,42 +40,72 @@ final class RealNumbers implements Set
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(?int $lowerBound, ?int $upperBound): self
     {
-        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
+        return new self(
+            $lowerBound ?? \PHP_INT_MIN,
+            $upperBound ?? \PHP_INT_MAX,
+        );
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function between(int $lowerBound, int $upperBound): self
+    public static function any(): Set
     {
-        return new self($lowerBound, $upperBound);
+        return Set::realNumbers()->toSet();
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function above(int $lowerBound): self
+    public static function between(int $lowerBound, int $upperBound): Set
     {
-        return new self($lowerBound, \PHP_INT_MAX);
+        return Set::realNumbers()
+            ->between($lowerBound, $upperBound)
+            ->toSet();
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function below(int $upperBound): self
+    public static function above(int $lowerBound): Set
     {
-        return new self(\PHP_INT_MIN, $upperBound);
+        return Set::realNumbers()
+            ->above($lowerBound)
+            ->toSet();
+    }
+
+    /**
+     * @deprecated Use Set::realNumbers() instead
+     * @psalm-pure
+     *
+     * @return Set<float>
+     */
+    public static function below(int $upperBound): Set
+    {
+        return Set::realNumbers()
+            ->below($upperBound)
+            ->toSet();
     }
 
     /**
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->lowerBound,
@@ -88,7 +119,7 @@ final class RealNumbers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -110,9 +141,9 @@ final class RealNumbers implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::implementation($map, $this, true);
     }
 
     #[\Override]

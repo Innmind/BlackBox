@@ -9,48 +9,54 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * @template D
  * @template I
- * @implements Set<D>
+ * @implements Implementation<D>
  */
-final class Decorate implements Set
+final class Decorate implements Implementation
 {
     /** @var \Closure(I): D */
     private \Closure $decorate;
-    /** @var Set<I> */
-    private Set $set;
+    /** @var Implementation<I> */
+    private Implementation $set;
     private bool $immutable;
 
     /**
      * @psalm-mutation-free
      *
      * @param \Closure(I): D $decorate
-     * @param Set<I>|Provider<I> $set
+     * @param Implementation<I> $set
      */
-    private function __construct(bool $immutable, \Closure $decorate, Set|Provider $set)
+    private function __construct(bool $immutable, \Closure $decorate, Implementation $set)
     {
         $this->decorate = $decorate;
-        $this->set = Collapse::of($set);
+        $this->set = $set;
         $this->immutable = $immutable;
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @template T
      * @template V
      *
      * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
-     * @param Set<V>|Provider<V> $set
+     * @param Implementation<V> $set
      *
      * @return self<T,V>
      */
-    public static function immutable(callable $decorate, Set|Provider $set): self
-    {
-        return new self(true, \Closure::fromCallable($decorate), $set);
+    public static function implementation(
+        callable $decorate,
+        Implementation $set,
+        bool $immutable,
+    ): self {
+        return new self($immutable, \Closure::fromCallable($decorate), $set);
     }
 
     /**
+     * @deprecated Use $set->map() instead
      * @psalm-pure
      *
      * @template T
@@ -59,18 +65,35 @@ final class Decorate implements Set
      * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
      * @param Set<V>|Provider<V> $set
      *
-     * @return self<T,V>
+     * @return Set<T>
      */
-    public static function mutable(callable $decorate, Set|Provider $set): self
+    public static function immutable(callable $decorate, Set|Provider $set): Set
     {
-        return new self(false, \Closure::fromCallable($decorate), $set);
+        return Collapse::of($set)->map($decorate);
+    }
+
+    /**
+     * @deprecated Use Set::decorate() instead
+     * @psalm-pure
+     *
+     * @template T
+     * @template V
+     *
+     * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
+     * @param Set<V>|Provider<V> $set
+     *
+     * @return Set<T>
+     */
+    public static function mutable(callable $decorate, Set|Provider $set): Set
+    {
+        return Set::decorate($decorate, $set);
     }
 
     /**
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->immutable,
@@ -83,7 +106,7 @@ final class Decorate implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         /** @psalm-suppress MixedArgument */
         return new self(
@@ -99,7 +122,11 @@ final class Decorate implements Set
     #[\Override]
     public function map(callable $map): self
     {
-        return self::immutable($map, $this);
+        return self::implementation(
+            $map,
+            $this,
+            $this->immutable,
+        );
     }
 
     #[\Override]

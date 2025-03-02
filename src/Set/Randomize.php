@@ -10,51 +10,64 @@ use Innmind\BlackBox\{
 };
 
 /**
- * Use this set to prevent iterating over all possible combinations of a composite set
- *
- * It will allow to test more diverse combinations for a given set
- *
+ * @internal
  * @template I
- * @implements Set<I>
+ * @implements Implementation<I>
  */
-final class Randomize implements Set
+final class Randomize implements Implementation
 {
-    /** @var Set<I> */
-    private Set $set;
+    /** @var Implementation<I> */
+    private Implementation $set;
     /** @var positive-int */
     private int $size;
 
     /**
      * @psalm-mutation-free
      *
-     * @param Set<I> $set
+     * @param Implementation<I> $set
      * @param positive-int $size
      */
-    private function __construct(Set $set, int $size)
+    private function __construct(Implementation $set, int $size)
     {
         $this->set = $set;
         $this->size = $size;
     }
 
     /**
+     * @internal
+     * @psalm-pure
+     *
+     * @template T
+     *
+     * @param Implementation<T> $set
+     *
+     * @return self<T>
+     */
+    public static function implementation(Implementation $set): self
+    {
+        return new self($set, 100);
+    }
+
+    /**
+     * @deprecated Use $set->randomize() instead
      * @psalm-pure
      *
      * @template T
      *
      * @param Set<T>|Provider<T> $set
      *
-     * @return self<T>
+     * @return Set<T>
      */
-    public static function of(Set|Provider $set): self
+    public static function of(Set|Provider $set): Set
     {
-        return new self(Collapse::of($set), 100);
+        return Collapse::of($set)->randomize();
     }
 
     /**
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $this->set,
@@ -66,7 +79,7 @@ final class Randomize implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         return new self(
             $this->set->filter($predicate),
@@ -78,9 +91,9 @@ final class Randomize implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::implementation($map, $this, true);
     }
 
     #[\Override]

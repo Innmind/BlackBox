@@ -10,14 +10,15 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * This set can only contain immutable values as they're generated outside of the
  * class, so it can't be re-generated on the fly
  *
  * @template T
  * @template U
- * @implements Set<T|U>
+ * @implements Implementation<T|U>
  */
-final class Elements implements Set
+final class Elements implements Implementation
 {
     /** @var positive-int */
     private int $size;
@@ -49,6 +50,7 @@ final class Elements implements Set
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @no-named-arguments
@@ -61,16 +63,35 @@ final class Elements implements Set
      *
      * @return self<A, B>
      */
-    public static function of($first, ...$elements): self
+    public static function implementation($first, ...$elements): self
     {
         return new self(100, static fn(): bool => true, $first, $elements);
+    }
+
+    /**
+     * @deprecated Use Set::of() instead
+     * @psalm-pure
+     *
+     * @no-named-arguments
+     *
+     * @template A
+     * @template B
+     *
+     * @param A $first
+     * @param B $elements
+     *
+     * @return Set<A|B>
+     */
+    public static function of($first, ...$elements): Set
+    {
+        return Set::of($first, ...$elements);
     }
 
     /**
      * @psalm-mutation-free
      */
     #[\Override]
-    public function take(int $size): Set
+    public function take(int $size): self
     {
         return new self(
             $size,
@@ -84,7 +105,7 @@ final class Elements implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function filter(callable $predicate): Set
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
@@ -107,9 +128,9 @@ final class Elements implements Set
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Set
+    public function map(callable $map): Implementation
     {
-        return Decorate::immutable($map, $this);
+        return Decorate::implementation($map, $this, true);
     }
 
     #[\Override]

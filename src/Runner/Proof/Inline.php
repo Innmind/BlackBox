@@ -60,7 +60,7 @@ final class Inline implements Proof
     ): self {
         return new self(
             $name,
-            Given::of(Set\Elements::of([])),
+            Given::of(Set::of([])),
             $test,
             [],
             1,
@@ -112,8 +112,10 @@ final class Inline implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
-        return Set\Randomize::of($this->values->set())
+        return $this
+            ->values
+            ->set()
+            ->randomize()
             ->map(fn(array $args) => Scenario\Inline::of($args, $this->test))
             ->take($this->scenarii ?? $count);
     }
