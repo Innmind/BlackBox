@@ -2859,6 +2859,44 @@ final class Unicode implements Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @param int<1, max> $size
+     *
+     * @return Set<string>
+     */
+    public function take(int $size): Set
+    {
+        return $this->toSet()->take($size);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(string): bool $predicate
+     *
+     * @return Set<string>
+     */
+    public function filter(callable $predicate): Set
+    {
+        return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(string): V $map
+     *
+     * @return Set<V>
+     */
+    public function map(callable $map): Set
+    {
+        return $this->toSet()->map($map);
+    }
+
+    /**
+     * @psalm-mutation-free
      */
     #[\Override]
     public function toSet(): Set
