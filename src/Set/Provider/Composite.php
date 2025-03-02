@@ -20,13 +20,13 @@ final class Composite implements Provider
      *
      * @param pure-Closure(Implementation<T>): Set<T> $wrap
      * @param callable(...mixed): T $aggregate
-     * @param list<Set> $rest
+     * @param list<Implementation> $rest
      */
     private function __construct(
         private \Closure $wrap,
         private $aggregate,
-        private Set $first,
-        private Set $second,
+        private Implementation $first,
+        private Implementation $second,
         private array $rest,
         private bool $immutable,
     ) {
@@ -46,9 +46,9 @@ final class Composite implements Provider
     public static function of(
         \Closure $wrap,
         callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$rest,
+        Implementation $first,
+        Implementation $second,
+        Implementation ...$rest,
     ): self {
         return new self($wrap, $aggregate, $first, $second, $rest, true);
     }

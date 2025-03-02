@@ -4,7 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set\Composite;
 
 use Innmind\BlackBox\{
-    Set,
+    Set\Implementation,
+    Set\FromGenerator,
     Random,
 };
 
@@ -13,42 +14,44 @@ use Innmind\BlackBox\{
  */
 final class Matrix
 {
-    private Set $a;
-    /** @var Set<Combination> */
-    private Set $combinations;
+    private Implementation $a;
+    /** @var Implementation<Combination> */
+    private Implementation $combinations;
 
     /**
-     * @param Set<mixed> $a
-     * @param Set<Combination> $combinations
+     * @param Implementation<mixed> $a
+     * @param Implementation<Combination> $combinations
      */
-    public function __construct(Set $a, Set $combinations)
+    public function __construct(Implementation $a, Implementation $combinations)
     {
         $this->a = $a;
         $this->combinations = $combinations;
     }
 
-    public static function of(Set $a, Set $b): self
+    public static function of(Implementation $a, Implementation $b): self
     {
-        /** @var Set<Combination> */
-        $combinations = Set::generator(static function(Random $rand) use ($b): \Generator {
-            foreach ($b->values($rand) as $value) {
-                yield Combination::startWith($value);
-            }
-        })
-            ->immutable()
-            ->toSet();
+        /** @var Implementation<Combination> */
+        $combinations = FromGenerator::implementation(
+            static function(Random $rand) use ($b): \Generator {
+                foreach ($b->values($rand) as $value) {
+                    yield Combination::startWith($value);
+                }
+            },
+            immutable: true,
+        );
 
         return new self($a, $combinations);
     }
 
-    public function dot(Set $set): self
+    public function dot(Implementation $set): self
     {
-        /** @var Set<Combination> */
-        $combinations = Set::generator(function(Random $rand): \Generator {
-            yield from $this->values($rand);
-        })
-            ->immutable()
-            ->toSet();
+        /** @var Implementation<Combination> */
+        $combinations = FromGenerator::implementation(
+            function(Random $rand): \Generator {
+                yield from $this->values($rand);
+            },
+            immutable: true,
+        );
 
         return new self($set, $combinations);
     }

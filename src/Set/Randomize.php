@@ -19,18 +19,18 @@ use Innmind\BlackBox\{
  */
 final class Randomize implements Implementation
 {
-    /** @var Set<I> */
-    private Set $set;
+    /** @var Implementation<I> */
+    private Implementation $set;
     /** @var positive-int */
     private int $size;
 
     /**
      * @psalm-mutation-free
      *
-     * @param Set<I> $set
+     * @param Implementation<I> $set
      * @param positive-int $size
      */
-    private function __construct(Set $set, int $size)
+    private function __construct(Implementation $set, int $size)
     {
         $this->set = $set;
         $this->size = $size;
@@ -42,13 +42,13 @@ final class Randomize implements Implementation
      *
      * @template T
      *
-     * @param Set<T>|Provider<T> $set
+     * @param Implementation<T> $set
      *
      * @return self<T>
      */
-    public static function implementation(Set|Provider $set): self
+    public static function implementation(Implementation $set): self
     {
-        return new self(Collapse::of($set), 100);
+        return new self($set, 100);
     }
 
     /**

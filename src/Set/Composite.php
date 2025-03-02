@@ -18,9 +18,9 @@ final class Composite implements Implementation
 {
     /** @var \Closure(mixed...): C */
     private \Closure $aggregate;
-    private Set $first;
-    private Set $second;
-    /** @var list<Set> */
+    private Implementation $first;
+    private Implementation $second;
+    /** @var list<Implementation> */
     private array $sets;
     private ?int $size;
     /** @var \Closure(C): bool */
@@ -34,18 +34,18 @@ final class Composite implements Implementation
     private function __construct(
         bool $immutable,
         callable $aggregate,
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$sets,
+        Implementation $first,
+        Implementation $second,
+        Implementation ...$sets,
     ) {
         $this->immutable = $immutable;
         /** @var \Closure(mixed...): C */
         $this->aggregate = \Closure::fromCallable($aggregate);
         $this->size = null; // by default allow all combinations
         $this->predicate = static fn(): bool => true;
-        $this->first = Collapse::of($first);
-        $this->second = Collapse::of($second);
-        $this->sets = \array_map(Collapse::of(...), $sets);
+        $this->first = $first;
+        $this->second = $second;
+        $this->sets = $sets;
     }
 
     /**
@@ -62,9 +62,9 @@ final class Composite implements Implementation
     public static function implementation(
         bool $immutable,
         callable $aggregate,
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$sets,
+        Implementation $first,
+        Implementation $second,
+        Implementation ...$sets,
     ): self {
         return new self($immutable, $aggregate, $first, $second, ...$sets);
     }
@@ -220,7 +220,7 @@ final class Composite implements Implementation
         /** @psalm-suppress PossiblyNullArgument */
         return \array_reduce(
             $sets,
-            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            static fn(Matrix $matrix, Implementation $set): Matrix => $matrix->dot($set),
             Matrix::of($second, $first),
         );
     }

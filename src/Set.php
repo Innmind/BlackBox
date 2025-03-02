@@ -80,14 +80,18 @@ final class Set
         self|Provider $second,
         self|Provider ...$rest,
     ): Provider\Composite {
-        /** @psalm-suppress InvalidArgument */
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
+         * @psalm-suppress ImpureFunctionCall
+         */
         return Provider\Composite::of(
             self::build(...),
             $aggregate,
-            Collapse::of($first),
-            Collapse::of($second),
+            Collapse::of($first)->implementation,
+            Collapse::of($second)->implementation,
             ...\array_map(
-                Collapse::of(...),
+                static fn($set) => Collapse::of($set)->implementation,
                 $rest,
             ),
         );
@@ -145,7 +149,12 @@ final class Set
      */
     public static function randomize(self|Provider $set): self
     {
-        return new self(Set\Randomize::implementation($set));
+        /**
+         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
+         */
+        return new self(Set\Randomize::implementation(
+            Collapse::of($set)->implementation,
+        ));
     }
 
     /**
@@ -168,7 +177,18 @@ final class Set
         self|Provider $second,
         self|Provider ...$rest,
     ): self {
-        return new self(Set\Either::implementation($first, $second, ...$rest));
+        /**
+         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
+         * @psalm-suppress ImpureFunctionCall
+         */
+        return new self(Set\Either::implementation(
+            Collapse::of($first)->implementation,
+            Collapse::of($second)->implementation,
+            ...\array_map(
+                static fn($set) => Collapse::of($set)->implementation,
+                $rest,
+            ),
+        ));
     }
 
     /**

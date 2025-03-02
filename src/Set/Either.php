@@ -17,11 +17,11 @@ use Innmind\BlackBox\{
  */
 final class Either implements Implementation
 {
-    /** @var Set<T> */
-    private Set $first;
-    /** @var Set<U> */
-    private Set $second;
-    /** @var list<Set<V>> */
+    /** @var Implementation<T> */
+    private Implementation $first;
+    /** @var Implementation<U> */
+    private Implementation $second;
+    /** @var list<Implementation<V>> */
     private array $rest;
     /** @var positive-int */
     private int $size;
@@ -32,20 +32,19 @@ final class Either implements Implementation
      * @no-named-arguments
      *
      * @param positive-int $size
-     * @param Set<T>|Provider<T> $first
-     * @param Set<U>|Provider<U> $second
-     * @param Set<V>|Provider<V> $rest
+     * @param Implementation<T> $first
+     * @param Implementation<U> $second
+     * @param Implementation<V> $rest
      */
     private function __construct(
         int $size,
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$rest,
+        Implementation $first,
+        Implementation $second,
+        Implementation ...$rest,
     ) {
-        $this->first = Collapse::of($first);
-        $this->second = Collapse::of($second);
-        /** @psalm-suppress PossiblyInvalidArgument */
-        $this->rest = \array_map(Collapse::of(...), $rest);
+        $this->first = $first;
+        $this->second = $second;
+        $this->rest = $rest;
         $this->size = $size;
     }
 
@@ -59,16 +58,16 @@ final class Either implements Implementation
      * @template B
      * @template C
      *
-     * @param Set<A>|Provider<A> $first
-     * @param Set<B>|Provider<B> $second
-     * @param Set<C>|Provider<C> $rest
+     * @param Implementation<A> $first
+     * @param Implementation<B> $second
+     * @param Implementation<C> $rest
      *
      * @return self<A, B, C>
      */
     public static function implementation(
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$rest,
+        Implementation $first,
+        Implementation $second,
+        Implementation ...$rest,
     ): self {
         return new self(100, $first, $second, ...$rest);
     }
@@ -107,7 +106,7 @@ final class Either implements Implementation
             $this->first->take($size),
             $this->second->take($size),
             ...\array_map(
-                static fn(Set $set): Set => $set->take($size),
+                static fn(Implementation $set): Implementation => $set->take($size),
                 $this->rest,
             ),
         );
@@ -124,7 +123,7 @@ final class Either implements Implementation
             $this->first->filter($predicate),
             $this->second->filter($predicate),
             ...\array_map(
-                static fn(Set $set): Set => $set->filter($predicate),
+                static fn(Implementation $set): Implementation => $set->filter($predicate),
                 $this->rest,
             ),
         );
@@ -143,7 +142,7 @@ final class Either implements Implementation
     public function values(Random $random): \Generator
     {
         $iterations = 0;
-        /** @var list<Set<T>|Set<U>|Set<V>> */
+        /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
 
         while ($iterations < $this->size) {
