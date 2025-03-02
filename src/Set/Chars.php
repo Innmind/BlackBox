@@ -8,76 +8,80 @@ use Innmind\BlackBox\Set;
 final class Chars
 {
     /**
+     * @deprecated Use Set::strings()->chars() instead
      * @psalm-pure
      *
      * @return Set<non-empty-string>
      */
     public static function any(): Set
     {
-        return Set::integers()
-            ->between(0, 255)
-            ->map(\chr(...));
+        return Set::strings()
+            ->chars()
+            ->toSet();
     }
 
     /**
+     * @deprecated Use Set::strings()->chars()->lowercaseLetter() instead
      * @psalm-pure
      *
      * @return Set<non-empty-string>
      */
     public static function lowercaseLetter(): Set
     {
-        return Set::integers()
-            ->between(97, 122)
-            ->map(\chr(...));
+        return Set::strings()
+            ->chars()
+            ->lowercaseLetter();
     }
 
     /**
+     * @deprecated Use Set::strings()->chars()->uppercaseLetter() instead
      * @psalm-pure
      *
      * @return Set<non-empty-string>
      */
     public static function uppercaseLetter(): Set
     {
-        return Set::integers()
-            ->between(65, 90)
-            ->map(\chr(...));
+        return Set::strings()
+            ->chars()
+            ->uppercaseLetter();
     }
 
     /**
+     * @deprecated Use Set::strings()->chars()->number() instead
      * @psalm-pure
      *
      * @return Set<non-empty-string>
      */
     public static function number(): Set
     {
-        return Set::integers()
-            ->between(48, 57)
-            ->map(\chr(...));
+        return Set::strings()
+            ->chars()
+            ->number();
     }
 
     /**
+     * @deprecated Use Set::strings()->chars()->ascii() instead
      * @psalm-pure
      *
      * @return Set<non-empty-string>
      */
     public static function ascii(): Set
     {
-        return Set::integers()
-            ->between(32, 126)
-            ->map(\chr(...));
+        return Set::strings()
+            ->chars()
+            ->ascii();
     }
 
     /**
+     * @deprecated Use Set::strings()->chars()->alphanumerical() instead
      * @psalm-pure
      *
      * @return Set<non-empty-string>
      */
     public static function alphanumerical(): Set
     {
-        return Set::either(
-            self::lowercaseLetter(),
-            self::uppercaseLetter(),
-            self::number(),
-        );
+        return Set::strings()
+            ->chars()
+            ->alphanumerical();
     }
 }

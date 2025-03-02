@@ -11,2799 +11,3599 @@ use Innmind\BlackBox\Set;
 final class Unicode
 {
     /**
+     * @deprecated Use Set::strings()->unicode() instead
      * @psalm-pure
      */
     public static function strings(): MadeOf
     {
-        return Strings::madeOf(self::any());
+        return Set::strings()->madeOf(
+            Set::strings()->unicode()->char(),
+        );
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->char() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function any(): Set
     {
-        $methods = \get_class_methods(self::class);
-        $methods = \array_filter(
-            $methods,
-            static fn(string $method): bool => !\in_array($method, ['any', 'between', 'strings', 'lengthBetween'], true),
-        );
-        /**
-         * @psalm-suppress MixedReturnStatement
-         * @psalm-suppress MixedInferredReturnType
-         * @var non-empty-list<Set<string>>
-         */
-        $sets = \array_map(
-            static fn(string $method): Set => self::{$method}(),
-            $methods,
-        );
-
-        return Set::either(...$sets);
+        return Set::strings()->unicode()->char();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->controlCharater() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function controlCharater(): Set
     {
-        return self::between(0x0000, 0X001F);
+        return Set::strings()
+            ->unicode()
+            ->controlCharater();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->basicLatin() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function basicLatin(): Set
     {
-        return self::between(0x0020, 0x007F);
+        return Set::strings()
+            ->unicode()
+            ->basicLatin();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latin1Supplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latin1Supplement(): Set
     {
-        return self::between(0x0080, 0x00FF);
+        return Set::strings()
+            ->unicode()
+            ->latin1Supplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latinExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latinExtendedA(): Set
     {
-        return self::between(0x0100, 0x017F);
+        return Set::strings()
+            ->unicode()
+            ->latinExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latinExtendedB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latinExtendedB(): Set
     {
-        return self::between(0x0180, 0x024F);
+        return Set::strings()
+            ->unicode()
+            ->latinExtendedB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ipaExtensions() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ipaExtensions(): Set
     {
-        return self::between(0x0250, 0x02AF);
+        return Set::strings()
+            ->unicode()
+            ->ipaExtensions();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->spacingModifierLetters() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function spacingModifierLetters(): Set
     {
-        return self::between(0x02B0, 0x02FF);
+        return Set::strings()
+            ->unicode()
+            ->spacingModifierLetters();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->combiningDiacriticalMarks() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarks(): Set
     {
-        return self::between(0x0300, 0x036F);
+        return Set::strings()
+            ->unicode()
+            ->combiningDiacriticalMarks();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->greekAndCoptic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function greekAndCoptic(): Set
     {
-        return self::between(0x0370, 0x03FF);
+        return Set::strings()
+            ->unicode()
+            ->greekAndCoptic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cyrillic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cyrillic(): Set
     {
-        return self::between(0x0400, 0x04FF);
+        return Set::strings()
+            ->unicode()
+            ->cyrillic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cyrillicSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cyrillicSupplement(): Set
     {
-        return self::between(0x0500, 0x052F);
+        return Set::strings()
+            ->unicode()
+            ->cyrillicSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->armenian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function armenian(): Set
     {
-        return self::between(0x0530, 0x058F);
+        return Set::strings()
+            ->unicode()
+            ->armenian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hebrew() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hebrew(): Set
     {
-        return self::between(0x0590, 0x05FF);
+        return Set::strings()
+            ->unicode()
+            ->hebrew();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arabic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arabic(): Set
     {
-        return self::between(0x0600, 0x06FF);
+        return Set::strings()
+            ->unicode()
+            ->arabic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->syriac() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function syriac(): Set
     {
-        return self::between(0x0700, 0x074F);
+        return Set::strings()
+            ->unicode()
+            ->syriac();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arabicSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arabicSupplement(): Set
     {
-        return self::between(0x0750, 0x077F);
+        return Set::strings()
+            ->unicode()
+            ->arabicSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->thaana() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function thaana(): Set
     {
-        return self::between(0x0780, 0x07BF);
+        return Set::strings()
+            ->unicode()
+            ->thaana();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->nko() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function nko(): Set
     {
-        return self::between(0x07C0, 0x07FF);
+        return Set::strings()
+            ->unicode()
+            ->nko();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->samaritan() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function samaritan(): Set
     {
-        return self::between(0x0800, 0x083F);
+        return Set::strings()
+            ->unicode()
+            ->samaritan();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mandaic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mandaic(): Set
     {
-        return self::between(0x0840, 0x085F);
+        return Set::strings()
+            ->unicode()
+            ->mandaic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->syriacSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function syriacSupplement(): Set
     {
-        return self::between(0x0860, 0x086F);
+        return Set::strings()
+            ->unicode()
+            ->syriacSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arabicExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arabicExtendedA(): Set
     {
-        return self::between(0x08A0, 0x08FF);
+        return Set::strings()
+            ->unicode()
+            ->arabicExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->devanagari() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function devanagari(): Set
     {
-        return self::between(0x0900, 0x097F);
+        return Set::strings()
+            ->unicode()
+            ->devanagari();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bengali() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bengali(): Set
     {
-        return self::between(0x0980, 0x09FF);
+        return Set::strings()
+            ->unicode()
+            ->bengali();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->gurmukhi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function gurmukhi(): Set
     {
-        return self::between(0x0A00, 0x0A7F);
+        return Set::strings()
+            ->unicode()
+            ->gurmukhi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->gujarati() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function gujarati(): Set
     {
-        return self::between(0x0A80, 0x0AFF);
+        return Set::strings()
+            ->unicode()
+            ->gujarati();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oriya() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oriya(): Set
     {
-        return self::between(0x0B00, 0x0B7F);
+        return Set::strings()
+            ->unicode()
+            ->oriya();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tamil() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tamil(): Set
     {
-        return self::between(0x0B80, 0x0BFF);
+        return Set::strings()
+            ->unicode()
+            ->tamil();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->telugu() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function telugu(): Set
     {
-        return self::between(0x0C00, 0x0C7F);
+        return Set::strings()
+            ->unicode()
+            ->telugu();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kannada() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kannada(): Set
     {
-        return self::between(0x0C80, 0x0CFF);
+        return Set::strings()
+            ->unicode()
+            ->kannada();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->malayalam() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function malayalam(): Set
     {
-        return self::between(0x0D00, 0x0D7F);
+        return Set::strings()
+            ->unicode()
+            ->malayalam();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->sinhala() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function sinhala(): Set
     {
-        return self::between(0x0D80, 0x0DFF);
+        return Set::strings()
+            ->unicode()
+            ->sinhala();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->thai() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function thai(): Set
     {
-        return self::between(0x0E00, 0x0E7F);
+        return Set::strings()
+            ->unicode()
+            ->thai();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->lao() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function lao(): Set
     {
-        return self::between(0x0E80, 0x0EFF);
+        return Set::strings()
+            ->unicode()
+            ->lao();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tibetan() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tibetan(): Set
     {
-        return self::between(0x0F00, 0x0FFF);
+        return Set::strings()
+            ->unicode()
+            ->tibetan();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->myanmar() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function myanmar(): Set
     {
-        return self::between(0x1000, 0x109F);
+        return Set::strings()
+            ->unicode()
+            ->myanmar();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->georgian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function georgian(): Set
     {
-        return self::between(0x10A0, 0x10FF);
+        return Set::strings()
+            ->unicode()
+            ->georgian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hangulJamo() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hangulJamo(): Set
     {
-        return self::between(0x1100, 0x11FF);
+        return Set::strings()
+            ->unicode()
+            ->hangulJamo();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ethiopic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ethiopic(): Set
     {
-        return self::between(0x1200, 0x137F);
+        return Set::strings()
+            ->unicode()
+            ->ethiopic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ethiopicSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ethiopicSupplement(): Set
     {
-        return self::between(0x1380, 0x139F);
+        return Set::strings()
+            ->unicode()
+            ->ethiopicSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cherokee() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cherokee(): Set
     {
-        return self::between(0x13A0, 0x13FF);
+        return Set::strings()
+            ->unicode()
+            ->cherokee();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->unifiedCanadianAboriginalSyllabics() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function unifiedCanadianAboriginalSyllabics(): Set
     {
-        return self::between(0x1400, 0x167F);
+        return Set::strings()
+            ->unicode()
+            ->unifiedCanadianAboriginalSyllabics();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ogham() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ogham(): Set
     {
-        return self::between(0x1680, 0x169F);
+        return Set::strings()
+            ->unicode()
+            ->ogham();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->runic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function runic(): Set
     {
-        return self::between(0x16A0, 0x16FF);
+        return Set::strings()
+            ->unicode()
+            ->runic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tagalog() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tagalog(): Set
     {
-        return self::between(0x1700, 0x171F);
+        return Set::strings()
+            ->unicode()
+            ->tagalog();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hanunoo() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hanunoo(): Set
     {
-        return self::between(0x1720, 0x173F);
+        return Set::strings()
+            ->unicode()
+            ->hanunoo();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->buhid() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function buhid(): Set
     {
-        return self::between(0x1740, 0x175F);
+        return Set::strings()
+            ->unicode()
+            ->buhid();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tagbanwa() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tagbanwa(): Set
     {
-        return self::between(0x1760, 0x177F);
+        return Set::strings()
+            ->unicode()
+            ->tagbanwa();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->khmer() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function khmer(): Set
     {
-        return self::between(0x1780, 0x17FF);
+        return Set::strings()
+            ->unicode()
+            ->khmer();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mongolian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mongolian(): Set
     {
-        return self::between(0x1800, 0x18AF);
+        return Set::strings()
+            ->unicode()
+            ->mongolian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->unifiedCanadianAboriginalSyllabicsExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function unifiedCanadianAboriginalSyllabicsExtended(): Set
     {
-        return self::between(0x18B0, 0x18FF);
+        return Set::strings()
+            ->unicode()
+            ->unifiedCanadianAboriginalSyllabicsExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->limbu() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function limbu(): Set
     {
-        return self::between(0x1900, 0x194F);
+        return Set::strings()
+            ->unicode()
+            ->limbu();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->taiLe() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function taiLe(): Set
     {
-        return self::between(0x1950, 0x197F);
+        return Set::strings()
+            ->unicode()
+            ->taiLe();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->newTaiLue() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function newTaiLue(): Set
     {
-        return self::between(0x1980, 0x19DF);
+        return Set::strings()
+            ->unicode()
+            ->newTaiLue();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->khmerSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function khmerSymbols(): Set
     {
-        return self::between(0x19E0, 0x19FF);
+        return Set::strings()
+            ->unicode()
+            ->khmerSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->buginese() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function buginese(): Set
     {
-        return self::between(0x1A00, 0x1A1F);
+        return Set::strings()
+            ->unicode()
+            ->buginese();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->taiTham() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function taiTham(): Set
     {
-        return self::between(0x1A20, 0x1AAF);
+        return Set::strings()
+            ->unicode()
+            ->taiTham();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->combiningDiacriticalMarksExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarksExtended(): Set
     {
-        return self::between(0x1AB0, 0x1AFF);
+        return Set::strings()
+            ->unicode()
+            ->combiningDiacriticalMarksExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->balinese() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function balinese(): Set
     {
-        return self::between(0x1B00, 0x1B7F);
+        return Set::strings()
+            ->unicode()
+            ->balinese();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->sundanese() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function sundanese(): Set
     {
-        return self::between(0x1B80, 0x1BBF);
+        return Set::strings()
+            ->unicode()
+            ->sundanese();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->batak() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function batak(): Set
     {
-        return self::between(0x1BC0, 0x1BFF);
+        return Set::strings()
+            ->unicode()
+            ->batak();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->lepcha() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function lepcha(): Set
     {
-        return self::between(0x1C00, 0x1C4F);
+        return Set::strings()
+            ->unicode()
+            ->lepcha();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->olChiki() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function olChiki(): Set
     {
-        return self::between(0x1C50, 0x1C7F);
+        return Set::strings()
+            ->unicode()
+            ->olChiki();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cyrillicExtendedC() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cyrillicExtendedC(): Set
     {
-        return self::between(0x1C80, 0x1C8F);
+        return Set::strings()
+            ->unicode()
+            ->cyrillicExtendedC();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->sundaneseSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function sundaneseSupplement(): Set
     {
-        return self::between(0x1CC0, 0x1CCF);
+        return Set::strings()
+            ->unicode()
+            ->sundaneseSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->vedicExtensions() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function vedicExtensions(): Set
     {
-        return self::between(0x1CD0, 0x1CFF);
+        return Set::strings()
+            ->unicode()
+            ->vedicExtensions();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->phoneticExtensions() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function phoneticExtensions(): Set
     {
-        return self::between(0x1D00, 0x1D7F);
+        return Set::strings()
+            ->unicode()
+            ->phoneticExtensions();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->phoneticExtensionsSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function phoneticExtensionsSupplement(): Set
     {
-        return self::between(0x1D80, 0x1D8F);
+        return Set::strings()
+            ->unicode()
+            ->phoneticExtensionsSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->combiningDiacriticalMarksSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarksSupplement(): Set
     {
-        return self::between(0x1DC0, 0x1DFF);
+        return Set::strings()
+            ->unicode()
+            ->combiningDiacriticalMarksSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latinExtendedAdditional() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latinExtendedAdditional(): Set
     {
-        return self::between(0x1E00, 0x1EFF);
+        return Set::strings()
+            ->unicode()
+            ->latinExtendedAdditional();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->greekExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function greekExtended(): Set
     {
-        return self::between(0x1F00, 0x1FFF);
+        return Set::strings()
+            ->unicode()
+            ->greekExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->generalPunctuation() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function generalPunctuation(): Set
     {
-        return self::between(0x2000, 0x206F);
+        return Set::strings()
+            ->unicode()
+            ->generalPunctuation();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->superscriptsAndSubscripts() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function superscriptsAndSubscripts(): Set
     {
-        return self::between(0x2070, 0x209F);
+        return Set::strings()
+            ->unicode()
+            ->superscriptsAndSubscripts();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->currencySymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function currencySymbols(): Set
     {
-        return self::between(0x20A0, 0x20CF);
+        return Set::strings()
+            ->unicode()
+            ->currencySymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->combiningDiacriticalMarksForSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function combiningDiacriticalMarksForSymbols(): Set
     {
-        return self::between(0x20D0, 0x20FF);
+        return Set::strings()
+            ->unicode()
+            ->combiningDiacriticalMarksForSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->letterlikeSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function letterlikeSymbols(): Set
     {
-        return self::between(0x2100, 0x214F);
+        return Set::strings()
+            ->unicode()
+            ->letterlikeSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->numberForms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function numberForms(): Set
     {
-        return self::between(0x2150, 0x218F);
+        return Set::strings()
+            ->unicode()
+            ->numberForms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arrows() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arrows(): Set
     {
-        return self::between(0x2190, 0x21FF);
+        return Set::strings()
+            ->unicode()
+            ->arrows();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mathematicalOperators() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mathematicalOperators(): Set
     {
-        return self::between(0x2200, 0x22FF);
+        return Set::strings()
+            ->unicode()
+            ->mathematicalOperators();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miscellaneousTechnical() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miscellaneousTechnical(): Set
     {
-        return self::between(0x2300, 0x23FF);
+        return Set::strings()
+            ->unicode()
+            ->miscellaneousTechnical();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->controlPictures() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function controlPictures(): Set
     {
-        return self::between(0x2400, 0x243F);
+        return Set::strings()
+            ->unicode()
+            ->controlPictures();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->opticalCharacterRecognition() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function opticalCharacterRecognition(): Set
     {
-        return self::between(0x2440, 0x245F);
+        return Set::strings()
+            ->unicode()
+            ->opticalCharacterRecognition();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->enclosedAlphanumerics() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function enclosedAlphanumerics(): Set
     {
-        return self::between(0x2460, 0x247F);
+        return Set::strings()
+            ->unicode()
+            ->enclosedAlphanumerics();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->boxDrawing() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function boxDrawing(): Set
     {
-        return self::between(0x2500, 0x257F);
+        return Set::strings()
+            ->unicode()
+            ->boxDrawing();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->blockElements() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function blockElements(): Set
     {
-        return self::between(0x2580, 0x259F);
+        return Set::strings()
+            ->unicode()
+            ->blockElements();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->geometricShapes() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function geometricShapes(): Set
     {
-        return self::between(0x25A0, 0x25FF);
+        return Set::strings()
+            ->unicode()
+            ->geometricShapes();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miscellaneousSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miscellaneousSymbols(): Set
     {
-        return self::between(0x2600, 0x26FF);
+        return Set::strings()
+            ->unicode()
+            ->miscellaneousSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->dingbats() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function dingbats(): Set
     {
-        return self::between(0x270, 0x27BF);
+        return Set::strings()
+            ->unicode()
+            ->dingbats();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miscellaneousMathematicalSymbolsA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miscellaneousMathematicalSymbolsA(): Set
     {
-        return self::between(0x27C0, 0x27EF);
+        return Set::strings()
+            ->unicode()
+            ->miscellaneousMathematicalSymbolsA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->supplementalArrowsA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function supplementalArrowsA(): Set
     {
-        return self::between(0x27F0, 0x27FF);
+        return Set::strings()
+            ->unicode()
+            ->supplementalArrowsA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->braillePatterns() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function braillePatterns(): Set
     {
-        return self::between(0x2800, 0x28FF);
+        return Set::strings()
+            ->unicode()
+            ->braillePatterns();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->supplementalArrowsB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function supplementalArrowsB(): Set
     {
-        return self::between(0x2900, 0x297F);
+        return Set::strings()
+            ->unicode()
+            ->supplementalArrowsB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miscellaneousMathematicalSymbolsB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miscellaneousMathematicalSymbolsB(): Set
     {
-        return self::between(0x2980, 0x29FF);
+        return Set::strings()
+            ->unicode()
+            ->miscellaneousMathematicalSymbolsB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->supplementalMathematicalOperators() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function supplementalMathematicalOperators(): Set
     {
-        return self::between(0x2A00, 0x2AFF);
+        return Set::strings()
+            ->unicode()
+            ->supplementalMathematicalOperators();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miscellaneousSymbolsAndArrows() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miscellaneousSymbolsAndArrows(): Set
     {
-        return self::between(0x2B00, 0x2BFF);
+        return Set::strings()
+            ->unicode()
+            ->miscellaneousSymbolsAndArrows();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->glagolitic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function glagolitic(): Set
     {
-        return self::between(0x2C00, 0x2C5F);
+        return Set::strings()
+            ->unicode()
+            ->glagolitic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latinExtendedC() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latinExtendedC(): Set
     {
-        return self::between(0x2C60, 0x2C7F);
+        return Set::strings()
+            ->unicode()
+            ->latinExtendedC();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->coptic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function coptic(): Set
     {
-        return self::between(0x2C80, 0x2CFF);
+        return Set::strings()
+            ->unicode()
+            ->coptic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->georgianSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function georgianSupplement(): Set
     {
-        return self::between(0x2D00, 0x2D2F);
+        return Set::strings()
+            ->unicode()
+            ->georgianSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tifinagh() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tifinagh(): Set
     {
-        return self::between(0x2D30, 0x2D7F);
+        return Set::strings()
+            ->unicode()
+            ->tifinagh();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ethiopicExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ethiopicExtended(): Set
     {
-        return self::between(0x2D80, 0x2DDF);
+        return Set::strings()
+            ->unicode()
+            ->ethiopicExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cyrillicExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cyrillicExtendedA(): Set
     {
-        return self::between(0x2DE0, 0x2DFF);
+        return Set::strings()
+            ->unicode()
+            ->cyrillicExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->supplementalPunctuation() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function supplementalPunctuation(): Set
     {
-        return self::between(0x2E00, 0x2E7F);
+        return Set::strings()
+            ->unicode()
+            ->supplementalPunctuation();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkRadicalsSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkRadicalsSupplement(): Set
     {
-        return self::between(0x2E80, 0x2EFF);
+        return Set::strings()
+            ->unicode()
+            ->cjkRadicalsSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kangxiRadicals() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kangxiRadicals(): Set
     {
-        return self::between(0x2F00, 0x2FDF);
+        return Set::strings()
+            ->unicode()
+            ->kangxiRadicals();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ideographicDescriptionCharacters() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ideographicDescriptionCharacters(): Set
     {
-        return self::between(0x2FF0, 0x2FFF);
+        return Set::strings()
+            ->unicode()
+            ->ideographicDescriptionCharacters();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkSymbolsAndPunctuation() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkSymbolsAndPunctuation(): Set
     {
-        return self::between(0x3000, 0x303F);
+        return Set::strings()
+            ->unicode()
+            ->cjkSymbolsAndPunctuation();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hiragana() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hiragana(): Set
     {
-        return self::between(0x3040, 0x309F);
+        return Set::strings()
+            ->unicode()
+            ->hiragana();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->katakana() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function katakana(): Set
     {
-        return self::between(0x30A0, 0x30FF);
+        return Set::strings()
+            ->unicode()
+            ->katakana();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bopomofo() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bopomofo(): Set
     {
-        return self::between(0x3100, 0x312F);
+        return Set::strings()
+            ->unicode()
+            ->bopomofo();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hangulCompatibilityJamo() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hangulCompatibilityJamo(): Set
     {
-        return self::between(0x3130, 0x318F);
+        return Set::strings()
+            ->unicode()
+            ->hangulCompatibilityJamo();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kanbun() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kanbun(): Set
     {
-        return self::between(0x3190, 0x319F);
+        return Set::strings()
+            ->unicode()
+            ->kanbun();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bopomofoExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bopomofoExtended(): Set
     {
-        return self::between(0x31A0, 0x31BF);
+        return Set::strings()
+            ->unicode()
+            ->bopomofoExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkStrokes() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkStrokes(): Set
     {
-        return self::between(0x31C0, 0x31EF);
+        return Set::strings()
+            ->unicode()
+            ->cjkStrokes();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->katakanaPhoneticExtensions() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function katakanaPhoneticExtensions(): Set
     {
-        return self::between(0x31F0, 0x31FF);
+        return Set::strings()
+            ->unicode()
+            ->katakanaPhoneticExtensions();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->enclosedCJKLettersAndMonths() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function enclosedCJKLettersAndMonths(): Set
     {
-        return self::between(0x3200, 0x32FF);
+        return Set::strings()
+            ->unicode()
+            ->enclosedCJKLettersAndMonths();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkCompatibility() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkCompatibility(): Set
     {
-        return self::between(0x3300, 0x33FF);
+        return Set::strings()
+            ->unicode()
+            ->cjkCompatibility();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographsExtensionA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionA(): Set
     {
-        return self::between(0x3400, 0x4DBF);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographsExtensionA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->yijingHexagramSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function yijingHexagramSymbols(): Set
     {
-        return self::between(0x4DC0, 0x4DFF);
+        return Set::strings()
+            ->unicode()
+            ->yijingHexagramSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographs(): Set
     {
-        return self::between(0x4E00, 0x9FFF);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->yiSyllables() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function yiSyllables(): Set
     {
-        return self::between(0xA000, 0xA48F);
+        return Set::strings()
+            ->unicode()
+            ->yiSyllables();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->yiRadicals() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function yiRadicals(): Set
     {
-        return self::between(0xA490, 0xA4CF);
+        return Set::strings()
+            ->unicode()
+            ->yiRadicals();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->lisu() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function lisu(): Set
     {
-        return self::between(0xA4D0, 0xA4FF);
+        return Set::strings()
+            ->unicode()
+            ->lisu();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->vai() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function vai(): Set
     {
-        return self::between(0xA500, 0xA63F);
+        return Set::strings()
+            ->unicode()
+            ->vai();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cyrillicExtendedB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cyrillicExtendedB(): Set
     {
-        return self::between(0xA640, 0xA69F);
+        return Set::strings()
+            ->unicode()
+            ->cyrillicExtendedB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bamum() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bamum(): Set
     {
-        return self::between(0xA6A0, 0xA6FF);
+        return Set::strings()
+            ->unicode()
+            ->bamum();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->modifierToneLetters() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function modifierToneLetters(): Set
     {
-        return self::between(0xA700, 0xA71F);
+        return Set::strings()
+            ->unicode()
+            ->modifierToneLetters();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latinExtendedD() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latinExtendedD(): Set
     {
-        return self::between(0xA720, 0xA7FF);
+        return Set::strings()
+            ->unicode()
+            ->latinExtendedD();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->sylotiNagri() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function sylotiNagri(): Set
     {
-        return self::between(0xA800, 0xA82F);
+        return Set::strings()
+            ->unicode()
+            ->sylotiNagri();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->commonIndicNumberForms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function commonIndicNumberForms(): Set
     {
-        return self::between(0xA830, 0xA83F);
+        return Set::strings()
+            ->unicode()
+            ->commonIndicNumberForms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->phagsPa() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function phagsPa(): Set
     {
-        return self::between(0xA840, 0xA87F);
+        return Set::strings()
+            ->unicode()
+            ->phagsPa();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->saurashtra() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function saurashtra(): Set
     {
-        return self::between(0xA880, 0xA8DF);
+        return Set::strings()
+            ->unicode()
+            ->saurashtra();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->devanagariExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function devanagariExtended(): Set
     {
-        return self::between(0xA8E0, 0xA8FF);
+        return Set::strings()
+            ->unicode()
+            ->devanagariExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kayahLi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kayahLi(): Set
     {
-        return self::between(0xA900, 0xA92F);
+        return Set::strings()
+            ->unicode()
+            ->kayahLi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->rejang() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function rejang(): Set
     {
-        return self::between(0xA930, 0xA95F);
+        return Set::strings()
+            ->unicode()
+            ->rejang();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hangulJamoExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hangulJamoExtendedA(): Set
     {
-        return self::between(0xA960, 0xA97F);
+        return Set::strings()
+            ->unicode()
+            ->hangulJamoExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->javanese() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function javanese(): Set
     {
-        return self::between(0xA980, 0xA9DF);
+        return Set::strings()
+            ->unicode()
+            ->javanese();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->myanmarExtendedB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function myanmarExtendedB(): Set
     {
-        return self::between(0xA9E0, 0xA9FF);
+        return Set::strings()
+            ->unicode()
+            ->myanmarExtendedB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cham() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cham(): Set
     {
-        return self::between(0xAA00, 0xAA5F);
+        return Set::strings()
+            ->unicode()
+            ->cham();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->myanmarExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function myanmarExtendedA(): Set
     {
-        return self::between(0xAA60, 0xAA7F);
+        return Set::strings()
+            ->unicode()
+            ->myanmarExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->taiViet() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function taiViet(): Set
     {
-        return self::between(0xAA80, 0xAADF);
+        return Set::strings()
+            ->unicode()
+            ->taiViet();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->meeteiMayekExtensions() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function meeteiMayekExtensions(): Set
     {
-        return self::between(0xAAE0, 0xAAFF);
+        return Set::strings()
+            ->unicode()
+            ->meeteiMayekExtensions();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ethiopicExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ethiopicExtendedA(): Set
     {
-        return self::between(0xAB00, 0xAB2F);
+        return Set::strings()
+            ->unicode()
+            ->ethiopicExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->latinExtendedE() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function latinExtendedE(): Set
     {
-        return self::between(0xAB30, 0xAB6F);
+        return Set::strings()
+            ->unicode()
+            ->latinExtendedE();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cherokeeSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cherokeeSupplement(): Set
     {
-        return self::between(0xAB70, 0xABBF);
+        return Set::strings()
+            ->unicode()
+            ->cherokeeSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->meeteiMayek() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function meeteiMayek(): Set
     {
-        return self::between(0xABC0, 0xABFF);
+        return Set::strings()
+            ->unicode()
+            ->meeteiMayek();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hangulSyllables() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hangulSyllables(): Set
     {
-        return self::between(0xAC00, 0xD7AF);
+        return Set::strings()
+            ->unicode()
+            ->hangulSyllables();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hangulJamoExtendedB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hangulJamoExtendedB(): Set
     {
-        return self::between(0xB7B0, 0xD7FF);
+        return Set::strings()
+            ->unicode()
+            ->hangulJamoExtendedB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkCompatibilityIdeographs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkCompatibilityIdeographs(): Set
     {
-        return self::between(0xF900, 0xFAFF);
+        return Set::strings()
+            ->unicode()
+            ->cjkCompatibilityIdeographs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->alphabeticPresentationForms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function alphabeticPresentationForms(): Set
     {
-        return self::between(0xFB00, 0xFB4F);
+        return Set::strings()
+            ->unicode()
+            ->alphabeticPresentationForms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arabicPresentationFormsA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arabicPresentationFormsA(): Set
     {
-        return self::between(0xFB50, 0xFDFF);
+        return Set::strings()
+            ->unicode()
+            ->arabicPresentationFormsA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->variationSelectors() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function variationSelectors(): Set
     {
-        return self::between(0xFE00, 0xFE0F);
+        return Set::strings()
+            ->unicode()
+            ->variationSelectors();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->verticalForms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function verticalForms(): Set
     {
-        return self::between(0xFE10, 0xFE1F);
+        return Set::strings()
+            ->unicode()
+            ->verticalForms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->combiningHalfMarks() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function combiningHalfMarks(): Set
     {
-        return self::between(0xFE20, 0xFE2F);
+        return Set::strings()
+            ->unicode()
+            ->combiningHalfMarks();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkCompatibilityForms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkCompatibilityForms(): Set
     {
-        return self::between(0xFE30, 0xFE4F);
+        return Set::strings()
+            ->unicode()
+            ->cjkCompatibilityForms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->smallFormVariants() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function smallFormVariants(): Set
     {
-        return self::between(0xFE50, 0xFE6F);
+        return Set::strings()
+            ->unicode()
+            ->smallFormVariants();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arabicPresentationFormsB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arabicPresentationFormsB(): Set
     {
-        return self::between(0xFE70, 0xFEFF);
+        return Set::strings()
+            ->unicode()
+            ->arabicPresentationFormsB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->halfwidthAndFullwidthForms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function halfwidthAndFullwidthForms(): Set
     {
-        return self::between(0xFF00, 0xFFEF);
+        return Set::strings()
+            ->unicode()
+            ->halfwidthAndFullwidthForms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->specials() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function specials(): Set
     {
-        return self::between(0xFFF0, 0xFFFF);
+        return Set::strings()
+            ->unicode()
+            ->specials();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->linearBSyllabary() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function linearBSyllabary(): Set
     {
-        return self::between(0x10000, 0x1007F);
+        return Set::strings()
+            ->unicode()
+            ->linearBSyllabary();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->linearBIdeograms() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function linearBIdeograms(): Set
     {
-        return self::between(0x10080, 0x100FF);
+        return Set::strings()
+            ->unicode()
+            ->linearBIdeograms();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->aeganNumbers() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function aeganNumbers(): Set
     {
-        return self::between(0x10100, 0x1013F);
+        return Set::strings()
+            ->unicode()
+            ->aeganNumbers();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ancientGreekNumbers() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ancientGreekNumbers(): Set
     {
-        return self::between(0x10140, 0x1018F);
+        return Set::strings()
+            ->unicode()
+            ->ancientGreekNumbers();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ancientSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ancientSymbols(): Set
     {
-        return self::between(0x10190, 0x101CF);
+        return Set::strings()
+            ->unicode()
+            ->ancientSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->phaistosDisc() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function phaistosDisc(): Set
     {
-        return self::between(0x101D0, 0x101FF);
+        return Set::strings()
+            ->unicode()
+            ->phaistosDisc();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->lycian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function lycian(): Set
     {
-        return self::between(0x10280, 0x1029F);
+        return Set::strings()
+            ->unicode()
+            ->lycian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->carian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function carian(): Set
     {
-        return self::between(0x102A0, 0x102DF);
+        return Set::strings()
+            ->unicode()
+            ->carian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->copticEpactNumbers() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function copticEpactNumbers(): Set
     {
-        return self::between(0x102E0, 0x102FF);
+        return Set::strings()
+            ->unicode()
+            ->copticEpactNumbers();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldItalic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldItalic(): Set
     {
-        return self::between(0x10300, 0x1032F);
+        return Set::strings()
+            ->unicode()
+            ->oldItalic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->gothic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function gothic(): Set
     {
-        return self::between(0x10330, 0x1034F);
+        return Set::strings()
+            ->unicode()
+            ->gothic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldPermic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldPermic(): Set
     {
-        return self::between(0x10350, 0x1037F);
+        return Set::strings()
+            ->unicode()
+            ->oldPermic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ugaritic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ugaritic(): Set
     {
-        return self::between(0x10380, 0x1039F);
+        return Set::strings()
+            ->unicode()
+            ->ugaritic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldPersian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldPersian(): Set
     {
-        return self::between(0x103A0, 0x103DF);
+        return Set::strings()
+            ->unicode()
+            ->oldPersian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->deseret() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function deseret(): Set
     {
-        return self::between(0x1040, 0x1044F);
+        return Set::strings()
+            ->unicode()
+            ->deseret();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->shavian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function shavian(): Set
     {
-        return self::between(0x10450, 0x1047F);
+        return Set::strings()
+            ->unicode()
+            ->shavian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->osmanya() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function osmanya(): Set
     {
-        return self::between(0x10480, 0x104AF);
+        return Set::strings()
+            ->unicode()
+            ->osmanya();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->osage() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function osage(): Set
     {
-        return self::between(0x104B0, 0x104FF);
+        return Set::strings()
+            ->unicode()
+            ->osage();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->elbasan() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function elbasan(): Set
     {
-        return self::between(0x10500, 0x1052F);
+        return Set::strings()
+            ->unicode()
+            ->elbasan();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->caucasianAlbanian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function caucasianAlbanian(): Set
     {
-        return self::between(0x10530, 0x1056F);
+        return Set::strings()
+            ->unicode()
+            ->caucasianAlbanian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->linearA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function linearA(): Set
     {
-        return self::between(0x10600, 0x1077F);
+        return Set::strings()
+            ->unicode()
+            ->linearA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cypriotSyllabary() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cypriotSyllabary(): Set
     {
-        return self::between(0x10800, 0x1083F);
+        return Set::strings()
+            ->unicode()
+            ->cypriotSyllabary();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->imperialAramaic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function imperialAramaic(): Set
     {
-        return self::between(0x10840, 0x1085F);
+        return Set::strings()
+            ->unicode()
+            ->imperialAramaic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->palmyrene() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function palmyrene(): Set
     {
-        return self::between(0x10860, 0x1087F);
+        return Set::strings()
+            ->unicode()
+            ->palmyrene();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->nabataean() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function nabataean(): Set
     {
-        return self::between(0x10880, 0x108AF);
+        return Set::strings()
+            ->unicode()
+            ->nabataean();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->hatran() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function hatran(): Set
     {
-        return self::between(0x108E0, 0x108FF);
+        return Set::strings()
+            ->unicode()
+            ->hatran();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->phoenician() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function phoenician(): Set
     {
-        return self::between(0x10900, 0x1091F);
+        return Set::strings()
+            ->unicode()
+            ->phoenician();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->lydian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function lydian(): Set
     {
-        return self::between(0x10920, 0x1093F);
+        return Set::strings()
+            ->unicode()
+            ->lydian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->meroiticHieroglyphs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function meroiticHieroglyphs(): Set
     {
-        return self::between(0x10980, 0x1099F);
+        return Set::strings()
+            ->unicode()
+            ->meroiticHieroglyphs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->meroiticCursive() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function meroiticCursive(): Set
     {
-        return self::between(0x109A0, 0x109FF);
+        return Set::strings()
+            ->unicode()
+            ->meroiticCursive();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kharoshthi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kharoshthi(): Set
     {
-        return self::between(0x10A00, 0x10A5F);
+        return Set::strings()
+            ->unicode()
+            ->kharoshthi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldSouthArabian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldSouthArabian(): Set
     {
-        return self::between(0x10A60, 0x10A7F);
+        return Set::strings()
+            ->unicode()
+            ->oldSouthArabian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldNorthArabian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldNorthArabian(): Set
     {
-        return self::between(0x10A80, 0x10A9F);
+        return Set::strings()
+            ->unicode()
+            ->oldNorthArabian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->manichaean() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function manichaean(): Set
     {
-        return self::between(0x10AC0, 0x10AFF);
+        return Set::strings()
+            ->unicode()
+            ->manichaean();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->avestan() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function avestan(): Set
     {
-        return self::between(0x10B00, 0x10B3F);
+        return Set::strings()
+            ->unicode()
+            ->avestan();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->inscriptionalParthian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function inscriptionalParthian(): Set
     {
-        return self::between(0x10B40, 0x10B5F);
+        return Set::strings()
+            ->unicode()
+            ->inscriptionalParthian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->inscriptionalPahlavi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function inscriptionalPahlavi(): Set
     {
-        return self::between(0x10B60, 0x10B7F);
+        return Set::strings()
+            ->unicode()
+            ->inscriptionalPahlavi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->psalterPahlavi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function psalterPahlavi(): Set
     {
-        return self::between(0x10B80, 0x10BAF);
+        return Set::strings()
+            ->unicode()
+            ->psalterPahlavi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldTurkic() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldTurkic(): Set
     {
-        return self::between(0x10C00, 0x10C4F);
+        return Set::strings()
+            ->unicode()
+            ->oldTurkic();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->oldHungarian() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function oldHungarian(): Set
     {
-        return self::between(0x10C80, 0x10CFF);
+        return Set::strings()
+            ->unicode()
+            ->oldHungarian();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->rumiNumeralSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function rumiNumeralSymbols(): Set
     {
-        return self::between(0x10E60, 0x10E7F);
+        return Set::strings()
+            ->unicode()
+            ->rumiNumeralSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->brahmi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function brahmi(): Set
     {
-        return self::between(0x11000, 0x1107F);
+        return Set::strings()
+            ->unicode()
+            ->brahmi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kaithi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kaithi(): Set
     {
-        return self::between(0x11080, 0x110CF);
+        return Set::strings()
+            ->unicode()
+            ->kaithi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->soraSompeg() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function soraSompeg(): Set
     {
-        return self::between(0x110D0, 0x110FF);
+        return Set::strings()
+            ->unicode()
+            ->soraSompeg();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->chakma() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function chakma(): Set
     {
-        return self::between(0x11100, 0x1114F);
+        return Set::strings()
+            ->unicode()
+            ->chakma();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mahajani() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mahajani(): Set
     {
-        return self::between(0x11150, 0x1117F);
+        return Set::strings()
+            ->unicode()
+            ->mahajani();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->sharada() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function sharada(): Set
     {
-        return self::between(0x11180, 0x111DF);
+        return Set::strings()
+            ->unicode()
+            ->sharada();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->sinhalaArchaicNumbers() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function sinhalaArchaicNumbers(): Set
     {
-        return self::between(0x111E0, 0x111FF);
+        return Set::strings()
+            ->unicode()
+            ->sinhalaArchaicNumbers();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->khojki() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function khojki(): Set
     {
-        return self::between(0x11200, 0x1124F);
+        return Set::strings()
+            ->unicode()
+            ->khojki();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->multani() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function multani(): Set
     {
-        return self::between(0x11280, 0x112AF);
+        return Set::strings()
+            ->unicode()
+            ->multani();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->khudawadi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function khudawadi(): Set
     {
-        return self::between(0x112B0, 0x112FF);
+        return Set::strings()
+            ->unicode()
+            ->khudawadi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->grantha() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function grantha(): Set
     {
-        return self::between(0x11300, 0x1137F);
+        return Set::strings()
+            ->unicode()
+            ->grantha();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->newa() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function newa(): Set
     {
-        return self::between(0x11400, 0x1147F);
+        return Set::strings()
+            ->unicode()
+            ->newa();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tirhuta() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tirhuta(): Set
     {
-        return self::between(0x11480, 0x114DF);
+        return Set::strings()
+            ->unicode()
+            ->tirhuta();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->siddham() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function siddham(): Set
     {
-        return self::between(0x11580, 0x115FF);
+        return Set::strings()
+            ->unicode()
+            ->siddham();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->modi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function modi(): Set
     {
-        return self::between(0x11600, 0x1165F);
+        return Set::strings()
+            ->unicode()
+            ->modi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mongolianSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mongolianSupplement(): Set
     {
-        return self::between(0x11660, 0x1167F);
+        return Set::strings()
+            ->unicode()
+            ->mongolianSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->takri() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function takri(): Set
     {
-        return self::between(0x11680, 0x116CF);
+        return Set::strings()
+            ->unicode()
+            ->takri();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ahom() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ahom(): Set
     {
-        return self::between(0x11700, 0x1173F);
+        return Set::strings()
+            ->unicode()
+            ->ahom();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->warangCiti() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function warangCiti(): Set
     {
-        return self::between(0x118A0, 0x118FF);
+        return Set::strings()
+            ->unicode()
+            ->warangCiti();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->zanabazarSquare() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function zanabazarSquare(): Set
     {
-        return self::between(0x11A00, 0x11A4F);
+        return Set::strings()
+            ->unicode()
+            ->zanabazarSquare();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->soyombo() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function soyombo(): Set
     {
-        return self::between(0x11A50, 0x11AAF);
+        return Set::strings()
+            ->unicode()
+            ->soyombo();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->pauCinHau() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function pauCinHau(): Set
     {
-        return self::between(0x11AC0, 0x11AFF);
+        return Set::strings()
+            ->unicode()
+            ->pauCinHau();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bhaiksuki() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bhaiksuki(): Set
     {
-        return self::between(0x11C00, 0x11C6F);
+        return Set::strings()
+            ->unicode()
+            ->bhaiksuki();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->marchen() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function marchen(): Set
     {
-        return self::between(0x11C70, 0x11CBF);
+        return Set::strings()
+            ->unicode()
+            ->marchen();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->masaramGondi() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function masaramGondi(): Set
     {
-        return self::between(0x11D00, 0x11D5F);
+        return Set::strings()
+            ->unicode()
+            ->masaramGondi();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cuneiform() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cuneiform(): Set
     {
-        return self::between(0x12000, 0x123FF);
+        return Set::strings()
+            ->unicode()
+            ->cuneiform();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cuneiformNumbersAndPunctuation() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cuneiformNumbersAndPunctuation(): Set
     {
-        return self::between(0x12400, 0x1247F);
+        return Set::strings()
+            ->unicode()
+            ->cuneiformNumbersAndPunctuation();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->earlyDynasticCuneiform() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function earlyDynasticCuneiform(): Set
     {
-        return self::between(0x12480, 0x1254F);
+        return Set::strings()
+            ->unicode()
+            ->earlyDynasticCuneiform();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->egyptianHieroglyphs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function egyptianHieroglyphs(): Set
     {
-        return self::between(0x13000, 0x1342F);
+        return Set::strings()
+            ->unicode()
+            ->egyptianHieroglyphs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->anatolianHieroglyphs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function anatolianHieroglyphs(): Set
     {
-        return self::between(0x14400, 0x1467F);
+        return Set::strings()
+            ->unicode()
+            ->anatolianHieroglyphs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bamumSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bamumSupplement(): Set
     {
-        return self::between(0x16800, 0x16A3F);
+        return Set::strings()
+            ->unicode()
+            ->bamumSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mro() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mro(): Set
     {
-        return self::between(0x16A40, 0x16A6F);
+        return Set::strings()
+            ->unicode()
+            ->mro();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->bassaVah() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function bassaVah(): Set
     {
-        return self::between(0x16AD0, 0x16AFF);
+        return Set::strings()
+            ->unicode()
+            ->bassaVah();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->pahawhHmong() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function pahawhHmong(): Set
     {
-        return self::between(0x16B00, 0x16B8F);
+        return Set::strings()
+            ->unicode()
+            ->pahawhHmong();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miao() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miao(): Set
     {
-        return self::between(0x16F00, 0x16F9F);
+        return Set::strings()
+            ->unicode()
+            ->miao();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ideographicSymbolsAndPunctuation() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ideographicSymbolsAndPunctuation(): Set
     {
-        return self::between(0x16FE0, 0x16FFF);
+        return Set::strings()
+            ->unicode()
+            ->ideographicSymbolsAndPunctuation();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tangut() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tangut(): Set
     {
-        return self::between(0x17000, 0x187FF);
+        return Set::strings()
+            ->unicode()
+            ->tangut();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tangutComponents() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tangutComponents(): Set
     {
-        return self::between(0x18800, 0x18AFF);
+        return Set::strings()
+            ->unicode()
+            ->tangutComponents();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kanaSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kanaSupplement(): Set
     {
-        return self::between(0x1B000, 0x1B0FF);
+        return Set::strings()
+            ->unicode()
+            ->kanaSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->kanaExtendedA() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function kanaExtendedA(): Set
     {
-        return self::between(0x1B100, 0x1B12F);
+        return Set::strings()
+            ->unicode()
+            ->kanaExtendedA();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->nushu() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function nushu(): Set
     {
-        return self::between(0x1B170, 0x1B2FF);
+        return Set::strings()
+            ->unicode()
+            ->nushu();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->duployan() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function duployan(): Set
     {
-        return self::between(0x1BC00, 0x1BC9F);
+        return Set::strings()
+            ->unicode()
+            ->duployan();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->shorthandFormatControls() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function shorthandFormatControls(): Set
     {
-        return self::between(0x1BCA0, 0x1BCAF);
+        return Set::strings()
+            ->unicode()
+            ->shorthandFormatControls();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->byzantineMusicalSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function byzantineMusicalSymbols(): Set
     {
-        return self::between(0x1D000, 0x1D0FF);
+        return Set::strings()
+            ->unicode()
+            ->byzantineMusicalSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->musicalSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function musicalSymbols(): Set
     {
-        return self::between(0x1D100, 0x1D1FF);
+        return Set::strings()
+            ->unicode()
+            ->musicalSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ancientGreekMusicalNotation() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ancientGreekMusicalNotation(): Set
     {
-        return self::between(0x1D200, 0x1D24F);
+        return Set::strings()
+            ->unicode()
+            ->ancientGreekMusicalNotation();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->taiXuanJingSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function taiXuanJingSymbols(): Set
     {
-        return self::between(0x1D300, 0x1D35F);
+        return Set::strings()
+            ->unicode()
+            ->taiXuanJingSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->countingRodNumerals() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function countingRodNumerals(): Set
     {
-        return self::between(0x1D360, 0x1D37F);
+        return Set::strings()
+            ->unicode()
+            ->countingRodNumerals();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mathematicalAlphanumericSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mathematicalAlphanumericSymbols(): Set
     {
-        return self::between(0x1D400, 0x1D7FF);
+        return Set::strings()
+            ->unicode()
+            ->mathematicalAlphanumericSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->suttonSignWriting() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function suttonSignWriting(): Set
     {
-        return self::between(0x1D800, 0x1DAAF);
+        return Set::strings()
+            ->unicode()
+            ->suttonSignWriting();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->glagoliticSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function glagoliticSupplement(): Set
     {
-        return self::between(0x1E000, 0x1E02F);
+        return Set::strings()
+            ->unicode()
+            ->glagoliticSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mendeKikakui() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mendeKikakui(): Set
     {
-        return self::between(0x1E800, 0x1E8DF);
+        return Set::strings()
+            ->unicode()
+            ->mendeKikakui();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->adlam() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function adlam(): Set
     {
-        return self::between(0x1E900, 0x1E95F);
+        return Set::strings()
+            ->unicode()
+            ->adlam();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->arabicMathematicalAlphabeticSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function arabicMathematicalAlphabeticSymbols(): Set
     {
-        return self::between(0x1EE00, 0x1EEFF);
+        return Set::strings()
+            ->unicode()
+            ->arabicMathematicalAlphabeticSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->mahjongTiles() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function mahjongTiles(): Set
     {
-        return self::between(0x1F000, 0x1F02F);
+        return Set::strings()
+            ->unicode()
+            ->mahjongTiles();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->dominoTiles() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function dominoTiles(): Set
     {
-        return self::between(0x1F030, 0x1F09F);
+        return Set::strings()
+            ->unicode()
+            ->dominoTiles();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->playingCards() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function playingCards(): Set
     {
-        return self::between(0x1F0A0, 0x1F0FF);
+        return Set::strings()
+            ->unicode()
+            ->playingCards();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->enclosedAlphanumericSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function enclosedAlphanumericSupplement(): Set
     {
-        return self::between(0x1F100, 0x1F1FF);
+        return Set::strings()
+            ->unicode()
+            ->enclosedAlphanumericSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->enclosedIdeopgraphicSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function enclosedIdeopgraphicSupplement(): Set
     {
-        return self::between(0x1F200, 0x1F2FF);
+        return Set::strings()
+            ->unicode()
+            ->enclosedIdeopgraphicSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->miscellaneousSymbolsAndPictographs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function miscellaneousSymbolsAndPictographs(): Set
     {
-        return self::between(0x1F300, 0x1F5FF);
+        return Set::strings()
+            ->unicode()
+            ->miscellaneousSymbolsAndPictographs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->emoticons() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function emoticons(): Set
     {
-        return self::between(0x1F600, 0x1F64F);
+        return Set::strings()
+            ->unicode()
+            ->emoticons();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->ornamentalDingbats() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function ornamentalDingbats(): Set
     {
-        return self::between(0x1F650, 0x1F67F);
+        return Set::strings()
+            ->unicode()
+            ->ornamentalDingbats();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->transportAndMapSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function transportAndMapSymbols(): Set
     {
-        return self::between(0x1F680, 0x1F6FF);
+        return Set::strings()
+            ->unicode()
+            ->transportAndMapSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->alchemicalSymbols() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function alchemicalSymbols(): Set
     {
-        return self::between(0x1F700, 0x1F77F);
+        return Set::strings()
+            ->unicode()
+            ->alchemicalSymbols();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->geometricShapesExtended() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function geometricShapesExtended(): Set
     {
-        return self::between(0x1F780, 0x1F7FF);
+        return Set::strings()
+            ->unicode()
+            ->geometricShapesExtended();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->supplementalArrowsC() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function supplementalArrowsC(): Set
     {
-        return self::between(0x1F800, 0x1F8FF);
+        return Set::strings()
+            ->unicode()
+            ->supplementalArrowsC();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->supplementalSymbolsAndPictographs() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function supplementalSymbolsAndPictographs(): Set
     {
-        return self::between(0x1F900, 0x1F9FF);
+        return Set::strings()
+            ->unicode()
+            ->supplementalSymbolsAndPictographs();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographsExtensionB() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionB(): Set
     {
-        return self::between(0x20000, 0x2A6DF);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographsExtensionB();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographsExtensionC() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionC(): Set
     {
-        return self::between(0x2A700, 0x2B73F);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographsExtensionC();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographsExtensionD() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionD(): Set
     {
-        return self::between(0x2B740, 0x2B81F);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographsExtensionD();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographsExtensionE() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionE(): Set
     {
-        return self::between(0x2B820, 0x2CEAF);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographsExtensionE();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkUnifiedIdeographsExtensionF() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkUnifiedIdeographsExtensionF(): Set
     {
-        return self::between(0x2CEB0, 0x2EBEF);
+        return Set::strings()
+            ->unicode()
+            ->cjkUnifiedIdeographsExtensionF();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->cjkCompatibilityIdeographsSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function cjkCompatibilityIdeographsSupplement(): Set
     {
-        return self::between(0x2F800, 0x2FA1F);
+        return Set::strings()
+            ->unicode()
+            ->cjkCompatibilityIdeographsSupplement();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->tags() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function tags(): Set
     {
-        return self::between(0xE0000, 0xE007F);
+        return Set::strings()
+            ->unicode()
+            ->tags();
     }
 
     /**
+     * @deprecated Use Set::strings()->unicode()->variationSelectorsSupplement() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function variationSelectorsSupplement(): Set
     {
-        return self::between(0xE0100, 0xE01EF);
-    }
-
-    /**
-     * @psalm-pure
-     *
-     * @return Set<string>
-     */
-    private static function between(int $min, int $max): Set
-    {
-        /** @var Set<string> */
-        return Set::integers()
-            ->between($min, $max)
-            ->map(\IntlChar::chr(...))
-            ->filter(static fn($char) => \is_string($char));
+        return Set::strings()
+            ->unicode()
+            ->variationSelectorsSupplement();
     }
 }

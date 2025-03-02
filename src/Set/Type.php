@@ -38,7 +38,7 @@ final class Type
             Set::of(true, false, null),
             Set::integers(),
             Set::realNumbers(),
-            Unicode::strings(),
+            Set::strings()->unicode(),
             Set::generator(static function() { // objects
                 while (true) {
                     yield new class {

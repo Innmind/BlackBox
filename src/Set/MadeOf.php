@@ -60,10 +60,11 @@ final class MadeOf implements Provider
      *
      * @param positive-int $length
      *
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public function atLeast(int $length): Set
     {
+        /** @var Set<non-empty-string> */
         return $this->build($length, $length + 128);
     }
 

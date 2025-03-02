@@ -45,14 +45,14 @@ final class UnsafeStrings implements Implementation
     }
 
     /**
-     * @deprecated Use Set::unsafeStrings() instead
+     * @deprecated Use Set::strings()->unsafe() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function any(): Set
     {
-        return Set::unsafeStrings();
+        return Set::strings()->unsafe();
     }
 
     /**

@@ -210,15 +210,6 @@ final class Set
     /**
      * @psalm-pure
      *
-     * @return self<string>
-     */
-    public static function unsafeStrings(): self
-    {
-        return new self(Set\UnsafeStrings::implementation());
-    }
-    /**
-     * @psalm-pure
-     *
      * @template A
      *
      * @param callable(): A $call
@@ -234,6 +225,18 @@ final class Set
         })
             ->mutable()
             ->map(static fn($call) => $call());
+    }
+
+    /**
+     * @psalm-pure
+     */
+    public static function strings(): Provider\Strings
+    {
+        /**
+         * @psalm-suppress InvalidArgument
+         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
+         */
+        return Provider\Strings::of(self::build(...));
     }
 
     /**
