@@ -59,7 +59,7 @@ final class Randomize implements Implementation
      */
     public static function of(Set|Provider $set): Set
     {
-        return Set::randomize($set);
+        return Collapse::of($set)->randomize();
     }
 
     /**

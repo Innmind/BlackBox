@@ -112,7 +112,10 @@ final class Inline implements Proof
     #[\Override]
     public function scenarii(int $count): Set
     {
-        return Set::randomize($this->values->set())
+        return $this
+            ->values
+            ->set()
+            ->randomize()
             ->map(fn(array $args) => Scenario\Inline::of($args, $this->test))
             ->take($this->scenarii ?? $count);
     }

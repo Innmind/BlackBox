@@ -142,29 +142,6 @@ final class Set
     }
 
     /**
-     * Use this set to prevent iterating over all possible combinations of a composite set
-     *
-     * It will allow to test more diverse combinations for a given set
-     *
-     * @psalm-pure
-     *
-     * @template A
-     *
-     * @param self<A>|Provider<A> $set
-     *
-     * @return self<A>
-     */
-    public static function randomize(self|Provider $set): self
-    {
-        /**
-         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
-         */
-        return new self(Set\Randomize::implementation(
-            Collapse::of($set)->implementation,
-        ));
-    }
-
-    /**
      * @psalm-pure
      *
      * @no-named-arguments
@@ -216,6 +193,20 @@ final class Set
     public function nullable(): self
     {
         return self::either($this, self::of(null));
+    }
+
+    /**
+     * Use this set to prevent iterating over all possible combinations of a composite set
+     *
+     * It will allow to test more diverse combinations for a given set
+     *
+     * @psalm-mutation-free
+     *
+     * @return self<T>
+     */
+    public function randomize(): self
+    {
+        return new self(Set\Randomize::implementation($this->implementation));
     }
 
     /**
