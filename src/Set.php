@@ -400,7 +400,10 @@ final class Set
      */
     public function nullable(): self
     {
-        return self::either($this, self::of(null));
+        return new self(Set\Either::implementation(
+            $this->implementation,
+            Set\Elements::implementation(null),
+        ));
     }
 
     /**
