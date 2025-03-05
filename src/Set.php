@@ -459,6 +459,30 @@ final class Set
     }
 
     /**
+     * This allows to configure a Set from a randomly generated value from the
+     * current Set.
+     *
+     * Note that the value generated for the input won't be shrunk. The more
+     * your values comes from this composition the less values will be
+     * shrinkable.
+     *
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(T): (self<V>|Provider<V>) $map
+     *
+     * @return self<V>
+     */
+    public function flatMap(callable $map): self
+    {
+        return new self($this->implementation->flatMap(
+            $map,
+            static fn(self|Provider $set) => Collapse::of($set)->implementation,
+        ));
+    }
+
+    /**
      * @internal End users mustn't use this method directly (BC breaks may be introduced)
      *
      * @throws EmptySet When no value can be generated
