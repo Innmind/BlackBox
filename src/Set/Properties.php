@@ -97,6 +97,20 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @template V
+     *
+     * @param callable(Ensure): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
+     */
+    public function flatMap(callable $map): Set
+    {
+        return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @return Set<Ensure>
      */
     #[\Override]

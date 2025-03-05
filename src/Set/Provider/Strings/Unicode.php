@@ -53,6 +53,7 @@ final class Unicode implements Provider
                     'take',
                     'filter',
                     'map',
+                    'flatMap',
                     'toSet',
                     'block',
                 ],
@@ -2896,6 +2897,20 @@ final class Unicode implements Provider
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(string): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
+     */
+    public function flatMap(callable $map): Set
+    {
+        return $this->toSet()->flatMap($map);
     }
 
     /**

@@ -114,14 +114,14 @@ return static function() {
         'Set::flatMap() input value is always the same',
         given(
             Set::of(
-                Set::integers()->toSet(),
-                Set::realNumbers()->toSet(),
-                Set::strings()->toSet(),
+                Set::integers(),
+                Set::realNumbers(),
+                Set::strings(),
                 Set::sequence(Set::either(
-                    Set::integers()->toSet(),
-                    Set::realNumbers()->toSet(),
-                    Set::strings()->toSet(),
-                ))->between(0, 10)->toSet(),
+                    Set::integers(),
+                    Set::realNumbers(),
+                    Set::strings(),
+                ))->between(0, 10),
             ),
             $anySet,
         ),
