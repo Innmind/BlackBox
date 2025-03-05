@@ -18,35 +18,20 @@ use Innmind\BlackBox\{
  */
 final class Either implements Implementation
 {
-    /** @var Implementation<T> */
-    private Implementation $first;
-    /** @var Implementation<U> */
-    private Implementation $second;
-    /** @var list<Implementation<V>> */
-    private array $rest;
-    /** @var positive-int */
-    private int $size;
-
     /**
      * @psalm-mutation-free
      *
-     * @no-named-arguments
-     *
-     * @param positive-int $size
      * @param Implementation<T> $first
      * @param Implementation<U> $second
-     * @param Implementation<V> $rest
+     * @param list<Implementation<V>> $rest
+     * @param int<1, max> $size
      */
     private function __construct(
-        int $size,
-        Implementation $first,
-        Implementation $second,
-        Implementation ...$rest,
+        private Implementation $first,
+        private Implementation $second,
+        private array $rest,
+        private int $size,
     ) {
-        $this->first = $first;
-        $this->second = $second;
-        $this->rest = $rest;
-        $this->size = $size;
     }
 
     /**
@@ -70,7 +55,7 @@ final class Either implements Implementation
         Implementation $second,
         Implementation ...$rest,
     ): self {
-        return new self(100, $first, $second, ...$rest);
+        return new self($first, $second, $rest, 100);
     }
 
     /**
@@ -104,13 +89,13 @@ final class Either implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $size,
             $this->first->take($size),
             $this->second->take($size),
-            ...\array_map(
+            \array_map(
                 static fn(Implementation $set): Implementation => $set->take($size),
                 $this->rest,
             ),
+            $size,
         );
     }
 
@@ -121,13 +106,13 @@ final class Either implements Implementation
     public function filter(callable $predicate): self
     {
         return new self(
-            $this->size,
             $this->first->filter($predicate),
             $this->second->filter($predicate),
-            ...\array_map(
+            \array_map(
                 static fn(Implementation $set): Implementation => $set->filter($predicate),
                 $this->rest,
             ),
+            $this->size,
         );
     }
 

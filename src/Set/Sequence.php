@@ -15,31 +15,19 @@ use Innmind\BlackBox\{
  */
 final class Sequence implements Implementation
 {
-    /** @var Implementation<I> */
-    private Implementation $set;
-    private Integers $sizes;
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(list<I>): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param positive-int $size
      * @param \Closure(list<I>): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        Implementation $set,
-        Integers $sizes,
-        ?int $size = null,
-        ?\Closure $predicate = null,
+        private Implementation $set,
+        private Integers $sizes,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->set = $set;
-        $this->sizes = $sizes;
-        $this->size = $size ?? 100;
-        $this->predicate = $predicate ?? static fn(array $sequence): bool => \count($sequence) >= $sizes->lowerBound();
     }
 
     /**
@@ -56,7 +44,12 @@ final class Sequence implements Implementation
         Implementation $set,
         Integers $sizes,
     ): self {
-        return new self($set, $sizes);
+        return new self(
+            $set,
+            $sizes,
+            static fn(array $sequence): bool => \count($sequence) >= $sizes->min(),
+            100,
+        );
     }
 
     /**
@@ -83,8 +76,8 @@ final class Sequence implements Implementation
         return new self(
             $this->set,
             $this->sizes->take($size),
-            $size,
             $this->predicate,
+            $size,
         );
     }
 
@@ -99,7 +92,6 @@ final class Sequence implements Implementation
         return new self(
             $this->set,
             $this->sizes,
-            $this->size,
             static function(array $value) use ($previous, $predicate): bool {
                 /** @var list<I> $value */
                 if (!$previous($value)) {
@@ -108,6 +100,7 @@ final class Sequence implements Implementation
 
                 return $predicate($value);
             },
+            $this->size,
         );
     }
 

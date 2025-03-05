@@ -14,40 +14,34 @@ use Innmind\BlackBox\{
  */
 final class Integers implements Implementation
 {
-    private int $lowerBound;
-    private int $upperBound;
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(int): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
      * @param \Closure(int): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        int $lowerBound,
-        int $upperBound,
-        ?int $size = null,
-        ?\Closure $predicate = null,
+        private int $min,
+        private int $max,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->lowerBound = $lowerBound;
-        $this->upperBound = $upperBound;
-        $this->size = $size ?? 100;
-        $this->predicate = $predicate ?? fn(int $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
     /**
      * @internal
      * @psalm-pure
      */
-    public static function implementation(?int $lowerBound, ?int $upperBound): self
+    public static function implementation(?int $min, ?int $max): self
     {
+        $min ??= \PHP_INT_MIN;
+        $max ??= \PHP_INT_MAX;
+
         return new self(
-            $lowerBound ?? \PHP_INT_MIN,
-            $upperBound ?? \PHP_INT_MAX,
+            $min,
+            $max,
+            static fn(int $value): bool => $value >= $min && $value <= $max,
+            100,
         );
     }
 
@@ -68,10 +62,10 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
-    public static function between(int $lowerBound, int $upperBound): Set
+    public static function between(int $min, int $max): Set
     {
         return Set::integers()
-            ->between($lowerBound, $upperBound)
+            ->between($min, $max)
             ->toSet();
     }
 
@@ -81,10 +75,10 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
-    public static function above(int $lowerBound): Set
+    public static function above(int $min): Set
     {
         return Set::integers()
-            ->above($lowerBound)
+            ->above($min)
             ->toSet();
     }
 
@@ -94,19 +88,19 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
-    public static function below(int $upperBound): Set
+    public static function below(int $max): Set
     {
         return Set::integers()
-            ->below($upperBound)
+            ->below($max)
             ->toSet();
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function lowerBound(): int
+    public function min(): int
     {
-        return $this->lowerBound;
+        return $this->min;
     }
 
     /**
@@ -116,10 +110,10 @@ final class Integers implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $this->lowerBound,
-            $this->upperBound,
-            $size,
+            $this->min,
+            $this->max,
             $this->predicate,
+            $size,
         );
     }
 
@@ -132,9 +126,8 @@ final class Integers implements Implementation
         $previous = $this->predicate;
 
         return new self(
-            $this->lowerBound,
-            $this->upperBound,
-            $this->size,
+            $this->min,
+            $this->max,
             static function(int $value) use ($previous, $predicate): bool {
                 if (!$previous($value)) {
                     return false;
@@ -142,6 +135,7 @@ final class Integers implements Implementation
 
                 return $predicate($value);
             },
+            $this->size,
         );
     }
 
@@ -172,7 +166,7 @@ final class Integers implements Implementation
         $iterations = 0;
 
         while ($iterations < $this->size) {
-            $value = $random->between($this->lowerBound, $this->upperBound);
+            $value = $random->between($this->min, $this->max);
 
             if (!($this->predicate)($value)) {
                 continue;

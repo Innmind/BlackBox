@@ -16,23 +16,16 @@ use Innmind\Json\Json;
  */
 final class UnsafeStrings implements Implementation
 {
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(string): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
      * @param \Closure(string): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        int $size,
-        \Closure $predicate,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->size = $size;
-        $this->predicate = $predicate;
     }
 
     /**
@@ -41,7 +34,7 @@ final class UnsafeStrings implements Implementation
      */
     public static function implementation(): self
     {
-        return new self(100, static fn(): bool => true);
+        return new self(static fn(): bool => true, 100);
     }
 
     /**
@@ -62,8 +55,8 @@ final class UnsafeStrings implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $size,
             $this->predicate,
+            $size,
         );
     }
 
@@ -76,7 +69,6 @@ final class UnsafeStrings implements Implementation
         $previous = $this->predicate;
 
         return new self(
-            $this->size,
             static function(string $value) use ($previous, $predicate): bool {
                 if (!$previous($value)) {
                     return false;
@@ -84,6 +76,7 @@ final class UnsafeStrings implements Implementation
 
                 return $predicate($value);
             },
+            $this->size,
         );
     }
 

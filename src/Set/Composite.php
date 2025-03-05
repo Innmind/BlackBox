@@ -17,36 +17,23 @@ use Innmind\BlackBox\{
  */
 final class Composite implements Implementation
 {
-    /** @var \Closure(mixed...): C */
-    private \Closure $aggregate;
-    private Implementation $first;
-    private Implementation $second;
-    /** @var list<Implementation> */
-    private array $sets;
-    private ?int $size;
-    /** @var \Closure(C): bool */
-    private \Closure $predicate;
-    private bool $immutable;
-
     /**
      * @psalm-mutation-free
-     * @no-named-arguments
+     *
+     * @param \Closure(mixed...): C $aggregate
+     * @param list<Implementation> $sets
+     * @param \Closure(C): bool $predicate
+     * @param ?int<1, max> $size
      */
     private function __construct(
-        bool $immutable,
-        callable $aggregate,
-        Implementation $first,
-        Implementation $second,
-        Implementation ...$sets,
+        private \Closure $aggregate,
+        private Implementation $first,
+        private Implementation $second,
+        private array $sets,
+        private \Closure $predicate,
+        private ?int $size,
+        private bool $immutable,
     ) {
-        $this->immutable = $immutable;
-        /** @var \Closure(mixed...): C */
-        $this->aggregate = \Closure::fromCallable($aggregate);
-        $this->size = null; // by default allow all combinations
-        $this->predicate = static fn(): bool => true;
-        $this->first = $first;
-        $this->second = $second;
-        $this->sets = $sets;
     }
 
     /**
@@ -67,7 +54,15 @@ final class Composite implements Implementation
         Implementation $second,
         Implementation ...$sets,
     ): self {
-        return new self($immutable, $aggregate, $first, $second, ...$sets);
+        return new self(
+            \Closure::fromCallable($aggregate),
+            $first,
+            $second,
+            $sets,
+            static fn(): bool => true,
+            null, // by default allow all combinations
+            $immutable,
+        );
     }
 
     /**
@@ -117,15 +112,22 @@ final class Composite implements Implementation
     /**
      * @psalm-mutation-free
      *
+     * @param int<1, max> $size
+     *
      * @return self<C>
      */
     #[\Override]
     public function take(int $size): self
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $this->aggregate,
+            $this->first,
+            $this->second,
+            $this->sets,
+            $this->predicate,
+            $size,
+            $this->immutable,
+        );
     }
 
     /**
@@ -139,19 +141,25 @@ final class Composite implements Implementation
     public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
-            /** @var C */
-            $value = $value;
 
-            if (!$previous($value)) {
-                return false;
-            }
+        return new self(
+            $this->aggregate,
+            $this->first,
+            $this->second,
+            $this->sets,
+            static function(mixed $value) use ($previous, $predicate): bool {
+                /** @var C */
+                $value = $value;
 
-            return $predicate($value);
-        };
+                if (!$previous($value)) {
+                    return false;
+                }
 
-        return $self;
+                return $predicate($value);
+            },
+            $this->size,
+            $this->immutable,
+        );
     }
 
     /**

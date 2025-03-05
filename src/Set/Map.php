@@ -13,23 +13,17 @@ use Innmind\BlackBox\Random;
  */
 final class Map implements Implementation
 {
-    /** @var \Closure(I): D */
-    private \Closure $decorate;
-    /** @var Implementation<I> */
-    private Implementation $set;
-    private bool $immutable;
-
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(I): D $decorate
+     * @param \Closure(I): D $map
      * @param Implementation<I> $set
      */
-    private function __construct(bool $immutable, \Closure $decorate, Implementation $set)
-    {
-        $this->decorate = $decorate;
-        $this->set = $set;
-        $this->immutable = $immutable;
+    private function __construct(
+        private \Closure $map,
+        private Implementation $set,
+        private bool $immutable,
+    ) {
     }
 
     /**
@@ -39,17 +33,17 @@ final class Map implements Implementation
      * @template T
      * @template V
      *
-     * @param callable(V): T $decorate It must be a pure function (no randomness, no side effects)
+     * @param callable(V): T $map It must be a pure function (no randomness, no side effects)
      * @param Implementation<V> $set
      *
      * @return self<T,V>
      */
     public static function implementation(
-        callable $decorate,
+        callable $map,
         Implementation $set,
         bool $immutable,
     ): self {
-        return new self($immutable, \Closure::fromCallable($decorate), $set);
+        return new self(\Closure::fromCallable($map), $set, $immutable);
     }
 
     /**
@@ -59,9 +53,9 @@ final class Map implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $this->immutable,
-            $this->decorate,
+            $this->map,
             $this->set->take($size),
+            $this->immutable,
         );
     }
 
@@ -73,9 +67,9 @@ final class Map implements Implementation
     {
         /** @psalm-suppress MixedArgument */
         return new self(
+            $this->map,
+            $this->set->filter(fn(mixed $value): bool => $predicate(($this->map)($value))),
             $this->immutable,
-            $this->decorate,
-            $this->set->filter(fn(mixed $value): bool => $predicate(($this->decorate)($value))),
         );
     }
 
@@ -110,10 +104,10 @@ final class Map implements Implementation
     {
         foreach ($this->set->values($random) as $value) {
             if ($value->isImmutable() && $this->immutable) {
-                $decorated = ($this->decorate)($value->unwrap());
+                $mapped = ($this->map)($value->unwrap());
 
                 yield Value::immutable(
-                    $decorated,
+                    $mapped,
                     $this->shrink(false, $value),
                 );
             } else {
@@ -122,7 +116,7 @@ final class Map implements Implementation
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 yield Value::mutable(
-                    fn() => ($this->decorate)($value->unwrap()),
+                    fn() => ($this->map)($value->unwrap()),
                     $this->shrink(true, $value),
                 );
             }
@@ -157,13 +151,13 @@ final class Map implements Implementation
     {
         if ($mutable) {
             return fn(): Value => Value::mutable(
-                fn() => ($this->decorate)($strategy->unwrap()),
+                fn() => ($this->map)($strategy->unwrap()),
                 $this->shrink(true, $strategy),
             );
         }
 
         return fn(): Value => Value::immutable(
-            ($this->decorate)($strategy->unwrap()),
+            ($this->map)($strategy->unwrap()),
             $this->shrink(false, $strategy),
         );
     }
