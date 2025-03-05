@@ -86,7 +86,7 @@ final class FlatMap implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation(
+        return Map::implementation(
             $map,
             $this,
             true,

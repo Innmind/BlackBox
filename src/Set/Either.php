@@ -137,7 +137,7 @@ final class Either implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation($map, $this, true);
+        return Map::implementation($map, $this, true);
     }
 
     /**
