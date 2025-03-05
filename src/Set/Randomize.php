@@ -97,7 +97,10 @@ final class Randomize implements Implementation
     #[\Override]
     public function flatMap(callable $map, callable $extract): Implementation
     {
-        /** @psalm-suppress MixedArgument Due to $input */
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress InvalidArgument
+         */
         return FlatMap::implementation(
             static fn($input) => $extract($map($input)),
             $this,

@@ -95,8 +95,12 @@ final class UnsafeStrings implements Implementation
     #[\Override]
     public function flatMap(callable $map, callable $extract): Implementation
     {
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion
+         * @psalm-suppress InvalidArgument
+         */
         return FlatMap::implementation(
-            static fn(string $input) => $extract($map($input)),
+            static fn($input) => $extract($map($input)),
             $this,
         );
     }

@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Implementation,
     Set\Provider,
     Set\Value,
+    Set\Seed,
     Set\Collapse,
     Exception\EmptySet,
 };
@@ -470,7 +471,7 @@ final class Set
      *
      * @template V
      *
-     * @param callable(T): (self<V>|Provider<V>) $map
+     * @param callable(Seed<T>): (self<V>|Provider<V>) $map
      *
      * @return self<V>
      */

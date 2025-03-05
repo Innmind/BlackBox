@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Provider;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
+    Set\Seed,
     Set\Implementation,
 };
 
@@ -104,7 +105,7 @@ final class RealNumbers implements Provider
      *
      * @template V
      *
-     * @param callable(float): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<float>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */

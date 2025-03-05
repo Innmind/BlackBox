@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Provider;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
+    Set\Seed,
     Set\Implementation,
 };
 
@@ -130,7 +131,7 @@ final class Composite implements Provider
      *
      * @template V
      *
-     * @param callable(T): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<T>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */

@@ -49,7 +49,7 @@ interface Implementation
      *
      * @template V
      *
-     * @param callable(T): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<T>): (Set<V>|Provider<V>) $map
      * @param callable(Set<V>|Provider<V>): self<V> $extract
      *
      * @return self<V>

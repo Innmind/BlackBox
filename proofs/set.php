@@ -26,7 +26,7 @@ return static function() {
         static function($assert, $input, $output) {
             $compose = $input->flatMap(static function($value) use ($assert, $input, $output) {
                 $assert->same(
-                    \gettype($value),
+                    \gettype($value->unwrap()),
                     \gettype($input->values(Random::default)->current()->unwrap()),
                 );
 
@@ -127,7 +127,7 @@ return static function() {
         ),
         static function($assert, $input, $output) {
             $compose = $input->flatMap(static fn($value) => $output->map(
-                static fn() => $value,
+                static fn() => $value->unwrap(),
             ));
             $values = [];
 
