@@ -27,6 +27,101 @@ $set = Set::strings()
 
 Now if you use `$set` in a proof it will generate instances of `Password` with a random string inside it.
 
+### Flat map
+
+This method allows to generate a `Set` configured from a randomly generated value from another `Set`.
+
+In most cases you'll want to use the [`Set::composite()`](#composite). This method will be useful for advanced cases.
+
+One example is the ability to randomly generate `Set`s with associated data. Let's say you want to randomly generate strings defining types (`int`, `string`, etc...) with an associated `Set` to generate values of this type in order to build an imaginary `Type` class:
+
+```php
+use Innmind\BlackBox\Set;
+
+$pairs = Set::of(
+    ['int', Set::integers()],
+    ['string', Set::strings()],
+    ['float', Set::realNumbers()],
+    ['bool', Set::of(true, false)],
+    // etc...
+);
+
+$types = $pairs->flatMap(static function($pair) {
+    [$type, $values] = $pair;
+
+    return $values->map(static fn($value) => new Type($type, $value));
+});
+```
+
+The `#!php $types` `Set` could generate the values `#!php new Type('bool', true)`, `#!php new Type('bool', false)`, `#!php new Type('int', 42)`, etc...
+
+This example is simple enough and could be expressed without the use of `flatMap`. Like this:
+
+```php
+use Innmind\BlackBox\Set;
+
+$types = Set::either(
+    Set::integers()->map(static fn($value) => ['int', $value]),
+    Set::strings()->map(static fn($value) => ['string', $value]),
+    Set::realNumbers()->map(static fn($value) => ['float', $value]),
+    Set::of(true, false)->map(static fn($value) => ['bool', $value]),
+)
+    ->map(static function($pair) {
+        [$type, $value] = $pair;
+
+        return new Type($type, $value);
+    });
+```
+
+But say that now you want multiple values instead of a single one. With `flatMap` it's traightforward, unlike with the other approach.
+
+=== "`flatMap`"
+    ```php hl_lines="14"
+    use Innmind\BlackBox\Set;
+
+    $pairs = Set::of(
+        ['int', Set::integers()],
+        ['string', Set::strings()],
+        ['float', Set::realNumbers()],
+        ['bool', Set::of(true, false)],
+        // etc...
+    );
+
+    $types = $pairs->flatMap(static function($pair) {
+        [$type, $values] = $pair;
+
+        return Set::sequence($values)->map(
+            static fn($value) => new Type($type, $value),
+        );
+    });
+    ```
+=== "Alternative"
+    ```php hl_lines="4-7"
+    use Innmind\BlackBox\Set;
+
+    $types = Set::either(
+        Set::sequence(Set::integers())->map(static fn($value) => ['int', $value]),
+        Set::sequence(Set::strings())->map(static fn($value) => ['string', $value]),
+        Set::sequence(Set::realNumbers())->map(static fn($value) => ['float', $value]),
+        Set::sequence(Set::of(true, false))->map(static fn($value) => ['bool', $value]),
+    )
+        ->map(static function($pair) {
+            [$type, $value] = $pair;
+
+            return new Type($type, $value);
+        });
+    ```
+
+As you can see with `flatMap` you can locally define what you want without having to change the `Set` you rely on. Unlike the alternative where you need to change the initial `Set` and thus impacting any other `Set` that could depend on it.
+
+??? warning "Shrinking"
+    The value passed as argument to the `flatMap` callable won't be [shrunk](preface/terminology.mq#shrinking). This means that the more you compose your `Set`s via `flatMap` the less values BlackBox will be able to shrink.
+
+??? warning "Randomness"
+    By default the `Set` returned by `flatMap` will produce values with the same _seed_ (the callable argument).
+
+    If you want a more wide range of seeded values you should call the `->randomize()` method after `->flatMap()`.
+
 ### Filter
 
 To reuse the password example from above. Say that your password needs to contain the character `$`. You can do:

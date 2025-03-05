@@ -136,6 +136,20 @@ final class Sequence implements Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @template U
+     *
+     * @param callable(list<V>): (Set<U>|Provider<U>) $map
+     *
+     * @return Set<U>
+     */
+    public function flatMap(callable $map): Set
+    {
+        return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
      */
     #[\Override]
     public function toSet(): Set

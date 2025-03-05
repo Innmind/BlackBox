@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
+    Set,
     Random,
     Exception\EmptySet,
 };
@@ -42,6 +43,18 @@ interface Implementation
      * @return self<V>
      */
     public function map(callable $map): self;
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(T): (Set<V>|Provider<V>) $map
+     * @param callable(Set<V>|Provider<V>): self<V> $extract
+     *
+     * @return self<V>
+     */
+    public function flatMap(callable $map, callable $extract): self;
 
     /**
      * @throws EmptySet When no value can be generated

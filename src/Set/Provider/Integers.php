@@ -139,6 +139,20 @@ final class Integers implements Provider
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(int): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
+     */
+    public function flatMap(callable $map): Set
+    {
+        return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
      */
     #[\Override]
     public function toSet(): Set

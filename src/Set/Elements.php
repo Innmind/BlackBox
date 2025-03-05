@@ -133,6 +133,19 @@ final class Elements implements Implementation
         return Decorate::implementation($map, $this, true);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
+    #[\Override]
+    public function flatMap(callable $map, callable $extract): Implementation
+    {
+        /** @psalm-suppress MixedArgument Due to $input */
+        return FlatMap::implementation(
+            static fn($input) => $extract($map($input)),
+            $this,
+        );
+    }
+
     #[\Override]
     public function values(Random $random): \Generator
     {

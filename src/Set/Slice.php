@@ -108,6 +108,20 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @template V
+     *
+     * @param callable(Util): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
+     */
+    public function flatMap(callable $map): Set
+    {
+        return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @return Set<Util>
      */
     #[\Override]

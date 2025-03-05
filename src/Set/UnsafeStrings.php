@@ -96,6 +96,18 @@ final class UnsafeStrings implements Implementation
         return Decorate::implementation($map, $this, true);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
+    #[\Override]
+    public function flatMap(callable $map, callable $extract): Implementation
+    {
+        return FlatMap::implementation(
+            static fn(string $input) => $extract($map($input)),
+            $this,
+        );
+    }
+
     #[\Override]
     public function values(Random $random): \Generator
     {
