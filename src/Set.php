@@ -152,7 +152,7 @@ final class Set
          * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
          * @psalm-suppress ImpureFunctionCall
          */
-        return new self(Set\Decorate::implementation(
+        return new self(Set\Map::implementation(
             $decorate,
             Collapse::of($set)->implementation,
             false,

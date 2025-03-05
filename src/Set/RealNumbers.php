@@ -14,40 +14,34 @@ use Innmind\BlackBox\{
  */
 final class RealNumbers implements Implementation
 {
-    private int $lowerBound;
-    private int $upperBound;
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(float): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
      * @param \Closure(float): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        int $lowerBound,
-        int $upperBound,
-        ?int $size = null,
-        ?\Closure $predicate = null,
+        private int $min,
+        private int $max,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->lowerBound = $lowerBound;
-        $this->upperBound = $upperBound;
-        $this->size = $size ?? 100;
-        $this->predicate = $predicate ?? fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
     /**
      * @internal
      * @psalm-pure
      */
-    public static function implementation(?int $lowerBound, ?int $upperBound): self
+    public static function implementation(?int $min, ?int $max): self
     {
+        $min ??= \PHP_INT_MIN;
+        $max ??= \PHP_INT_MAX;
+
         return new self(
-            $lowerBound ?? \PHP_INT_MIN,
-            $upperBound ?? \PHP_INT_MAX,
+            $min,
+            $max,
+            static fn(float $value): bool => $value >= $min && $value <= $max,
+            100,
         );
     }
 
@@ -68,10 +62,10 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
-    public static function between(int $lowerBound, int $upperBound): Set
+    public static function between(int $min, int $max): Set
     {
         return Set::realNumbers()
-            ->between($lowerBound, $upperBound)
+            ->between($min, $max)
             ->toSet();
     }
 
@@ -81,10 +75,10 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
-    public static function above(int $lowerBound): Set
+    public static function above(int $min): Set
     {
         return Set::realNumbers()
-            ->above($lowerBound)
+            ->above($min)
             ->toSet();
     }
 
@@ -94,10 +88,10 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
-    public static function below(int $upperBound): Set
+    public static function below(int $max): Set
     {
         return Set::realNumbers()
-            ->below($upperBound)
+            ->below($max)
             ->toSet();
     }
 
@@ -108,10 +102,10 @@ final class RealNumbers implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $this->lowerBound,
-            $this->upperBound,
-            $size,
+            $this->min,
+            $this->max,
             $this->predicate,
+            $size,
         );
     }
 
@@ -124,9 +118,8 @@ final class RealNumbers implements Implementation
         $previous = $this->predicate;
 
         return new self(
-            $this->lowerBound,
-            $this->upperBound,
-            $this->size,
+            $this->min,
+            $this->max,
             static function(float $value) use ($previous, $predicate): bool {
                 if (!$previous($value)) {
                     return false;
@@ -134,6 +127,7 @@ final class RealNumbers implements Implementation
 
                 return $predicate($value);
             },
+            $this->size,
         );
     }
 
@@ -143,7 +137,7 @@ final class RealNumbers implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation($map, $this, true);
+        return Map::implementation($map, $this, true);
     }
 
     /**
@@ -167,7 +161,7 @@ final class RealNumbers implements Implementation
             // simulate the function lcg_value()
             $lcg = ($random->between(0, 100) / 100);
             /** @psalm-suppress InvalidOperand Don't know why it complains */
-            $value = $random->between($this->lowerBound, $this->upperBound) * $lcg;
+            $value = $random->between($this->min, $this->max) * $lcg;
 
             if (!($this->predicate)($value)) {
                 continue;

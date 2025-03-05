@@ -16,21 +16,16 @@ use Innmind\BlackBox\{
  */
 final class Randomize implements Implementation
 {
-    /** @var Implementation<I> */
-    private Implementation $set;
-    /** @var positive-int */
-    private int $size;
-
     /**
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param positive-int $size
+     * @param int<1, max> $size
      */
-    private function __construct(Implementation $set, int $size)
-    {
-        $this->set = $set;
-        $this->size = $size;
+    private function __construct(
+        private Implementation $set,
+        private int $size,
+    ) {
     }
 
     /**
@@ -93,7 +88,7 @@ final class Randomize implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation($map, $this, true);
+        return Map::implementation($map, $this, true);
     }
 
     /**

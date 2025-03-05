@@ -20,7 +20,7 @@ class IntegersTest extends TestCase
     public function testAny()
     {
         $this->assertInstanceOf(Set::class, Integers::any());
-        $this->assertSame(\PHP_INT_MIN, Integers::implementation(null, null)->lowerBound());
+        $this->assertSame(\PHP_INT_MIN, Integers::implementation(null, null)->min());
     }
 
     public function testByDefault100IntegersAreGenerated()

@@ -16,31 +16,19 @@ use Innmind\BlackBox\{
  */
 final class FromGenerator implements Implementation
 {
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(Random): \Generator<T> */
-    private \Closure $generatorFactory;
-    /** @var \Closure(T): bool */
-    private \Closure $predicate;
-    private bool $immutable;
-
     /**
      * @psalm-mutation-free
      *
-     * @param callable(Random): \Generator<T> $generatorFactory
-     * @param positive-int $size
+     * @param \Closure(Random): \Generator<T> $generatorFactory
      * @param \Closure(T): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        callable $generatorFactory,
-        int $size,
-        \Closure $predicate,
-        bool $immutable,
+        private \Closure $generatorFactory,
+        private \Closure $predicate,
+        private int $size,
+        private bool $immutable,
     ) {
-        $this->generatorFactory = \Closure::fromCallable($generatorFactory);
-        $this->size = $size;
-        $this->predicate = $predicate;
-        $this->immutable = $immutable;
     }
 
     /**
@@ -58,9 +46,9 @@ final class FromGenerator implements Implementation
         bool $immutable,
     ): self {
         return new self(
-            $generatorFactory,
-            100,
+            \Closure::fromCallable($generatorFactory),
             static fn(): bool => true,
+            100,
             $immutable,
         );
     }
@@ -103,8 +91,8 @@ final class FromGenerator implements Implementation
     {
         return new self(
             $this->generatorFactory,
-            $size,
             $this->predicate,
+            $size,
             $this->immutable,
         );
     }
@@ -119,7 +107,6 @@ final class FromGenerator implements Implementation
 
         return new self(
             $this->generatorFactory,
-            $this->size,
             static function(mixed $value) use ($previous, $predicate): bool {
                 /** @var T */
                 $value = $value;
@@ -130,6 +117,7 @@ final class FromGenerator implements Implementation
 
                 return $predicate($value);
             },
+            $this->size,
             $this->immutable,
         );
     }
@@ -140,7 +128,7 @@ final class FromGenerator implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation($map, $this, $this->immutable);
+        return Map::implementation($map, $this, $this->immutable);
     }
 
     /**

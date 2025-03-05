@@ -20,33 +20,20 @@ use Innmind\BlackBox\{
  */
 final class Elements implements Implementation
 {
-    /** @var positive-int */
-    private int $size;
-    /** @var T */
-    private mixed $first;
-    /** @var list<U> */
-    private array $elements;
-    /** @var \Closure(T|U): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
-     * @param \Closure(T|U): bool $predicate
+     * @param int<1, max> $size
      * @param T $first
      * @param list<U> $elements
+     * @param \Closure(T|U): bool $predicate
      */
     private function __construct(
-        int $size,
-        \Closure $predicate,
-        mixed $first,
-        array $elements,
+        private mixed $first,
+        private array $elements,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->size = $size;
-        $this->predicate = $predicate;
-        $this->first = $first;
-        $this->elements = $elements;
     }
 
     /**
@@ -65,7 +52,7 @@ final class Elements implements Implementation
      */
     public static function implementation($first, ...$elements): self
     {
-        return new self(100, static fn(): bool => true, $first, $elements);
+        return new self($first, $elements, static fn(): bool => true, 100);
     }
 
     /**
@@ -94,10 +81,10 @@ final class Elements implements Implementation
     public function take(int $size): self
     {
         return new self(
-            $size,
-            $this->predicate,
             $this->first,
             $this->elements,
+            $this->predicate,
+            $size,
         );
     }
 
@@ -110,7 +97,8 @@ final class Elements implements Implementation
         $previous = $this->predicate;
 
         return new self(
-            $this->size,
+            $this->first,
+            $this->elements,
             static function(mixed $value) use ($previous, $predicate): bool {
                 /** @var T|U $value */
                 if (!$previous($value)) {
@@ -119,8 +107,7 @@ final class Elements implements Implementation
 
                 return $predicate($value);
             },
-            $this->first,
-            $this->elements,
+            $this->size,
         );
     }
 
@@ -130,7 +117,7 @@ final class Elements implements Implementation
     #[\Override]
     public function map(callable $map): Implementation
     {
-        return Decorate::implementation($map, $this, true);
+        return Map::implementation($map, $this, true);
     }
 
     /**
