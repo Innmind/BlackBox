@@ -141,4 +141,52 @@ return static function() {
             );
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap() input value is shrinkable',
+        static function($assert) {
+            $compose = Set::integers()->flatMap(
+                static fn($seed) => Set::strings()->map(
+                    static fn($string) => $seed->map(
+                        static fn($i) => $i.$string,
+                    ),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('0', $value->unwrap());
+            }
+
+            $compose = Set::strings()->flatMap(
+                static fn($seed) => Set::compose(
+                    static fn($a, $b) => $seed->map(
+                        static fn($string) => $a.$string.$b,
+                    ),
+                    Set::integers(),
+                    Set::integers(),
+                ),
+            );
+
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('00', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };

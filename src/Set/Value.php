@@ -4,69 +4,82 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 /**
- * @psalm-immutable
- *
  * @template-covariant T
  */
 final class Value
 {
-    /** @var \Closure(): T */
-    private \Closure $unwrap;
-    private bool $immutable;
-    /** @var ?Dichotomy<T> */
-    private ?Dichotomy $dichotomy;
+    private ?Seed $seed = null;
 
     /**
-     * @param callable(): T $unwrap
+     * @psalm-mutation-free
+     *
+     * @param \Closure(): (T|Seed<T>) $unwrap
      * @param ?Dichotomy<T> $dichotomy
      */
     private function __construct(
-        bool $immutable,
-        callable $unwrap,
-        ?Dichotomy $dichotomy,
+        private bool $immutable,
+        private \Closure $unwrap,
+        private ?Dichotomy $dichotomy,
     ) {
-        $this->unwrap = \Closure::fromCallable($unwrap);
-        $this->immutable = $immutable;
-        $this->dichotomy = $dichotomy;
     }
 
     /**
+     * @psalm-pure
      * @template V
      *
-     * @param V $value
+     * @param V|Seed<V> $value
      * @param Dichotomy<V>|null $dichotomy
      *
      * @return self<V>
      */
     public static function immutable($value, ?Dichotomy $dichotomy = null): self
     {
-        return new self(true, static fn() => $value, $dichotomy);
+        /** @psalm-suppress InvalidArgument Don't know why it complains on the Seed */
+        return new self(
+            true,
+            static fn() => $value,
+            $dichotomy,
+        );
     }
 
     /**
+     * @psalm-pure
      * @template V
      *
-     * @param callable(): V $unwrap
+     * @param callable(): (V|Seed<V>) $unwrap
      * @param Dichotomy<V>|null $dichotomy
      *
      * @return self<V>
      */
     public static function mutable(callable $unwrap, ?Dichotomy $dichotomy = null): self
     {
-        return new self(false, $unwrap, $dichotomy);
+        /** @psalm-suppress InvalidArgument Don't know why it complains on the Seed */
+        return new self(
+            false,
+            \Closure::fromCallable($unwrap),
+            $dichotomy,
+        );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function isImmutable(): bool
     {
         return $this->immutable;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function shrinkable(): bool
     {
-        return $this->dichotomy instanceof Dichotomy;
+        return $this->dichotomy instanceof Dichotomy || ($this->seed?->shrinkable() === true);
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @psalm-suppress InvalidNullableReturnType
      *
      * @return Dichotomy<T>
@@ -74,7 +87,7 @@ final class Value
     public function shrink(): Dichotomy
     {
         /** @psalm-suppress NullableReturnStatement */
-        return $this->dichotomy;
+        return $this->dichotomy ?? $this->seed?->shrink();
     }
 
     /**
@@ -82,7 +95,14 @@ final class Value
      */
     public function unwrap()
     {
-        /** @psalm-suppress ImpureFunctionCall */
-        return ($this->unwrap)();
+        $value = ($this->unwrap)();
+
+        if ($value instanceof Seed) {
+            $this->seed = $value;
+            /** @var T */
+            $value = $value->unwrap();
+        }
+
+        return $value;
     }
 }
