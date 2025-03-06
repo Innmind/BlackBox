@@ -117,7 +117,7 @@ final class FlatMap
      *
      * @return Dichotomy<T>
      */
-    public function previousShrink(): Dichotomy
+    private function previousShrink(): Dichotomy
     {
         $shrunk = $this->previous->shrink();
 
