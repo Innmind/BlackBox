@@ -189,4 +189,35 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap() input value is composable and shrinkable',
+        static function($assert) {
+            $compose = Set::strings()->flatMap(
+                static fn($stringSeed) => Set::integers()->flatMap(
+                    static fn($aSeed) => Set::integers()->map(
+                        static fn($b) => $stringSeed->flatMap(
+                            static fn($string) => $aSeed->map(
+                                static fn($a) => $a.'|'.$string.'|'.$b,
+                            ),
+                        ),
+                    ),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('0||0', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };
