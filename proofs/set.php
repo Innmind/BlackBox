@@ -222,4 +222,62 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::compose() can collapse seeds from flatMaps',
+        static function($assert) {
+            $compose = Set::strings()->flatMap(
+                static fn($stringSeed) => Set::integers()->flatMap(
+                    static fn($aSeed) => Set::compose(
+                        static fn($b, $stringB) => $stringSeed->flatMap(
+                            static fn($string) => $aSeed->map(
+                                static fn($a) => $a.'|'.$string.'|'.$stringB.'|'.$b,
+                            ),
+                        ),
+                        Set::integers(),
+                        Set::strings(),
+                    ),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('0|||0', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::generator() can collapse seeds from flatMaps',
+        static function($assert) {
+            $compose = Set::strings()->flatMap(
+                static fn($stringSeed) => Set::generator(static function() use ($stringSeed) {
+                    yield $stringSeed;
+                }),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };
