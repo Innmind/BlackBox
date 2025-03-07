@@ -50,13 +50,14 @@ class CombinationTest extends TestCase
         $this->assertFalse($nonShrinkable->shrinkable());
 
         $shrinkable = Combination::startWith(Value::immutable(42));
-        $shrinkable = $shrinkable->add(Value::immutable(
-            24,
-            new Dichotomy(
-                static fn() => Value::immutable(12),
-                static fn() => Value::immutable(23),
+        $shrinkable = $shrinkable->add(
+            Value::immutable(24)->shrinkWith(
+                new Dichotomy(
+                    static fn() => Value::immutable(12),
+                    static fn() => Value::immutable(23),
+                ),
             ),
-        ));
+        );
         $shrinkable = $shrinkable->add(Value::immutable(66));
 
         $this->assertTrue($shrinkable->shrinkable());
