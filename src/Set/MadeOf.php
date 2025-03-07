@@ -109,7 +109,7 @@ final class MadeOf implements Provider
      *
      * @template V
      *
-     * @param callable(string): (V|Set\Seed<V>) $map
+     * @param callable(string): (V|Seed<V>) $map
      *
      * @return Set<V>
      */

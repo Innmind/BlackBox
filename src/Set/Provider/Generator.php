@@ -106,7 +106,7 @@ final class Generator implements Provider
      *
      * @template V
      *
-     * @param callable(T): (V|Set\Seed<V>) $map
+     * @param callable(T): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
