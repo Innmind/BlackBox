@@ -196,11 +196,13 @@ return static function() {
             $compose = Set::strings()->flatMap(
                 static fn($stringSeed) => Set::integers()->flatMap(
                     static fn($aSeed) => Set::integers()->map(
-                        static fn($b) => $stringSeed->flatMap(
-                            static fn($string) => $aSeed->map(
-                                static fn($a) => $a.'|'.$string.'|'.$b,
-                            ),
-                        ),
+                        static fn($b) => $stringSeed
+                            ->flatMap(
+                                static fn($string) => $aSeed->map(
+                                    static fn($a) => $a.'|'.$string.'|'.$b,
+                                ),
+                            )
+                            ->map(static fn($string) => "($string)"),
                     ),
                 ),
             );
@@ -216,7 +218,7 @@ return static function() {
                     $value->unwrap();
                 }
 
-                $assert->same('0||0', $value->unwrap());
+                $assert->same('(0||0)', $value->unwrap());
             }
         },
     )->tag(Tag::ci, Tag::local);
