@@ -30,17 +30,15 @@ final class Value
      * @template V
      *
      * @param V|Seed<V> $value
-     * @param Dichotomy<V>|null $dichotomy
      *
      * @return self<V>
      */
-    public static function immutable($value, ?Dichotomy $dichotomy = null): self
+    public static function immutable($value): self
     {
-        /** @psalm-suppress InvalidArgument Don't know why it complains on the Seed */
         return new self(
             true,
             static fn() => $value,
-            $dichotomy,
+            null,
         );
     }
 
@@ -50,16 +48,28 @@ final class Value
      * @template V
      *
      * @param callable(): (V|Seed<V>) $unwrap
-     * @param Dichotomy<V>|null $dichotomy
      *
      * @return self<V>
      */
-    public static function mutable(callable $unwrap, ?Dichotomy $dichotomy = null): self
+    public static function mutable(callable $unwrap): self
     {
-        /** @psalm-suppress InvalidArgument Don't know why it complains on the Seed */
         return new self(
             false,
             \Closure::fromCallable($unwrap),
+            null,
+        );
+    }
+
+    /**
+     * @param ?Dichotomy<T> $dichotomy
+     *
+     * @return self<T>
+     */
+    public function shrinkWith(?Dichotomy $dichotomy): self
+    {
+        return new self(
+            $this->immutable,
+            $this->unwrap,
             $dichotomy,
         );
     }

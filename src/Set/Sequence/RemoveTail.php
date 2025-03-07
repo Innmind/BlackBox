@@ -36,14 +36,18 @@ final class RemoveTail
         }
 
         return match ($mutable) {
-            true => static fn() => Value::mutable(
-                static fn() => Detonate::of($shrunk),
-                RecursiveTail::of($mutable, $predicate, $shrunk),
-            ),
-            false => static fn() => Value::immutable(
-                Detonate::of($shrunk),
-                RecursiveTail::of($mutable, $predicate, $shrunk),
-            ),
+            true => static fn() => Value::mutable(static fn() => Detonate::of($shrunk))
+                ->shrinkWith(RecursiveTail::of(
+                    $mutable,
+                    $predicate,
+                    $shrunk,
+                )),
+            false => static fn() => Value::immutable(Detonate::of($shrunk))
+                ->shrinkWith(RecursiveTail::of(
+                    $mutable,
+                    $predicate,
+                    $shrunk,
+                )),
         };
     }
 }

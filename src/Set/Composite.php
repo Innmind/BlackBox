@@ -20,7 +20,7 @@ final class Composite implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(mixed...): C $aggregate
+     * @param \Closure(mixed...): (C|Seed<C>) $aggregate
      * @param list<Implementation> $sets
      * @param \Closure(C): bool $predicate
      * @param ?int<1, max> $size
@@ -43,7 +43,7 @@ final class Composite implements Implementation
      * @template T
      * @no-named-arguments
      *
-     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
+     * @param callable(mixed...): (T|Seed<T>) $aggregate It must be a pure function (no randomness, no side effects)
      *
      * @return self<T>
      */
@@ -204,29 +204,25 @@ final class Composite implements Implementation
             }
 
             if ($combination->immutable() && $this->immutable) {
-                yield Value::immutable(
-                    $value,
-                    Composite\RecursiveNthShrink::of(
+                yield Value::immutable($value)
+                    ->shrinkWith(Composite\RecursiveNthShrink::of(
                         false,
                         $this->predicate,
                         $this->aggregate,
                         $combination,
-                    ),
-                );
+                    ));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                yield Value::mutable(
-                    fn() => $combination->detonate($this->aggregate),
-                    Composite\RecursiveNthShrink::of(
+                yield Value::mutable(fn() => $combination->detonate($this->aggregate))
+                    ->shrinkWith(Composite\RecursiveNthShrink::of(
                         true,
                         $this->predicate,
                         $this->aggregate,
                         $combination,
-                    ),
-                );
+                    ));
             }
 
             ++$iterations;

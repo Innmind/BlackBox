@@ -19,7 +19,7 @@ final class FromGenerator implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(Random): \Generator<T> $generatorFactory
+     * @param \Closure(Random): \Generator<T|Seed<T>> $generatorFactory
      * @param \Closure(T): bool $predicate
      * @param int<1, max> $size
      */
@@ -37,7 +37,7 @@ final class FromGenerator implements Implementation
      *
      * @template V
      *
-     * @param callable(Random): \Generator<V> $generatorFactory
+     * @param callable(Random): \Generator<V|Seed<V>> $generatorFactory
      *
      * @return self<V>
      */
@@ -154,7 +154,7 @@ final class FromGenerator implements Implementation
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {
-            /** @var T */
+            /** @var T|Seed<T> */
             $value = $generator->current();
 
             if (($this->predicate)($value)) {

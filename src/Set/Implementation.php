@@ -38,7 +38,7 @@ interface Implementation
      *
      * @template V
      *
-     * @param callable(T): V $map
+     * @param callable(T): (Seed<V>|V) $map
      *
      * @return self<V>
      */

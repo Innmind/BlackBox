@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Composite;
 
-use Innmind\BlackBox\Set\Value;
+use Innmind\BlackBox\Set\{
+    Value,
+    Seed,
+};
 
 /**
  * @internal
@@ -14,7 +17,7 @@ final class Identity
      * @internal
      * @template A
      *
-     * @param callable(...mixed): A $aggregate
+     * @param callable(...mixed): (A|Seed<A>) $aggregate
      *
      * @return callable(): Value<A>
      */

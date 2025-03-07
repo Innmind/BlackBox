@@ -20,7 +20,7 @@ final class Composite implements Provider
      * @psalm-mutation-free
      *
      * @param pure-Closure(Implementation<T>): Set<T> $wrap
-     * @param callable(...mixed): T $aggregate
+     * @param callable(...mixed): (T|Seed<T>) $aggregate
      * @param list<Implementation> $rest
      */
     private function __construct(
@@ -40,7 +40,7 @@ final class Composite implements Provider
      * @no-named-arguments
      *
      * @param pure-Closure(Implementation<A>): Set<A> $wrap
-     * @param callable(...mixed): A $aggregate
+     * @param callable(...mixed): (A|Seed<A>) $aggregate
      *
      * @return self<A>
      */
@@ -117,7 +117,7 @@ final class Composite implements Provider
      *
      * @template V
      *
-     * @param callable(T): V $map
+     * @param callable(T): (V|Set\Seed<V>) $map
      *
      * @return Set<V>
      */

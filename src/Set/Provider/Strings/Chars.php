@@ -121,7 +121,7 @@ final class Chars implements Provider
      *
      * @template V
      *
-     * @param callable(non-empty-string): V $map
+     * @param callable(non-empty-string): (V|Set\Seed<V>) $map
      *
      * @return Set<V>
      */

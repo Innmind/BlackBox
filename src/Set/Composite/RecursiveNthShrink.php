@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Composite;
 
-use Innmind\BlackBox\Set\Dichotomy;
+use Innmind\BlackBox\Set\{
+    Dichotomy,
+    Seed,
+};
 
 /**
  * @internal
@@ -15,7 +18,7 @@ final class RecursiveNthShrink
      * @template A
      *
      * @param callable(A): bool $predicate
-     * @param callable(mixed...): A $aggregate
+     * @param callable(mixed...): (A|Seed<A>) $aggregate
      * @param 0|positive-int $n
      *
      * @return ?Dichotomy<A>

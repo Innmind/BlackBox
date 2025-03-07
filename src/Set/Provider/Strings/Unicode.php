@@ -2891,7 +2891,7 @@ final class Unicode implements Provider
      *
      * @template V
      *
-     * @param callable(string): V $map
+     * @param callable(string): (V|Set\Seed<V>) $map
      *
      * @return Set<V>
      */

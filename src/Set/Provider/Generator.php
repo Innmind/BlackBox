@@ -21,7 +21,7 @@ final class Generator implements Provider
      * @psalm-mutation-free
      *
      * @param pure-Closure(Implementation<T>): Set<T> $wrap
-     * @param callable(Random): \Generator<T> $factory
+     * @param callable(Random): \Generator<T|Seed<T>> $factory
      */
     private function __construct(
         private \Closure $wrap,
@@ -37,7 +37,7 @@ final class Generator implements Provider
      * @no-named-arguments
      *
      * @param pure-Closure(Implementation<A>): Set<A> $wrap
-     * @param callable(Random): \Generator<A> $factory
+     * @param callable(Random): \Generator<A|Seed<A>> $factory
      *
      * @return self<A>
      */
@@ -45,6 +45,7 @@ final class Generator implements Provider
         \Closure $wrap,
         callable $factory,
     ): self {
+        /** @var self<A> Don't know why it complains */
         return new self($wrap, $factory, true);
     }
 
@@ -105,7 +106,7 @@ final class Generator implements Provider
      *
      * @template V
      *
-     * @param callable(T): V $map
+     * @param callable(T): (V|Set\Seed<V>) $map
      *
      * @return Set<V>
      */

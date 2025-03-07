@@ -36,14 +36,18 @@ final class RemoveHead
         }
 
         return match ($mutable) {
-            true => static fn() => Value::mutable(
-                static fn() => Detonate::of($shrunk),
-                RecursiveHead::of($mutable, $predicate, $shrunk),
-            ),
-            false => static fn() => Value::immutable(
-                Detonate::of($shrunk),
-                RecursiveHead::of($mutable, $predicate, $shrunk),
-            ),
+            true => static fn() => Value::mutable(static fn() => Detonate::of($shrunk))
+                ->shrinkWith(RecursiveHead::of(
+                    $mutable,
+                    $predicate,
+                    $shrunk,
+                )),
+            false => static fn() => Value::immutable(Detonate::of($shrunk))
+                ->shrinkWith(RecursiveHead::of(
+                    $mutable,
+                    $predicate,
+                    $shrunk,
+                )),
         };
     }
 }

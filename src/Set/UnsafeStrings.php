@@ -132,7 +132,8 @@ final class UnsafeStrings implements Implementation
             $index = $random->between(0, $size);
             $value = $values[$index];
 
-            yield Value::immutable($value, $this->shrink($value));
+            yield Value::immutable($value)
+                ->shrinkWith($this->shrink($value));
             ++$iterations;
         }
     }
@@ -163,7 +164,8 @@ final class UnsafeStrings implements Implementation
             return $this->identity($value);
         }
 
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+        return fn(): Value => Value::immutable($shrinked)
+            ->shrinkWith($this->shrink($shrinked));
     }
 
     /**
@@ -177,7 +179,8 @@ final class UnsafeStrings implements Implementation
             return $this->identity($value);
         }
 
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+        return fn(): Value => Value::immutable($shrinked)
+            ->shrinkWith($this->shrink($shrinked));
     }
 
     /**
