@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 /**
+ * @internal
  * @template-covariant T
  */
 final class Value
@@ -24,6 +25,7 @@ final class Value
     }
 
     /**
+     * @internal
      * @psalm-pure
      * @template V
      *
@@ -43,6 +45,7 @@ final class Value
     }
 
     /**
+     * @internal
      * @psalm-pure
      * @template V
      *
