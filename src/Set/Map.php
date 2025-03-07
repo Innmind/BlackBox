@@ -65,10 +65,21 @@ final class Map implements Implementation
     #[\Override]
     public function filter(callable $predicate): self
     {
+        $map = $this->map;
+
         /** @psalm-suppress MixedArgument */
         return new self(
             $this->map,
-            $this->set->filter(fn(mixed $value): bool => $predicate(($this->map)($value))),
+            $this->set->filter(static function(mixed $value) use ($map, $predicate) {
+                $mapped = $map($value);
+
+                if ($mapped instanceof Seed) {
+                    /** @var mixed */
+                    $mapped = $mapped->unwrap();
+                }
+
+                return $predicate($mapped);
+            }),
             $this->immutable,
         );
     }

@@ -199,7 +199,14 @@ final class Composite implements Implementation
             $value = $combination->detonate($this->aggregate);
             $matrix->next();
 
-            if (!($this->predicate)($value)) {
+            $t = $value;
+
+            if ($t instanceof Seed) {
+                /** @var C */
+                $t = $t->unwrap();
+            }
+
+            if (!($this->predicate)($t)) {
                 continue;
             }
 

@@ -51,8 +51,14 @@ final class ShrinkBNth
         }
 
         $shrunk = $combination->bShrinkNth($n);
+        $value = $shrunk->detonate($aggregate);
 
-        if (!$predicate($shrunk->detonate($aggregate))) {
+        if ($value instanceof Seed) {
+            /** @var A */
+            $value = $value->unwrap();
+        }
+
+        if (!$predicate($value)) {
             return self::of(
                 $mutable,
                 $predicate,

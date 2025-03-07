@@ -30,7 +30,14 @@ final class RecursiveNthShrink
         Combination $combination,
         int $n = 0,
     ): ?Dichotomy {
-        if (!$predicate($combination->detonate($aggregate))) {
+        $value = $combination->detonate($aggregate);
+
+        if ($value instanceof Seed) {
+            /** @var A */
+            $value = $value->unwrap();
+        }
+
+        if (!$predicate($value)) {
             return null;
         }
 
