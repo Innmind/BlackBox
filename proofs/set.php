@@ -280,4 +280,33 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap()->map()->filter()',
+        static function($assert) {
+            $compose = Set::integers()->flatMap(
+                static fn($seed) => Set::strings()
+                    ->map(static fn($string) => $seed->map(
+                        static fn($i) => $i.$string,
+                    ))
+                    ->filter(static fn($string) => $string !== '0'),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert
+                    ->array(['-1', '1'])
+                    ->contains($value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };
