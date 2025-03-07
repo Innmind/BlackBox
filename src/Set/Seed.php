@@ -59,7 +59,7 @@ final class Seed
     }
 
     /**
-     * @psalm-mutation-free
+     * @internal
      */
     public function shrinkable(): bool
     {
@@ -67,7 +67,7 @@ final class Seed
     }
 
     /**
-     * @psalm-mutation-free
+     * @internal
      *
      * @return Dichotomy<T>
      */

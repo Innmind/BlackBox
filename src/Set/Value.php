@@ -82,17 +82,12 @@ final class Value
         return $this->immutable;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function shrinkable(): bool
     {
         return $this->dichotomy instanceof Dichotomy || ($this->seed?->shrinkable() === true);
     }
 
     /**
-     * @psalm-mutation-free
-     *
      * @psalm-suppress InvalidNullableReturnType
      *
      * @return Dichotomy<T>

@@ -71,18 +71,12 @@ final class FlatMap
         return new self($this, \Closure::fromCallable($map));
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function shrinkable(): bool
     {
-        /** @psalm-suppress ImpureMethodCall */
         return $this->previous->shrinkable() || $this->collapse()->shrinkable();
     }
 
     /**
-     * @psalm-mutation-free
-     *
      * @return Dichotomy<T>
      */
     public function shrink(): Dichotomy
@@ -91,7 +85,6 @@ final class FlatMap
             return $this->previousShrink();
         }
 
-        /** @psalm-suppress ImpureMethodCall */
         return $this->collapse()->shrink();
     }
 
@@ -100,7 +93,6 @@ final class FlatMap
      */
     public function unwrap(): mixed
     {
-        /** @psalm-suppress ImpureMethodCall */
         return $this->collapse()->unwrap();
     }
 
@@ -113,23 +105,18 @@ final class FlatMap
     }
 
     /**
-     * @psalm-mutation-free
-     *
      * @return Dichotomy<T>
      */
     private function previousShrink(): Dichotomy
     {
         $shrunk = $this->previous->shrink();
 
-        /** @psalm-suppress ImpureMethodCall */
         $a = $shrunk->a();
-        /** @psalm-suppress ImpureMethodCall */
         $b = $shrunk->b();
         $map = $this->map;
 
         // There's no need to define the immutability of the values here because
         // it's held by the values injected in the new Seeds.
-        /** @psalm-suppress InvalidArgument Don't know why it complains on the Seed */
         return new Dichotomy(
             static fn() => Value::immutable(
                 Seed::of($a)->flatMap($map),
