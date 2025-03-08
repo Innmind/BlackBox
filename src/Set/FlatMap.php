@@ -80,19 +80,6 @@ final class FlatMap implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): self
-    {
-        /** @psalm-suppress MixedArgument Due to $input */
-        return self::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
-        );
-    }
-
     #[\Override]
     public function values(Random $random): \Generator
     {

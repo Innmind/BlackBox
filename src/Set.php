@@ -480,9 +480,10 @@ final class Set
      */
     public function flatMap(callable $map): self
     {
-        return new self($this->implementation->flatMap(
-            $map,
-            static fn(self|Provider $set) => Collapse::of($set)->implementation,
+        /** @psalm-suppress MixedArgument Due to $input */
+        return new self(Set\FlatMap::implementation(
+            static fn($input) => Collapse::of($map($input))->implementation,
+            $this->implementation,
         ));
     }
 
