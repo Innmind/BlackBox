@@ -119,9 +119,10 @@ final class RealNumbers implements Provider
     #[\Override]
     public function toSet(): Set
     {
-        return ($this->wrap)(Set\RealNumbers::implementation(
-            $this->min,
-            $this->max,
-        ));
+        $min = $this->min ?? \PHP_INT_MIN;
+        $max = $this->max ?? \PHP_INT_MAX;
+
+        return ($this->wrap)(Set\RealNumbers::implementation($min, $max))
+            ->filter(static fn($value) => $value >= $min && $value <= $max);
     }
 }

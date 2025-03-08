@@ -147,10 +147,6 @@ final class Integers implements Implementation
         while ($iterations < $this->size) {
             $value = $random->between($this->min, $this->max);
 
-            if (!($this->predicate)($value)) {
-                continue;
-            }
-
             yield Value::immutable($value)
                 ->shrinkWith($this->shrink($value));
             ++$iterations;

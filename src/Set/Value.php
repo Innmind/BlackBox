@@ -13,11 +13,13 @@ final class Value
     /**
      * @param \Closure(): T $unwrap
      * @param ?Dichotomy<T> $dichotomy
+     * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
         private bool $immutable,
         private \Closure $unwrap,
         private ?Dichotomy $dichotomy,
+        private \Closure $predicate,
     ) {
         $this->unwrap = \Closure::fromCallable($unwrap);
         $this->immutable = $immutable;
@@ -33,7 +35,12 @@ final class Value
      */
     public static function immutable($value): self
     {
-        return new self(true, static fn() => $value, null);
+        return new self(
+            true,
+            static fn() => $value,
+            null,
+            static fn() => true,
+        );
     }
 
     /**
@@ -45,7 +52,12 @@ final class Value
      */
     public static function mutable(callable $unwrap): self
     {
-        return new self(false, \Closure::fromCallable($unwrap), null);
+        return new self(
+            false,
+            \Closure::fromCallable($unwrap),
+            null,
+            static fn() => true,
+        );
     }
 
     /**
@@ -59,7 +71,31 @@ final class Value
             $this->immutable,
             $this->unwrap,
             $dichotomy,
+            $this->predicate,
         );
+    }
+
+    /**
+     * @param callable(mixed): bool $predicate
+     *
+     * @return self<T>
+     */
+    public function predicatedOn(callable $predicate): self
+    {
+        $previous = $this->predicate;
+
+        return new self(
+            $this->immutable,
+            $this->unwrap,
+            $this->dichotomy,
+            static fn($value) => $previous($value) && $predicate($value),
+        );
+    }
+
+    public function acceptable(): bool
+    {
+        /** @psalm-suppress ImpureFunctionCall */
+        return ($this->predicate)($this->unwrap());
     }
 
     public function isImmutable(): bool

@@ -32,11 +32,8 @@ final class RealNumbers implements Implementation
      * @internal
      * @psalm-pure
      */
-    public static function implementation(?int $min, ?int $max): self
+    public static function implementation(int $min, int $max): self
     {
-        $min ??= \PHP_INT_MIN;
-        $max ??= \PHP_INT_MAX;
-
         return new self(
             $min,
             $max,

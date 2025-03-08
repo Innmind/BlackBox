@@ -20,9 +20,11 @@ final class Set
      * @psalm-mutation-free
      *
      * @param Implementation<T> $implementation
+     * @param int<1, max> $size
      */
     private function __construct(
         private Implementation $implementation,
+        private int $size,
     ) {
     }
 
@@ -41,7 +43,7 @@ final class Set
      */
     public static function of(mixed $first, mixed ...$rest): self
     {
-        return new self(Set\Elements::implementation($first, ...$rest));
+        return new self(Set\Elements::implementation($first, ...$rest), 100);
     }
 
     /**
@@ -156,7 +158,7 @@ final class Set
             $decorate,
             Collapse::of($set)->implementation,
             false,
-        ));
+        ), 100);
     }
 
     /**
@@ -234,7 +236,7 @@ final class Set
                 static fn($set) => Collapse::of($set)->implementation,
                 $rest,
             ),
-        ));
+        ), 100);
     }
 
     /**
@@ -400,10 +402,13 @@ final class Set
      */
     public function nullable(): self
     {
-        return new self(Set\Either::implementation(
-            $this->implementation,
-            Set\Elements::implementation(null),
-        ));
+        return new self(
+            Set\Either::implementation(
+                $this->implementation,
+                Set\Elements::implementation(null),
+            ),
+            $this->size,
+        );
     }
 
     /**
@@ -417,7 +422,10 @@ final class Set
      */
     public function randomize(): self
     {
-        return new self(Set\Randomize::implementation($this->implementation));
+        return new self(
+            Set\Randomize::implementation($this->implementation),
+            $this->size,
+        );
     }
 
     /**
@@ -429,7 +437,10 @@ final class Set
      */
     public function take(int $size): self
     {
-        return new self($this->implementation->take($size));
+        return new self(
+            $this->implementation->take($size),
+            $size,
+        );
     }
 
     /**
@@ -441,7 +452,13 @@ final class Set
      */
     public function filter(callable $predicate): self
     {
-        return new self($this->implementation->filter($predicate));
+        return new self(
+            Set\Filter::implementation(
+                $predicate,
+                $this->implementation->filter($predicate),
+            ),
+            $this->size,
+        );
     }
 
     /**
@@ -455,11 +472,14 @@ final class Set
      */
     public function map(callable $map): self
     {
-        return new self(Set\Map::implementation(
-            $map,
-            $this->implementation,
-            true,
-        ));
+        return new self(
+            Set\Map::implementation(
+                $map,
+                $this->implementation,
+                true,
+            ),
+            $this->size,
+        );
     }
 
     /**
@@ -481,10 +501,13 @@ final class Set
     public function flatMap(callable $map): self
     {
         /** @psalm-suppress MixedArgument Due to $input */
-        return new self(Set\FlatMap::implementation(
-            static fn($input) => Collapse::of($map($input))->implementation,
-            $this->implementation,
-        ));
+        return new self(
+            Set\FlatMap::implementation(
+                static fn($input) => Collapse::of($map($input))->implementation,
+                $this->implementation,
+            ),
+            $this->size,
+        );
     }
 
     /**
@@ -496,7 +519,16 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from $this->implementation->values($random);
+        $iterations = 0;
+
+        foreach ($this->implementation->values($random) as $value) {
+            if ($iterations >= $this->size) {
+                break;
+            }
+
+            yield $value;
+            ++$iterations;
+        }
     }
 
     /**
@@ -509,6 +541,6 @@ final class Set
      */
     private static function build(Implementation $implementation): self
     {
-        return new self($implementation);
+        return new self($implementation, 100);
     }
 }
