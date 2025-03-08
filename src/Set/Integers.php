@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
+    Exception\EmptySet,
 };
 
 /**
@@ -150,6 +151,10 @@ final class Integers implements Implementation
             yield Value::immutable($value)
                 ->shrinkWith($this->shrink($value));
             ++$iterations;
+        }
+
+        if ($iterations === 0) {
+            throw new EmptySet;
         }
     }
 

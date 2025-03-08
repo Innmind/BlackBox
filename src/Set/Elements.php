@@ -134,5 +134,9 @@ final class Elements implements Implementation
             yield Value::immutable($value);
             ++$iterations;
         }
+
+        if ($iterations === 0) {
+            throw new EmptySet;
+        }
     }
 }

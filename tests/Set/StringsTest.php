@@ -10,6 +10,7 @@ use Innmind\BlackBox\{
     Set,
     Set\Value,
     Random,
+    Exception\EmptySet,
 };
 
 class StringsTest extends TestCase
@@ -192,13 +193,13 @@ class StringsTest extends TestCase
 
     public function testTakeNoElement()
     {
-        $this->assertCount(
-            0,
-            \iterator_to_array(
+        $this->assert()->throws(
+            static fn() => \iterator_to_array(
                 Strings::any()
                     ->take(0)
                     ->values(Random::mersenneTwister),
             ),
+            EmptySet::class,
         );
     }
 

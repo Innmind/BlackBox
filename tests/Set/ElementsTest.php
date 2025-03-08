@@ -106,13 +106,13 @@ class ElementsTest extends TestCase
 
     public function testTakeNoElement()
     {
-        $this->assertCount(
-            0,
-            \iterator_to_array(
+        $this->assert()->throws(
+            static fn() => \iterator_to_array(
                 Elements::of(1, 2, 3)
                     ->take(0)
                     ->values(Random::mersenneTwister),
             ),
+            EmptySet::class,
         );
     }
 
