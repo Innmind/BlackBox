@@ -123,6 +123,6 @@ final class RealNumbers implements Provider
         $max = $this->max ?? \PHP_INT_MAX;
 
         return ($this->wrap)(Set\RealNumbers::implementation($min, $max))
-            ->filter(static fn($value) => $value >= $min && $value <= $max);
+            ->filter(static fn(float $value) => $value >= $min && $value <= $max);
     }
 }

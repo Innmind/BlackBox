@@ -139,10 +139,6 @@ final class RealNumbers implements Implementation
             /** @psalm-suppress InvalidOperand Don't know why it complains */
             $value = $random->between($this->min, $this->max) * $lcg;
 
-            if (!($this->predicate)($value)) {
-                continue;
-            }
-
             yield Value::immutable($value)
                 ->shrinkWith($this->shrink($value));
             ++$iterations;

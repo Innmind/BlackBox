@@ -121,7 +121,7 @@ class RealNumbersTest extends TestCase
 
     public function testRealNumbersCanBeShrinked()
     {
-        $numbers = RealNumbers::any()->filter(static fn($i) => $i !== 0.0);
+        $numbers = RealNumbers::any()->filter(static fn(float $i) => $i !== 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->shrinkable());
