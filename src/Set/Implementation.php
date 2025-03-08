@@ -38,17 +38,6 @@ interface Implementation
      *
      * @template V
      *
-     * @param callable(T): V $map
-     *
-     * @return self<V>
-     */
-    public function map(callable $map): self;
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @template V
-     *
      * @param callable(T): (Set<V>|Provider<V>) $map
      * @param callable(Set<V>|Provider<V>): self<V> $extract
      *

@@ -126,15 +126,6 @@ final class FromGenerator implements Implementation
      * @psalm-mutation-free
      */
     #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, $this->immutable);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
     public function flatMap(callable $map, callable $extract): Implementation
     {
         /** @psalm-suppress MixedArgument Due to $input */

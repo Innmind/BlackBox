@@ -455,7 +455,11 @@ final class Set
      */
     public function map(callable $map): self
     {
-        return new self($this->implementation->map($map));
+        return new self(Set\Map::implementation(
+            $map,
+            $this->implementation,
+            true,
+        ));
     }
 
     /**
