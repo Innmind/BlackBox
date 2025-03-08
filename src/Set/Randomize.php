@@ -89,16 +89,14 @@ final class Randomize implements Implementation
 
         while ($iterations < $this->size) {
             try {
-                $value = $this->set->values($random)->current();
+                foreach ($this->set->values($random) as $value) {
+                    yield $value;
+                    break;
+                }
             } catch (EmptySet $e) {
                 continue;
             }
 
-            if (\is_null($value)) {
-                continue;
-            }
-
-            yield $value;
             ++$iterations;
         }
     }
