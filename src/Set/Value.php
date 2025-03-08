@@ -10,20 +10,14 @@ namespace Innmind\BlackBox\Set;
  */
 final class Value
 {
-    /** @var \Closure(): T */
-    private \Closure $unwrap;
-    private bool $immutable;
-    /** @var ?Dichotomy<T> */
-    private ?Dichotomy $dichotomy;
-
     /**
-     * @param callable(): T $unwrap
+     * @param \Closure(): T $unwrap
      * @param ?Dichotomy<T> $dichotomy
      */
     private function __construct(
-        bool $immutable,
-        callable $unwrap,
-        ?Dichotomy $dichotomy,
+        private bool $immutable,
+        private \Closure $unwrap,
+        private ?Dichotomy $dichotomy,
     ) {
         $this->unwrap = \Closure::fromCallable($unwrap);
         $this->immutable = $immutable;
@@ -34,26 +28,38 @@ final class Value
      * @template V
      *
      * @param V $value
-     * @param Dichotomy<V>|null $dichotomy
      *
      * @return self<V>
      */
-    public static function immutable($value, ?Dichotomy $dichotomy = null): self
+    public static function immutable($value): self
     {
-        return new self(true, static fn() => $value, $dichotomy);
+        return new self(true, static fn() => $value, null);
     }
 
     /**
      * @template V
      *
      * @param callable(): V $unwrap
-     * @param Dichotomy<V>|null $dichotomy
      *
      * @return self<V>
      */
-    public static function mutable(callable $unwrap, ?Dichotomy $dichotomy = null): self
+    public static function mutable(callable $unwrap): self
     {
-        return new self(false, $unwrap, $dichotomy);
+        return new self(false, \Closure::fromCallable($unwrap), null);
+    }
+
+    /**
+     * @param ?Dichotomy<T> $dichotomy
+     *
+     * @return self<T>
+     */
+    public function shrinkWith(?Dichotomy $dichotomy): self
+    {
+        return new self(
+            $this->immutable,
+            $this->unwrap,
+            $dichotomy,
+        );
     }
 
     public function isImmutable(): bool

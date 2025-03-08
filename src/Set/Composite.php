@@ -201,29 +201,25 @@ final class Composite implements Implementation
             }
 
             if ($combination->immutable() && $this->immutable) {
-                yield Value::immutable(
-                    $value,
-                    Composite\RecursiveNthShrink::of(
+                yield Value::immutable($value)
+                    ->shrinkWith(Composite\RecursiveNthShrink::of(
                         false,
                         $this->predicate,
                         $this->aggregate,
                         $combination,
-                    ),
-                );
+                    ));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                yield Value::mutable(
-                    fn() => $combination->detonate($this->aggregate),
-                    Composite\RecursiveNthShrink::of(
+                yield Value::mutable(fn() => $combination->detonate($this->aggregate))
+                    ->shrinkWith(Composite\RecursiveNthShrink::of(
                         true,
                         $this->predicate,
                         $this->aggregate,
                         $combination,
-                    ),
-                );
+                    ));
             }
 
             ++$iterations;

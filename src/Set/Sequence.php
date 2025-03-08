@@ -146,23 +146,19 @@ final class Sequence implements Implementation
                 }
 
                 if ($immutable) {
-                    yield Value::immutable(
-                        Sequence\Detonate::of($values),
-                        Sequence\RecursiveHalf::of(
+                    yield Value::immutable(Sequence\Detonate::of($values))
+                        ->shrinkWith(Sequence\RecursiveHalf::of(
                             false,
                             $this->predicate,
                             $values,
-                        ),
-                    );
+                        ));
                 } else {
-                    yield Value::mutable(
-                        static fn() => Sequence\Detonate::of($values),
-                        Sequence\RecursiveHalf::of(
+                    yield Value::mutable(static fn() => Sequence\Detonate::of($values))
+                        ->shrinkWith(Sequence\RecursiveHalf::of(
                             true,
                             $this->predicate,
                             $values,
-                        ),
-                    );
+                        ));
                 }
 
                 ++$yielded;

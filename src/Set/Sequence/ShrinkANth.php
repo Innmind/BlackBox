@@ -49,14 +49,10 @@ final class ShrinkANth
         }
 
         return match ($mutable) {
-            true => static fn() => Value::mutable(
-                static fn() => Detonate::of($shrunk),
-                RecursiveNthShrink::of($mutable, $predicate, $shrunk, $n),
-            ),
-            false => static fn() => Value::immutable(
-                Detonate::of($shrunk),
-                RecursiveNthShrink::of($mutable, $predicate, $shrunk, $n),
-            ),
+            true => static fn() => Value::mutable(static fn() => Detonate::of($shrunk))
+                ->shrinkWith(RecursiveNthShrink::of($mutable, $predicate, $shrunk, $n)),
+            false => static fn() => Value::immutable(Detonate::of($shrunk))
+                ->shrinkWith(RecursiveNthShrink::of($mutable, $predicate, $shrunk, $n)),
         };
     }
 }

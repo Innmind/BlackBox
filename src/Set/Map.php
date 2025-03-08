@@ -106,19 +106,15 @@ final class Map implements Implementation
             if ($value->isImmutable() && $this->immutable) {
                 $mapped = ($this->map)($value->unwrap());
 
-                yield Value::immutable(
-                    $mapped,
-                    $this->shrink(false, $value),
-                );
+                yield Value::immutable($mapped)
+                    ->shrinkWith($this->shrink(false, $value));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
-                yield Value::mutable(
-                    fn() => ($this->map)($value->unwrap()),
-                    $this->shrink(true, $value),
-                );
+                yield Value::mutable(fn() => ($this->map)($value->unwrap()))
+                    ->shrinkWith($this->shrink(true, $value));
             }
         }
     }
@@ -150,15 +146,11 @@ final class Map implements Implementation
     private function shrinkWithStrategy(bool $mutable, Value $strategy): callable
     {
         if ($mutable) {
-            return fn(): Value => Value::mutable(
-                fn() => ($this->map)($strategy->unwrap()),
-                $this->shrink(true, $strategy),
-            );
+            return fn(): Value => Value::mutable(fn() => ($this->map)($strategy->unwrap()))
+                ->shrinkWith($this->shrink(true, $strategy));
         }
 
-        return fn(): Value => Value::immutable(
-            ($this->map)($strategy->unwrap()),
-            $this->shrink(false, $strategy),
-        );
+        return fn(): Value => Value::immutable(($this->map)($strategy->unwrap()))
+            ->shrinkWith($this->shrink(false, $strategy));
     }
 }

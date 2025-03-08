@@ -47,14 +47,10 @@ final class RemoveNth
         }
 
         return match ($mutable) {
-            true => static fn() => Value::mutable(
-                static fn() => Detonate::of($shrunk),
-                RecursiveNth::of($mutable, $predicate, $shrunk, $n),
-            ),
-            false => static fn() => Value::immutable(
-                Detonate::of($shrunk),
-                RecursiveNth::of($mutable, $predicate, $shrunk, $n),
-            ),
+            true => static fn() => Value::mutable(static fn() => Detonate::of($shrunk))
+                ->shrinkWith(RecursiveNth::of($mutable, $predicate, $shrunk, $n)),
+            false => static fn() => Value::immutable(Detonate::of($shrunk))
+                ->shrinkWith(RecursiveNth::of($mutable, $predicate, $shrunk, $n)),
         };
     }
 }

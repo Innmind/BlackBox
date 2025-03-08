@@ -172,7 +172,8 @@ final class Integers implements Implementation
                 continue;
             }
 
-            yield Value::immutable($value, $this->shrink($value));
+            yield Value::immutable($value)
+                ->shrinkWith($this->shrink($value));
             ++$iterations;
         }
     }
@@ -203,7 +204,8 @@ final class Integers implements Implementation
             return $this->reduceByOne($value);
         }
 
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+        return fn(): Value => Value::immutable($shrinked)
+            ->shrinkWith($this->shrink($shrinked));
     }
 
     /**
@@ -219,7 +221,8 @@ final class Integers implements Implementation
             return $this->identity($value);
         }
 
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
+        return fn(): Value => Value::immutable($shrinked)
+            ->shrinkWith($this->shrink($shrinked));
     }
 
     /**
