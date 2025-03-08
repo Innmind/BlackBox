@@ -9,19 +9,28 @@ namespace Innmind\BlackBox\Set;
  */
 final class Dichotomy
 {
-    /** @var \Closure(): Value<T> */
-    private \Closure $a;
-    /** @var \Closure(): Value<T> */
-    private \Closure $b;
+    /**
+     * @param \Closure(): Value<T> $a
+     * @param \Closure(): Value<T> $b
+     */
+    private function __construct(
+        private \Closure $a,
+        private \Closure $b,
+    ) {
+    }
 
     /**
-     * @param callable(): Value<T> $a
-     * @param callable(): Value<T> $b
+     * @internal
+     * @template A
+     *
+     * @param callable(): Value<A> $a
+     * @param callable(): Value<A> $b
+     *
+     * @return self<A>
      */
-    public function __construct(callable $a, callable $b)
+    public static function of(callable $a, callable $b)
     {
-        $this->a = \Closure::fromCallable($a);
-        $this->b = \Closure::fromCallable($b);
+        return new self(\Closure::fromCallable($a), \Closure::fromCallable($b));
     }
 
     /**

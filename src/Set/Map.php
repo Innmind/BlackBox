@@ -132,7 +132,7 @@ final class Map implements Implementation
 
         $shrinked = $value->shrink();
 
-        return new Dichotomy(
+        return Dichotomy::of(
             $this->shrinkWithStrategy($mutable, $shrinked->a()),
             $this->shrinkWithStrategy($mutable, $shrinked->b()),
         );

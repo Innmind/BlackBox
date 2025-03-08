@@ -32,7 +32,7 @@ class DichotomyTest extends TestCase
                 $expectedA = Value::immutable($a);
                 $expectedB = Value::immutable($b);
 
-                $dichotomy = new Dichotomy(
+                $dichotomy = Dichotomy::of(
                     static fn() => $expectedA,
                     static fn() => $expectedB,
                 );

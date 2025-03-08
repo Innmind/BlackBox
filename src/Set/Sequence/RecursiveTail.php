@@ -35,7 +35,7 @@ final class RecursiveTail
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             RemoveTail::of($mutable, $predicate, $sequence),
             RemoveHead::of($mutable, $predicate, $sequence),
         );

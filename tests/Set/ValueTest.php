@@ -37,11 +37,11 @@ class ValueTest extends TestCase
         $this->assertFalse(Value::immutable(new \stdClass)->shrinkable());
         $this->assertFalse(Value::mutable(static fn() => new \stdClass)->shrinkable());
 
-        $immutable = Value::immutable(new \stdClass)->shrinkWith(new Dichotomy(
+        $immutable = Value::immutable(new \stdClass)->shrinkWith(Dichotomy::of(
             static fn() => Value::immutable(new \stdClass),
             static fn() => Value::immutable(new \stdClass),
         ));
-        $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith(new Dichotomy(
+        $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith(Dichotomy::of(
             static fn() => Value::mutable(static fn() => new \stdClass),
             static fn() => Value::mutable(static fn() => new \stdClass),
         ));
@@ -52,11 +52,11 @@ class ValueTest extends TestCase
 
     public function testShrinkReturnTheGivenDichotomy()
     {
-        $immutable = Value::immutable(new \stdClass)->shrinkWith($expectedImmutable = new Dichotomy(
+        $immutable = Value::immutable(new \stdClass)->shrinkWith($expectedImmutable = Dichotomy::of(
             static fn() => Value::immutable(new \stdClass),
             static fn() => Value::immutable(new \stdClass),
         ));
-        $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith($expectedMutable = new Dichotomy(
+        $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith($expectedMutable = Dichotomy::of(
             static fn() => Value::mutable(static fn() => new \stdClass),
             static fn() => Value::mutable(static fn() => new \stdClass),
         ));

@@ -35,7 +35,7 @@ final class RecursiveNthShrink
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             ShrinkANth::of($mutable, $predicate, $aggregate, $combination, $n),
             ShrinkANth::of($mutable, $predicate, $aggregate, $combination, $n + 1),
         );

@@ -182,7 +182,7 @@ final class RealNumbers implements Implementation
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             $this->divideByTwo($value),
             $this->reduceByOne($value),
         );

@@ -35,7 +35,7 @@ final class RecursiveHead
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             RemoveHead::of($mutable, $predicate, $sequence),
             RemoveNth::of($mutable, $predicate, $sequence),
         );

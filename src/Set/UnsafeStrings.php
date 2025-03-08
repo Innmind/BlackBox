@@ -143,7 +143,7 @@ final class UnsafeStrings implements Implementation
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             $this->removeTrailingCharacter($value),
             $this->removeLeadingCharacter($value),
         );

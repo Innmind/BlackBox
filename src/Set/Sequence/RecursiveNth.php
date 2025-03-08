@@ -37,7 +37,7 @@ final class RecursiveNth
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             RemoveNth::of($mutable, $predicate, $sequence, $n),
             RemoveNth::of($mutable, $predicate, $sequence, $n + 1),
         );
