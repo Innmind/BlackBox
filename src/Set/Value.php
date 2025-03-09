@@ -169,7 +169,7 @@ final class Value
 
     public function shrinkable(): bool
     {
-        return $this->dichotomy instanceof Dichotomy || ($this->seed?->shrinkable() === true);
+        return $this->dichotomy instanceof Dichotomy || ($this->seed?->shrinkable($this->predicate) === true);
     }
 
     /**
@@ -180,7 +180,7 @@ final class Value
     public function shrink(): Dichotomy
     {
         /** @psalm-suppress NullableReturnStatement */
-        return $this->dichotomy ?? $this->seed?->shrink();
+        return $this->dichotomy ?? $this->seed?->shrink($this->predicate);
     }
 
     /**

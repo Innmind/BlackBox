@@ -18,10 +18,12 @@ final class Map implements Implementation
      *
      * @param \Closure(I): (Seed<D>|D) $map
      * @param Implementation<I> $set
+     * @param \Closure(D): bool $predicate
      */
     private function __construct(
         private \Closure $map,
         private Implementation $set,
+        private \Closure $predicate,
         private bool $immutable,
     ) {
     }
@@ -43,7 +45,12 @@ final class Map implements Implementation
         Implementation $set,
         bool $immutable,
     ): self {
-        return new self(\Closure::fromCallable($map), $set, $immutable);
+        return new self(
+            \Closure::fromCallable($map),
+            $set,
+            static fn() => true,
+            $immutable,
+        );
     }
 
     /**
@@ -55,6 +62,7 @@ final class Map implements Implementation
         return new self(
             $this->map,
             $this->set->take($size),
+            $this->predicate,
             $this->immutable,
         );
     }
@@ -66,6 +74,7 @@ final class Map implements Implementation
     public function filter(callable $predicate): self
     {
         $map = $this->map;
+        $previous = $this->predicate;
 
         /** @psalm-suppress MixedArgument */
         return new self(
@@ -80,6 +89,7 @@ final class Map implements Implementation
 
                 return $predicate($mapped);
             }),
+            static fn($value) => $previous($value) && $predicate($value),
             $this->immutable,
         );
     }
@@ -92,6 +102,7 @@ final class Map implements Implementation
                 $mapped = ($this->map)($value->unwrap());
 
                 yield Value::immutable($mapped)
+                    ->predicatedOn($this->predicate)
                     ->shrinkWith($this->shrink(false, $value));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
@@ -99,6 +110,7 @@ final class Map implements Implementation
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 yield Value::mutable(fn() => ($this->map)($value->unwrap()))
+                    ->predicatedOn($this->predicate)
                     ->shrinkWith($this->shrink(true, $value));
             }
         }
@@ -132,10 +144,12 @@ final class Map implements Implementation
     {
         if ($mutable) {
             return fn(): Value => Value::mutable(fn() => ($this->map)($strategy->unwrap()))
+                ->predicatedOn($this->predicate)
                 ->shrinkWith($this->shrink(true, $strategy));
         }
 
         return fn(): Value => Value::immutable(($this->map)($strategy->unwrap()))
+            ->predicatedOn($this->predicate)
             ->shrinkWith($this->shrink(false, $strategy));
     }
 }

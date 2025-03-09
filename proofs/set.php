@@ -309,4 +309,37 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap()->map()->filter() on composed seeds',
+        static function($assert) {
+            $compose = Set::integers()->flatMap(
+                static fn($seedA) => Set::integers()->flatMap(
+                    static fn($seedB) => Set::strings()
+                        ->map(static fn($string) => $seedA->flatMap(
+                            static fn($a) => $seedB->map(
+                                static fn($b) => $a.$string.$b,
+                            ),
+                        ))
+                        ->filter(static fn($string) => $string !== '00'),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert
+                    ->array(['0-1', '-10', '01', '10'])
+                    ->contains($value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };

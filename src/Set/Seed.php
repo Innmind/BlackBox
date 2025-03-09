@@ -60,20 +60,28 @@ final class Seed
 
     /**
      * @internal
+     * @psalm-mutation-free
+     *
+     * @param \Closure(T): bool $predicate
      */
-    public function shrinkable(): bool
+    public function shrinkable(\Closure $predicate): bool
     {
-        return $this->implementation->shrinkable();
+        /** @psalm-suppress ImpureMethodCall */
+        return $this->implementation->shrinkable($predicate);
     }
 
     /**
      * @internal
+     * @psalm-mutation-free
+     *
+     * @param \Closure(T): bool $predicate
      *
      * @return Dichotomy<T>
      */
-    public function shrink(): Dichotomy
+    public function shrink(\Closure $predicate): Dichotomy
     {
-        return $this->implementation->shrink();
+        /** @psalm-suppress ImpureMethodCall */
+        return $this->implementation->shrink($predicate);
     }
 
     /**

@@ -71,21 +71,29 @@ final class FlatMap
         return new self($this, \Closure::fromCallable($map));
     }
 
-    public function shrinkable(): bool
+    /**
+     * @psalm-mutation-free
+     *
+     * @param \Closure(T): bool $predicate
+     */
+    public function shrinkable(\Closure $predicate): bool
     {
-        return $this->previous->shrinkable() || $this->collapse()->shrinkable();
+        /** @psalm-suppress ImpureMethodCall */
+        return $this->previous->shrinkable($predicate) || $this->collapse()->shrinkable($predicate);
     }
 
     /**
+     * @param \Closure(T): bool $predicate
+     *
      * @return Dichotomy<T>
      */
-    public function shrink(): Dichotomy
+    public function shrink(\Closure $predicate): Dichotomy
     {
-        if ($this->previous->shrinkable()) {
-            return $this->previousShrink();
+        if ($this->previous->shrinkable($predicate)) {
+            return $this->previousShrink($predicate);
         }
 
-        return $this->collapse()->shrink();
+        return $this->collapse()->shrink($predicate);
     }
 
     /**
@@ -105,11 +113,13 @@ final class FlatMap
     }
 
     /**
+     * @param \Closure(T): bool $predicate
+     *
      * @return Dichotomy<T>
      */
-    private function previousShrink(): Dichotomy
+    private function previousShrink(\Closure $predicate): Dichotomy
     {
-        $shrunk = $this->previous->shrink();
+        $shrunk = $this->previous->shrink($predicate);
 
         $a = $shrunk->a();
         $b = $shrunk->b();
@@ -122,12 +132,12 @@ final class FlatMap
                 Seed::of($a)->flatMap($map),
                 // No dichotomy because the captured values in the configure
                 // lambda is shrunk first
-            ),
+            )->predicatedOn($predicate),
             static fn() => Value::immutable(
                 Seed::of($b)->flatMap($map),
                 // No dichotomy because the captured values in the configure
                 // lambda is shrunk first
-            ),
+            )->predicatedOn($predicate),
         );
     }
 }

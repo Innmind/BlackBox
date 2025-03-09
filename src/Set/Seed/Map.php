@@ -72,15 +72,31 @@ final class Map
         return FlatMap::of($this, $map);
     }
 
-    public function shrinkable(): bool
+    /**
+     * @param \Closure(T): bool $predicate
+     */
+    public function shrinkable(\Closure $predicate): bool
     {
-        return $this->value->shrinkable();
+        if (!$this->value->shrinkable()) {
+            return false;
+        }
+
+        $shrunk = $this->value->shrink();
+
+        $a = Value::immutable(Seed::of($shrunk->a())->map($this->map))
+            ->predicatedOn($predicate);
+        $b = Value::immutable(Seed::of($shrunk->b())->map($this->map))
+            ->predicatedOn($predicate);
+
+        return $a->acceptable() && $b->acceptable();
     }
 
     /**
+     * @param \Closure(T): bool $predicate
+     *
      * @return Dichotomy<T>
      */
-    public function shrink(): Dichotomy
+    public function shrink(\Closure $predicate): Dichotomy
     {
         $shrunk = $this->value->shrink();
 
@@ -95,12 +111,12 @@ final class Map
                 Seed::of($a)->map($map),
                 // No dichotomy because the captured values in the configure
                 // lambda is shrunk first
-            ),
+            )->predicatedOn($predicate),
             static fn() => Value::immutable(
                 Seed::of($b)->map($map),
                 // No dichotomy because the captured values in the configure
                 // lambda is shrunk first
-            ),
+            )->predicatedOn($predicate),
         );
     }
 
