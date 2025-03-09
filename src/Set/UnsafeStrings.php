@@ -108,7 +108,7 @@ final class UnsafeStrings implements Implementation
             $value = Value::immutable($values[$index])
                 ->predicatedOn($this->predicate);
 
-            yield $value->shrinkWith($this->shrink($value));
+            yield $value->shrinkWith(self::shrink($value));
             ++$iterations;
         }
     }
@@ -118,15 +118,15 @@ final class UnsafeStrings implements Implementation
      *
      * @return Dichotomy<string>|null
      */
-    private function shrink(Value $value): ?Dichotomy
+    private static function shrink(Value $value): ?Dichotomy
     {
         if ($value->unwrap() === '') {
             return null;
         }
 
         return new Dichotomy(
-            $this->removeTrailingCharacter($value),
-            $this->removeLeadingCharacter($value),
+            self::removeTrailingCharacter($value),
+            self::removeLeadingCharacter($value),
         );
     }
 
@@ -135,7 +135,7 @@ final class UnsafeStrings implements Implementation
      *
      * @return callable(): Value<string>
      */
-    private function removeTrailingCharacter(Value $value): callable
+    private static function removeTrailingCharacter(Value $value): callable
     {
         $shrunk = $value->map(static fn($string) => \mb_substr(
             $string,
@@ -148,7 +148,7 @@ final class UnsafeStrings implements Implementation
             return static fn() => $value->withoutShrinking();
         }
 
-        return fn(): Value => $shrunk->shrinkWith($this->shrink($shrunk));
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 
     /**
@@ -156,7 +156,7 @@ final class UnsafeStrings implements Implementation
      *
      * @return callable(): Value<string>
      */
-    private function removeLeadingCharacter(Value $value): callable
+    private static function removeLeadingCharacter(Value $value): callable
     {
         $shrunk = $value->map(static fn($string) => \mb_substr(
             $string,
@@ -169,6 +169,6 @@ final class UnsafeStrings implements Implementation
             return static fn() => $value->withoutShrinking();
         }
 
-        return fn(): Value => $shrunk->shrinkWith($this->shrink($shrunk));
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }
