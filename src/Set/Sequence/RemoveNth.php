@@ -14,53 +14,37 @@ final class RemoveNth
      * @internal
      * @template A
      *
-     * @param callable(list<A>): bool $predicate
-     * @param list<Value<A>> $sequence
+     * @param Value<list<Value<A>>> $value
      * @param positive-int $n
      *
      * @return callable(): Value<list<A>>
      */
-    public static function of(
-        bool $mutable,
-        callable $predicate,
-        array $sequence,
-        int $n = 1,
-    ): callable {
-        if (!\array_key_exists($n, $sequence)) {
-            return ShrinkANth::of($mutable, $predicate, $sequence);
+    public static function of(Value $value, int $n = 1): callable
+    {
+        if (!\array_key_exists($n, $value->unwrap())) {
+            return ShrinkANth::of($value);
         }
 
-        $shrunk = [];
+        $shrunk = $value->map(static function($sequence) use ($n) {
+            $shrunk = [];
 
-        foreach ($sequence as $i => $value) {
-            if ($i !== $n) {
-                $shrunk[] = $value;
+            foreach ($sequence as $i => $value) {
+                if ($i !== $n) {
+                    $shrunk[] = $value;
+                }
             }
+
+            return $shrunk;
+        });
+        $detonated = $shrunk->map(Detonate::of(...));
+
+        if (!$detonated->acceptable()) {
+            return ShrinkANth::of($value);
         }
 
-        if (!$predicate(Detonate::of($shrunk))) {
-            return ShrinkANth::of(
-                $mutable,
-                $predicate,
-                $sequence,
-            );
-        }
-
-        return match ($mutable) {
-            true => static fn() => Value::mutable(static fn() => Detonate::of($shrunk))
-                ->shrinkWith(RecursiveNth::of(
-                    $mutable,
-                    $predicate,
-                    $shrunk,
-                    $n,
-                )),
-            false => static fn() => Value::immutable(Detonate::of($shrunk))
-                ->shrinkWith(RecursiveNth::of(
-                    $mutable,
-                    $predicate,
-                    $shrunk,
-                    $n,
-                )),
-        };
+        return static fn() => $detonated->shrinkWith(RecursiveNth::of(
+            $shrunk,
+            $n,
+        ));
     }
 }

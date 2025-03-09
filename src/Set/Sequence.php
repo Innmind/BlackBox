@@ -118,26 +118,18 @@ final class Sequence implements Implementation
 
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
+                $value = match ($immutable) {
+                    true => Value::immutable($values),
+                    false => Value::mutable(static fn() => $values),
+                };
+                $value = $value->predicatedOn($this->predicate);
+                $yieldable = $value->map(Sequence\Detonate::of(...));
 
-                if (!($this->predicate)(Sequence\Detonate::of($values))) {
+                if (!$yieldable->acceptable()) {
                     continue;
                 }
 
-                if ($immutable) {
-                    yield Value::immutable(Sequence\Detonate::of($values))
-                        ->shrinkWith(Sequence\RecursiveHalf::of(
-                            false,
-                            $this->predicate,
-                            $values,
-                        ));
-                } else {
-                    yield Value::mutable(static fn() => Sequence\Detonate::of($values))
-                        ->shrinkWith(Sequence\RecursiveHalf::of(
-                            true,
-                            $this->predicate,
-                            $values,
-                        ));
-                }
+                yield $yieldable->shrinkWith(Sequence\RecursiveHalf::of($value));
 
                 ++$yielded;
             }

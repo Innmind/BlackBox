@@ -14,40 +14,24 @@ final class RemoveTail
      * @internal
      * @template A
      *
-     * @param callable(list<A>): bool $predicate
-     * @param list<Value<A>> $sequence
+     * @param Value<list<Value<A>>> $value
      *
      * @return callable(): Value<list<A>>
      */
-    public static function of(
-        bool $mutable,
-        callable $predicate,
-        array $sequence,
-    ): callable {
-        $shrunk = $sequence;
-        \array_pop($shrunk);
+    public static function of(Value $value): callable
+    {
+        $shrunk = $value->map(static function($sequence) {
+            $shrunk = $sequence;
+            \array_pop($shrunk);
 
-        if (!$predicate(Detonate::of($shrunk))) {
-            return RemoveHead::of(
-                $mutable,
-                $predicate,
-                $sequence,
-            );
+            return $shrunk;
+        });
+        $detonated = $shrunk->map(Detonate::of(...));
+
+        if (!$detonated->acceptable()) {
+            return RemoveHead::of($value);
         }
 
-        return match ($mutable) {
-            true => static fn() => Value::mutable(static fn() => Detonate::of($shrunk))
-                ->shrinkWith(RecursiveTail::of(
-                    $mutable,
-                    $predicate,
-                    $shrunk,
-                )),
-            false => static fn() => Value::immutable(Detonate::of($shrunk))
-                ->shrinkWith(RecursiveTail::of(
-                    $mutable,
-                    $predicate,
-                    $shrunk,
-                )),
-        };
+        return static fn() => $detonated->shrinkWith(RecursiveTail::of($shrunk));
     }
 }

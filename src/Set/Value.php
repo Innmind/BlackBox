@@ -111,26 +111,35 @@ final class Value
 
     /**
      * @psalm-mutation-free
+     * @template V
      *
-     * @param callable(T): T $map
+     * @param callable(T): V $map
      *
-     * @return self<T>
+     * @return self<V>
      */
     public function map(callable $map): self
     {
-        $unwrap = $this->unwrap;
+        $previous = $this->unwrap;
+        $unwrap = static function() use ($map, $previous): mixed {
+            $value = $previous();
+
+            if ($value instanceof Seed) {
+                return $value->map($map);
+            }
+
+            return $map($value);
+        };
+
+        // avoid recomputing the map operation on each unwrap
+        if ($this->immutable) {
+            /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
+            $value = $unwrap();
+            $unwrap = static fn(): mixed => $value;
+        }
 
         return new self(
             $this->immutable,
-            static function() use ($map, $unwrap) {
-                $value = $unwrap();
-
-                if ($value instanceof Seed) {
-                    return $value->map($map);
-                }
-
-                return $map($value);
-            },
+            $unwrap,
             null,
             $this->predicate,
         );
