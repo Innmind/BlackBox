@@ -105,20 +105,22 @@ final class UnsafeStrings implements Implementation
 
         while ($iterations < $this->size) {
             $index = $random->between(0, $size);
-            $value = $values[$index];
+            $value = Value::immutable($values[$index])
+                ->predicatedOn($this->predicate);
 
-            yield Value::immutable($value)
-                ->shrinkWith($this->shrink($value));
+            yield $value->shrinkWith($this->shrink($value));
             ++$iterations;
         }
     }
 
     /**
+     * @param Value<string> $value
+     *
      * @return Dichotomy<string>|null
      */
-    private function shrink(string $value): ?Dichotomy
+    private function shrink(Value $value): ?Dichotomy
     {
-        if ($value === '') {
+        if ($value->unwrap() === '') {
             return null;
         }
 
@@ -129,42 +131,44 @@ final class UnsafeStrings implements Implementation
     }
 
     /**
-     * @return callable(): Value<string>
-     */
-    private function removeTrailingCharacter(string $value): callable
-    {
-        $shrinked = \mb_substr($value, 0, -1, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked)
-            ->shrinkWith($this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<string>
-     */
-    private function removeLeadingCharacter(string $value): callable
-    {
-        $shrinked = \mb_substr($value, 1, null, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked)
-            ->shrinkWith($this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     * @param Value<string> $value
      *
      * @return callable(): Value<string>
      */
-    private function identity(string $value): callable
+    private function removeTrailingCharacter(Value $value): callable
     {
-        return static fn(): Value => Value::immutable($value);
+        $shrunk = $value->map(static fn($string) => \mb_substr(
+            $string,
+            0,
+            -1,
+            'ASCII',
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return fn(): Value => $shrunk->shrinkWith($this->shrink($shrunk));
+    }
+
+    /**
+     * @param Value<string> $value
+     *
+     * @return callable(): Value<string>
+     */
+    private function removeLeadingCharacter(Value $value): callable
+    {
+        $shrunk = $value->map(static fn($string) => \mb_substr(
+            $string,
+            1,
+            null,
+            'ASCII',
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return fn(): Value => $shrunk->shrinkWith($this->shrink($shrunk));
     }
 }
