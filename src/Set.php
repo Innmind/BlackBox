@@ -459,7 +459,11 @@ final class Set
      */
     public function map(callable $map): self
     {
-        return new self($this->implementation->map($map));
+        return new self(Set\Map::implementation(
+            $map,
+            $this->implementation,
+            true,
+        ));
     }
 
     /**
@@ -480,9 +484,10 @@ final class Set
      */
     public function flatMap(callable $map): self
     {
-        return new self($this->implementation->flatMap(
-            $map,
-            static fn(self|Provider $set) => Collapse::of($set)->implementation,
+        /** @psalm-suppress InvalidArgument */
+        return new self(Set\FlatMap::implementation(
+            static fn($input) => Collapse::of($map($input))->implementation,
+            $this->implementation,
         ));
     }
 

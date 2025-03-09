@@ -131,31 +131,6 @@ final class RealNumbers implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, true);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        /**
-         * @psalm-suppress MixedArgumentTypeCoercion
-         * @psalm-suppress InvalidArgument
-         */
-        return FlatMap::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
-        );
-    }
-
     #[\Override]
     public function values(Random $random): \Generator
     {
