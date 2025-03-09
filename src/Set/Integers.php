@@ -146,70 +146,69 @@ final class Integers implements Implementation
 
         while ($iterations < $this->size) {
             $value = $random->between($this->min, $this->max);
+            $value = Value::immutable($value)
+                ->predicatedOn($this->predicate);
 
-            if (!($this->predicate)($value)) {
+            if (!$value->acceptable()) {
                 continue;
             }
 
-            yield Value::immutable($value)->shrinkWith($this->shrink($value));
+            yield $value->shrinkWith(self::shrink($value));
             ++$iterations;
         }
     }
 
     /**
+     * @param Value<int> $value
+     *
      * @return Dichotomy<int>|null
      */
-    private function shrink(int $value): ?Dichotomy
+    private static function shrink(Value $value): ?Dichotomy
     {
-        if ($value === 0) {
+        if ($value->unwrap() === 0) {
             return null;
         }
 
         return new Dichotomy(
-            $this->divideByTwo($value),
-            $this->reduceByOne($value),
+            self::divideByTwo($value),
+            self::reduceByOne($value),
         );
     }
 
     /**
-     * @return callable(): Value<int>
-     */
-    private function divideByTwo(int $value): callable
-    {
-        $shrinked = (int) \round($value / 2, 0, \PHP_ROUND_HALF_DOWN);
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->reduceByOne($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked)
-            ->shrinkWith($this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<int>
-     */
-    private function reduceByOne(int $value): callable
-    {
-        // add one when the value is negative, otherwise subtract one
-        $reduce = ($value <=> 0) * -1;
-        $shrinked = $value + $reduce;
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked)
-            ->shrinkWith($this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     * @param Value<int> $value
      *
      * @return callable(): Value<int>
      */
-    private function identity(int $value): callable
+    private static function divideByTwo(Value $value): callable
     {
-        return static fn(): Value => Value::immutable($value);
+        $shrunk = $value->map(static fn($int) => (int) \round(
+            $int / 2,
+            0,
+            \PHP_ROUND_HALF_DOWN,
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return self::reduceByOne($value);
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+    }
+
+    /**
+     * @param Value<int> $value
+     *
+     * @return callable(): Value<int>
+     */
+    private static function reduceByOne(Value $value): callable
+    {
+        // add one when the value is negative, otherwise subtract one
+        $shrunk = $value->map(static fn($int) => $int + (($int <=> 0) * -1));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }
