@@ -131,7 +131,7 @@ final class Elements implements Implementation
             /** @var mixed */
             $value = $elements[$index];
 
-            yield Value::immutable($value);
+            yield Value::immutable($value)->predicatedOn($this->predicate);
             ++$iterations;
         }
     }
