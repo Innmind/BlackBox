@@ -140,8 +140,8 @@ final class FromGenerator implements Implementation
 
             if (($this->predicate)($t)) {
                 yield match ($this->immutable) {
-                    true => Value::immutable($value),
-                    false => Value::mutable(static fn() => $value),
+                    true => Value::immutable($value)->predicatedOn($this->predicate),
+                    false => Value::mutable(static fn() => $value)->predicatedOn($this->predicate),
                 };
 
                 ++$iterations;
