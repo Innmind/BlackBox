@@ -113,7 +113,7 @@ final class Value
      * @psalm-mutation-free
      * @template V
      *
-     * @param callable(T): V $map
+     * @param callable(T): (V|Seed<V>) $map
      *
      * @return self<V>
      */
@@ -124,7 +124,16 @@ final class Value
             $value = $previous();
 
             if ($value instanceof Seed) {
-                return $value->map($map);
+                return $value->flatMap(static function($value) use ($map) {
+                    /** @var T $value */
+                    $mapped = $map($value);
+
+                    if ($mapped instanceof Seed) {
+                        return $mapped;
+                    }
+
+                    return Seed::of(Value::immutable($mapped));
+                });
             }
 
             return $map($value);
