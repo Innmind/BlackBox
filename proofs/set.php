@@ -328,7 +328,10 @@ return static function() {
             // The calls to unwrap below are here to simulate the fact that a
             // value is first unwrapped to be tested before eventually being
             // shrunk in case of a test failure.
-            foreach ($compose->values(Random::default) as $value) {
+            // The take(10) is here to speed things up as the default would need
+            // to shrink 300 values (both ints and the string) to their minimum
+            // values. It would take almost a minute.
+            foreach ($compose->take(10)->values(Random::default) as $value) {
                 $value->unwrap();
 
                 while ($value->shrinkable()) {
