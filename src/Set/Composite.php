@@ -166,46 +166,32 @@ final class Composite implements Implementation
     public function values(Random $random): \Generator
     {
         $matrix = $this->matrix()->values($random);
+        $aggregate = $this->aggregate;
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
             /** @var Composite\Combination */
             $combination = $matrix->current();
-            $value = $combination->detonate($this->aggregate);
+            $immutable = $combination->immutable() && $this->immutable;
             $matrix->next();
 
-            $t = $value;
+            $value = match ($immutable) {
+                true => Value::immutable($combination),
+                false => Value::mutable(static fn() => $combination),
+            };
+            $value = $value->predicatedOn($this->predicate);
+            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
 
-            if ($t instanceof Seed) {
-                /** @var C */
-                $t = $t->unwrap();
-            }
-
-            if (!($this->predicate)($t)) {
+            if (!$mapped->acceptable()) {
                 continue;
             }
 
-            if ($combination->immutable() && $this->immutable) {
-                yield Value::immutable($value)
-                    ->shrinkWith(Composite\RecursiveNthShrink::of(
-                        false,
-                        $this->predicate,
-                        $this->aggregate,
-                        $combination,
-                    ));
-            } else {
-                // we don't need to re-apply the predicate when we handle mutable
-                // data as the underlying data is already validated and the mutable
-                // nature is about the enclosing of the data and should not be part
-                // of the filtering process
-                yield Value::mutable(fn() => $combination->detonate($this->aggregate))
-                    ->shrinkWith(Composite\RecursiveNthShrink::of(
-                        true,
-                        $this->predicate,
-                        $this->aggregate,
-                        $combination,
-                    ));
-            }
+            yield $mapped->shrinkWith(Composite\RecursiveNthShrink::of(
+                !$immutable,
+                $this->predicate,
+                $this->aggregate,
+                $combination,
+            ));
 
             ++$iterations;
         }
