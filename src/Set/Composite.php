@@ -187,10 +187,8 @@ final class Composite implements Implementation
             }
 
             yield $mapped->shrinkWith(Composite\RecursiveNthShrink::of(
-                !$immutable,
-                $this->predicate,
                 $this->aggregate,
-                $combination,
+                $value,
             ));
 
             ++$iterations;

@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Composite;
 use Innmind\BlackBox\Set\{
     Dichotomy,
     Seed,
+    Value,
 };
 
 /**
@@ -17,37 +18,36 @@ final class RecursiveNthShrink
      * @internal
      * @template A
      *
-     * @param callable(A): bool $predicate
      * @param callable(mixed...): (A|Seed<A>) $aggregate
+     * @param Value<Combination> $value
      * @param 0|positive-int $n
      *
      * @return ?Dichotomy<A>
      */
     public static function of(
-        bool $mutable,
-        callable $predicate,
         callable $aggregate,
-        Combination $combination,
+        Value $value,
         int $n = 0,
     ): ?Dichotomy {
-        $value = $combination->detonate($aggregate);
+        $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
+        $combination = $value->unwrap();
 
-        if ($value instanceof Seed) {
-            /** @var A */
-            $value = $value->unwrap();
-        }
-
-        if (!$predicate($value)) {
+        if (!$mapped->acceptable()) {
             return null;
         }
 
+        // There's no need to check if the mapped value is shrinkable because
+        // either the detonated value is not seeded and the only criteria
+        // determining if it's shrinkable comes from the combination. Or the
+        // detonated value is seeded but then the shrinking of the seed will
+        // happen inside the Value class itself.
         if (!$combination->shrinkable()) {
             return null;
         }
 
         return new Dichotomy(
-            ShrinkANth::of($mutable, $predicate, $aggregate, $combination, $n),
-            ShrinkANth::of($mutable, $predicate, $aggregate, $combination, $n + 1),
+            ShrinkANth::of($aggregate, $value, $n),
+            ShrinkANth::of($aggregate, $value, $n + 1),
         );
     }
 }
