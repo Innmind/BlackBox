@@ -200,6 +200,11 @@ final class Value
     {
         $value = ($this->unwrap)();
 
+        // This is not ideal to hide the seeded value this way and to hijack
+        // the shrinking system in self::shrinkable() and self::shrink() as it
+        // complexifies the understanding of what's happening. Because now the
+        // filtering can happen in 2 places.
+        // Until a better idea comes along, this will stay this way.
         if ($value instanceof Seed) {
             $this->seed = $value;
             /** @var T */
