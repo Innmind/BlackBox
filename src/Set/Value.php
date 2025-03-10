@@ -65,6 +65,8 @@ final class Value
     }
 
     /**
+     * @internal
+     *
      * @param ?Dichotomy<T> $dichotomy
      *
      * @return self<T>
@@ -80,6 +82,8 @@ final class Value
     }
 
     /**
+     * @internal
+     *
      * @return self<T>
      */
     public function withoutShrinking(): self
@@ -93,6 +97,7 @@ final class Value
     }
 
     /**
+     * @internal
      * @psalm-mutation-free
      *
      * @param callable(mixed): bool $predicate
@@ -110,6 +115,7 @@ final class Value
     }
 
     /**
+     * @internal
      * @psalm-mutation-free
      * @template V
      *
@@ -154,12 +160,16 @@ final class Value
         );
     }
 
+    /**
+     * @internal
+     */
     public function acceptable(): bool
     {
         return ($this->predicate)($this->unwrap());
     }
 
     /**
+     * @internal
      * @psalm-mutation-free
      */
     public function isImmutable(): bool
