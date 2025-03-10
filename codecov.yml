@@ -2,3 +2,4 @@ ignore:
     - 'blackbox.php'
     - 'BlackBox.php'
     - '.php-cs-fixer.dist.php'
+    - 'src/Set/unsafeStrings.json'
