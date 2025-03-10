@@ -345,4 +345,37 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::compose() should shrink seeded values and apply filters',
+        static function($assert) {
+            $compose = Set::strings()->madeOf(Set::of('a'))->flatMap(
+                static fn($seed) => Set::compose(
+                    static fn($a, $b) => $seed->map(
+                        static fn($string) => $a.'|'.$string.'|'.$b,
+                    ),
+                    Set::integers()->above(0), // to simplify the assertion
+                    Set::integers()->above(0),
+                )->filter(static fn($string) => $string !== '0||0'),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            // The take(10) is here to speed things up as the default would need
+            // to shrink 300 values (both ints and the string) to their minimum
+            // values. It would take almost a minute.
+            foreach ($compose->take(10)->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                // The integers are shrunk first, so it should always be this value
+                $assert->same('0|a|0', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };

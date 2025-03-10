@@ -70,6 +70,7 @@ final class ShrinkBNth
 
         return match ($mutable) {
             true => static fn() => Value::mutable(static fn() => $shrunk->detonate($aggregate))
+                ->predicatedOn($predicate)
                 ->shrinkWith(RecursiveNthShrink::of(
                     $mutable,
                     $predicate,
@@ -78,6 +79,7 @@ final class ShrinkBNth
                     $n,
                 )),
             false => static fn() => Value::immutable($shrunk->detonate($aggregate))
+                ->predicatedOn($predicate)
                 ->shrinkWith(RecursiveNthShrink::of(
                     $mutable,
                     $predicate,
