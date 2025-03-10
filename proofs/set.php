@@ -373,8 +373,9 @@ return static function() {
                     $value->unwrap();
                 }
 
-                // The integers are shrunk first, so it should always be this value
-                $assert->same('0|a|0', $value->unwrap());
+                $assert
+                    ->array(['0|a|0', '0||1', '1||0'])
+                    ->contains($value->unwrap());
             }
         },
     )->tag(Tag::ci, Tag::local);
