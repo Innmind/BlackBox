@@ -10,84 +10,89 @@ use Innmind\BlackBox\{
 };
 
 /**
- * This set can only contain immutable values as they're generated outside of the
- * class, so it can't be re-generated on the fly
- *
+ * @internal
  * @template T
- * @implements Set<T>
+ * @implements Implementation<T>
  */
-final class FromGenerator implements Set
+final class FromGenerator implements Implementation
 {
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(Random): \Generator<T> */
-    private \Closure $generatorFactory;
-    /** @var \Closure(T): bool */
-    private \Closure $predicate;
-    private bool $immutable;
-
     /**
      * @psalm-mutation-free
      *
-     * @param callable(Random): \Generator<T> $generatorFactory
-     * @param positive-int $size
+     * @param \Closure(Random): \Generator<T|Seed<T>> $generatorFactory
      * @param \Closure(T): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        callable $generatorFactory,
-        int $size,
-        \Closure $predicate,
-        bool $immutable,
+        private \Closure $generatorFactory,
+        private \Closure $predicate,
+        private int $size,
+        private bool $immutable,
     ) {
-        $this->generatorFactory = \Closure::fromCallable($generatorFactory);
-        $this->size = $size;
-        $this->predicate = $predicate;
-        $this->immutable = $immutable;
     }
 
     /**
+     * @internal
+     * @psalm-pure
+     *
      * @template V
      *
-     * @param callable(Random): \Generator<V> $generatorFactory
+     * @param callable(Random): \Generator<V|Seed<V>> $generatorFactory
      *
      * @return self<V>
      */
-    public static function of(callable $generatorFactory): self
-    {
+    public static function implementation(
+        callable $generatorFactory,
+        bool $immutable,
+    ): self {
         return new self(
-            self::guard($generatorFactory),
-            100,
+            \Closure::fromCallable($generatorFactory),
             static fn(): bool => true,
-            true,
+            100,
+            $immutable,
         );
     }
 
     /**
+     * @deprecated Use Set::generator()->immutable() instead
      * @template V
      *
      * @param callable(Random): \Generator<V> $generatorFactory
      *
-     * @return self<V>
+     * @return Set<V>
      */
-    public static function mutable(callable $generatorFactory): self
+    public static function of(callable $generatorFactory): Set
     {
-        return new self(
-            self::guard($generatorFactory),
-            100,
-            static fn(): bool => true,
-            false,
-        );
+        return Set::generator(self::guard($generatorFactory))
+            ->immutable()
+            ->toSet();
+    }
+
+    /**
+     * @deprecated Use Set::generator()->mutable() instead
+     * @template V
+     *
+     * @param callable(Random): \Generator<V> $generatorFactory
+     *
+     * @return Set<V>
+     */
+    public static function mutable(callable $generatorFactory): Set
+    {
+        return Set::generator(self::guard($generatorFactory))
+            ->mutable()
+            ->toSet();
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function take(int $size): Set
+    #[\Override]
+    public function take(int $size): self
     {
         return new self(
             $this->generatorFactory,
-            $size,
             $this->predicate,
+            $size,
             $this->immutable,
         );
     }
@@ -95,52 +100,36 @@ final class FromGenerator implements Set
     /**
      * @psalm-mutation-free
      */
-    public function filter(callable $predicate): Set
+    #[\Override]
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
         return new self(
             $this->generatorFactory,
+            static fn(mixed $value) => /** @var T $value */ $previous($value) && $predicate($value),
             $this->size,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var T */
-                $value = $value;
-
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
             $this->immutable,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function map(callable $map): Set
-    {
-        return match ($this->immutable) {
-            true => Decorate::immutable($map, $this),
-            false => Decorate::mutable($map, $this),
-        };
-    }
-
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $generator = ($this->generatorFactory)($random);
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {
-            /** @var T */
+            /** @var T|Seed<T> */
             $value = $generator->current();
+            $value = match ($this->immutable) {
+                true => Value::immutable($value),
+                false => Value::mutable(static fn() => $value),
+            };
+            $value = $value->predicatedOn($this->predicate);
 
-            if (($this->predicate)($value)) {
-                yield match ($this->immutable) {
-                    true => Value::immutable($value),
-                    false => Value::mutable(static fn() => $value),
-                };
+            if ($value->acceptable()) {
+                yield $value;
 
                 ++$iterations;
             }

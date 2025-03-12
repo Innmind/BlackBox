@@ -9,148 +9,95 @@ use Innmind\BlackBox\{
 };
 
 /**
- *
+ * @internal
  * @template I
- * @implements Set<list<I>>
+ * @implements Implementation<list<I>>
  */
-final class Sequence implements Set
+final class Sequence implements Implementation
 {
-    /** @var Set<I> */
-    private Set $set;
-    private Integers $sizes;
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(list<I>): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param Set<I> $set
-     * @param positive-int $size
+     * @param Implementation<I> $set
      * @param \Closure(list<I>): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        Set $set,
-        Integers $sizes,
-        ?int $size = null,
-        ?\Closure $predicate = null,
+        private Implementation $set,
+        private Integers $sizes,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->set = $set;
-        $this->sizes = $sizes;
-        $this->size = $size ?? 100;
-        $this->predicate = $predicate ?? static fn(array $sequence): bool => \count($sequence) >= $sizes->lowerBound();
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @template U
      *
-     * @param Set<U> $set
+     * @param Implementation<U> $set
      *
      * @return self<U>
      */
-    public static function of(Set $set): self
-    {
-        return new self($set, Integers::between(0, 100));
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param positive-int $size
-     *
-     * @return Set<list<I>>
-     */
-    public function atLeast(int $size): Set
-    {
+    public static function implementation(
+        Implementation $set,
+        Integers $sizes,
+    ): self {
         return new self(
-            $this->set,
-            Integers::between($size, $size + 100),
-            $this->size,
-            null, // to make sure the lower bound is respected
+            $set,
+            $sizes,
+            static fn(array $sequence): bool => \count($sequence) >= $sizes->min(),
+            100,
         );
     }
 
     /**
-     * @psalm-mutation-free
+     * @deprecated Use Set::sequence() instead
+     * @psalm-pure
      *
-     * @param positive-int $size
+     * @template U
      *
-     * @return Set<list<I>>
+     * @param Set<U>|Provider<U> $set
+     *
+     * @return Provider\Sequence<U>
      */
-    public function atMost(int $size): Set
+    public static function of(Set|Provider $set): Provider\Sequence
     {
-        return new self(
-            $this->set,
-            Integers::between(0, $size),
-            $this->size,
-            null, // to make sure the lower bound is respected
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param 0|positive-int $lower
-     * @param positive-int $upper
-     *
-     * @return Set<list<I>>
-     */
-    public function between(int $lower, int $upper): Set
-    {
-        return new self(
-            $this->set,
-            Integers::between($lower, $upper),
-            $this->size,
-            null, // to make sure the lower bound is respected
-        );
+        return Set::sequence($set);
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function take(int $size): Set
+    #[\Override]
+    public function take(int $size): self
     {
         return new self(
             $this->set,
             $this->sizes->take($size),
-            $size,
             $this->predicate,
+            $size,
         );
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function filter(callable $predicate): Set
+    #[\Override]
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
         return new self(
             $this->set,
             $this->sizes,
+            static fn(array $value) => /** @var list<I> $value */ $previous($value) && $predicate($value),
             $this->size,
-            static function(array $value) use ($previous, $predicate): bool {
-                /** @var list<I> $value */
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function map(callable $map): Set
-    {
-        return Decorate::immutable($map, $this);
-    }
-
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $immutable = $this->set->values($random)->current()?->isImmutable() ?? false;
@@ -164,30 +111,18 @@ final class Sequence implements Set
 
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
+                $value = match ($immutable) {
+                    true => Value::immutable($values),
+                    false => Value::mutable(static fn() => $values),
+                };
+                $value = $value->predicatedOn($this->predicate);
+                $yieldable = $value->map(Sequence\Detonate::of(...));
 
-                if (!($this->predicate)(Sequence\Detonate::of($values))) {
+                if (!$yieldable->acceptable()) {
                     continue;
                 }
 
-                if ($immutable) {
-                    yield Value::immutable(
-                        Sequence\Detonate::of($values),
-                        Sequence\RecursiveHalf::of(
-                            false,
-                            $this->predicate,
-                            $values,
-                        ),
-                    );
-                } else {
-                    yield Value::mutable(
-                        static fn() => Sequence\Detonate::of($values),
-                        Sequence\RecursiveHalf::of(
-                            true,
-                            $this->predicate,
-                            $values,
-                        ),
-                    );
-                }
+                yield $yieldable->shrinkWith(Sequence\RecursiveHalf::of($value));
 
                 ++$yielded;
             }

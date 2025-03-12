@@ -11,75 +11,70 @@ use Innmind\BlackBox\{
 use Innmind\Json\Json;
 
 /**
- * @implements Set<string>
+ * @internal
+ * @implements Implementation<string>
  */
-final class UnsafeStrings implements Set
+final class UnsafeStrings implements Implementation
 {
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(string): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
      * @param \Closure(string): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        int $size,
-        \Closure $predicate,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->size = $size;
-        $this->predicate = $predicate;
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(): self
     {
-        return new self(100, static fn(): bool => true);
+        return new self(static fn(): bool => true, 100);
+    }
+
+    /**
+     * @deprecated Use Set::strings()->unsafe() instead
+     * @psalm-pure
+     *
+     * @return Set<string>
+     */
+    public static function any(): Set
+    {
+        return Set::strings()->unsafe();
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function take(int $size): Set
+    #[\Override]
+    public function take(int $size): self
     {
         return new self(
-            $size,
             $this->predicate,
+            $size,
         );
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function filter(callable $predicate): Set
+    #[\Override]
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
         return new self(
+            static fn(string $value) => $previous($value) && $predicate($value),
             $this->size,
-            static function(string $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function map(callable $map): Set
-    {
-        return Decorate::immutable($map, $this);
-    }
-
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
@@ -104,63 +99,70 @@ final class UnsafeStrings implements Set
 
         while ($iterations < $this->size) {
             $index = $random->between(0, $size);
-            $value = $values[$index];
+            $value = Value::immutable($values[$index])
+                ->predicatedOn($this->predicate);
 
-            yield Value::immutable($value, $this->shrink($value));
+            yield $value->shrinkWith(self::shrink($value));
             ++$iterations;
         }
     }
 
     /**
+     * @param Value<string> $value
+     *
      * @return Dichotomy<string>|null
      */
-    private function shrink(string $value): ?Dichotomy
+    private static function shrink(Value $value): ?Dichotomy
     {
-        if ($value === '') {
+        if ($value->unwrap() === '') {
             return null;
         }
 
         return new Dichotomy(
-            $this->removeTrailingCharacter($value),
-            $this->removeLeadingCharacter($value),
+            self::removeTrailingCharacter($value),
+            self::removeLeadingCharacter($value),
         );
     }
 
     /**
-     * @return callable(): Value<string>
-     */
-    private function removeTrailingCharacter(string $value): callable
-    {
-        $shrinked = \mb_substr($value, 0, -1, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<string>
-     */
-    private function removeLeadingCharacter(string $value): callable
-    {
-        $shrinked = \mb_substr($value, 1, null, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     * @param Value<string> $value
      *
      * @return callable(): Value<string>
      */
-    private function identity(string $value): callable
+    private static function removeTrailingCharacter(Value $value): callable
     {
-        return static fn(): Value => Value::immutable($value);
+        $shrunk = $value->map(static fn($string) => \mb_substr(
+            $string,
+            0,
+            -1,
+            'ASCII',
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+    }
+
+    /**
+     * @param Value<string> $value
+     *
+     * @return callable(): Value<string>
+     */
+    private static function removeLeadingCharacter(Value $value): callable
+    {
+        $shrunk = $value->map(static fn($string) => \mb_substr(
+            $string,
+            1,
+            null,
+            'ASCII',
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }

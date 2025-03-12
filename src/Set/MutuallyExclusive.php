@@ -11,19 +11,19 @@ final class MutuallyExclusive
      * @psalm-pure
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $second
-     * @param Set<string> $rest
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $second
+     * @param Set<string>|Provider<string> $rest
      *
      * @return Set<non-empty-list<string>>
      */
     public static function of(
-        Set $first,
-        Set $second,
-        Set ...$rest,
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$rest,
     ): Set {
         /** @var Set<non-empty-list<string>> */
-        return Tuple::of(
+        return Set::tuple(
             $first,
             $second,
             ...$rest,

@@ -51,7 +51,7 @@ class CompositeTest extends TestCase
     public function testImmutable()
     {
         $this->assertInstanceOf(
-            Composite::class,
+            Set::class,
             Composite::immutable(
                 static function() {},
                 FromGenerator::of(static function() {

@@ -9,109 +9,123 @@ use Innmind\BlackBox\{
 };
 
 /**
- * @implements Set<float>
+ * @internal
+ * @implements Implementation<float>
  */
-final class RealNumbers implements Set
+final class RealNumbers implements Implementation
 {
-    private int $lowerBound;
-    private int $upperBound;
-    /** @var positive-int */
-    private int $size;
-    /** @var \Closure(float): bool */
-    private \Closure $predicate;
-
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
      * @param \Closure(float): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
-        int $lowerBound,
-        int $upperBound,
-        ?int $size = null,
-        ?\Closure $predicate = null,
+        private int $min,
+        private int $max,
+        private \Closure $predicate,
+        private int $size,
     ) {
-        $this->lowerBound = $lowerBound;
-        $this->upperBound = $upperBound;
-        $this->size = $size ?? 100;
-        $this->predicate = $predicate ?? fn(float $value): bool => $value >= $this->lowerBound && $value <= $this->upperBound;
     }
 
     /**
+     * @internal
      * @psalm-pure
      */
-    public static function any(): self
+    public static function implementation(?int $min, ?int $max): self
     {
-        return new self(\PHP_INT_MIN, \PHP_INT_MAX);
+        $min ??= \PHP_INT_MIN;
+        $max ??= \PHP_INT_MAX;
+
+        return new self(
+            $min,
+            $max,
+            static fn(float $value): bool => $value >= $min && $value <= $max,
+            100,
+        );
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function between(int $lowerBound, int $upperBound): self
+    public static function any(): Set
     {
-        return new self($lowerBound, $upperBound);
+        return Set::realNumbers()->toSet();
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function above(int $lowerBound): self
+    public static function between(int $min, int $max): Set
     {
-        return new self($lowerBound, \PHP_INT_MAX);
+        return Set::realNumbers()
+            ->between($min, $max)
+            ->toSet();
     }
 
     /**
+     * @deprecated Use Set::realNumbers() instead
      * @psalm-pure
+     *
+     * @return Set<float>
      */
-    public static function below(int $upperBound): self
+    public static function above(int $min): Set
     {
-        return new self(\PHP_INT_MIN, $upperBound);
+        return Set::realNumbers()
+            ->above($min)
+            ->toSet();
+    }
+
+    /**
+     * @deprecated Use Set::realNumbers() instead
+     * @psalm-pure
+     *
+     * @return Set<float>
+     */
+    public static function below(int $max): Set
+    {
+        return Set::realNumbers()
+            ->below($max)
+            ->toSet();
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function take(int $size): Set
+    #[\Override]
+    public function take(int $size): self
     {
         return new self(
-            $this->lowerBound,
-            $this->upperBound,
-            $size,
+            $this->min,
+            $this->max,
             $this->predicate,
+            $size,
         );
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function filter(callable $predicate): Set
+    #[\Override]
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
 
         return new self(
-            $this->lowerBound,
-            $this->upperBound,
+            $this->min,
+            $this->max,
+            static fn(float $value) => $previous($value) && $predicate($value),
             $this->size,
-            static function(float $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function map(callable $map): Set
-    {
-        return Decorate::immutable($map, $this);
-    }
-
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $iterations = 0;
@@ -119,70 +133,70 @@ final class RealNumbers implements Set
         while ($iterations < $this->size) {
             // simulate the function lcg_value()
             $lcg = ($random->between(0, 100) / 100);
-            /** @var float */
-            $value = $random->between($this->lowerBound, $this->upperBound) * $lcg;
+            /** @psalm-suppress InvalidOperand Don't know why it complains */
+            $value = $random->between($this->min, $this->max) * $lcg;
+            $value = Value::immutable($value)
+                ->predicatedOn($this->predicate);
 
-            if (!($this->predicate)($value)) {
+            if (!$value->acceptable()) {
                 continue;
             }
 
-            yield Value::immutable($value, $this->shrink($value));
+            yield $value->shrinkWith(self::shrink($value));
             ++$iterations;
         }
     }
 
     /**
+     * @param Value<float> $value
+     *
      * @return Dichotomy<float>|null
      */
-    private function shrink(float $value): ?Dichotomy
+    private static function shrink(Value $value): ?Dichotomy
     {
-        if (\round($value, 5) === 0.0) {
+        if (\round($value->unwrap(), 5) === 0.0) {
             return null;
         }
 
         return new Dichotomy(
-            $this->divideByTwo($value),
-            $this->reduceByOne($value),
+            self::divideByTwo($value),
+            self::reduceByOne($value),
         );
     }
 
     /**
-     * @return callable(): Value<float>
-     */
-    private function divideByTwo(float $value): callable
-    {
-        $shrinked = $value / 2;
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->reduceByOne($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<float>
-     */
-    private function reduceByOne(float $value): callable
-    {
-        // add one when the value is negative, otherwise subtract one
-        $reduce = ($value <=> 0) * -1;
-        $shrinked = $value + $reduce;
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     * @param Value<float> $value
      *
      * @return callable(): Value<float>
      */
-    private function identity(float $value): callable
+    private static function divideByTwo(Value $value): callable
     {
-        return static fn(): Value => Value::immutable($value);
+        $shrunk = $value->map(static fn(float $value) => $value / 2.0);
+
+        if (!$shrunk->acceptable()) {
+            return self::reduceByOne($value);
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+    }
+
+    /**
+     * @param Value<float> $value
+     *
+     * @return callable(): Value<float>
+     */
+    private static function reduceByOne(Value $value): callable
+    {
+        // add one when the value is negative, otherwise subtract one
+        /** @psalm-suppress InvalidOperand Don't know why it complains */
+        $shrunk = $value->map(static fn(float $value) => $value + (
+            ($value <=> 0.0) * -1.0
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }

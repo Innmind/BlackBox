@@ -3,27 +3,22 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Set;
 
 /**
- * @implements Set<string>
+ * @implements Provider<string>
  */
-final class MadeOf implements Set
+final class MadeOf implements Provider
 {
-    /** @var Set<string> */
-    private Set $chars;
+    /** @var Set<string>|Provider<string> */
+    private Set|Provider $chars;
 
     /**
      * @psalm-mutation-free
      *
-     * @no-named-arguments
-     *
-     * @param Set<string> $chars
+     * @param Set<string>|Provider<string> $chars
      */
-    private function __construct(Set $chars)
+    private function __construct(Set|Provider $chars)
     {
         $this->chars = $chars;
     }
@@ -33,15 +28,15 @@ final class MadeOf implements Set
      *
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $rest
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $rest
      */
-    public static function of(Set $first, Set ...$rest): self
+    public static function of(Set|Provider $first, Set|Provider ...$rest): self
     {
         $chars = $first;
 
         if (\count($rest) > 0) {
-            $chars = Either::any($first, ...$rest);
+            return new self(Set::either($first, ...$rest));
         }
 
         return new self($chars);
@@ -65,10 +60,11 @@ final class MadeOf implements Set
      *
      * @param positive-int $length
      *
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public function atLeast(int $length): Set
     {
+        /** @var Set<non-empty-string> */
         return $this->build($length, $length + 128);
     }
 
@@ -86,33 +82,65 @@ final class MadeOf implements Set
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<string>
      */
     public function take(int $size): Set
     {
-        return $this->build(0, 128)->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(string): bool $predicate
+     *
+     * @return Set<string>
      */
     public function filter(callable $predicate): Set
     {
-        return $this->build(0, 128)->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(string): (V|Seed<V>) $map
+     *
+     * @return Set<V>
      */
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this);
+        return $this->toSet()->map($map);
     }
 
-    public function values(Random $random): \Generator
+    /**
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Seed<string>): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
+     */
+    public function flatMap(callable $map): Set
     {
-        yield from $this
-            ->build(0, 128)
-            ->values($random);
+        return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<string>
+     */
+    #[\Override]
+    public function toSet(): Set
+    {
+        return $this->build(0, 128);
     }
 
     /**
@@ -125,7 +153,7 @@ final class MadeOf implements Set
      */
     private function build(int $min, int $max): Set
     {
-        return Sequence::of($this->chars)
+        return Set::sequence($this->chars)
             ->between($min, $max)
             ->map(static fn(array $chars) => \implode('', $chars));
     }

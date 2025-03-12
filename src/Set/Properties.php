@@ -4,26 +4,25 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Random,
     Set,
     Property as Concrete,
     Properties as Ensure,
 };
 
 /**
- * @implements Set<Ensure>
+ * @implements Provider<Ensure>
  */
-final class Properties implements Set
+final class Properties implements Provider
 {
-    /** @var Set<Concrete> */
-    private Set $properties;
+    /** @var Set<Concrete>|Provider<Concrete> */
+    private Set|Provider $properties;
 
     /**
      * @psalm-mutation-free
      *
-     * @param Set<Concrete> $properties
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    private function __construct(Set $properties)
+    private function __construct(Set|Provider $properties)
     {
         $this->properties = $properties;
     }
@@ -33,16 +32,16 @@ final class Properties implements Set
      *
      * @no-named-arguments
      *
-     * @param Set<Concrete> $first
-     * @param Set<Concrete> $properties
+     * @param Set<Concrete>|Provider<Concrete> $first
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    public static function any(Set $first, Set ...$properties): self
+    public static function any(Set|Provider $first, Set|Provider ...$properties): self
     {
         if (\count($properties) === 0) {
             return new self($first);
         }
 
-        return new self(Either::any($first, ...$properties));
+        return new self(Set::either($first, ...$properties));
     }
 
     /**
@@ -59,34 +58,65 @@ final class Properties implements Set
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<Ensure>
      */
     public function take(int $size): Set
     {
-        return $this->ensure(100)->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(Ensure): bool $predicate
+     *
+     * @return Set<Ensure>
      */
     public function filter(callable $predicate): Set
     {
-        return $this->ensure(100)->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Ensure): (V|Seed<V>) $map
+     *
+     * @return Set<V>
      */
     public function map(callable $map): Set
     {
-        return Decorate::immutable($map, $this->ensure(100));
+        return $this->toSet()->map($map);
     }
 
     /**
-     * @return \Generator<Value<Ensure>>
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Seed<Ensure>): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
      */
-    public function values(Random $random): \Generator
+    public function flatMap(callable $map): Set
     {
-        yield from $this->ensure(100)->values($random);
+        return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<Ensure>
+     */
+    #[\Override]
+    public function toSet(): Set
+    {
+        return $this->ensure(100);
     }
 
     /**
@@ -99,7 +129,7 @@ final class Properties implements Set
     private function ensure(int $max): Set
     {
         /** @var Set<non-empty-list<Concrete>> */
-        $sequences = Sequence::of($this->properties)->between(1, $max);
+        $sequences = Set::sequence($this->properties)->between(1, $max);
 
         return $sequences->map(
             static fn(array $properties): Ensure => Ensure::of(...$properties),

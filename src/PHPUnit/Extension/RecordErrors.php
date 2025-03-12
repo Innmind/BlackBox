@@ -25,6 +25,7 @@ final class RecordErrors implements ErroredSubscriber
         $this->tests = $tests;
     }
 
+    #[\Override]
     public function notify(Errored $event): void
     {
         $test = $event->test();

@@ -74,6 +74,7 @@ final class Extension implements ExtensionInterface
         self::$instance->scenarii->offsetSet($test, [$callable, $scenario]);
     }
 
+    #[\Override]
     public function bootstrap(Configuration $configuration, Facade $facade, ParameterCollection $parameters): void
     {
         $facade->registerSubscriber($this->selectCurrentTest);

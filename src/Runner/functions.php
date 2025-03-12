@@ -5,6 +5,8 @@ namespace Innmind\BlackBox\Runner;
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
+    Set\Collapse,
     Property,
     Properties,
 };
@@ -40,47 +42,48 @@ function test(string $name, callable $test): Proof
 /**
  * @no-named-arguments
  */
-function given(Set $first, Set ...$rest): Given
+function given(Set|Provider $first, Set|Provider ...$rest): Given
 {
-    /** @var Set<list<mixed>> */
-    $given = $first->map(static fn(mixed $value) => [$value]);
+    $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
 
     if (\count($rest) > 0) {
         /** @var Set<list<mixed>> */
-        $given = Set\Composite::immutable(
+        $given = Set::compose(
             static fn(mixed ...$args) => $args,
             $first,
             ...$rest,
-        );
+        )
+            ->immutable()
+            ->toSet();
     }
 
-    return Given::of(Set\Randomize::of($given));
+    return Given::of($given->randomize());
 }
 
 /**
  * @param class-string<Property> $property
- * @param Set<object> $systemUnderTest
+ * @param Set<object>|Provider<object> $systemUnderTest
  */
 function property(
     string $property,
-    Set $systemUnderTest,
+    Set|Provider $systemUnderTest,
 ): Proof\Property {
-    return Proof\Property::of($property, $systemUnderTest);
+    return Proof\Property::of($property, Collapse::of($systemUnderTest));
 }
 
 /**
  * @param non-empty-string $name
- * @param Set<Properties> $properties
- * @param Set<object> $systemUnderTest
+ * @param Set<Properties>|Provider<Properties> $properties
+ * @param Set<object>|Provider<object> $systemUnderTest
  */
 function properties(
     string $name,
-    Set $properties,
-    Set $systemUnderTest,
+    Set|Provider $properties,
+    Set|Provider $systemUnderTest,
 ): Proof {
     return Proof\Properties::of(
         Proof\Name::of($name),
-        $properties,
-        $systemUnderTest,
+        Collapse::of($properties),
+        Collapse::of($systemUnderTest),
     );
 }

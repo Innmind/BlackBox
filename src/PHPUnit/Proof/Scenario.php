@@ -34,6 +34,7 @@ final class Scenario implements ScenarioInterface
         $this->args = $args;
     }
 
+    #[\Override]
     public function __invoke(Assert $assert): mixed
     {
         try {

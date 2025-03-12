@@ -8,17 +8,28 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     PHPUnit\Framework\TestCase,
 };
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UnicodeTest extends TestCase
 {
     use BlackBox;
 
-    public function testStrings()
+    #[DataProvider('blocks')]
+    public function testBlocks($block)
     {
         $this
-            ->forAll(Unicode::strings())
+            ->forAll($block)
             ->then(function($string) {
                 $this->assertIsString($string);
             });
+    }
+
+    public static function blocks()
+    {
+        $methods = \get_class_methods(Unicode::class);
+
+        foreach ($methods as $method) {
+            yield $method => [Unicode::{$method}()];
+        }
     }
 }

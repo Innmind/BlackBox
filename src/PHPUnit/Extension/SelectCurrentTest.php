@@ -21,6 +21,7 @@ final class SelectCurrentTest implements PreparedSubscriber
         $this->currentTest = $currentTest;
     }
 
+    #[\Override]
     public function notify(Prepared $event): void
     {
         $test = $event->test();

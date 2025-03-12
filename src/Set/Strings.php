@@ -8,63 +8,66 @@ use Innmind\BlackBox\Set;
 final class Strings
 {
     /**
+     * @deprecated Use Set::strings() instead
      * @psalm-pure
      *
      * @return Set<string>
      */
     public static function any(): Set
     {
-        return self::between(0, 128);
+        return Set::strings()->toSet();
     }
 
     /**
+     * @deprecated Use Set::strings()->between() instead
      * @psalm-pure
      *
-     * @param 0|positive-int $minLength
-     * @param positive-int $maxLength
+     * @param 0|positive-int $min
+     * @param positive-int $max
      *
      * @return Set<string>
      */
-    public static function between(int $minLength, int $maxLength): Set
+    public static function between(int $min, int $max): Set
     {
-        return Sequence::of(Chars::any())
-            ->between($minLength, $maxLength)
-            ->map(static fn(array $chars): string => \implode('', $chars));
+        return Set::strings()->between($min, $max);
     }
 
     /**
+     * @deprecated Use Set::strings()->atMost() instead
      * @psalm-pure
      *
-     * @param positive-int $maxLength
+     * @param positive-int $max
      *
      * @return Set<string>
      */
-    public static function atMost(int $maxLength): Set
+    public static function atMost(int $max): Set
     {
-        return self::between(0, $maxLength);
+        return Set::strings()->atMost($max);
     }
 
     /**
+     * @deprecated Use Set::strings()->atLeast() instead
      * @psalm-pure
      *
-     * @param positive-int $minLength
+     * @param positive-int $min
      *
      * @return Set<string>
      */
-    public static function atLeast(int $minLength): Set
+    public static function atLeast(int $min): Set
     {
-        return self::between($minLength, $minLength + 128);
+        return Set::strings()->atLeast($min);
     }
 
     /**
+     * @deprecated Use Set::strings()->madeOf() instead
      * @psalm-pure
      *
      * @no-named-arguments
      *
-     * @param Set<string> $first
-     * @param Set<string> $rest
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $rest
      */
-    public static function madeOf(Set $first, Set ...$rest): MadeOf
+    public static function madeOf(Set|Provider $first, Set|Provider ...$rest): MadeOf
     {
         return MadeOf::of($first, ...$rest);
     }

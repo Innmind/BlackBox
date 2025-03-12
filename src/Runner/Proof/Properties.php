@@ -48,6 +48,7 @@ final class Properties implements Proof
         return new self($name, $properties, $systemUnderTest, []);
     }
 
+    #[\Override]
     public function name(): Name
     {
         return $this->name;
@@ -57,6 +58,7 @@ final class Properties implements Proof
      * @psalm-mutation-free
      * @no-named-arguments
      */
+    #[\Override]
     public function tag(\UnitEnum ...$tags): self
     {
         return new self(
@@ -67,18 +69,22 @@ final class Properties implements Proof
         );
     }
 
+    #[\Override]
     public function tags(): array
     {
         return $this->tags;
     }
 
+    #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
-        return Set\Randomize::of(Set\Composite::immutable(
+        return Set::compose(
             Scenario\Properties::of(...),
             $this->properties,
             $this->systemUnderTest,
-        ))->take($count);
+        )
+            ->immutable()
+            ->take($count)
+            ->randomize();
     }
 }

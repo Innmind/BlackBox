@@ -11,44 +11,62 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @internal
  * @template C
- * @implements Set<C>
+ * @implements Implementation<C>
  */
-final class Composite implements Set
+final class Composite implements Implementation
 {
-    /** @var \Closure(mixed...): C */
-    private \Closure $aggregate;
-    private Set $first;
-    private Set $second;
-    /** @var list<Set> */
-    private array $sets;
-    private ?int $size;
-    /** @var \Closure(C): bool */
-    private \Closure $predicate;
-    private bool $immutable;
-
     /**
      * @psalm-mutation-free
-     * @no-named-arguments
+     *
+     * @param \Closure(mixed...): (C|Seed<C>) $aggregate
+     * @param list<Implementation> $sets
+     * @param \Closure(C): bool $predicate
+     * @param ?int<1, max> $size
      */
     private function __construct(
-        bool $immutable,
-        callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$sets,
+        private \Closure $aggregate,
+        private Implementation $first,
+        private Implementation $second,
+        private array $sets,
+        private \Closure $predicate,
+        private ?int $size,
+        private bool $immutable,
     ) {
-        $this->immutable = $immutable;
-        /** @var \Closure(mixed...): C */
-        $this->aggregate = \Closure::fromCallable($aggregate);
-        $this->size = null; // by default allow all combinations
-        $this->predicate = static fn(): bool => true;
-        $this->first = $first;
-        $this->second = $second;
-        $this->sets = $sets;
     }
 
     /**
+     * @internal
+     * @psalm-pure
+     *
+     * @template T
+     * @no-named-arguments
+     *
+     * @param callable(mixed...): (T|Seed<T>) $aggregate It must be a pure function (no randomness, no side effects)
+     *
+     * @return self<T>
+     */
+    public static function implementation(
+        bool $immutable,
+        callable $aggregate,
+        Implementation $first,
+        Implementation $second,
+        Implementation ...$sets,
+    ): self {
+        return new self(
+            \Closure::fromCallable($aggregate),
+            $first,
+            $second,
+            $sets,
+            static fn(): bool => true,
+            null, // by default allow all combinations
+            $immutable,
+        );
+    }
+
+    /**
+     * @deprecated Use Set::compose()->immutable() instead
      * @psalm-pure
      *
      * @template T
@@ -56,18 +74,21 @@ final class Composite implements Set
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *
-     * @return self<T>
+     * @return Set<T>
      */
     public static function immutable(
         callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$sets,
-    ): self {
-        return new self(true, $aggregate, $first, $second, ...$sets);
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$sets,
+    ): Set {
+        return Set::compose($aggregate, $first, $second, ...$sets)
+            ->immutable()
+            ->toSet();
     }
 
     /**
+     * @deprecated Use Set::compose()->mutable() instead
      * @psalm-pure
      *
      * @template T
@@ -75,28 +96,38 @@ final class Composite implements Set
      *
      * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
      *
-     * @return self<T>
+     * @return Set<T>
      */
     public static function mutable(
         callable $aggregate,
-        Set $first,
-        Set $second,
-        Set ...$sets,
-    ): self {
-        return new self(false, $aggregate, $first, $second, ...$sets);
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$sets,
+    ): Set {
+        return Set::compose($aggregate, $first, $second, ...$sets)
+            ->mutable()
+            ->toSet();
     }
 
     /**
      * @psalm-mutation-free
      *
-     * @return Set<C>
+     * @param int<1, max> $size
+     *
+     * @return self<C>
      */
-    public function take(int $size): Set
+    #[\Override]
+    public function take(int $size): self
     {
-        $self = clone $this;
-        $self->size = $size;
-
-        return $self;
+        return new self(
+            $this->aggregate,
+            $this->first,
+            $this->second,
+            $this->sets,
+            $this->predicate,
+            $size,
+            $this->immutable,
+        );
     }
 
     /**
@@ -104,74 +135,52 @@ final class Composite implements Set
      *
      * @param callable(C): bool $predicate
      *
-     * @return Set<C>
+     * @return self<C>
      */
-    public function filter(callable $predicate): Set
+    #[\Override]
+    public function filter(callable $predicate): self
     {
         $previous = $this->predicate;
-        $self = clone $this;
-        $self->predicate = static function(mixed $value) use ($previous, $predicate): bool {
-            /** @var C */
-            $value = $value;
 
-            if (!$previous($value)) {
-                return false;
-            }
-
-            return $predicate($value);
-        };
-
-        return $self;
+        return new self(
+            $this->aggregate,
+            $this->first,
+            $this->second,
+            $this->sets,
+            static fn(mixed $value) => /** @var C $value */ $previous($value) && $predicate($value),
+            $this->size,
+            $this->immutable,
+        );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function map(callable $map): Set
-    {
-        return Decorate::immutable($map, $this);
-    }
-
+    #[\Override]
     public function values(Random $random): \Generator
     {
         $matrix = $this->matrix()->values($random);
+        $aggregate = $this->aggregate;
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
             /** @var Composite\Combination */
             $combination = $matrix->current();
-            $value = $combination->detonate($this->aggregate);
+            $immutable = $combination->immutable() && $this->immutable;
             $matrix->next();
 
-            if (!($this->predicate)($value)) {
+            $value = match ($immutable) {
+                true => Value::immutable($combination),
+                false => Value::mutable(static fn() => $combination),
+            };
+            $value = $value->predicatedOn($this->predicate);
+            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
+
+            if (!$mapped->acceptable()) {
                 continue;
             }
 
-            if ($combination->immutable() && $this->immutable) {
-                yield Value::immutable(
-                    $value,
-                    Composite\RecursiveNthShrink::of(
-                        false,
-                        $this->predicate,
-                        $this->aggregate,
-                        $combination,
-                    ),
-                );
-            } else {
-                // we don't need to re-apply the predicate when we handle mutable
-                // data as the underlying data is already validated and the mutable
-                // nature is about the enclosing of the data and should not be part
-                // of the filtering process
-                yield Value::mutable(
-                    fn() => $combination->detonate($this->aggregate),
-                    Composite\RecursiveNthShrink::of(
-                        true,
-                        $this->predicate,
-                        $this->aggregate,
-                        $combination,
-                    ),
-                );
-            }
+            yield $mapped->shrinkWith(Composite\RecursiveNthShrink::of(
+                $this->aggregate,
+                $value,
+            ));
 
             ++$iterations;
         }
@@ -191,7 +200,7 @@ final class Composite implements Set
         /** @psalm-suppress PossiblyNullArgument */
         return \array_reduce(
             $sets,
-            static fn(Matrix $matrix, Set $set): Matrix => $matrix->dot($set),
+            static fn(Matrix $matrix, Implementation $set): Matrix => $matrix->dot($set),
             Matrix::of($second, $first),
         );
     }

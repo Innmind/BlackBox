@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Proof as ProofInterface,
     Runner\Proof\Name,
-    Runner\Proof\Scenario,
     Set,
 };
 
@@ -55,6 +54,7 @@ final class Proof implements ProofInterface
         return new self($class, $method, null, $args, []);
     }
 
+    #[\Override]
     public function name(): Name
     {
         return Name::of(\sprintf(
@@ -83,6 +83,7 @@ final class Proof implements ProofInterface
      * @psalm-mutation-free
      * @no-named-arguments
      */
+    #[\Override]
     public function tag(\UnitEnum ...$tags): self
     {
         return new self(
@@ -94,15 +95,16 @@ final class Proof implements ProofInterface
         );
     }
 
+    #[\Override]
     public function tags(): array
     {
         return $this->tags;
     }
 
+    #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
-        return Set\Elements::of(Proof\Scenario::of(
+        return Set::of(Proof\Scenario::of(
             $this->class,
             $this->method,
             $this->args,

@@ -60,13 +60,14 @@ final class Inline implements Proof
     ): self {
         return new self(
             $name,
-            Given::of(Set\Elements::of([])),
+            Given::of(Set::of([])),
             $test,
             [],
             1,
         );
     }
 
+    #[\Override]
     public function name(): Name
     {
         return $this->name;
@@ -76,6 +77,7 @@ final class Inline implements Proof
      * @psalm-mutation-free
      * @no-named-arguments
      */
+    #[\Override]
     public function tag(\UnitEnum ...$tags): self
     {
         return new self(
@@ -101,15 +103,19 @@ final class Inline implements Proof
         );
     }
 
+    #[\Override]
     public function tags(): array
     {
         return $this->tags;
     }
 
+    #[\Override]
     public function scenarii(int $count): Set
     {
-        /** @var Set<Scenario> */
-        return Set\Randomize::of($this->values->set())
+        return $this
+            ->values
+            ->set()
+            ->randomize()
             ->map(fn(array $args) => Scenario\Inline::of($args, $this->test))
             ->take($this->scenarii ?? $count);
     }

@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Composite;
 
-use Innmind\BlackBox\Set\Value;
+use Innmind\BlackBox\Set\{
+    Value,
+    Seed,
+};
 
 /**
  * @internal
@@ -14,72 +17,51 @@ final class ShrinkBNth
      * @internal
      * @template A
      *
-     * @param callable(A): bool $predicate
-     * @param callable(mixed...): A $aggregate
+     * @param callable(mixed...): (A|Seed<A>) $aggregate
+     * @param Value<Combination> $value
      * @param 0|positive-int $n
      *
      * @return callable(): Value<A>
      */
     public static function of(
-        bool $mutable,
-        callable $predicate,
         callable $aggregate,
-        Combination $combination,
+        Value $value,
         int $n = 0,
     ): callable {
+        $combination = $value->unwrap();
         $values = $combination->values();
 
         if (!\array_key_exists($n, $values)) {
-            return Identity::of(
-                $mutable,
-                $aggregate,
-                $combination,
-            );
+            return static fn() => $value
+                ->map(static fn($combination) => $combination->detonate($aggregate))
+                ->withoutShrinking();
         }
 
         if (!$values[$n]->shrinkable()) {
             return self::of(
-                $mutable,
-                $predicate,
                 $aggregate,
-                $combination,
+                $value,
                 $n + 1,
             );
         }
 
-        $shrunk = $combination->bShrinkNth($n);
+        $shrunk = $value->map(static fn($combination) => $combination->bShrinkNth($n));
+        $mapped = $shrunk->map(
+            static fn($combination) => $combination->detonate($aggregate),
+        );
 
-        if (!$predicate($shrunk->detonate($aggregate))) {
+        if (!$mapped->acceptable()) {
             return self::of(
-                $mutable,
-                $predicate,
                 $aggregate,
-                $combination,
+                $value,
                 $n + 1,
             );
         }
 
-        return match ($mutable) {
-            true => static fn() => Value::mutable(
-                static fn() => $shrunk->detonate($aggregate),
-                RecursiveNthShrink::of(
-                    $mutable,
-                    $predicate,
-                    $aggregate,
-                    $shrunk,
-                    $n,
-                ),
-            ),
-            false => static fn() => Value::immutable(
-                $shrunk->detonate($aggregate),
-                RecursiveNthShrink::of(
-                    $mutable,
-                    $predicate,
-                    $aggregate,
-                    $shrunk,
-                    $n,
-                ),
-            ),
-        };
+        return static fn() => $mapped->shrinkWith(RecursiveNthShrink::of(
+            $aggregate,
+            $shrunk,
+            $n,
+        ));
     }
 }

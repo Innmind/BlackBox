@@ -49,6 +49,7 @@ final class Standard implements Proof
         return new self($withColors, $addMarks, $addGroups);
     }
 
+    #[\Override]
     public function emptySet(IO $output, IO $error): void
     {
         $error("No scenario found\n");
@@ -58,18 +59,21 @@ final class Standard implements Proof
         }
     }
 
+    #[\Override]
     public function success(IO $output, IO $error): void
     {
         $this->newLine($output);
         $output('.');
     }
 
+    #[\Override]
     public function shrunk(IO $output, IO $error): void
     {
         $this->newLine($output);
         $output('S');
     }
 
+    #[\Override]
     public function failed(IO $output, IO $error, Failure $failure): void
     {
         $this->newLine($output);
@@ -139,6 +143,7 @@ final class Standard implements Proof
         }
     }
 
+    #[\Override]
     public function end(IO $output, IO $error): void
     {
         $output("\n\n");

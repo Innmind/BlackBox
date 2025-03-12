@@ -8,12 +8,13 @@ use Innmind\BlackBox\Set;
 final class IntegersExceptZero
 {
     /**
+     * @deprecated Use Set::integers()->exceptZero() instead
      * @psalm-pure
      *
      * @return Set<int>
      */
     public static function any(): Set
     {
-        return Integers::any()->filter(static fn(int $value): bool => $value !== 0);
+        return Set::integers()->exceptZero();
     }
 }

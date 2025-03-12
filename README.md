@@ -27,8 +27,8 @@ Application::new([])
         yield proof(
             'add is commutative',
             given(
-                Set\Integers::any(),
-                Set\Integers::any(),
+                Set::integers(),
+                Set::integers(),
             ),
             static fn(Assert $assert, int $a, int $b) => $assert->same(
                 add($a, $b),
@@ -38,9 +38,9 @@ Application::new([])
         yield proof(
             'add is associative',
             given(
-                Set\Integers::any(),
-                Set\Integers::any(),
-                Set\Integers::any(),
+                Set::integers(),
+                Set::integers(),
+                Set::integers(),
             ),
             static fn(Assert $assert, int $a, int $b, int $c) => $assert->same(
                 add(add($a, $b), $c),
@@ -49,7 +49,7 @@ Application::new([])
         );
         yield proof(
             'add is an identity function',
-            given(Set\Integers::any()),
+            given(Set::integers()),
             static fn(Assert $assert, int $a) => $assert->same(
                 $a,
                 add($a, 0),

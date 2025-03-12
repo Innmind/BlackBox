@@ -5,14 +5,13 @@ namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
     Set,
-    Random,
     Util\Slice as Util,
 };
 
 /**
- * @implements Set<Util>
+ * @implements Provider<Util>
  */
-final class Slice implements Set
+final class Slice implements Provider
 {
     /** @var 0|positive-int */
     private int $min;
@@ -70,31 +69,54 @@ final class Slice implements Set
 
     /**
      * @psalm-mutation-free
+     *
+     * @param positive-int $size
+     *
+     * @return Set<Util>
      */
     public function take(int $size): Set
     {
-        return $this->collapse()->take($size);
+        return $this->toSet()->take($size);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(Util): bool $predicate
+     *
+     * @return Set<Util>
      */
     public function filter(callable $predicate): Set
     {
-        return $this->collapse()->filter($predicate);
+        return $this->toSet()->filter($predicate);
     }
 
     /**
      * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Util): (V|Seed<V>) $map
+     *
+     * @return Set<V>
      */
     public function map(callable $map): Set
     {
-        return $this->collapse()->map($map);
+        return $this->toSet()->map($map);
     }
 
-    public function values(Random $random): \Generator
+    /**
+     * @psalm-mutation-free
+     *
+     * @template V
+     *
+     * @param callable(Seed<Util>): (Set<V>|Provider<V>) $map
+     *
+     * @return Set<V>
+     */
+    public function flatMap(callable $map): Set
     {
-        yield from $this->collapse()->values($random);
+        return $this->toSet()->flatMap($map);
     }
 
     /**
@@ -102,14 +124,17 @@ final class Slice implements Set
      *
      * @return Set<Util>
      */
-    private function collapse(): Set
+    #[\Override]
+    public function toSet(): Set
     {
-        return Composite::immutable(
+        return Set::compose(
             Util::of(...),
-            Integers::between($this->min, $this->max),
-            Integers::between($this->atLeast, $this->max - $this->min),
-            Elements::of($this->atLeast),
-            Elements::of(true, false),
-        );
+            Set::integers()->between($this->min, $this->max),
+            Set::integers()->between($this->atLeast, $this->max - $this->min),
+            Set::of($this->atLeast),
+            Set::of(true, false),
+        )
+            ->immutable()
+            ->toSet();
     }
 }

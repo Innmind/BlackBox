@@ -17,14 +17,14 @@ class MatrixTest extends TestCase
     public function testInterface()
     {
         $matrix = new Matrix(
-            FromGenerator::of(static function() {
+            FromGenerator::implementation(static function() {
                 yield 'a';
                 yield 'b';
-            }),
-            FromGenerator::of(static function() {
+            }, true),
+            FromGenerator::implementation(static function() {
                 yield Combination::startWith(Value::immutable('c'));
                 yield Combination::startWith(Value::immutable('d'));
-            }),
+            }, true),
         );
 
         $this->assertSame(
@@ -41,19 +41,19 @@ class MatrixTest extends TestCase
     public function testDot()
     {
         $matrix = new Matrix(
-            FromGenerator::of(static function() {
+            FromGenerator::implementation(static function() {
                 yield 'a';
                 yield 'b';
-            }),
-            FromGenerator::of(static function() {
+            }, true),
+            FromGenerator::implementation(static function() {
                 yield Combination::startWith(Value::immutable('c'));
                 yield Combination::startWith(Value::immutable('d'));
-            }),
+            }, true),
         );
-        $matrix2 = $matrix->dot(FromGenerator::of(static function() {
+        $matrix2 = $matrix->dot(FromGenerator::implementation(static function() {
             yield 'e';
             yield 'f';
-        }));
+        }, true));
 
         $this->assertInstanceOf(Matrix::class, $matrix2);
         $this->assertNotSame($matrix, $matrix2);

@@ -56,6 +56,7 @@ final class Standard implements Printer
         );
     }
 
+    #[\Override]
     public function start(IO $output, IO $error): void
     {
         $this->timer->start();
@@ -63,6 +64,7 @@ final class Standard implements Printer
         $output("BlackBox\n");
     }
 
+    #[\Override]
     public function proof(
         IO $output,
         IO $error,
@@ -94,6 +96,7 @@ final class Standard implements Printer
         );
     }
 
+    #[\Override]
     public function end(IO $output, IO $error, Stats $stats): void
     {
         $statsToPrint = \sprintf(

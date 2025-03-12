@@ -47,7 +47,7 @@ class EitherTest extends TestCase
         $either2 = $either1->take(50);
 
         $this->assertNotSame($either1, $either2);
-        $this->assertInstanceOf(Either::class, $either2);
+        $this->assertInstanceOf(Set::class, $either2);
         $this->assertCount(100, $this->unwrap($either1->values(Random::mersenneTwister)));
         $this->assertCount(50, $this->unwrap($either2->values(Random::mersenneTwister)));
     }
@@ -65,7 +65,7 @@ class EitherTest extends TestCase
         });
 
         $this->assertNotSame($either, $either2);
-        $this->assertInstanceOf(Either::class, $either2);
+        $this->assertInstanceOf(Set::class, $either2);
 
         $this->assertSame([1], \array_unique($this->unwrap($either2->values(Random::mersenneTwister))));
         $unique = \array_unique($this->unwrap($either->values(Random::mersenneTwister)));
