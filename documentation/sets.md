@@ -115,7 +115,7 @@ But say that now you want multiple values instead of a single one. With `flatMap
 As you can see with `flatMap` you can locally define what you want without having to change the `Set` you rely on. Unlike the alternative where you need to change the initial `Set` and thus impacting any other `Set` that could depend on it.
 
 ??? warning "Shrinking"
-    The value passed as argument to the `flatMap` callable won't be [shrunk](preface/terminology.mq#shrinking). This means that the more you compose your `Set`s via `flatMap` the less values BlackBox will be able to shrink.
+    The value passed as argument to the `flatMap` callable won't be [shrunk](preface/terminology.md#shrinking). This means that the more you compose your `Set`s via `flatMap` the less values BlackBox will be able to shrink.
 
 ??? warning "Randomness"
     By default the `Set` returned by `flatMap` will produce values with the same _seed_ (the callable argument).
