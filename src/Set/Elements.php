@@ -99,14 +99,7 @@ final class Elements implements Implementation
         return new self(
             $this->first,
             $this->elements,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var T|U $value */
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(mixed $value) => /** @var T|U $value */ $previous($value) && $predicate($value),
             $this->size,
         );
     }

@@ -147,16 +147,7 @@ final class Composite implements Implementation
             $this->first,
             $this->second,
             $this->sets,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var C */
-                $value = $value;
-
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(mixed $value) => /** @var C $value */ $previous($value) && $predicate($value),
             $this->size,
             $this->immutable,
         );

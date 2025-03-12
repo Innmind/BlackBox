@@ -92,14 +92,7 @@ final class Sequence implements Implementation
         return new self(
             $this->set,
             $this->sizes,
-            static function(array $value) use ($previous, $predicate): bool {
-                /** @var list<I> $value */
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(array $value) => /** @var list<I> $value */ $previous($value) && $predicate($value),
             $this->size,
         );
     }

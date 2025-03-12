@@ -107,16 +107,7 @@ final class FromGenerator implements Implementation
 
         return new self(
             $this->generatorFactory,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var T */
-                $value = $value;
-
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(mixed $value) => /** @var T $value */ $previous($value) && $predicate($value),
             $this->size,
             $this->immutable,
         );

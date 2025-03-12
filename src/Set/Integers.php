@@ -128,13 +128,7 @@ final class Integers implements Implementation
         return new self(
             $this->min,
             $this->max,
-            static function(int $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(int $value) => $previous($value) && $predicate($value),
             $this->size,
         );
     }

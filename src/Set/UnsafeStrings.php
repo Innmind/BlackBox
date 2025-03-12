@@ -69,13 +69,7 @@ final class UnsafeStrings implements Implementation
         $previous = $this->predicate;
 
         return new self(
-            static function(string $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(string $value) => $previous($value) && $predicate($value),
             $this->size,
         );
     }

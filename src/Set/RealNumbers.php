@@ -120,13 +120,7 @@ final class RealNumbers implements Implementation
         return new self(
             $this->min,
             $this->max,
-            static function(float $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(float $value) => $previous($value) && $predicate($value),
             $this->size,
         );
     }
