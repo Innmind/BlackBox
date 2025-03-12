@@ -36,7 +36,10 @@ In most cases you'll want to use the [`Set::composite()`](#composite). This meth
 One example is the ability to randomly generate `Set`s with associated data. Let's say you want to randomly generate strings defining types (`int`, `string`, etc...) with an associated `Set` to generate values of this type in order to build an imaginary `Type` class:
 
 ```php
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Set\Seed,
+};
 
 $pairs = Set::of(
     ['int', Set::integers()],
@@ -46,8 +49,8 @@ $pairs = Set::of(
     // etc...
 );
 
-$types = $pairs->flatMap(static function($pair) {
-    [$type, $values] = $pair;
+$types = $pairs->flatMap(static function(Seed $pair) {
+    [$type, $values] = $pair->unwrap();
 
     return $values->map(static fn($value) => new Type($type, $value));
 });
@@ -73,11 +76,14 @@ $types = Set::either(
     });
 ```
 
-But say that now you want multiple values instead of a single one. With `flatMap` it's traightforward, unlike with the other approach.
+But say that now you want multiple values instead of a single one. With `flatMap` it's straightforward, unlike with the other approach.
 
 === "`flatMap`"
-    ```php hl_lines="14"
-    use Innmind\BlackBox\Set;
+    ```php hl_lines="17"
+    use Innmind\BlackBox\{
+        Set,
+        Set\Seed,
+    };
 
     $pairs = Set::of(
         ['int', Set::integers()],
@@ -87,8 +93,8 @@ But say that now you want multiple values instead of a single one. With `flatMap
         // etc...
     );
 
-    $types = $pairs->flatMap(static function($pair) {
-        [$type, $values] = $pair;
+    $types = $pairs->flatMap(static function(Seed $pair) {
+        [$type, $values] = $pair->unwrap();
 
         return Set::sequence($values)->map(
             static fn($value) => new Type($type, $value),
@@ -114,8 +120,33 @@ But say that now you want multiple values instead of a single one. With `flatMap
 
 As you can see with `flatMap` you can locally define what you want without having to change the `Set` you rely on. Unlike the alternative where you need to change the initial `Set` and thus impacting any other `Set` that could depend on it.
 
-??? warning "Shrinking"
-    The value passed as argument to the `flatMap` callable won't be [shrunk](preface/terminology.md#shrinking). This means that the more you compose your `Set`s via `flatMap` the less values BlackBox will be able to shrink.
+??? note "Shrinking"
+    In the examples above the value passed as argument to the `flatMap` callable can't be [shrunk](preface/terminology.md#shrinking). This is because we call `->unwrap()` to acces to the real value behind the `Seed` object.
+
+    When the `Seed` value is unwrapped, BlackBox can no longer track how it's used and thus can no longer shrink it.
+
+    In the examples above the seeded value can't be shrunk anyway because it comes from user provided values via `Set::of()`.
+
+    A simple example to demonstrate the use case is prefixing a `string` with an `int`:
+
+    ```php
+    use Innmind\BlackBox\{
+        Set,
+        Set\Seed,
+    };
+
+    $set = Set::integers()->flatMap(
+        static fn(Seed $int) => Set::strings()->map(
+            static fn(string $string) => $int->map(
+                static fn(int $int) => $int.$string,
+            ),
+        ),
+    );
+    ```
+
+    This way BlackBox knows every transformations of a seeded value and re-apply then after shrinking it.
+
+    And you can also compose multiple `Seed`s via the `Seed::flatMap()` method.
 
 ??? warning "Randomness"
     By default the `Set` returned by `flatMap` will produce values with the same _seed_ (the callable argument).
