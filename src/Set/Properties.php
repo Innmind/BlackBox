@@ -85,7 +85,7 @@ final class Properties implements Provider
      *
      * @template V
      *
-     * @param callable(Ensure): V $map
+     * @param callable(Ensure): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -99,7 +99,7 @@ final class Properties implements Provider
      *
      * @template V
      *
-     * @param callable(Ensure): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<Ensure>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */

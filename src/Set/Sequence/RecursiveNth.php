@@ -17,29 +17,24 @@ final class RecursiveNth
      * @internal
      * @template A
      *
-     * @param callable(list<A>): bool $predicate
-     * @param list<Value<A>> $sequence
+     * @param Value<list<Value<A>>> $value
      * @param positive-int $n
      *
      * @return ?Dichotomy<list<A>>
      */
-    public static function of(
-        bool $mutable,
-        callable $predicate,
-        array $sequence,
-        int $n = 1,
-    ): ?Dichotomy {
-        if (\count($sequence) === 0) {
+    public static function of(Value $value, int $n = 1): ?Dichotomy
+    {
+        if (\count($value->unwrap()) === 0) {
             return null;
         }
 
-        if (!$predicate(Detonate::of($sequence))) {
+        if (!$value->map(Detonate::of(...))->acceptable()) {
             return null;
         }
 
         return new Dichotomy(
-            RemoveNth::of($mutable, $predicate, $sequence, $n),
-            RemoveNth::of($mutable, $predicate, $sequence, $n + 1),
+            RemoveNth::of($value, $n),
+            RemoveNth::of($value, $n + 1),
         );
     }
 }

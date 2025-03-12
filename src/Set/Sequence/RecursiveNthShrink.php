@@ -17,29 +17,24 @@ final class RecursiveNthShrink
      * @internal
      * @template A
      *
-     * @param callable(list<A>): bool $predicate
-     * @param list<Value<A>> $sequence
+     * @param Value<list<Value<A>>> $value
      * @param 0|positive-int $n
      *
      * @return ?Dichotomy<list<A>>
      */
-    public static function of(
-        bool $mutable,
-        callable $predicate,
-        array $sequence,
-        int $n = 0,
-    ): ?Dichotomy {
-        if (\count($sequence) === 0) {
+    public static function of(Value $value, int $n = 0): ?Dichotomy
+    {
+        if (\count($value->unwrap()) === 0) {
             return null;
         }
 
-        if (!$predicate(Detonate::of($sequence))) {
+        if (!$value->map(Detonate::of(...))->acceptable()) {
             return null;
         }
 
         return new Dichotomy(
-            ShrinkANth::of($mutable, $predicate, $sequence, $n),
-            ShrinkANth::of($mutable, $predicate, $sequence, $n + 1),
+            ShrinkANth::of($value, $n),
+            ShrinkANth::of($value, $n + 1),
         );
     }
 }

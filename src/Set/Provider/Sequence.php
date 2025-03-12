@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Provider;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
+    Set\Seed,
     Set\Implementation,
     Set\Integers,
 };
@@ -125,7 +126,7 @@ final class Sequence implements Provider
      *
      * @template U
      *
-     * @param callable(list<V>): U $map
+     * @param callable(list<V>): (U|Seed<U>) $map
      *
      * @return Set<U>
      */
@@ -139,7 +140,7 @@ final class Sequence implements Provider
      *
      * @template U
      *
-     * @param callable(list<V>): (Set<U>|Provider<U>) $map
+     * @param callable(Seed<list<V>>): (Set<U>|Provider<U>) $map
      *
      * @return Set<U>
      */

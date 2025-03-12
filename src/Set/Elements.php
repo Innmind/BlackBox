@@ -99,37 +99,8 @@ final class Elements implements Implementation
         return new self(
             $this->first,
             $this->elements,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var T|U $value */
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(mixed $value) => /** @var T|U $value */ $previous($value) && $predicate($value),
             $this->size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, true);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        /** @psalm-suppress MixedArgument Due to $input */
-        return FlatMap::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
         );
     }
 
@@ -153,7 +124,7 @@ final class Elements implements Implementation
             /** @var mixed */
             $value = $elements[$index];
 
-            yield Value::immutable($value);
+            yield Value::immutable($value)->predicatedOn($this->predicate);
             ++$iterations;
         }
     }

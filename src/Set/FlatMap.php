@@ -19,7 +19,7 @@ final class FlatMap implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(I): Implementation<D> $decorate
+     * @param \Closure(Seed<I>): Implementation<D> $decorate
      * @param Implementation<I> $set
      */
     private function __construct(
@@ -36,7 +36,7 @@ final class FlatMap implements Implementation
      * @template T
      * @template V
      *
-     * @param callable(V): Implementation<T> $decorate It must be a pure function (no randomness, no side effects)
+     * @param callable(Seed<V>): Implementation<T> $decorate It must be a pure function (no randomness, no side effects)
      * @param Implementation<V> $set
      *
      * @return self<T,V>
@@ -80,32 +80,6 @@ final class FlatMap implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation(
-            $map,
-            $this,
-            true,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): self
-    {
-        /** @psalm-suppress MixedArgument Due to $input */
-        return self::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
-        );
-    }
-
     #[\Override]
     public function values(Random $random): \Generator
     {
@@ -115,7 +89,7 @@ final class FlatMap implements Implementation
         // from the underlying set. To generate a more wide range of seeds one
         // can use the ->randomize() method.
         foreach ($this->set->values($random) as $seed) {
-            $set = ($this->decorate)($seed->unwrap());
+            $set = ($this->decorate)(Seed::of($seed));
 
             foreach ($set->values($random) as $value) {
                 yield $value;

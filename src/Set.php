@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set\Implementation,
     Set\Provider,
     Set\Value,
+    Set\Seed,
     Set\Collapse,
     Exception\EmptySet,
 };
@@ -70,7 +71,7 @@ final class Set
      * @template A
      * @no-named-arguments
      *
-     * @param callable(mixed...): A $aggregate It must be a pure function (no randomness, no side effects)
+     * @param callable(mixed...): (A|Seed<A>) $aggregate It must be a pure function (no randomness, no side effects)
      *
      * @return Provider\Composite<A>
      */
@@ -138,7 +139,7 @@ final class Set
      * @template A
      * @template B
      *
-     * @param callable(A): B $decorate
+     * @param callable(A): (B|Seed<B>) $decorate
      * @param Set<A>|Provider<A> $set
      *
      * @return self<B>
@@ -169,13 +170,16 @@ final class Set
      *
      * @template V
      *
-     * @param callable(Random): \Generator<V> $factory
+     * @param callable(Random): \Generator<(V|Seed<V>)> $factory
      *
      * @return Provider\Generator<V>
      */
     public static function generator(callable $factory): Provider\Generator
     {
-        /** @psalm-suppress InvalidArgument */
+        /**
+         * @psalm-suppress InvalidArgument
+         * @var Provider\Generator<V> Don't know why it complains
+         */
         return Provider\Generator::of(
             self::build(...),
             $factory,
@@ -242,7 +246,7 @@ final class Set
      *
      * @template A
      *
-     * @param callable(): A $call
+     * @param callable(): (A|Seed<A>) $call
      *
      * @return self<A>
      */
@@ -449,13 +453,17 @@ final class Set
      *
      * @template V
      *
-     * @param callable(T): V $map
+     * @param callable(T): (V|Seed<V>) $map
      *
      * @return self<V>
      */
     public function map(callable $map): self
     {
-        return new self($this->implementation->map($map));
+        return new self(Set\Map::implementation(
+            $map,
+            $this->implementation,
+            true,
+        ));
     }
 
     /**
@@ -470,15 +478,16 @@ final class Set
      *
      * @template V
      *
-     * @param callable(T): (self<V>|Provider<V>) $map
+     * @param callable(Seed<T>): (self<V>|Provider<V>) $map
      *
      * @return self<V>
      */
     public function flatMap(callable $map): self
     {
-        return new self($this->implementation->flatMap(
-            $map,
-            static fn(self|Provider $set) => Collapse::of($set)->implementation,
+        /** @psalm-suppress InvalidArgument */
+        return new self(Set\FlatMap::implementation(
+            static fn($input) => Collapse::of($map($input))->implementation,
+            $this->implementation,
         ));
     }
 

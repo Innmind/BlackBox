@@ -92,37 +92,8 @@ final class Sequence implements Implementation
         return new self(
             $this->set,
             $this->sizes,
-            static function(array $value) use ($previous, $predicate): bool {
-                /** @var list<I> $value */
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(array $value) => /** @var list<I> $value */ $previous($value) && $predicate($value),
             $this->size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, true);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        /** @psalm-suppress MixedArgument Due to $input */
-        return FlatMap::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
         );
     }
 
@@ -140,30 +111,18 @@ final class Sequence implements Implementation
 
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
+                $value = match ($immutable) {
+                    true => Value::immutable($values),
+                    false => Value::mutable(static fn() => $values),
+                };
+                $value = $value->predicatedOn($this->predicate);
+                $yieldable = $value->map(Sequence\Detonate::of(...));
 
-                if (!($this->predicate)(Sequence\Detonate::of($values))) {
+                if (!$yieldable->acceptable()) {
                     continue;
                 }
 
-                if ($immutable) {
-                    yield Value::immutable(
-                        Sequence\Detonate::of($values),
-                        Sequence\RecursiveHalf::of(
-                            false,
-                            $this->predicate,
-                            $values,
-                        ),
-                    );
-                } else {
-                    yield Value::mutable(
-                        static fn() => Sequence\Detonate::of($values),
-                        Sequence\RecursiveHalf::of(
-                            true,
-                            $this->predicate,
-                            $values,
-                        ),
-                    );
-                }
+                yield $yieldable->shrinkWith(Sequence\RecursiveHalf::of($value));
 
                 ++$yielded;
             }

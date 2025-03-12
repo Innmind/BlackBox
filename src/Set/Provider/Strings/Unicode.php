@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Provider\Strings;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
+    Set\Seed,
     Set\MadeOf,
 };
 
@@ -2890,7 +2891,7 @@ final class Unicode implements Provider
      *
      * @template V
      *
-     * @param callable(string): V $map
+     * @param callable(string): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -2904,7 +2905,7 @@ final class Unicode implements Provider
      *
      * @template V
      *
-     * @param callable(string): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<string>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */

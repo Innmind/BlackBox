@@ -69,35 +69,8 @@ final class UnsafeStrings implements Implementation
         $previous = $this->predicate;
 
         return new self(
-            static function(string $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(string $value) => $previous($value) && $predicate($value),
             $this->size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, true);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        return FlatMap::implementation(
-            static fn(string $input) => $extract($map($input)),
-            $this,
         );
     }
 
@@ -126,63 +99,70 @@ final class UnsafeStrings implements Implementation
 
         while ($iterations < $this->size) {
             $index = $random->between(0, $size);
-            $value = $values[$index];
+            $value = Value::immutable($values[$index])
+                ->predicatedOn($this->predicate);
 
-            yield Value::immutable($value, $this->shrink($value));
+            yield $value->shrinkWith(self::shrink($value));
             ++$iterations;
         }
     }
 
     /**
+     * @param Value<string> $value
+     *
      * @return Dichotomy<string>|null
      */
-    private function shrink(string $value): ?Dichotomy
+    private static function shrink(Value $value): ?Dichotomy
     {
-        if ($value === '') {
+        if ($value->unwrap() === '') {
             return null;
         }
 
         return new Dichotomy(
-            $this->removeTrailingCharacter($value),
-            $this->removeLeadingCharacter($value),
+            self::removeTrailingCharacter($value),
+            self::removeLeadingCharacter($value),
         );
     }
 
     /**
-     * @return callable(): Value<string>
-     */
-    private function removeTrailingCharacter(string $value): callable
-    {
-        $shrinked = \mb_substr($value, 0, -1, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<string>
-     */
-    private function removeLeadingCharacter(string $value): callable
-    {
-        $shrinked = \mb_substr($value, 1, null, 'ASCII');
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     * @param Value<string> $value
      *
      * @return callable(): Value<string>
      */
-    private function identity(string $value): callable
+    private static function removeTrailingCharacter(Value $value): callable
     {
-        return static fn(): Value => Value::immutable($value);
+        $shrunk = $value->map(static fn($string) => \mb_substr(
+            $string,
+            0,
+            -1,
+            'ASCII',
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+    }
+
+    /**
+     * @param Value<string> $value
+     *
+     * @return callable(): Value<string>
+     */
+    private static function removeLeadingCharacter(Value $value): callable
+    {
+        $shrunk = $value->map(static fn($string) => \mb_substr(
+            $string,
+            1,
+            null,
+            'ASCII',
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }

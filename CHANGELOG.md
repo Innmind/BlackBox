@@ -6,6 +6,8 @@
 
 - `Innmind\BlackBox\Set\Provider` to allow classes to be factories of `Set`s without having to implement the `Set` interface
 - Support for PHPUnit `12`
+- `Innmind\BlackBox\Set::flatMap()` and `Innmind\BlackBox\Set\Seed`
+- Callables for `Set::map()`, `Set\Composite`, `Set\Decorate`, `Set\FromGenerator` and `Set\Call` can now also return `Seed`ed values
 
 ### Changed
 
@@ -13,6 +15,7 @@
 - `Innmind\BlackBox\Set` is now a `final class`
 - All classes that implemented the `Set` interface are now declared `@internal`
 - The template param of `Innmind\BlackBox\Set` is now covariant for more flexibility
+- `Innmind\BlackBox\Set\Value` is now declared `@internal`
 
 ### Deprecated
 

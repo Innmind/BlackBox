@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Provider;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
+    Set\Seed,
     Set\Implementation,
 };
 
@@ -19,7 +20,7 @@ final class Composite implements Provider
      * @psalm-mutation-free
      *
      * @param pure-Closure(Implementation<T>): Set<T> $wrap
-     * @param callable(...mixed): T $aggregate
+     * @param callable(...mixed): (T|Seed<T>) $aggregate
      * @param list<Implementation> $rest
      */
     private function __construct(
@@ -39,7 +40,7 @@ final class Composite implements Provider
      * @no-named-arguments
      *
      * @param pure-Closure(Implementation<A>): Set<A> $wrap
-     * @param callable(...mixed): A $aggregate
+     * @param callable(...mixed): (A|Seed<A>) $aggregate
      *
      * @return self<A>
      */
@@ -116,7 +117,7 @@ final class Composite implements Provider
      *
      * @template V
      *
-     * @param callable(T): V $map
+     * @param callable(T): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -130,7 +131,7 @@ final class Composite implements Provider
      *
      * @template V
      *
-     * @param callable(T): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<T>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */

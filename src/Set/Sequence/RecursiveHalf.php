@@ -17,27 +17,23 @@ final class RecursiveHalf
      * @internal
      * @template A
      *
-     * @param callable(list<A>): bool $predicate
-     * @param list<Value<A>> $sequence
+     * @param Value<list<Value<A>>> $value
      *
      * @return ?Dichotomy<list<A>>
      */
-    public static function of(
-        bool $mutable,
-        callable $predicate,
-        array $sequence,
-    ): ?Dichotomy {
-        if (\count($sequence) === 0) {
+    public static function of(Value $value): ?Dichotomy
+    {
+        if (\count($value->unwrap()) === 0) {
             return null;
         }
 
-        if (!$predicate(Detonate::of($sequence))) {
+        if (!$value->map(Detonate::of(...))->acceptable()) {
             return null;
         }
 
         return new Dichotomy(
-            RemoveHalf::of($mutable, $predicate, $sequence),
-            RemoveTail::of($mutable, $predicate, $sequence),
+            RemoveHalf::of($value),
+            RemoveTail::of($value),
         );
     }
 }

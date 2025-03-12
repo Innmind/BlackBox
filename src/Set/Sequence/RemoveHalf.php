@@ -14,38 +14,25 @@ final class RemoveHalf
      * @internal
      * @template A
      *
-     * @param callable(list<A>): bool $predicate
-     * @param list<Value<A>> $sequence
+     * @param Value<list<Value<A>>> $value
      *
      * @return callable(): Value<list<A>>
      */
-    public static function of(
-        bool $mutable,
-        callable $predicate,
-        array $sequence,
-    ): callable {
+    public static function of(Value $value): callable
+    {
         // we round half down otherwise a sequence of 1 element would be shrunk
         // to a sequence of 1 element resulting in a infinite recursion
-        $numberToKeep = (int) \round(\count($sequence) / 2, 0, \PHP_ROUND_HALF_DOWN);
-        $shrunk = \array_slice($sequence, 0, $numberToKeep);
+        $shrunk = $value->map(static function($sequence) {
+            $numberToKeep = (int) \round(\count($sequence) / 2, 0, \PHP_ROUND_HALF_DOWN);
 
-        if (!$predicate(Detonate::of($shrunk))) {
-            return RemoveTail::of(
-                $mutable,
-                $predicate,
-                $sequence,
-            );
+            return \array_slice($sequence, 0, $numberToKeep);
+        });
+        $detonated = $shrunk->map(Detonate::of(...));
+
+        if (!$detonated->acceptable()) {
+            return RemoveTail::of($value);
         }
 
-        return match ($mutable) {
-            true => static fn() => Value::mutable(
-                static fn() => Detonate::of($shrunk),
-                RecursiveHalf::of($mutable, $predicate, $shrunk),
-            ),
-            false => static fn() => Value::immutable(
-                Detonate::of($shrunk),
-                RecursiveHalf::of($mutable, $predicate, $shrunk),
-            ),
-        };
+        return static fn() => $detonated->shrinkWith(RecursiveHalf::of($shrunk));
     }
 }

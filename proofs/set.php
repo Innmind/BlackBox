@@ -26,7 +26,7 @@ return static function() {
         static function($assert, $input, $output) {
             $compose = $input->flatMap(static function($value) use ($assert, $input, $output) {
                 $assert->same(
-                    \gettype($value),
+                    \gettype($value->unwrap()),
                     \gettype($input->values(Random::default)->current()->unwrap()),
                 );
 
@@ -127,7 +127,7 @@ return static function() {
         ),
         static function($assert, $input, $output) {
             $compose = $input->flatMap(static fn($value) => $output->map(
-                static fn() => $value,
+                static fn() => $value->unwrap(),
             ));
             $values = [];
 
@@ -139,6 +139,244 @@ return static function() {
                 1,
                 \array_unique($values, \SORT_REGULAR),
             );
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap() input value is shrinkable',
+        static function($assert) {
+            $compose = Set::integers()->flatMap(
+                static fn($seed) => Set::strings()->map(
+                    static fn($string) => $seed->map(
+                        static fn($i) => $i.$string,
+                    ),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('0', $value->unwrap());
+            }
+
+            $compose = Set::strings()->flatMap(
+                static fn($seed) => Set::compose(
+                    static fn($a, $b) => $seed->map(
+                        static fn($string) => $a.$string.$b,
+                    ),
+                    Set::integers(),
+                    Set::integers(),
+                ),
+            );
+
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('00', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap() input value is composable and shrinkable',
+        static function($assert) {
+            $compose = Set::strings()->flatMap(
+                static fn($stringSeed) => Set::integers()->flatMap(
+                    static fn($aSeed) => Set::integers()->map(
+                        static fn($b) => $stringSeed
+                            ->flatMap(
+                                static fn($string) => $aSeed->map(
+                                    static fn($a) => $a.'|'.$string.'|'.$b,
+                                ),
+                            )
+                            ->map(static fn($string) => "($string)"),
+                    ),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('(0||0)', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::compose() can collapse seeds from flatMaps',
+        static function($assert) {
+            $compose = Set::strings()->flatMap(
+                static fn($stringSeed) => Set::integers()->flatMap(
+                    static fn($aSeed) => Set::compose(
+                        static fn($b, $stringB) => $stringSeed->flatMap(
+                            static fn($string) => $aSeed->map(
+                                static fn($a) => $a.'|'.$string.'|'.$stringB.'|'.$b,
+                            ),
+                        ),
+                        Set::integers(),
+                        Set::strings(),
+                    ),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('0|||0', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::generator() can collapse seeds from flatMaps',
+        static function($assert) {
+            $compose = Set::strings()->flatMap(
+                static fn($stringSeed) => Set::generator(static function() use ($stringSeed) {
+                    yield $stringSeed;
+                }),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert->same('', $value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap()->map()->filter()',
+        static function($assert) {
+            $compose = Set::integers()->flatMap(
+                static fn($seed) => Set::strings()
+                    ->map(static fn($string) => $seed->map(
+                        static fn($i) => $i.$string,
+                    ))
+                    ->filter(static fn($string) => $string !== '0'),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            foreach ($compose->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert
+                    ->array(['-1', '1'])
+                    ->contains($value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::flatMap()->map()->filter() on composed seeds',
+        static function($assert) {
+            $compose = Set::integers()->flatMap(
+                static fn($seedA) => Set::integers()->flatMap(
+                    static fn($seedB) => Set::strings()
+                        ->map(static fn($string) => $seedA->flatMap(
+                            static fn($a) => $seedB->map(
+                                static fn($b) => $a.$string.$b,
+                            ),
+                        ))
+                        ->filter(static fn($string) => $string !== '00'),
+                ),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            // The take(10) is here to speed things up as the default would need
+            // to shrink 300 values (both ints and the string) to their minimum
+            // values. It would take almost a minute.
+            foreach ($compose->take(10)->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert
+                    ->array(['0-1', '-10', '01', '10'])
+                    ->contains($value->unwrap());
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set::compose() should shrink seeded values and apply filters',
+        static function($assert) {
+            $compose = Set::strings()->madeOf(Set::of('a'))->flatMap(
+                static fn($seed) => Set::compose(
+                    static fn($a, $b) => $seed->map(
+                        static fn($string) => $a.'|'.$string.'|'.$b,
+                    ),
+                    Set::integers()->above(0), // to simplify the assertion
+                    Set::integers()->above(0),
+                )->filter(static fn($string) => $string !== '0||0'),
+            );
+
+            // The calls to unwrap below are here to simulate the fact that a
+            // value is first unwrapped to be tested before eventually being
+            // shrunk in case of a test failure.
+            // The take(10) is here to speed things up as the default would need
+            // to shrink 300 values (both ints and the string) to their minimum
+            // values. It would take almost a minute.
+            foreach ($compose->take(10)->values(Random::default) as $value) {
+                $value->unwrap();
+
+                while ($value->shrinkable()) {
+                    $value = $value->shrink()->a();
+                    $value->unwrap();
+                }
+
+                $assert
+                    ->array(['0|a|0', '0||1', '1||0'])
+                    ->contains($value->unwrap());
+            }
         },
     )->tag(Tag::ci, Tag::local);
 };

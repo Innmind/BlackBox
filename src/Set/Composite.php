@@ -20,7 +20,7 @@ final class Composite implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(mixed...): C $aggregate
+     * @param \Closure(mixed...): (C|Seed<C>) $aggregate
      * @param list<Implementation> $sets
      * @param \Closure(C): bool $predicate
      * @param ?int<1, max> $size
@@ -43,7 +43,7 @@ final class Composite implements Implementation
      * @template T
      * @no-named-arguments
      *
-     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
+     * @param callable(mixed...): (T|Seed<T>) $aggregate It must be a pure function (no randomness, no side effects)
      *
      * @return self<T>
      */
@@ -147,40 +147,9 @@ final class Composite implements Implementation
             $this->first,
             $this->second,
             $this->sets,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var C */
-                $value = $value;
-
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(mixed $value) => /** @var C $value */ $previous($value) && $predicate($value),
             $this->size,
             $this->immutable,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, true);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        /** @psalm-suppress MixedArgument Due to $input */
-        return FlatMap::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
         );
     }
 
@@ -188,43 +157,30 @@ final class Composite implements Implementation
     public function values(Random $random): \Generator
     {
         $matrix = $this->matrix()->values($random);
+        $aggregate = $this->aggregate;
         $iterations = 0;
 
         while ($matrix->valid() && $this->continue($iterations)) {
             /** @var Composite\Combination */
             $combination = $matrix->current();
-            $value = $combination->detonate($this->aggregate);
+            $immutable = $combination->immutable() && $this->immutable;
             $matrix->next();
 
-            if (!($this->predicate)($value)) {
+            $value = match ($immutable) {
+                true => Value::immutable($combination),
+                false => Value::mutable(static fn() => $combination),
+            };
+            $value = $value->predicatedOn($this->predicate);
+            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
+
+            if (!$mapped->acceptable()) {
                 continue;
             }
 
-            if ($combination->immutable() && $this->immutable) {
-                yield Value::immutable(
-                    $value,
-                    Composite\RecursiveNthShrink::of(
-                        false,
-                        $this->predicate,
-                        $this->aggregate,
-                        $combination,
-                    ),
-                );
-            } else {
-                // we don't need to re-apply the predicate when we handle mutable
-                // data as the underlying data is already validated and the mutable
-                // nature is about the enclosing of the data and should not be part
-                // of the filtering process
-                yield Value::mutable(
-                    fn() => $combination->detonate($this->aggregate),
-                    Composite\RecursiveNthShrink::of(
-                        true,
-                        $this->predicate,
-                        $this->aggregate,
-                        $combination,
-                    ),
-                );
-            }
+            yield $mapped->shrinkWith(Composite\RecursiveNthShrink::of(
+                $this->aggregate,
+                $value,
+            ));
 
             ++$iterations;
         }

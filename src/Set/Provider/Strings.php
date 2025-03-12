@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Provider;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
+    Set\Seed,
     Set\Implementation,
 };
 
@@ -142,7 +143,7 @@ final class Strings implements Provider
      *
      * @template V
      *
-     * @param callable(string): V $map
+     * @param callable(string): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -156,7 +157,7 @@ final class Strings implements Provider
      *
      * @template V
      *
-     * @param callable(string): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<string>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */

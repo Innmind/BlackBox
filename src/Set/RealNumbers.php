@@ -120,35 +120,8 @@ final class RealNumbers implements Implementation
         return new self(
             $this->min,
             $this->max,
-            static function(float $value) use ($previous, $predicate): bool {
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(float $value) => $previous($value) && $predicate($value),
             $this->size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, true);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        return FlatMap::implementation(
-            static fn(float $input) => $extract($map($input)),
-            $this,
         );
     }
 
@@ -162,70 +135,68 @@ final class RealNumbers implements Implementation
             $lcg = ($random->between(0, 100) / 100);
             /** @psalm-suppress InvalidOperand Don't know why it complains */
             $value = $random->between($this->min, $this->max) * $lcg;
+            $value = Value::immutable($value)
+                ->predicatedOn($this->predicate);
 
-            if (!($this->predicate)($value)) {
+            if (!$value->acceptable()) {
                 continue;
             }
 
-            yield Value::immutable($value, $this->shrink($value));
+            yield $value->shrinkWith(self::shrink($value));
             ++$iterations;
         }
     }
 
     /**
+     * @param Value<float> $value
+     *
      * @return Dichotomy<float>|null
      */
-    private function shrink(float $value): ?Dichotomy
+    private static function shrink(Value $value): ?Dichotomy
     {
-        if (\round($value, 5) === 0.0) {
+        if (\round($value->unwrap(), 5) === 0.0) {
             return null;
         }
 
         return new Dichotomy(
-            $this->divideByTwo($value),
-            $this->reduceByOne($value),
+            self::divideByTwo($value),
+            self::reduceByOne($value),
         );
     }
 
     /**
-     * @return callable(): Value<float>
-     */
-    private function divideByTwo(float $value): callable
-    {
-        /** @psalm-suppress InvalidOperand Don't know why it complains */
-        $shrinked = $value / 2;
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->reduceByOne($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * @return callable(): Value<float>
-     */
-    private function reduceByOne(float $value): callable
-    {
-        // add one when the value is negative, otherwise subtract one
-        $reduce = ($value <=> 0) * -1;
-        /** @psalm-suppress InvalidOperand Don't know why it complains */
-        $shrinked = $value + $reduce;
-
-        if (!($this->predicate)($shrinked)) {
-            return $this->identity($value);
-        }
-
-        return fn(): Value => Value::immutable($shrinked, $this->shrink($shrinked));
-    }
-
-    /**
-     * Non shrinkable as it is alreay the minimum value accepted by the predicate
+     * @param Value<float> $value
      *
      * @return callable(): Value<float>
      */
-    private function identity(float $value): callable
+    private static function divideByTwo(Value $value): callable
     {
-        return static fn(): Value => Value::immutable($value);
+        $shrunk = $value->map(static fn(float $value) => $value / 2.0);
+
+        if (!$shrunk->acceptable()) {
+            return self::reduceByOne($value);
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+    }
+
+    /**
+     * @param Value<float> $value
+     *
+     * @return callable(): Value<float>
+     */
+    private static function reduceByOne(Value $value): callable
+    {
+        // add one when the value is negative, otherwise subtract one
+        /** @psalm-suppress InvalidOperand Don't know why it complains */
+        $shrunk = $value->map(static fn(float $value) => $value + (
+            ($value <=> 0.0) * -1.0
+        ));
+
+        if (!$shrunk->acceptable()) {
+            return static fn() => $value->withoutShrinking();
+        }
+
+        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }

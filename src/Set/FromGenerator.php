@@ -19,7 +19,7 @@ final class FromGenerator implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(Random): \Generator<T> $generatorFactory
+     * @param \Closure(Random): \Generator<T|Seed<T>> $generatorFactory
      * @param \Closure(T): bool $predicate
      * @param int<1, max> $size
      */
@@ -37,7 +37,7 @@ final class FromGenerator implements Implementation
      *
      * @template V
      *
-     * @param callable(Random): \Generator<V> $generatorFactory
+     * @param callable(Random): \Generator<V|Seed<V>> $generatorFactory
      *
      * @return self<V>
      */
@@ -107,40 +107,9 @@ final class FromGenerator implements Implementation
 
         return new self(
             $this->generatorFactory,
-            static function(mixed $value) use ($previous, $predicate): bool {
-                /** @var T */
-                $value = $value;
-
-                if (!$previous($value)) {
-                    return false;
-                }
-
-                return $predicate($value);
-            },
+            static fn(mixed $value) => /** @var T $value */ $previous($value) && $predicate($value),
             $this->size,
             $this->immutable,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function map(callable $map): Implementation
-    {
-        return Map::implementation($map, $this, $this->immutable);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function flatMap(callable $map, callable $extract): Implementation
-    {
-        /** @psalm-suppress MixedArgument Due to $input */
-        return FlatMap::implementation(
-            static fn($input) => $extract($map($input)),
-            $this,
         );
     }
 
@@ -151,14 +120,16 @@ final class FromGenerator implements Implementation
         $iterations = 0;
 
         while ($iterations < $this->size && $generator->valid()) {
-            /** @var T */
+            /** @var T|Seed<T> */
             $value = $generator->current();
+            $value = match ($this->immutable) {
+                true => Value::immutable($value),
+                false => Value::mutable(static fn() => $value),
+            };
+            $value = $value->predicatedOn($this->predicate);
 
-            if (($this->predicate)($value)) {
-                yield match ($this->immutable) {
-                    true => Value::immutable($value),
-                    false => Value::mutable(static fn() => $value),
-                };
+            if ($value->acceptable()) {
+                yield $value;
 
                 ++$iterations;
             }

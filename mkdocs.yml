@@ -29,6 +29,7 @@ nav:
   - Internals:
     - internals/index.md
     - Shrinking: internals/shrinking.md
+    - internals/set-composition.md
 
 theme:
   name: material
