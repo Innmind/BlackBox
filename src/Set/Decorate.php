@@ -10,10 +10,6 @@ use Innmind\BlackBox\Set;
  */
 final class Decorate
 {
-    private function __construct()
-    {
-    }
-
     /**
      * @deprecated Use $set->map() instead
      * @psalm-pure
