@@ -88,6 +88,10 @@ final class Map
         $b = Value::immutable(Seed::of($shrunk->b())->map($this->map))
             ->predicatedOn($predicate);
 
+        // With the current design we need both values to be acceptable in order
+        // to return a valid dichotomy. But this means that even if "b" is
+        // acceptable we won't test against it. So the shrinking mechanism may
+        // not pinpoint the minimum case every time.
         return $a->acceptable() && $b->acceptable();
     }
 
