@@ -470,10 +470,6 @@ final class Set
      * This allows to configure a Set from a randomly generated value from the
      * current Set.
      *
-     * Note that the value generated for the input won't be shrunk. The more
-     * your values comes from this composition the less values will be
-     * shrinkable.
-     *
      * @psalm-mutation-free
      *
      * @template V
