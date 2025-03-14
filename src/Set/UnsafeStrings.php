@@ -75,7 +75,7 @@ final class UnsafeStrings implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
 
@@ -87,7 +87,7 @@ final class UnsafeStrings implements Implementation
         $values = Json::decode($json);
         $values = \array_values(\array_filter(
             $values,
-            $this->predicate,
+            $predicate,
         ));
 
         if (\count($values) === 0) {
@@ -100,7 +100,7 @@ final class UnsafeStrings implements Implementation
         while ($iterations < $this->size) {
             $index = $random->between(0, $size);
             $value = Value::immutable($values[$index])
-                ->predicatedOn($this->predicate);
+                ->predicatedOn($predicate);
 
             yield $value->shrinkWith(self::shrink($value));
             ++$iterations;

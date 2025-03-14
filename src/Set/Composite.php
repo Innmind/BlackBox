@@ -154,7 +154,7 @@ final class Composite implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $matrix = $this->matrix()->values($random);
         $aggregate = $this->aggregate;

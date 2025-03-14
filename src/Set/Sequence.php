@@ -98,13 +98,17 @@ final class Sequence implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
-        $immutable = $this->set->values($random)->current()?->isImmutable() ?? false;
+        $immutable = $this
+            ->set
+            ->values($random, static fn() => true)
+            ->current()
+            ?->isImmutable() ?? false;
         $yielded = 0;
 
         do {
-            foreach ($this->sizes->values($random) as $size) {
+            foreach ($this->sizes->values($random, static fn() => true) as $size) {
                 if ($yielded === $this->size) {
                     return;
                 }
@@ -140,6 +144,9 @@ final class Sequence implements Implementation
             return [];
         }
 
-        return \array_values(\iterator_to_array($this->set->take($size)->values($rand)));
+        return \array_values(\iterator_to_array($this->set->take($size)->values(
+            $rand,
+            static fn() => true,
+        )));
     }
 }

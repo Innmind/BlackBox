@@ -33,9 +33,13 @@ interface Implementation
     public function filter(callable $predicate): self;
 
     /**
+     * @psalm-suppress InvalidTemplateParam
+     *
      * @throws EmptySet When no value can be generated
+     *
+     * @param \Closure(T): bool $predicate
      *
      * @return \Generator<Value<T>>
      */
-    public function values(Random $random): \Generator;
+    public function values(Random $random, \Closure $predicate): \Generator;
 }

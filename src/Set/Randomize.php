@@ -83,13 +83,13 @@ final class Randomize implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
             try {
-                $value = $this->set->values($random)->current();
+                $value = $this->set->values($random, $predicate)->current();
             } catch (EmptySet $e) {
                 continue;
             }

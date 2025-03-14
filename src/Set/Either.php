@@ -117,7 +117,7 @@ final class Either implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $iterations = 0;
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
@@ -137,7 +137,7 @@ final class Either implements Implementation
             $setToChoose = $random->between(0, $count - 1);
 
             try {
-                $value = $sets[$setToChoose]->values($random)->current();
+                $value = $sets[$setToChoose]->values($random, $predicate)->current();
 
                 if (\is_null($value)) {
                     continue;

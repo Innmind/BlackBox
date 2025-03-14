@@ -95,9 +95,22 @@ final class Map implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
-        foreach ($this->set->values($random) as $value) {
+        $map = $this->map;
+        $predicate = static function(mixed $value) use ($map, $predicate): bool {
+            /** @var I $value */
+            $mapped = $map($value);
+
+            if ($mapped instanceof Seed) {
+                /** @var D */
+                $mapped = $mapped->unwrap();
+            }
+
+            return $predicate($mapped);
+        };
+
+        foreach ($this->set->values($random, $predicate) as $value) {
             if ($value->isImmutable() && $this->immutable) {
                 $mapped = ($this->map)($value->unwrap());
 
