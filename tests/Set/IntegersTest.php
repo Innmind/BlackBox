@@ -126,7 +126,7 @@ class IntegersTest extends TestCase
         $ints = Integers::between(-1, 1)->filter(static fn($i) => $i === 0);
 
         foreach ($ints->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 
@@ -135,7 +135,7 @@ class IntegersTest extends TestCase
         $ints = Integers::any()->filter(static fn($i) => $i !== 0);
 
         foreach ($ints->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 
@@ -215,7 +215,7 @@ class IntegersTest extends TestCase
     public function testShrinkingStrategiesNeverProduceTheSameResultTwice()
     {
         foreach (Integers::between(-1000, 1000)->values(Random::mersenneTwister) as $integer) {
-            if ($integer->shrinkable()) {
+            if ($integer->shrink()) {
                 break;
             }
         }
@@ -223,14 +223,14 @@ class IntegersTest extends TestCase
         $previous = $integer;
         $integer = $integer->shrink()->a();
 
-        while ($integer->shrinkable()) {
+        while ($shrunk = $integer->shrink()) {
             $this->assertNotSame($previous->unwrap(), $integer->unwrap());
             $previous = $integer;
-            $integer = $integer->shrink()->a();
+            $integer = $shrunk->a();
         }
 
         foreach (Integers::between(-1000, 1000)->values(Random::mersenneTwister) as $integer) {
-            if ($integer->shrinkable()) {
+            if ($integer->shrink()) {
                 break;
             }
         }
@@ -241,13 +241,13 @@ class IntegersTest extends TestCase
         do {
             $this->assertNotSame($previous->unwrap(), $integer->unwrap());
 
-            if (!$integer->shrinkable()) {
+            if (!$integer->shrink()) {
                 return;
             }
 
             $previous = $integer;
             $integer = $integer->shrink()->b();
-        } while ($integer?->shrinkable() ?? false);
+        } while ($integer?->shrink() ?? false);
     }
 
     public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
@@ -255,10 +255,10 @@ class IntegersTest extends TestCase
         $integers = Integers::between(1000, 2000);
 
         $assertInBounds = function(Value $value, string $strategy) {
-            while ($value->shrinkable()) {
+            while ($shrunk = $value->shrink()) {
                 $this->assertGreaterThanOrEqual(1000, $value->unwrap());
                 $this->assertLessThanOrEqual(2000, $value->unwrap());
-                $value = $value->shrink()->$strategy();
+                $value = $shrunk->$strategy();
             }
         };
 
@@ -285,8 +285,8 @@ class IntegersTest extends TestCase
         $ints = Integers::above(43);
 
         foreach ($ints->values(Random::mersenneTwister) as $int) {
-            while ($int->shrinkable()) {
-                $int = $int->shrink()->a();
+            while ($shrunk = $int->shrink()) {
+                $int = $shrunk->a();
             }
 
             $this->assertSame(43, $int->unwrap());

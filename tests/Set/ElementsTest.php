@@ -85,7 +85,7 @@ class ElementsTest extends TestCase
         $elements = Elements::of(...\range(0, 1000));
 
         foreach ($elements->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 

@@ -34,8 +34,8 @@ class ValueTest extends TestCase
 
     public function testValueNotShinkrableWhenNoDichotomyGiven()
     {
-        $this->assertFalse(Value::immutable(new \stdClass)->shrinkable());
-        $this->assertFalse(Value::mutable(static fn() => new \stdClass)->shrinkable());
+        $this->assertNull(Value::immutable(new \stdClass)->shrink());
+        $this->assertNull(Value::mutable(static fn() => new \stdClass)->shrink());
 
         $immutable = Value::immutable(new \stdClass)->shrinkWith(new Dichotomy(
             static fn() => Value::immutable(new \stdClass),
@@ -46,8 +46,8 @@ class ValueTest extends TestCase
             static fn() => Value::mutable(static fn() => new \stdClass),
         ));
 
-        $this->assertTrue($immutable->shrinkable());
-        $this->assertTrue($mutable->shrinkable());
+        $this->assertNotNull($immutable->shrink());
+        $this->assertNotNull($mutable->shrink());
     }
 
     public function testShrinkReturnTheGivenDichotomy()

@@ -82,7 +82,7 @@ class UnsafeStringsTest extends TestCase
         $strings = UnsafeStrings::any()->filter(static fn($string) => $string === '');
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 
@@ -91,7 +91,7 @@ class UnsafeStringsTest extends TestCase
         $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 
@@ -142,8 +142,8 @@ class UnsafeStringsTest extends TestCase
 
             $this->assertSame($a->unwrap(), $value->unwrap());
             $this->assertSame($b->unwrap(), $value->unwrap());
-            $this->assertFalse($a->shrinkable());
-            $this->assertFalse($b->shrinkable());
+            $this->assertNull($a->shrink());
+            $this->assertNull($b->shrink());
         }
     }
 

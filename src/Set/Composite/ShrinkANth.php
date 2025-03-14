@@ -38,7 +38,9 @@ final class ShrinkANth
             );
         }
 
-        if (!$values[$n]->shrinkable()) {
+        $shrunk = $combination->aShrinkNth($n);
+
+        if (\is_null($shrunk)) {
             return self::of(
                 $aggregate,
                 $value,
@@ -46,7 +48,7 @@ final class ShrinkANth
             );
         }
 
-        $shrunk = $value->map(static fn($combination) => $combination->aShrinkNth($n));
+        $shrunk = $value->map(static fn() => $shrunk);
         $mapped = $shrunk->map(
             static fn($combination) => $combination->detonate($aggregate),
         );

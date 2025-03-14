@@ -114,7 +114,7 @@ class FromGeneratorTest extends TestCase
         });
 
         foreach ($generated->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 

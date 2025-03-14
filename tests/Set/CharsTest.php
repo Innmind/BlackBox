@@ -92,7 +92,7 @@ class CharsTest extends TestCase
                 continue;
             }
 
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 

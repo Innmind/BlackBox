@@ -167,19 +167,11 @@ final class Value
         return $this->immutable;
     }
 
-    public function shrinkable(): bool
-    {
-        return $this->dichotomy instanceof Dichotomy || ($this->seed?->shrinkable($this->predicate) === true);
-    }
-
     /**
-     * @psalm-suppress InvalidNullableReturnType
-     *
-     * @return Dichotomy<T>
+     * @return ?Dichotomy<T>
      */
-    public function shrink(): Dichotomy
+    public function shrink(): ?Dichotomy
     {
-        /** @psalm-suppress NullableReturnStatement */
         return $this->dichotomy ?? $this->seed?->shrink($this->predicate);
     }
 

@@ -27,22 +27,16 @@ final class ShrinkANth
             return ShrinkBNth::of($value);
         }
 
-        if (!$sequence[$n]->shrinkable()) {
+        $nShrunk = $sequence[$n]->shrink();
+
+        if (\is_null($nShrunk)) {
             return self::of($value, $n + 1);
         }
 
-        $shrunk = $value->map(static function($sequence) use ($n) {
-            $shrunk = [];
+        $shrunk = $value->map(static function($sequence) use ($n, $nShrunk) {
+            $sequence[$n] = $nShrunk->a();
 
-            foreach ($sequence as $i => $value) {
-                if ($i === $n) {
-                    $value = $value->shrink()->a();
-                }
-
-                $shrunk[] = $value;
-            }
-
-            return $shrunk;
+            return \array_values($sequence);
         });
         $detonated = $shrunk->map(Detonate::of(...));
 

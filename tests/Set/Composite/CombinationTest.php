@@ -47,7 +47,9 @@ class CombinationTest extends TestCase
         $nonShrinkable = $nonShrinkable->add(Value::immutable(24));
         $nonShrinkable = $nonShrinkable->add(Value::immutable(66));
 
-        $this->assertFalse($nonShrinkable->shrinkable());
+        $this->assertNull($nonShrinkable->aShrinkNth(0));
+        $this->assertNull($nonShrinkable->aShrinkNth(1));
+        $this->assertNull($nonShrinkable->aShrinkNth(2));
 
         $shrinkable = Combination::startWith(Value::immutable(42));
         $shrinkable = $shrinkable->add(
@@ -60,6 +62,6 @@ class CombinationTest extends TestCase
         );
         $shrinkable = $shrinkable->add(Value::immutable(66));
 
-        $this->assertTrue($shrinkable->shrinkable());
+        $this->assertNotNull($shrinkable->aShrinkNth(1));
     }
 }

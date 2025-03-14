@@ -36,15 +36,6 @@ final class RecursiveNthShrink
             return null;
         }
 
-        // There's no need to check if the mapped value is shrinkable because
-        // either the detonated value is not seeded and the only criteria
-        // determining if it's shrinkable comes from the combination. Or the
-        // detonated value is seeded but then the shrinking of the seed will
-        // happen inside the Value class itself.
-        if (!$combination->shrinkable()) {
-            return null;
-        }
-
         return new Dichotomy(
             ShrinkANth::of($aggregate, $value, $n),
             ShrinkANth::of($aggregate, $value, $n + 1),

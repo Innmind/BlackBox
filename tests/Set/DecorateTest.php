@@ -195,7 +195,7 @@ class DecorateTest extends TestCase
         );
 
         foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
 
         $shrinkable = Decorate::immutable(
@@ -206,7 +206,7 @@ class DecorateTest extends TestCase
         );
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 

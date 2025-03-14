@@ -63,22 +63,10 @@ final class Seed
      * @psalm-mutation-free
      *
      * @param \Closure(T): bool $predicate
-     */
-    public function shrinkable(\Closure $predicate): bool
-    {
-        /** @psalm-suppress ImpureMethodCall */
-        return $this->implementation->shrinkable($predicate);
-    }
-
-    /**
-     * @internal
-     * @psalm-mutation-free
      *
-     * @param \Closure(T): bool $predicate
-     *
-     * @return Dichotomy<T>
+     * @return ?Dichotomy<T>
      */
-    public function shrink(\Closure $predicate): Dichotomy
+    public function shrink(\Closure $predicate): ?Dichotomy
     {
         /** @psalm-suppress ImpureMethodCall */
         return $this->implementation->shrink($predicate);

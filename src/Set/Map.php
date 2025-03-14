@@ -123,15 +123,15 @@ final class Map implements Implementation
      */
     private function shrink(bool $mutable, Value $value): ?Dichotomy
     {
-        if (!$value->shrinkable()) {
+        $shrunk = $value->shrink();
+
+        if (\is_null($shrunk)) {
             return null;
         }
 
-        $shrinked = $value->shrink();
-
         return new Dichotomy(
-            $this->shrinkWithStrategy($mutable, $shrinked->a()),
-            $this->shrinkWithStrategy($mutable, $shrinked->b()),
+            $this->shrinkWithStrategy($mutable, $shrunk->a()),
+            $this->shrinkWithStrategy($mutable, $shrunk->b()),
         );
     }
 

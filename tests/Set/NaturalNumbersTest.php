@@ -85,7 +85,7 @@ class NaturalNumbersTest extends TestCase
         $integers = NaturalNumbers::any();
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 }

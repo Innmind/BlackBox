@@ -72,28 +72,13 @@ final class FlatMap
     }
 
     /**
-     * @psalm-mutation-free
-     *
-     * @param \Closure(T): bool $predicate
-     */
-    public function shrinkable(\Closure $predicate): bool
-    {
-        /** @psalm-suppress ImpureMethodCall */
-        return $this->previous->shrinkable($predicate) || $this->collapse()->shrinkable($predicate);
-    }
-
-    /**
      * @param \Closure(T): bool $predicate
      *
-     * @return Dichotomy<T>
+     * @return ?Dichotomy<T>
      */
-    public function shrink(\Closure $predicate): Dichotomy
+    public function shrink(\Closure $predicate): ?Dichotomy
     {
-        if ($this->previous->shrinkable($predicate)) {
-            return $this->previousShrink($predicate);
-        }
-
-        return $this->collapse()->shrink($predicate);
+        return $this->previousShrink($predicate) ?? $this->collapse()->shrink($predicate);
     }
 
     /**
@@ -115,11 +100,15 @@ final class FlatMap
     /**
      * @param \Closure(T): bool $predicate
      *
-     * @return Dichotomy<T>
+     * @return ?Dichotomy<T>
      */
-    private function previousShrink(\Closure $predicate): Dichotomy
+    private function previousShrink(\Closure $predicate): ?Dichotomy
     {
         $shrunk = $this->previous->shrink($predicate);
+
+        if (\is_null($shrunk)) {
+            return null;
+        }
 
         $a = $shrunk->a();
         $b = $shrunk->b();
