@@ -110,7 +110,7 @@ final class Elements implements Implementation
         $iterations = 0;
         $elements = \array_values(\array_filter(
             [$this->first, ...$this->elements],
-            $this->predicate,
+            $predicate,
         ));
 
         if (\count($elements) === 0) {
@@ -124,7 +124,7 @@ final class Elements implements Implementation
             /** @var mixed */
             $value = $elements[$index];
 
-            yield Value::immutable($value)->predicatedOn($this->predicate);
+            yield Value::immutable($value)->predicatedOn($predicate);
             ++$iterations;
         }
     }

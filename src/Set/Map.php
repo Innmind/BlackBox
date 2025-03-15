@@ -98,7 +98,7 @@ final class Map implements Implementation
     public function values(Random $random, \Closure $predicate): \Generator
     {
         $map = $this->map;
-        $predicate = static function(mixed $value) use ($map, $predicate): bool {
+        $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
             /** @var I $value */
             $mapped = $map($value);
 
@@ -110,32 +110,36 @@ final class Map implements Implementation
             return $predicate($mapped);
         };
 
-        foreach ($this->set->values($random, $predicate) as $value) {
+        foreach ($this->set->values($random, $mappedPredicate) as $value) {
             if ($value->isImmutable() && $this->immutable) {
                 $mapped = ($this->map)($value->unwrap());
 
                 yield Value::immutable($mapped)
-                    ->predicatedOn($this->predicate)
-                    ->shrinkWith($this->shrink(false, $value));
+                    ->predicatedOn($predicate)
+                    ->shrinkWith($this->shrink(false, $value, $predicate));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 yield Value::mutable(fn() => ($this->map)($value->unwrap()))
-                    ->predicatedOn($this->predicate)
-                    ->shrinkWith($this->shrink(true, $value));
+                    ->predicatedOn($predicate)
+                    ->shrinkWith($this->shrink(true, $value, $predicate));
             }
         }
     }
 
     /**
      * @param Value<I> $value
+     * @param \Closure(D): bool $predicate
      *
      * @return ?Dichotomy<D>
      */
-    private function shrink(bool $mutable, Value $value): ?Dichotomy
-    {
+    private function shrink(
+        bool $mutable,
+        Value $value,
+        \Closure $predicate,
+    ): ?Dichotomy {
         $shrunk = $value->shrink();
 
         if (\is_null($shrunk)) {
@@ -143,26 +147,30 @@ final class Map implements Implementation
         }
 
         return new Dichotomy(
-            $this->shrinkWithStrategy($mutable, $shrunk->a()),
-            $this->shrinkWithStrategy($mutable, $shrunk->b()),
+            $this->shrinkWithStrategy($mutable, $shrunk->a(), $predicate),
+            $this->shrinkWithStrategy($mutable, $shrunk->b(), $predicate),
         );
     }
 
     /**
      * @param Value<I> $strategy
+     * @param \Closure(D): bool $predicate
      *
      * @return callable(): Value<D>
      */
-    private function shrinkWithStrategy(bool $mutable, Value $strategy): callable
-    {
+    private function shrinkWithStrategy(
+        bool $mutable,
+        Value $strategy,
+        \Closure $predicate,
+    ): callable {
         if ($mutable) {
             return fn(): Value => Value::mutable(fn() => ($this->map)($strategy->unwrap()))
-                ->predicatedOn($this->predicate)
-                ->shrinkWith($this->shrink(true, $strategy));
+                ->predicatedOn($predicate)
+                ->shrinkWith($this->shrink(true, $strategy, $predicate));
         }
 
         return fn(): Value => Value::immutable(($this->map)($strategy->unwrap()))
-            ->predicatedOn($this->predicate)
-            ->shrinkWith($this->shrink(false, $strategy));
+            ->predicatedOn($predicate)
+            ->shrinkWith($this->shrink(false, $strategy, $predicate));
     }
 }

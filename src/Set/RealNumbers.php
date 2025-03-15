@@ -128,6 +128,10 @@ final class RealNumbers implements Implementation
     #[\Override]
     public function values(Random $random, \Closure $predicate): \Generator
     {
+        $min = $this->min;
+        $max = $this->max;
+        $bounds = static fn(float $value): bool => $value >= $min && $value <= $max;
+        $predicate = static fn(float $value): bool => $bounds($value) && $predicate($value);
         $iterations = 0;
 
         while ($iterations < $this->size) {
@@ -136,7 +140,7 @@ final class RealNumbers implements Implementation
             /** @psalm-suppress InvalidOperand Don't know why it complains */
             $value = $random->between($this->min, $this->max) * $lcg;
             $value = Value::immutable($value)
-                ->predicatedOn($this->predicate);
+                ->predicatedOn($predicate);
 
             if (!$value->acceptable()) {
                 continue;

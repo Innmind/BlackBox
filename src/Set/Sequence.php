@@ -21,12 +21,14 @@ final class Sequence implements Implementation
      * @param Implementation<I> $set
      * @param \Closure(list<I>): bool $predicate
      * @param int<1, max> $size
+     * @param int<1, max> $min
      */
     private function __construct(
         private Implementation $set,
         private Integers $sizes,
         private \Closure $predicate,
         private int $size,
+        private int $min,
     ) {
     }
 
@@ -44,11 +46,13 @@ final class Sequence implements Implementation
         Implementation $set,
         Integers $sizes,
     ): self {
+        /** @psalm-suppress ArgumentTypeCoercion */
         return new self(
             $set,
             $sizes,
             static fn(array $sequence): bool => \count($sequence) >= $sizes->min(),
             100,
+            $sizes->min(),
         );
     }
 
@@ -78,6 +82,7 @@ final class Sequence implements Implementation
             $this->sizes->take($size),
             $this->predicate,
             $size,
+            $this->min,
         );
     }
 
@@ -94,12 +99,16 @@ final class Sequence implements Implementation
             $this->sizes,
             static fn(array $value) => /** @var list<I> $value */ $previous($value) && $predicate($value),
             $this->size,
+            $this->min,
         );
     }
 
     #[\Override]
     public function values(Random $random, \Closure $predicate): \Generator
     {
+        $min = $this->min;
+        $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
+        $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
         $immutable = $this
             ->set
             ->values($random, static fn() => true)
@@ -119,7 +128,7 @@ final class Sequence implements Implementation
                     true => Value::immutable($values),
                     false => Value::mutable(static fn() => $values),
                 };
-                $value = $value->predicatedOn($this->predicate);
+                $value = $value->predicatedOn($predicate);
                 $yieldable = $value->map(Sequence\Detonate::of(...));
 
                 if (!$yieldable->acceptable()) {

@@ -170,7 +170,7 @@ final class Composite implements Implementation
                 true => Value::immutable($combination),
                 false => Value::mutable(static fn() => $combination),
             };
-            $value = $value->predicatedOn($this->predicate);
+            $value = $value->predicatedOn($predicate);
             $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
 
             if (!$mapped->acceptable()) {

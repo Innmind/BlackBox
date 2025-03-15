@@ -126,7 +126,7 @@ final class FromGenerator implements Implementation
                 true => Value::immutable($value),
                 false => Value::mutable(static fn() => $value),
             };
-            $value = $value->predicatedOn($this->predicate);
+            $value = $value->predicatedOn($predicate);
 
             if ($value->acceptable()) {
                 yield $value;
