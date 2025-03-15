@@ -55,8 +55,8 @@ class CombinationTest extends TestCase
         $shrinkable = $shrinkable->add(
             Value::immutable(24)->shrinkWith(
                 static fn() => Dichotomy::of(
-                    static fn() => Value::immutable(12),
-                    static fn() => Value::immutable(23),
+                    Value::immutable(12),
+                    Value::immutable(23),
                 ),
             ),
         );

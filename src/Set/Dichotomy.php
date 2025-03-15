@@ -10,12 +10,12 @@ namespace Innmind\BlackBox\Set;
 final class Dichotomy
 {
     /**
-     * @param \Closure(): Value<T> $a
-     * @param \Closure(): Value<T> $b
+     * @param Value<T> $a
+     * @param Value<T> $b
      */
     private function __construct(
-        private \Closure $a,
-        private \Closure $b,
+        private Value $a,
+        private Value $b,
     ) {
     }
 
@@ -23,25 +23,14 @@ final class Dichotomy
      * @internal
      * @template V
      *
-     * @param (callable(): Value<V>)|Value<V> $a
-     * @param (callable(): Value<V>)|Value<V> $b
+     * @param Value<V> $a
+     * @param Value<V> $b
      *
      * @return self<V>
      */
-    public static function of(
-        callable|Value $a,
-        callable|Value $b,
-    ): self {
-        return new self(
-            match (true) {
-                $a instanceof Value => static fn() => $a,
-                default => \Closure::fromCallable($a),
-            },
-            match (true) {
-                $b instanceof Value => static fn() => $b,
-                default => \Closure::fromCallable($b),
-            },
-        );
+    public static function of(Value $a, Value $b): self
+    {
+        return new self($a, $b);
     }
 
     /**
@@ -49,7 +38,7 @@ final class Dichotomy
      */
     public function a(): Value
     {
-        return ($this->a)();
+        return $this->a;
     }
 
     /**
@@ -57,6 +46,6 @@ final class Dichotomy
      */
     public function b(): Value
     {
-        return ($this->b)();
+        return $this->b;
     }
 }
