@@ -53,6 +53,28 @@ final class Dichotomy
     }
 
     /**
+     * @psalm-mutation-free
+     * @template V
+     *
+     * @param pure-callable(Value<T>): Value<V> $map
+     *
+     * @return self<V>
+     */
+    public function map(callable $map): self
+    {
+        return new self(
+            match ($this->a) {
+                null => null,
+                default => $map($this->a),
+            },
+            match ($this->b) {
+                null => null,
+                default => $map($this->b),
+            },
+        );
+    }
+
+    /**
      * @return Value<T>
      */
     public function a(): Value

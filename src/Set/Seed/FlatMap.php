@@ -104,29 +104,18 @@ final class FlatMap
      */
     private function previousShrink(\Closure $predicate): ?Dichotomy
     {
-        $shrunk = $this->previous->shrink($predicate);
-
-        if (\is_null($shrunk)) {
-            return null;
-        }
-
-        $a = $shrunk->a();
-        $b = $shrunk->b();
         $map = $this->map;
 
         // There's no need to define the immutability of the values here because
         // it's held by the values injected in the new Seeds.
-        return Dichotomy::of(
-            Value::immutable(
-                Seed::of($a)->flatMap($map),
-                // No dichotomy because the captured values in the configure
-                // lambda is shrunk first
-            )->predicatedOn($predicate),
-            Value::immutable(
-                Seed::of($b)->flatMap($map),
-                // No dichotomy because the captured values in the configure
-                // lambda is shrunk first
-            )->predicatedOn($predicate),
-        );
+        // No dichotomy because the captured values in the map lambda is shrunk
+        // first.
+        return $this
+            ->previous
+            ->shrink($predicate)
+            ?->map(
+                static fn($strategy) => Value::immutable(Seed::of($strategy)->flatMap($map))
+                    ->predicatedOn($predicate),
+            );
     }
 }
