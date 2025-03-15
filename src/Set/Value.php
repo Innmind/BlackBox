@@ -65,19 +65,16 @@ final class Value
     }
 
     /**
-     * @param (\Closure(): ?Dichotomy<T>)|Dichotomy<T>|null $dichotomy
+     * @param \Closure(): ?Dichotomy<T> $shrink
      *
      * @return self<T>
      */
-    public function shrinkWith(\Closure|Dichotomy|null $dichotomy): self
+    public function shrinkWith(\Closure $shrink): self
     {
         return new self(
             $this->immutable,
             $this->unwrap,
-            match (true) {
-                $dichotomy instanceof \Closure => $dichotomy,
-                default => static fn() => $dichotomy,
-            },
+            $shrink,
             $this->predicate,
         );
     }
