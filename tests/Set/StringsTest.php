@@ -120,18 +120,26 @@ class StringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = Strings::any()->filter(static fn($string) => $string !== '');
+        $strings = Strings::any();
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
+            if ($value->unwrap() === '') {
+                continue;
+            }
+
             $this->assertNotNull($value->shrink());
         }
     }
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = Strings::any()->filter(static fn($string) => $string !== '');
+        $strings = Strings::any();
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
+            if ($value->unwrap() === '') {
+                continue;
+            }
+
             $dichotomy = $value->shrink();
             $a = $dichotomy->a();
             $b = $dichotomy->b();
