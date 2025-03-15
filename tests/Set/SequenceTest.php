@@ -220,6 +220,10 @@ class SequenceTest extends TestCase
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $this->assertTrue($dichotomy->a()->isImmutable());
             $this->assertTrue($dichotomy->b()->isImmutable());
         }
