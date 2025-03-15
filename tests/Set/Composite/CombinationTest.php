@@ -54,7 +54,7 @@ class CombinationTest extends TestCase
         $shrinkable = Combination::startWith(Value::immutable(42));
         $shrinkable = $shrinkable->add(
             Value::immutable(24)->shrinkWith(
-                static fn() => new Dichotomy(
+                static fn() => Dichotomy::of(
                     static fn() => Value::immutable(12),
                     static fn() => Value::immutable(23),
                 ),
