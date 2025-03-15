@@ -34,7 +34,7 @@ final class Dichotomy
             return null;
         }
 
-        return new self($a, $b);
+        return new self($a ?? $b, $b);
     }
 
     /**
