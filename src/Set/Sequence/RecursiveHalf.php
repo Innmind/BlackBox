@@ -31,7 +31,7 @@ final class RecursiveHalf
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             RemoveHalf::of($value),
             RemoveTail::of($value),
         );

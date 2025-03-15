@@ -139,7 +139,7 @@ final class RealNumbers implements Implementation
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             self::divideByTwo($value),
             self::reduceByOne($value),
         );

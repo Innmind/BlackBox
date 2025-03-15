@@ -116,7 +116,7 @@ final class FlatMap
 
         // There's no need to define the immutability of the values here because
         // it's held by the values injected in the new Seeds.
-        return new Dichotomy(
+        return Dichotomy::of(
             static fn() => Value::immutable(
                 Seed::of($a)->flatMap($map),
                 // No dichotomy because the captured values in the configure

@@ -18,10 +18,26 @@ final class Dichotomy
      * @param callable(): Value<T> $a
      * @param callable(): Value<T> $b
      */
-    public function __construct(callable $a, callable $b)
+    private function __construct(callable $a, callable $b)
     {
         $this->a = \Closure::fromCallable($a);
         $this->b = \Closure::fromCallable($b);
+    }
+
+    /**
+     * @internal
+     * @template V
+     *
+     * @param callable(): Value<V> $a
+     * @param callable(): Value<V> $b
+     *
+     * @return self<V>
+     */
+    public static function of(
+        callable $a,
+        callable $b,
+    ): self {
+        return new self($a, $b);
     }
 
     /**

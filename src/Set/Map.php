@@ -115,7 +115,7 @@ final class Map implements Implementation
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             $this->shrinkWithStrategy($mutable, $shrunk->a(), $predicate),
             $this->shrinkWithStrategy($mutable, $shrunk->b(), $predicate),
         );
