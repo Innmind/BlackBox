@@ -70,26 +70,14 @@ final class Randomize implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     #[\Override]
-    public function filter(callable $predicate): self
-    {
-        return new self(
-            $this->set->filter($predicate),
-            $this->size,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $iterations = 0;
 
         while ($iterations < $this->size) {
             try {
-                $value = $this->set->values($random)->current();
+                $value = $this->set->values($random, $predicate)->current();
             } catch (EmptySet $e) {
                 continue;
             }

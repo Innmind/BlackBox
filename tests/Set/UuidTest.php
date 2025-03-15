@@ -39,7 +39,9 @@ class UuidTest extends TestCase
         $uuids = Uuid::any();
 
         $min = static function($value, $type) use (&$min) {
-            return $value->shrinkable() ? $min($value->shrink()->{$type}(), $type) : $value->unwrap();
+            $shrunk = $value->shrink();
+
+            return $shrunk ? $min($shrunk->{$type}(), $type) : $value->unwrap();
         };
 
         foreach ($uuids->values(Random::mersenneTwister) as $uuid) {

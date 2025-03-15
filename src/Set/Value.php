@@ -15,13 +15,13 @@ final class Value
      * @psalm-mutation-free
      *
      * @param \Closure(): (T|Seed<T>) $unwrap
-     * @param ?Dichotomy<T> $dichotomy
+     * @param \Closure(self<T>): ?Dichotomy<T> $shrink
      * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
         private bool $immutable,
         private \Closure $unwrap,
-        private ?Dichotomy $dichotomy,
+        private \Closure $shrink,
         private \Closure $predicate,
     ) {
     }
@@ -40,7 +40,7 @@ final class Value
         return new self(
             true,
             static fn() => $value,
-            null,
+            static fn() => null,
             static fn() => true,
         );
     }
@@ -59,22 +59,22 @@ final class Value
         return new self(
             false,
             \Closure::fromCallable($unwrap),
-            null,
+            static fn() => null,
             static fn() => true,
         );
     }
 
     /**
-     * @param ?Dichotomy<T> $dichotomy
+     * @param \Closure(): ?Dichotomy<T> $shrink
      *
      * @return self<T>
      */
-    public function shrinkWith(?Dichotomy $dichotomy): self
+    public function shrinkWith(\Closure $shrink): self
     {
         return new self(
             $this->immutable,
             $this->unwrap,
-            $dichotomy,
+            static fn(self $default) => $shrink()?->default($default),
             $this->predicate,
         );
     }
@@ -87,7 +87,7 @@ final class Value
         return new self(
             $this->immutable,
             $this->unwrap,
-            null,
+            static fn() => null,
             $this->predicate,
         );
     }
@@ -104,7 +104,7 @@ final class Value
         return new self(
             $this->immutable,
             $this->unwrap,
-            $this->dichotomy,
+            $this->shrink,
             \Closure::fromCallable($predicate),
         );
     }
@@ -149,7 +149,7 @@ final class Value
         return new self(
             $this->immutable,
             $unwrap,
-            null,
+            static fn() => null,
             $this->predicate,
         );
     }
@@ -167,20 +167,14 @@ final class Value
         return $this->immutable;
     }
 
-    public function shrinkable(): bool
-    {
-        return $this->dichotomy instanceof Dichotomy || ($this->seed?->shrinkable($this->predicate) === true);
-    }
-
     /**
-     * @psalm-suppress InvalidNullableReturnType
-     *
-     * @return Dichotomy<T>
+     * @return ?Dichotomy<T>
      */
-    public function shrink(): Dichotomy
+    public function shrink(): ?Dichotomy
     {
-        /** @psalm-suppress NullableReturnStatement */
-        return $this->dichotomy ?? $this->seed?->shrink($this->predicate);
+        $identity = $this->withoutShrinking();
+
+        return ($this->shrink)($identity) ?? $this->seed?->shrink($this->predicate)?->default($identity);
     }
 
     /**

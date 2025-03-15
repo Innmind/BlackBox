@@ -24,18 +24,13 @@ interface Implementation
     public function take(int $size): self;
 
     /**
-     * @psalm-mutation-free
+     * @psalm-suppress InvalidTemplateParam
      *
-     * @param callable(T): bool $predicate
+     * @param \Closure(T): bool $predicate
      *
-     * @return self<T>
-     */
-    public function filter(callable $predicate): self;
-
-    /**
      * @throws EmptySet When no value can be generated
      *
      * @return \Generator<Value<T>>
      */
-    public function values(Random $random): \Generator;
+    public function values(Random $random, \Closure $predicate): \Generator;
 }

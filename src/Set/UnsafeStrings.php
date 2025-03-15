@@ -19,13 +19,10 @@ final class UnsafeStrings implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(string): bool $predicate
      * @param int<1, max> $size
      */
-    private function __construct(
-        private \Closure $predicate,
-        private int $size,
-    ) {
+    private function __construct(private int $size)
+    {
     }
 
     /**
@@ -34,7 +31,7 @@ final class UnsafeStrings implements Implementation
      */
     public static function implementation(): self
     {
-        return new self(static fn(): bool => true, 100);
+        return new self(100);
     }
 
     /**
@@ -54,28 +51,11 @@ final class UnsafeStrings implements Implementation
     #[\Override]
     public function take(int $size): self
     {
-        return new self(
-            $this->predicate,
-            $size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            static fn(string $value) => $previous($value) && $predicate($value),
-            $this->size,
-        );
+        return new self($size);
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
 
@@ -87,7 +67,7 @@ final class UnsafeStrings implements Implementation
         $values = Json::decode($json);
         $values = \array_values(\array_filter(
             $values,
-            $this->predicate,
+            $predicate,
         ));
 
         if (\count($values) === 0) {
@@ -100,9 +80,9 @@ final class UnsafeStrings implements Implementation
         while ($iterations < $this->size) {
             $index = $random->between(0, $size);
             $value = Value::immutable($values[$index])
-                ->predicatedOn($this->predicate);
+                ->predicatedOn($predicate);
 
-            yield $value->shrinkWith(self::shrink($value));
+            yield $value->shrinkWith(static fn() => self::shrink($value));
             ++$iterations;
         }
     }
@@ -118,7 +98,7 @@ final class UnsafeStrings implements Implementation
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             self::removeTrailingCharacter($value),
             self::removeLeadingCharacter($value),
         );
@@ -127,9 +107,9 @@ final class UnsafeStrings implements Implementation
     /**
      * @param Value<string> $value
      *
-     * @return callable(): Value<string>
+     * @return ?Value<string>
      */
-    private static function removeTrailingCharacter(Value $value): callable
+    private static function removeTrailingCharacter(Value $value): ?Value
     {
         $shrunk = $value->map(static fn($string) => \mb_substr(
             $string,
@@ -139,18 +119,18 @@ final class UnsafeStrings implements Implementation
         ));
 
         if (!$shrunk->acceptable()) {
-            return static fn() => $value->withoutShrinking();
+            return null;
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 
     /**
      * @param Value<string> $value
      *
-     * @return callable(): Value<string>
+     * @return ?Value<string>
      */
-    private static function removeLeadingCharacter(Value $value): callable
+    private static function removeLeadingCharacter(Value $value): ?Value
     {
         $shrunk = $value->map(static fn($string) => \mb_substr(
             $string,
@@ -160,9 +140,9 @@ final class UnsafeStrings implements Implementation
         ));
 
         if (!$shrunk->acceptable()) {
-            return static fn() => $value->withoutShrinking();
+            return null;
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 }

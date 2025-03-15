@@ -22,7 +22,6 @@ final class Composite implements Implementation
      *
      * @param \Closure(mixed...): (C|Seed<C>) $aggregate
      * @param list<Implementation> $sets
-     * @param \Closure(C): bool $predicate
      * @param ?int<1, max> $size
      */
     private function __construct(
@@ -30,7 +29,6 @@ final class Composite implements Implementation
         private Implementation $first,
         private Implementation $second,
         private array $sets,
-        private \Closure $predicate,
         private ?int $size,
         private bool $immutable,
     ) {
@@ -59,7 +57,6 @@ final class Composite implements Implementation
             $first,
             $second,
             $sets,
-            static fn(): bool => true,
             null, // by default allow all combinations
             $immutable,
         );
@@ -124,37 +121,13 @@ final class Composite implements Implementation
             $this->first,
             $this->second,
             $this->sets,
-            $this->predicate,
             $size,
             $this->immutable,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     *
-     * @param callable(C): bool $predicate
-     *
-     * @return self<C>
-     */
     #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->aggregate,
-            $this->first,
-            $this->second,
-            $this->sets,
-            static fn(mixed $value) => /** @var C $value */ $previous($value) && $predicate($value),
-            $this->size,
-            $this->immutable,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $matrix = $this->matrix()->values($random);
         $aggregate = $this->aggregate;
@@ -170,14 +143,14 @@ final class Composite implements Implementation
                 true => Value::immutable($combination),
                 false => Value::mutable(static fn() => $combination),
             };
-            $value = $value->predicatedOn($this->predicate);
+            $value = $value->predicatedOn($predicate);
             $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
 
             if (!$mapped->acceptable()) {
                 continue;
             }
 
-            yield $mapped->shrinkWith(Composite\RecursiveNthShrink::of(
+            yield $mapped->shrinkWith(fn() => Composite\RecursiveNthShrink::of(
                 $this->aggregate,
                 $value,
             ));

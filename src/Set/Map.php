@@ -18,12 +18,10 @@ final class Map implements Implementation
      *
      * @param \Closure(I): (Seed<D>|D) $map
      * @param Implementation<I> $set
-     * @param \Closure(D): bool $predicate
      */
     private function __construct(
         private \Closure $map,
         private Implementation $set,
-        private \Closure $predicate,
         private bool $immutable,
     ) {
     }
@@ -48,7 +46,6 @@ final class Map implements Implementation
         return new self(
             \Closure::fromCallable($map),
             $set,
-            static fn() => true,
             $immutable,
         );
     }
@@ -62,94 +59,87 @@ final class Map implements Implementation
         return new self(
             $this->map,
             $this->set->take($size),
-            $this->predicate,
             $this->immutable,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     #[\Override]
-    public function filter(callable $predicate): self
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $map = $this->map;
-        $previous = $this->predicate;
+        $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
+            /** @var I $value */
+            $mapped = $map($value);
 
-        /** @psalm-suppress MixedArgument */
-        return new self(
-            $this->map,
-            $this->set->filter(static function(mixed $value) use ($map, $predicate) {
-                $mapped = $map($value);
+            if ($mapped instanceof Seed) {
+                /** @var D */
+                $mapped = $mapped->unwrap();
+            }
 
-                if ($mapped instanceof Seed) {
-                    /** @var mixed */
-                    $mapped = $mapped->unwrap();
-                }
+            return $predicate($mapped);
+        };
 
-                return $predicate($mapped);
-            }),
-            static fn($value) => $previous($value) && $predicate($value),
-            $this->immutable,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
-    {
-        foreach ($this->set->values($random) as $value) {
+        foreach ($this->set->values($random, $mappedPredicate) as $value) {
             if ($value->isImmutable() && $this->immutable) {
                 $mapped = ($this->map)($value->unwrap());
 
                 yield Value::immutable($mapped)
-                    ->predicatedOn($this->predicate)
-                    ->shrinkWith($this->shrink(false, $value));
+                    ->predicatedOn($predicate)
+                    ->shrinkWith(fn() => $this->shrink(false, $value, $predicate));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
                 // nature is about the enclosing of the data and should not be part
                 // of the filtering process
                 yield Value::mutable(fn() => ($this->map)($value->unwrap()))
-                    ->predicatedOn($this->predicate)
-                    ->shrinkWith($this->shrink(true, $value));
+                    ->predicatedOn($predicate)
+                    ->shrinkWith(fn() => $this->shrink(true, $value, $predicate));
             }
         }
     }
 
     /**
      * @param Value<I> $value
+     * @param \Closure(D): bool $predicate
      *
      * @return ?Dichotomy<D>
      */
-    private function shrink(bool $mutable, Value $value): ?Dichotomy
-    {
-        if (!$value->shrinkable()) {
+    private function shrink(
+        bool $mutable,
+        Value $value,
+        \Closure $predicate,
+    ): ?Dichotomy {
+        $shrunk = $value->shrink();
+
+        if (\is_null($shrunk)) {
             return null;
         }
 
-        $shrinked = $value->shrink();
-
-        return new Dichotomy(
-            $this->shrinkWithStrategy($mutable, $shrinked->a()),
-            $this->shrinkWithStrategy($mutable, $shrinked->b()),
+        return Dichotomy::of(
+            $this->shrinkWithStrategy($mutable, $shrunk->a(), $predicate),
+            $this->shrinkWithStrategy($mutable, $shrunk->b(), $predicate),
         );
     }
 
     /**
      * @param Value<I> $strategy
+     * @param \Closure(D): bool $predicate
      *
-     * @return callable(): Value<D>
+     * @return Value<D>
      */
-    private function shrinkWithStrategy(bool $mutable, Value $strategy): callable
-    {
+    private function shrinkWithStrategy(
+        bool $mutable,
+        Value $strategy,
+        \Closure $predicate,
+    ): Value {
         if ($mutable) {
-            return fn(): Value => Value::mutable(fn() => ($this->map)($strategy->unwrap()))
-                ->predicatedOn($this->predicate)
-                ->shrinkWith($this->shrink(true, $strategy));
+            return Value::mutable(fn() => ($this->map)($strategy->unwrap()))
+                ->predicatedOn($predicate)
+                ->shrinkWith(fn() => $this->shrink(true, $strategy, $predicate));
         }
 
-        return fn(): Value => Value::immutable(($this->map)($strategy->unwrap()))
-            ->predicatedOn($this->predicate)
-            ->shrinkWith($this->shrink(false, $strategy));
+        return Value::immutable(($this->map)($strategy->unwrap()))
+            ->predicatedOn($predicate)
+            ->shrinkWith(fn() => $this->shrink(false, $strategy, $predicate));
     }
 }

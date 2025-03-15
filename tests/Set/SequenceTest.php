@@ -124,7 +124,7 @@ class SequenceTest extends TestCase
                 continue;
             }
 
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 
@@ -140,7 +140,7 @@ class SequenceTest extends TestCase
                 continue;
             }
 
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 
@@ -253,8 +253,8 @@ class SequenceTest extends TestCase
             ->toSet();
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
-            while ($sequence->shrinkable()) {
-                $sequence = $sequence->shrink()->a();
+            while ($shrunk = $sequence->shrink()) {
+                $sequence = $shrunk->a();
             }
 
             $this->assertCount(10, $sequence->unwrap());
@@ -278,7 +278,7 @@ class SequenceTest extends TestCase
             ->toSet();
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
-            if (!$value->shrinkable()) {
+            if (!$value->shrink()) {
                 continue;
             }
 
@@ -299,8 +299,8 @@ class SequenceTest extends TestCase
             ->toSet();
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
-            while ($sequence->shrinkable()) {
-                $sequence = $sequence->shrink()->a();
+            while ($shrunk = $sequence->shrink()) {
+                $sequence = $shrunk->a();
             }
 
             $this->assertSame([0], $sequence->unwrap());

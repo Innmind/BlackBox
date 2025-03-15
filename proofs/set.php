@@ -159,8 +159,8 @@ return static function() {
             foreach ($compose->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -180,8 +180,8 @@ return static function() {
             foreach ($compose->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -213,8 +213,8 @@ return static function() {
             foreach ($compose->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -246,8 +246,8 @@ return static function() {
             foreach ($compose->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -271,8 +271,8 @@ return static function() {
             foreach ($compose->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -298,8 +298,8 @@ return static function() {
             foreach ($compose->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -334,8 +334,8 @@ return static function() {
             foreach ($compose->take(10)->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 
@@ -368,8 +368,8 @@ return static function() {
             foreach ($compose->take(10)->values(Random::default) as $value) {
                 $value->unwrap();
 
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                     $value->unwrap();
                 }
 

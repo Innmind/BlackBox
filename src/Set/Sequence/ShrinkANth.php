@@ -17,9 +17,9 @@ final class ShrinkANth
      * @param Value<list<Value<A>>> $value
      * @param 0|positive-int $n
      *
-     * @return callable(): Value<list<A>>
+     * @return ?Value<list<A>>
      */
-    public static function of(Value $value, int $n = 0): callable
+    public static function of(Value $value, int $n = 0): ?Value
     {
         $sequence = $value->unwrap();
 
@@ -27,22 +27,16 @@ final class ShrinkANth
             return ShrinkBNth::of($value);
         }
 
-        if (!$sequence[$n]->shrinkable()) {
+        $nShrunk = $sequence[$n]->shrink();
+
+        if (\is_null($nShrunk)) {
             return self::of($value, $n + 1);
         }
 
-        $shrunk = $value->map(static function($sequence) use ($n) {
-            $shrunk = [];
+        $shrunk = $value->map(static function($sequence) use ($n, $nShrunk) {
+            $sequence[$n] = $nShrunk->a();
 
-            foreach ($sequence as $i => $value) {
-                if ($i === $n) {
-                    $value = $value->shrink()->a();
-                }
-
-                $shrunk[] = $value;
-            }
-
-            return $shrunk;
+            return \array_values($sequence);
         });
         $detonated = $shrunk->map(Detonate::of(...));
 
@@ -50,7 +44,7 @@ final class ShrinkANth
             return self::of($value, $n + 1);
         }
 
-        return static fn() => $detonated->shrinkWith(RecursiveNthShrink::of(
+        return $detonated->shrinkWith(static fn() => RecursiveNthShrink::of(
             $shrunk,
             $n,
         ));

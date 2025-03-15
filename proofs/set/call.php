@@ -27,7 +27,7 @@ return static function() {
             $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
             $current = $set->current();
 
-            $assert->false($current->shrinkable());
+            $assert->null($current->shrink());
         },
     )->tag(Tag::ci, Tag::local);
 

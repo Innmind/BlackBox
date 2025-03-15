@@ -32,7 +32,7 @@ final class RecursiveNth
             return null;
         }
 
-        return new Dichotomy(
+        return Dichotomy::of(
             RemoveNth::of($value, $n),
             RemoveNth::of($value, $n + 1),
         );

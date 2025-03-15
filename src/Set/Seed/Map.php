@@ -74,54 +74,38 @@ final class Map
 
     /**
      * @param \Closure(T): bool $predicate
+     *
+     * @return ?Dichotomy<T>
      */
-    public function shrinkable(\Closure $predicate): bool
+    public function shrink(\Closure $predicate): ?Dichotomy
     {
-        if (!$this->value->shrinkable()) {
-            return false;
-        }
-
         $shrunk = $this->value->shrink();
 
+        if (\is_null($shrunk)) {
+            return null;
+        }
+
+        // There's no need to define the immutability of the values here because
+        // it's held by the values injected in the new Seeds.
+        // No dichotomy because the captured values in the configure lambda is
+        // shrunk first
         $a = Value::immutable(Seed::of($shrunk->a())->map($this->map))
             ->predicatedOn($predicate);
         $b = Value::immutable(Seed::of($shrunk->b())->map($this->map))
             ->predicatedOn($predicate);
 
-        // With the current design we need both values to be acceptable in order
-        // to return a valid dichotomy. But this means that even if "b" is
-        // acceptable we won't test against it. So the shrinking mechanism may
-        // not pinpoint the minimum case every time.
-        return $a->acceptable() && $b->acceptable();
-    }
+        // If one of the strategies is not acceptable then we remove it and it
+        // will de defaulted to the parent value. And if both of them are not
+        // acceptable then the shrinking stops.
+        if (!$a->acceptable()) {
+            $a = null;
+        }
 
-    /**
-     * @param \Closure(T): bool $predicate
-     *
-     * @return Dichotomy<T>
-     */
-    public function shrink(\Closure $predicate): Dichotomy
-    {
-        $shrunk = $this->value->shrink();
+        if (!$b->acceptable()) {
+            $b = null;
+        }
 
-        $a = $shrunk->a();
-        $b = $shrunk->b();
-        $map = $this->map;
-
-        // There's no need to define the immutability of the values here because
-        // it's held by the values injected in the new Seeds.
-        return new Dichotomy(
-            static fn() => Value::immutable(
-                Seed::of($a)->map($map),
-                // No dichotomy because the captured values in the configure
-                // lambda is shrunk first
-            )->predicatedOn($predicate),
-            static fn() => Value::immutable(
-                Seed::of($b)->map($map),
-                // No dichotomy because the captured values in the configure
-                // lambda is shrunk first
-            )->predicatedOn($predicate),
-        );
+        return Dichotomy::of($a, $b);
     }
 
     /**

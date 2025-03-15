@@ -105,15 +105,15 @@ class StringsTest extends TestCase
         $strings = Strings::between(0, 1); // always generate string of length 1
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
-            if (!$value->shrinkable()) {
+            if (!$value->shrink()) {
                 continue;
             }
 
-            $this->assertFalse(
+            $this->assertNull(
                 $value
                     ->shrink()
                     ->a() // length of 0
-                    ->shrinkable(),
+                    ->shrink(),
             );
         }
     }
@@ -123,7 +123,7 @@ class StringsTest extends TestCase
         $strings = Strings::any()->filter(static fn($string) => $string !== '');
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 
@@ -177,10 +177,10 @@ class StringsTest extends TestCase
         $integers = Strings::between(20, 80);
 
         $assertInBounds = function(Value $value, string $strategy) {
-            while ($value->shrinkable()) {
+            while ($shrunk = $value->shrink()) {
                 $this->assertGreaterThanOrEqual(20, \strlen($value->unwrap()));
                 $this->assertLessThanOrEqual(80, \strlen($value->unwrap()));
-                $value = $value->shrink()->$strategy();
+                $value = $shrunk->$strategy();
             }
         };
 

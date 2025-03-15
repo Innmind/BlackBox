@@ -69,46 +69,35 @@ final class Combination
     /**
      * @param 0|positive-int $n
      */
-    public function aShrinkNth(int $n): self
+    public function aShrinkNth(int $n): ?self
     {
-        $shrunk = [];
+        $shrunk = $this->values;
+        $nShrunk = $this->values[$n]->shrink();
 
-        foreach ($this->values as $i => $value) {
-            if ($i === $n) {
-                $value = $value->shrink()->a();
-            }
-
-            $shrunk[] = $value;
+        if (\is_null($nShrunk)) {
+            return null;
         }
 
-        return new self($shrunk);
+        $shrunk[$n] = $nShrunk->a();
+
+        return new self(\array_values($shrunk));
     }
 
     /**
      * @param 0|positive-int $n
      */
-    public function bShrinkNth(int $n): self
+    public function bShrinkNth(int $n): ?self
     {
-        $shrunk = [];
+        $shrunk = $this->values;
+        $nShrunk = $this->values[$n]->shrink();
 
-        foreach ($this->values as $i => $value) {
-            if ($i === $n) {
-                $value = $value->shrink()->b();
-            }
-
-            $shrunk[] = $value;
+        if (\is_null($nShrunk)) {
+            return null;
         }
 
-        return new self($shrunk);
-    }
+        $shrunk[$n] = $nShrunk->b();
 
-    public function shrinkable(): bool
-    {
-        return \array_reduce(
-            $this->values,
-            static fn(bool $shrinkable, Value $value): bool => $shrinkable || $value->shrinkable(),
-            false,
-        );
+        return new self(\array_values($shrunk));
     }
 
     private function unwrap(): array

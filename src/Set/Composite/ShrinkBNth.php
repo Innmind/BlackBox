@@ -21,23 +21,23 @@ final class ShrinkBNth
      * @param Value<Combination> $value
      * @param 0|positive-int $n
      *
-     * @return callable(): Value<A>
+     * @return ?Value<A>
      */
     public static function of(
         callable $aggregate,
         Value $value,
         int $n = 0,
-    ): callable {
+    ): ?Value {
         $combination = $value->unwrap();
         $values = $combination->values();
 
         if (!\array_key_exists($n, $values)) {
-            return static fn() => $value
-                ->map(static fn($combination) => $combination->detonate($aggregate))
-                ->withoutShrinking();
+            return null;
         }
 
-        if (!$values[$n]->shrinkable()) {
+        $shrunk = $combination->bShrinkNth($n);
+
+        if (\is_null($shrunk)) {
             return self::of(
                 $aggregate,
                 $value,
@@ -45,7 +45,7 @@ final class ShrinkBNth
             );
         }
 
-        $shrunk = $value->map(static fn($combination) => $combination->bShrinkNth($n));
+        $shrunk = $value->map(static fn() => $shrunk);
         $mapped = $shrunk->map(
             static fn($combination) => $combination->detonate($aggregate),
         );
@@ -58,7 +58,7 @@ final class ShrinkBNth
             );
         }
 
-        return static fn() => $mapped->shrinkWith(RecursiveNthShrink::of(
+        return $mapped->shrinkWith(static fn() => RecursiveNthShrink::of(
             $aggregate,
             $shrunk,
             $n,

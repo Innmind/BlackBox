@@ -99,25 +99,8 @@ final class Either implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     #[\Override]
-    public function filter(callable $predicate): self
-    {
-        return new self(
-            $this->first->filter($predicate),
-            $this->second->filter($predicate),
-            \array_map(
-                static fn(Implementation $set): Implementation => $set->filter($predicate),
-                $this->rest,
-            ),
-            $this->size,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $iterations = 0;
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
@@ -137,7 +120,7 @@ final class Either implements Implementation
             $setToChoose = $random->between(0, $count - 1);
 
             try {
-                $value = $sets[$setToChoose]->values($random)->current();
+                $value = $sets[$setToChoose]->values($random, $predicate)->current();
 
                 if (\is_null($value)) {
                     continue;
