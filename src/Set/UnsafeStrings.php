@@ -82,7 +82,7 @@ final class UnsafeStrings implements Implementation
             $value = Value::immutable($values[$index])
                 ->predicatedOn($predicate);
 
-            yield $value->shrinkWith(static fn() => self::shrink($value));
+            yield $value->shrinkWith(self::shrink(...));
             ++$iterations;
         }
     }
@@ -122,7 +122,7 @@ final class UnsafeStrings implements Implementation
             return null;
         }
 
-        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(self::shrink(...));
     }
 
     /**
@@ -143,6 +143,6 @@ final class UnsafeStrings implements Implementation
             return null;
         }
 
-        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(self::shrink(...));
     }
 }

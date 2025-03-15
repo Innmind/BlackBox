@@ -123,7 +123,7 @@ final class RealNumbers implements Implementation
                 continue;
             }
 
-            yield $value->shrinkWith(static fn() => self::shrink($value));
+            yield $value->shrinkWith(self::shrink(...));
             ++$iterations;
         }
     }
@@ -158,7 +158,7 @@ final class RealNumbers implements Implementation
             return self::reduceByOne($value);
         }
 
-        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(self::shrink(...));
     }
 
     /**
@@ -178,6 +178,6 @@ final class RealNumbers implements Implementation
             return null;
         }
 
-        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(self::shrink(...));
     }
 }
