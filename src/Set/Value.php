@@ -15,7 +15,7 @@ final class Value
      * @psalm-mutation-free
      *
      * @param \Closure(): (T|Seed<T>) $unwrap
-     * @param \Closure(): ?Dichotomy<T> $shrink
+     * @param \Closure(self<T>): ?Dichotomy<T> $shrink
      * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
@@ -74,7 +74,7 @@ final class Value
         return new self(
             $this->immutable,
             $this->unwrap,
-            $shrink,
+            static fn(self $default) => $shrink()?->default($default),
             $this->predicate,
         );
     }
@@ -172,7 +172,7 @@ final class Value
      */
     public function shrink(): ?Dichotomy
     {
-        return ($this->shrink)() ?? $this->seed?->shrink($this->predicate);
+        return ($this->shrink)($this->withoutShrinking()) ?? $this->seed?->shrink($this->predicate);
     }
 
     /**

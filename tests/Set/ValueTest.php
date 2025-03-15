@@ -63,7 +63,9 @@ class ValueTest extends TestCase
         $immutable = Value::immutable(new \stdClass)->shrinkWith(static fn() => $expectedImmutable);
         $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith(static fn() => $expectedMutable);
 
-        $this->assertSame($expectedImmutable, $immutable->shrink());
-        $this->assertSame($expectedMutable, $mutable->shrink());
+        $this->assertSame($expectedImmutable->a(), $immutable->shrink()->a());
+        $this->assertSame($expectedImmutable->b(), $immutable->shrink()->b());
+        $this->assertSame($expectedMutable->a(), $mutable->shrink()->a());
+        $this->assertSame($expectedMutable->b(), $mutable->shrink()->b());
     }
 }

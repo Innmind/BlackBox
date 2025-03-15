@@ -10,12 +10,12 @@ namespace Innmind\BlackBox\Set;
 final class Dichotomy
 {
     /**
-     * @param Value<T> $a
-     * @param Value<T> $b
+     * @param ?Value<T> $a
+     * @param ?Value<T> $b
      */
     private function __construct(
-        private Value $a,
-        private Value $b,
+        private ?Value $a,
+        private ?Value $b,
     ) {
     }
 
@@ -23,14 +23,33 @@ final class Dichotomy
      * @internal
      * @template V
      *
-     * @param Value<V> $a
-     * @param Value<V> $b
+     * @param ?Value<V> $a
+     * @param ?Value<V> $b
      *
-     * @return self<V>
+     * @return ?self<V>
      */
-    public static function of(Value $a, Value $b): self
+    public static function of(?Value $a, ?Value $b): ?self
     {
+        if (\is_null($a) && \is_null($b)) {
+            return null;
+        }
+
         return new self($a, $b);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param Value<T> $default
+     *
+     * @return self<T>
+     */
+    public function default(Value $default): self
+    {
+        return new self(
+            $this->a ?? $default,
+            $this->b ?? $default,
+        );
     }
 
     /**
@@ -38,7 +57,7 @@ final class Dichotomy
      */
     public function a(): Value
     {
-        return $this->a;
+        return $this->a ?? throw new \LogicException('Default value missing');
     }
 
     /**
@@ -46,6 +65,6 @@ final class Dichotomy
      */
     public function b(): Value
     {
-        return $this->b;
+        return $this->b ?? throw new \LogicException('Default value missing');
     }
 }
