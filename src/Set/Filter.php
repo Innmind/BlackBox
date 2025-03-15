@@ -75,7 +75,7 @@ final class Filter implements Implementation
 
         yield from $this->set->values(
             $random,
-            static fn($value) => /** @var I $value */ $predicate($value) && $own($value),
+            static fn($value) => /** @var I $value */ $own($value) && $predicate($value),
         );
     }
 }
