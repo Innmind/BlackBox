@@ -153,9 +153,9 @@ final class Integers implements Implementation
     /**
      * @param Value<int> $value
      *
-     * @return callable(): Value<int>
+     * @return Value<int>
      */
-    private static function divideByTwo(Value $value): callable
+    private static function divideByTwo(Value $value): Value
     {
         $shrunk = $value->map(static fn($int) => (int) \round(
             $int / 2,
@@ -167,23 +167,23 @@ final class Integers implements Implementation
             return self::reduceByOne($value);
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 
     /**
      * @param Value<int> $value
      *
-     * @return callable(): Value<int>
+     * @return Value<int>
      */
-    private static function reduceByOne(Value $value): callable
+    private static function reduceByOne(Value $value): Value
     {
         // add one when the value is negative, otherwise subtract one
         $shrunk = $value->map(static fn($int) => $int + (($int <=> 0) * -1));
 
         if (!$shrunk->acceptable()) {
-            return static fn() => $value->withoutShrinking();
+            return $value->withoutShrinking();
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 }

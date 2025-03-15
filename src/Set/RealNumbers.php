@@ -148,9 +148,9 @@ final class RealNumbers implements Implementation
     /**
      * @param Value<float> $value
      *
-     * @return callable(): Value<float>
+     * @return Value<float>
      */
-    private static function divideByTwo(Value $value): callable
+    private static function divideByTwo(Value $value): Value
     {
         $shrunk = $value->map(static fn(float $value) => $value / 2.0);
 
@@ -158,15 +158,15 @@ final class RealNumbers implements Implementation
             return self::reduceByOne($value);
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 
     /**
      * @param Value<float> $value
      *
-     * @return callable(): Value<float>
+     * @return Value<float>
      */
-    private static function reduceByOne(Value $value): callable
+    private static function reduceByOne(Value $value): Value
     {
         // add one when the value is negative, otherwise subtract one
         /** @psalm-suppress InvalidOperand Don't know why it complains */
@@ -175,9 +175,9 @@ final class RealNumbers implements Implementation
         ));
 
         if (!$shrunk->acceptable()) {
-            return static fn() => $value->withoutShrinking();
+            return $value->withoutShrinking();
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
+        return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 }

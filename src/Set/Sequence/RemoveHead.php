@@ -16,9 +16,9 @@ final class RemoveHead
      *
      * @param Value<list<Value<A>>> $value
      *
-     * @return callable(): Value<list<A>>
+     * @return Value<list<A>>
      */
-    public static function of(Value $value): callable
+    public static function of(Value $value): Value
     {
         $shrunk = $value->map(static function($sequence) {
             $shrunk = $sequence;
@@ -32,6 +32,6 @@ final class RemoveHead
             return RemoveNth::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(static fn() => RecursiveHead::of($shrunk));
+        return $detonated->shrinkWith(static fn() => RecursiveHead::of($shrunk));
     }
 }

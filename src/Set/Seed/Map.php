@@ -102,10 +102,7 @@ final class Map
 
         // There's no need to define the immutability of the values here because
         // it's held by the values injected in the new Seeds.
-        return Dichotomy::of(
-            static fn() => $a,
-            static fn() => $b,
-        );
+        return Dichotomy::of($a, $b);
     }
 
     /**

@@ -21,13 +21,13 @@ final class ShrinkANth
      * @param Value<Combination> $value
      * @param 0|positive-int $n
      *
-     * @return callable(): Value<A>
+     * @return Value<A>
      */
     public static function of(
         callable $aggregate,
         Value $value,
         int $n,
-    ): callable {
+    ): Value {
         $combination = $value->unwrap();
         $values = $combination->values();
 
@@ -61,7 +61,7 @@ final class ShrinkANth
             );
         }
 
-        return static fn() => $mapped->shrinkWith(static fn() => RecursiveNthShrink::of(
+        return $mapped->shrinkWith(static fn() => RecursiveNthShrink::of(
             $aggregate,
             $shrunk,
             $n,

@@ -117,12 +117,12 @@ final class FlatMap
         // There's no need to define the immutability of the values here because
         // it's held by the values injected in the new Seeds.
         return Dichotomy::of(
-            static fn() => Value::immutable(
+            Value::immutable(
                 Seed::of($a)->flatMap($map),
                 // No dichotomy because the captured values in the configure
                 // lambda is shrunk first
             )->predicatedOn($predicate),
-            static fn() => Value::immutable(
+            Value::immutable(
                 Seed::of($b)->flatMap($map),
                 // No dichotomy because the captured values in the configure
                 // lambda is shrunk first

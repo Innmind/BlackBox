@@ -125,20 +125,20 @@ final class Map implements Implementation
      * @param Value<I> $strategy
      * @param \Closure(D): bool $predicate
      *
-     * @return callable(): Value<D>
+     * @return Value<D>
      */
     private function shrinkWithStrategy(
         bool $mutable,
         Value $strategy,
         \Closure $predicate,
-    ): callable {
+    ): Value {
         if ($mutable) {
-            return fn(): Value => Value::mutable(fn() => ($this->map)($strategy->unwrap()))
+            return Value::mutable(fn() => ($this->map)($strategy->unwrap()))
                 ->predicatedOn($predicate)
                 ->shrinkWith(fn() => $this->shrink(true, $strategy, $predicate));
         }
 
-        return fn(): Value => Value::immutable(($this->map)($strategy->unwrap()))
+        return Value::immutable(($this->map)($strategy->unwrap()))
             ->predicatedOn($predicate)
             ->shrinkWith(fn() => $this->shrink(false, $strategy, $predicate));
     }

@@ -17,9 +17,9 @@ final class RemoveNth
      * @param Value<list<Value<A>>> $value
      * @param positive-int $n
      *
-     * @return callable(): Value<list<A>>
+     * @return Value<list<A>>
      */
-    public static function of(Value $value, int $n = 1): callable
+    public static function of(Value $value, int $n = 1): Value
     {
         if (!\array_key_exists($n, $value->unwrap())) {
             return ShrinkANth::of($value);
@@ -42,7 +42,7 @@ final class RemoveNth
             return ShrinkANth::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(static fn() => RecursiveNth::of(
+        return $detonated->shrinkWith(static fn() => RecursiveNth::of(
             $shrunk,
             $n,
         ));

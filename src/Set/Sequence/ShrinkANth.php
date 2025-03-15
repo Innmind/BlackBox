@@ -17,9 +17,9 @@ final class ShrinkANth
      * @param Value<list<Value<A>>> $value
      * @param 0|positive-int $n
      *
-     * @return callable(): Value<list<A>>
+     * @return Value<list<A>>
      */
-    public static function of(Value $value, int $n = 0): callable
+    public static function of(Value $value, int $n = 0): Value
     {
         $sequence = $value->unwrap();
 
@@ -44,7 +44,7 @@ final class ShrinkANth
             return self::of($value, $n + 1);
         }
 
-        return static fn() => $detonated->shrinkWith(static fn() => RecursiveNthShrink::of(
+        return $detonated->shrinkWith(static fn() => RecursiveNthShrink::of(
             $shrunk,
             $n,
         ));

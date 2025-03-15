@@ -16,9 +16,9 @@ final class RemoveHalf
      *
      * @param Value<list<Value<A>>> $value
      *
-     * @return callable(): Value<list<A>>
+     * @return Value<list<A>>
      */
-    public static function of(Value $value): callable
+    public static function of(Value $value): Value
     {
         // we round half down otherwise a sequence of 1 element would be shrunk
         // to a sequence of 1 element resulting in a infinite recursion
@@ -33,6 +33,6 @@ final class RemoveHalf
             return RemoveTail::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(static fn() => RecursiveHalf::of($shrunk));
+        return $detonated->shrinkWith(static fn() => RecursiveHalf::of($shrunk));
     }
 }
