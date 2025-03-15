@@ -18,12 +18,10 @@ final class Map implements Implementation
      *
      * @param \Closure(I): (Seed<D>|D) $map
      * @param Implementation<I> $set
-     * @param \Closure(D): bool $predicate
      */
     private function __construct(
         private \Closure $map,
         private Implementation $set,
-        private \Closure $predicate,
         private bool $immutable,
     ) {
     }
@@ -48,7 +46,6 @@ final class Map implements Implementation
         return new self(
             \Closure::fromCallable($map),
             $set,
-            static fn() => true,
             $immutable,
         );
     }
@@ -62,34 +59,6 @@ final class Map implements Implementation
         return new self(
             $this->map,
             $this->set->take($size),
-            $this->predicate,
-            $this->immutable,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $map = $this->map;
-        $previous = $this->predicate;
-
-        /** @psalm-suppress MixedArgument */
-        return new self(
-            $this->map,
-            $this->set->filter(static function(mixed $value) use ($map, $predicate) {
-                $mapped = $map($value);
-
-                if ($mapped instanceof Seed) {
-                    /** @var mixed */
-                    $mapped = $mapped->unwrap();
-                }
-
-                return $predicate($mapped);
-            }),
-            static fn($value) => $previous($value) && $predicate($value),
             $this->immutable,
         );
     }

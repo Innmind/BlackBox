@@ -20,12 +20,10 @@ final class FromGenerator implements Implementation
      * @psalm-mutation-free
      *
      * @param \Closure(Random): \Generator<T|Seed<T>> $generatorFactory
-     * @param \Closure(T): bool $predicate
      * @param int<1, max> $size
      */
     private function __construct(
         private \Closure $generatorFactory,
-        private \Closure $predicate,
         private int $size,
         private bool $immutable,
     ) {
@@ -47,7 +45,6 @@ final class FromGenerator implements Implementation
     ): self {
         return new self(
             \Closure::fromCallable($generatorFactory),
-            static fn(): bool => true,
             100,
             $immutable,
         );
@@ -91,24 +88,7 @@ final class FromGenerator implements Implementation
     {
         return new self(
             $this->generatorFactory,
-            $this->predicate,
             $size,
-            $this->immutable,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->generatorFactory,
-            static fn(mixed $value) => /** @var T $value */ $previous($value) && $predicate($value),
-            $this->size,
             $this->immutable,
         );
     }

@@ -64,22 +64,6 @@ final class FlatMap implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $decorate = $this->decorate;
-
-        /** @psalm-suppress MixedArgument */
-        return new self(
-            static fn($value) => $decorate($value)->filter($predicate),
-            $this->set,
-            $this->size,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate): \Generator
     {

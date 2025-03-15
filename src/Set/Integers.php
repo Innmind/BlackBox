@@ -17,13 +17,11 @@ final class Integers implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(int): bool $predicate
      * @param int<1, max> $size
      */
     private function __construct(
         private int $min,
         private int $max,
-        private \Closure $predicate,
         private int $size,
     ) {
     }
@@ -34,13 +32,9 @@ final class Integers implements Implementation
      */
     public static function implementation(?int $min, ?int $max): self
     {
-        $min ??= \PHP_INT_MIN;
-        $max ??= \PHP_INT_MAX;
-
         return new self(
-            $min,
-            $max,
-            static fn(int $value): bool => $value >= $min && $value <= $max,
+            $min ?? \PHP_INT_MIN,
+            $max ?? \PHP_INT_MAX,
             100,
         );
     }
@@ -112,24 +106,7 @@ final class Integers implements Implementation
         return new self(
             $this->min,
             $this->max,
-            $this->predicate,
             $size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->min,
-            $this->max,
-            static fn(int $value) => $previous($value) && $predicate($value),
-            $this->size,
         );
     }
 

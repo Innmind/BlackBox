@@ -19,14 +19,12 @@ final class Sequence implements Implementation
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param \Closure(list<I>): bool $predicate
      * @param int<1, max> $size
      * @param int<1, max> $min
      */
     private function __construct(
         private Implementation $set,
         private Integers $sizes,
-        private \Closure $predicate,
         private int $size,
         private int $min,
     ) {
@@ -50,7 +48,6 @@ final class Sequence implements Implementation
         return new self(
             $set,
             $sizes,
-            static fn(array $sequence): bool => \count($sequence) >= $sizes->min(),
             100,
             $sizes->min(),
         );
@@ -80,25 +77,7 @@ final class Sequence implements Implementation
         return new self(
             $this->set,
             $this->sizes->take($size),
-            $this->predicate,
             $size,
-            $this->min,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->set,
-            $this->sizes,
-            static fn(array $value) => /** @var list<I> $value */ $previous($value) && $predicate($value),
-            $this->size,
             $this->min,
         );
     }

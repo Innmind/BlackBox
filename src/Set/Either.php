@@ -99,23 +99,6 @@ final class Either implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        return new self(
-            $this->first->filter($predicate),
-            $this->second->filter($predicate),
-            \array_map(
-                static fn(Implementation $set): Implementation => $set->filter($predicate),
-                $this->rest,
-            ),
-            $this->size,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate): \Generator
     {

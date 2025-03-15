@@ -19,13 +19,10 @@ final class UnsafeStrings implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(string): bool $predicate
      * @param int<1, max> $size
      */
-    private function __construct(
-        private \Closure $predicate,
-        private int $size,
-    ) {
+    private function __construct(private int $size)
+    {
     }
 
     /**
@@ -34,7 +31,7 @@ final class UnsafeStrings implements Implementation
      */
     public static function implementation(): self
     {
-        return new self(static fn(): bool => true, 100);
+        return new self(100);
     }
 
     /**
@@ -54,24 +51,7 @@ final class UnsafeStrings implements Implementation
     #[\Override]
     public function take(int $size): self
     {
-        return new self(
-            $this->predicate,
-            $size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            static fn(string $value) => $previous($value) && $predicate($value),
-            $this->size,
-        );
+        return new self($size);
     }
 
     #[\Override]

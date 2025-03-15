@@ -45,13 +45,13 @@ final class Filter implements Implementation
 
             /** @psalm-suppress ImpurePropertyFetch */
             return new self(
-                $set->set->filter($predicate),
+                $set->set,
                 static fn($value) => /** @var T $value */ $previous($value) && $predicate($value),
             );
         }
 
         return new self(
-            $set->filter($predicate),
+            $set,
             \Closure::fromCallable($predicate),
         );
     }
@@ -66,15 +66,6 @@ final class Filter implements Implementation
             $this->set->take($size),
             $this->predicate,
         );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        return self::implementation($this, $predicate);
     }
 
     #[\Override]
