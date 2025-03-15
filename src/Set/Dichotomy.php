@@ -23,18 +23,24 @@ final class Dichotomy
      * @internal
      * @template V
      *
-     * @param callable(): Value<V> $a
-     * @param callable(): Value<V> $b
+     * @param (callable(): Value<V>)|Value<V> $a
+     * @param (callable(): Value<V>)|Value<V> $b
      *
      * @return self<V>
      */
     public static function of(
-        callable $a,
-        callable $b,
+        callable|Value $a,
+        callable|Value $b,
     ): self {
         return new self(
-            \Closure::fromCallable($a),
-            \Closure::fromCallable($b),
+            match (true) {
+                $a instanceof Value => static fn() => $a,
+                default => \Closure::fromCallable($a),
+            },
+            match (true) {
+                $b instanceof Value => static fn() => $b,
+                default => \Closure::fromCallable($b),
+            },
         );
     }
 
