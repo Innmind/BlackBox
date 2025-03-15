@@ -172,7 +172,9 @@ final class Value
      */
     public function shrink(): ?Dichotomy
     {
-        return ($this->shrink)($this->withoutShrinking()) ?? $this->seed?->shrink($this->predicate);
+        $identity = $this->withoutShrinking();
+
+        return ($this->shrink)($identity) ?? $this->seed?->shrink($this->predicate)?->default($identity);
     }
 
     /**

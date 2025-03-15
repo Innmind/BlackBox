@@ -85,6 +85,8 @@ final class Map
             return null;
         }
 
+        // There's no need to define the immutability of the values here because
+        // it's held by the values injected in the new Seeds.
         // No dichotomy because the captured values in the configure lambda is
         // shrunk first
         $a = Value::immutable(Seed::of($shrunk->a())->map($this->map))
@@ -92,16 +94,17 @@ final class Map
         $b = Value::immutable(Seed::of($shrunk->b())->map($this->map))
             ->predicatedOn($predicate);
 
-        // With the current design we need both values to be acceptable in order
-        // to return a valid dichotomy. But this means that even if "b" is
-        // acceptable we won't test against it. So the shrinking mechanism may
-        // not pinpoint the minimum case every time.
-        if (!$a->acceptable() || !$b->acceptable()) {
-            return null;
+        // If one of the strategies is not acceptable then we remove it and it
+        // will de defaulted to the parent value. And if both of them are not
+        // acceptable then the shrinking stops.
+        if (!$a->acceptable()) {
+            $a = null;
         }
 
-        // There's no need to define the immutability of the values here because
-        // it's held by the values injected in the new Seeds.
+        if (!$b->acceptable()) {
+            $b = null;
+        }
+
         return Dichotomy::of($a, $b);
     }
 
