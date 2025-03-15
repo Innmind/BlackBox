@@ -35,9 +35,9 @@ interface Implementation
     /**
      * @psalm-suppress InvalidTemplateParam
      *
-     * @throws EmptySet When no value can be generated
-     *
      * @param \Closure(T): bool $predicate
+     *
+     * @throws EmptySet When no value can be generated
      *
      * @return \Generator<Value<T>>
      */
