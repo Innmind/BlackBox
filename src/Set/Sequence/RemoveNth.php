@@ -42,7 +42,7 @@ final class RemoveNth
             return ShrinkANth::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(RecursiveNth::of(
+        return static fn() => $detonated->shrinkWith(static fn() => RecursiveNth::of(
             $shrunk,
             $n,
         ));

@@ -33,6 +33,6 @@ final class RemoveHalf
             return RemoveTail::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(RecursiveHalf::of($shrunk));
+        return static fn() => $detonated->shrinkWith(static fn() => RecursiveHalf::of($shrunk));
     }
 }

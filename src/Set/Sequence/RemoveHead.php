@@ -32,6 +32,6 @@ final class RemoveHead
             return RemoveNth::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(RecursiveHead::of($shrunk));
+        return static fn() => $detonated->shrinkWith(static fn() => RecursiveHead::of($shrunk));
     }
 }

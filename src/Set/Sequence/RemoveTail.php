@@ -32,6 +32,6 @@ final class RemoveTail
             return RemoveHead::of($value);
         }
 
-        return static fn() => $detonated->shrinkWith(RecursiveTail::of($shrunk));
+        return static fn() => $detonated->shrinkWith(static fn() => RecursiveTail::of($shrunk));
     }
 }

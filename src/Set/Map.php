@@ -85,7 +85,7 @@ final class Map implements Implementation
 
                 yield Value::immutable($mapped)
                     ->predicatedOn($predicate)
-                    ->shrinkWith($this->shrink(false, $value, $predicate));
+                    ->shrinkWith(fn() => $this->shrink(false, $value, $predicate));
             } else {
                 // we don't need to re-apply the predicate when we handle mutable
                 // data as the underlying data is already validated and the mutable
@@ -93,7 +93,7 @@ final class Map implements Implementation
                 // of the filtering process
                 yield Value::mutable(fn() => ($this->map)($value->unwrap()))
                     ->predicatedOn($predicate)
-                    ->shrinkWith($this->shrink(true, $value, $predicate));
+                    ->shrinkWith(fn() => $this->shrink(true, $value, $predicate));
             }
         }
     }
@@ -135,11 +135,11 @@ final class Map implements Implementation
         if ($mutable) {
             return fn(): Value => Value::mutable(fn() => ($this->map)($strategy->unwrap()))
                 ->predicatedOn($predicate)
-                ->shrinkWith($this->shrink(true, $strategy, $predicate));
+                ->shrinkWith(fn() => $this->shrink(true, $strategy, $predicate));
         }
 
         return fn(): Value => Value::immutable(($this->map)($strategy->unwrap()))
             ->predicatedOn($predicate)
-            ->shrinkWith($this->shrink(false, $strategy, $predicate));
+            ->shrinkWith(fn() => $this->shrink(false, $strategy, $predicate));
     }
 }

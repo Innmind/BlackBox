@@ -128,7 +128,7 @@ final class Integers implements Implementation
                 continue;
             }
 
-            yield $value->shrinkWith(self::shrink($value));
+            yield $value->shrinkWith(static fn() => self::shrink($value));
             ++$iterations;
         }
     }
@@ -167,7 +167,7 @@ final class Integers implements Implementation
             return self::reduceByOne($value);
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+        return static fn(): Value => $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 
     /**
@@ -184,6 +184,6 @@ final class Integers implements Implementation
             return static fn() => $value->withoutShrinking();
         }
 
-        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
+        return static fn(): Value => $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
     }
 }

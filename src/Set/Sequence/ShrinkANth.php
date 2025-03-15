@@ -44,7 +44,7 @@ final class ShrinkANth
             return self::of($value, $n + 1);
         }
 
-        return static fn() => $detonated->shrinkWith(RecursiveNthShrink::of(
+        return static fn() => $detonated->shrinkWith(static fn() => RecursiveNthShrink::of(
             $shrunk,
             $n,
         ));

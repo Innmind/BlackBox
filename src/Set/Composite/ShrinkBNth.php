@@ -60,7 +60,7 @@ final class ShrinkBNth
             );
         }
 
-        return static fn() => $mapped->shrinkWith(RecursiveNthShrink::of(
+        return static fn() => $mapped->shrinkWith(static fn() => RecursiveNthShrink::of(
             $aggregate,
             $shrunk,
             $n,
