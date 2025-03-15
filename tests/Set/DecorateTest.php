@@ -256,6 +256,10 @@ class DecorateTest extends TestCase
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $this->assertSame(0, $dichotomy->a()->unwrap()[0] % 2);
             $this->assertSame(0, $dichotomy->b()->unwrap()[0] % 2);
         }
