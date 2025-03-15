@@ -205,6 +205,10 @@ class RealNumbersTest extends TestCase
         foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $this->assertSame(1, ((int) \round($dichotomy->a()->unwrap())) % 2);
             $this->assertSame(1, ((int) \round($dichotomy->b()->unwrap())) % 2);
         }

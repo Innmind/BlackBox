@@ -88,9 +88,13 @@ class UnsafeStringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
+        $strings = UnsafeStrings::any();
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
+            if ($value->unwrap() === '') {
+                continue;
+            }
+
             $this->assertNotNull($value->shrink());
         }
     }
@@ -98,23 +102,38 @@ class UnsafeStringsTest extends TestCase
     public function testShrinkedValuesAreImmutable()
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
+        $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
+
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
             $this->assertTrue($a->isImmutable());
             $this->assertTrue($b->isImmutable());
+            $shrunk = true;
         }
+
+        $this->assertTrue($shrunk, 'At least one string should have been shrunk');
     }
 
     public function testStringsAreShrinkedFromBothEnds()
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 1);
+        $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
+
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
@@ -127,36 +146,40 @@ class UnsafeStringsTest extends TestCase
             $this->assertStringStartsWith($a->unwrap(), $value->unwrap());
             $this->assertNotSame($b->unwrap(), $value->unwrap());
             $this->assertStringEndsWith($b->unwrap(), $value->unwrap());
+            $shrunk = true;
         }
+
+        $this->assertTrue($shrunk, 'At least one string should have been shrunk');
     }
 
-    public function testStringsOfOneCharacterShrinkToThemselves()
+    public function testStringsOfOneCharacterCantBeShrunk()
     {
         // otherwise they won't match the given predicate
         $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) === 1);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-            $a = $dichotomy->a();
-            $b = $dichotomy->b();
-
-            $this->assertSame($a->unwrap(), $value->unwrap());
-            $this->assertSame($b->unwrap(), $value->unwrap());
-            $this->assertNull($a->shrink());
-            $this->assertNull($b->shrink());
+            $this->assertNull($value->shrink());
         }
     }
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
         $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 20);
+        $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $this->assertTrue(\strlen($dichotomy->a()->unwrap()) > 20);
             $this->assertTrue(\strlen($dichotomy->b()->unwrap()) > 20);
+            $shrunk = true;
         }
+
+        $this->assertTrue($shrunk, 'At least one string should have been shrunk');
     }
 
     public function testThrowWhenCannotFindAValue()

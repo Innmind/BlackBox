@@ -17,9 +17,9 @@ final class RemoveNth
      * @param Value<list<Value<A>>> $value
      * @param positive-int $n
      *
-     * @return Value<list<A>>
+     * @return ?Value<list<A>>
      */
-    public static function of(Value $value, int $n = 1): Value
+    public static function of(Value $value, int $n = 1): ?Value
     {
         if (!\array_key_exists($n, $value->unwrap())) {
             return ShrinkANth::of($value);

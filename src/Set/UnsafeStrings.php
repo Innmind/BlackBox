@@ -107,9 +107,9 @@ final class UnsafeStrings implements Implementation
     /**
      * @param Value<string> $value
      *
-     * @return Value<string>
+     * @return ?Value<string>
      */
-    private static function removeTrailingCharacter(Value $value): Value
+    private static function removeTrailingCharacter(Value $value): ?Value
     {
         $shrunk = $value->map(static fn($string) => \mb_substr(
             $string,
@@ -119,7 +119,7 @@ final class UnsafeStrings implements Implementation
         ));
 
         if (!$shrunk->acceptable()) {
-            return $value->withoutShrinking();
+            return null;
         }
 
         return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));
@@ -128,9 +128,9 @@ final class UnsafeStrings implements Implementation
     /**
      * @param Value<string> $value
      *
-     * @return Value<string>
+     * @return ?Value<string>
      */
-    private static function removeLeadingCharacter(Value $value): Value
+    private static function removeLeadingCharacter(Value $value): ?Value
     {
         $shrunk = $value->map(static fn($string) => \mb_substr(
             $string,
@@ -140,7 +140,7 @@ final class UnsafeStrings implements Implementation
         ));
 
         if (!$shrunk->acceptable()) {
-            return $value->withoutShrinking();
+            return null;
         }
 
         return $shrunk->shrinkWith(static fn() => self::shrink($shrunk));

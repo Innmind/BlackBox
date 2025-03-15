@@ -16,9 +16,9 @@ final class RemoveHead
      *
      * @param Value<list<Value<A>>> $value
      *
-     * @return Value<list<A>>
+     * @return ?Value<list<A>>
      */
-    public static function of(Value $value): Value
+    public static function of(Value $value): ?Value
     {
         $shrunk = $value->map(static function($sequence) {
             $shrunk = $sequence;

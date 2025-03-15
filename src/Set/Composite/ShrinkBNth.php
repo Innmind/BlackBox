@@ -21,20 +21,18 @@ final class ShrinkBNth
      * @param Value<Combination> $value
      * @param 0|positive-int $n
      *
-     * @return Value<A>
+     * @return ?Value<A>
      */
     public static function of(
         callable $aggregate,
         Value $value,
         int $n = 0,
-    ): Value {
+    ): ?Value {
         $combination = $value->unwrap();
         $values = $combination->values();
 
         if (!\array_key_exists($n, $values)) {
-            return $value
-                ->map(static fn($combination) => $combination->detonate($aggregate))
-                ->withoutShrinking();
+            return null;
         }
 
         $shrunk = $combination->bShrinkNth($n);

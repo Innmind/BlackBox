@@ -198,6 +198,10 @@ class IntegersTest extends TestCase
         foreach ($even->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $this->assertSame(0, $dichotomy->a()->unwrap() % 2);
             $this->assertSame(0, $dichotomy->b()->unwrap() % 2);
         }
@@ -206,6 +210,10 @@ class IntegersTest extends TestCase
 
         foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
+
+            if (\is_null($dichotomy)) {
+                continue;
+            }
 
             $this->assertSame(1, $dichotomy->a()->unwrap() % 2);
             $this->assertSame(1, $dichotomy->b()->unwrap() % 2);

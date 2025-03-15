@@ -21,13 +21,13 @@ final class ShrinkANth
      * @param Value<Combination> $value
      * @param 0|positive-int $n
      *
-     * @return Value<A>
+     * @return ?Value<A>
      */
     public static function of(
         callable $aggregate,
         Value $value,
         int $n,
-    ): Value {
+    ): ?Value {
         $combination = $value->unwrap();
         $values = $combination->values();
 

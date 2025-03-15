@@ -16,9 +16,9 @@ final class RemoveHalf
      *
      * @param Value<list<Value<A>>> $value
      *
-     * @return Value<list<A>>
+     * @return ?Value<list<A>>
      */
-    public static function of(Value $value): Value
+    public static function of(Value $value): ?Value
     {
         // we round half down otherwise a sequence of 1 element would be shrunk
         // to a sequence of 1 element resulting in a infinite recursion
