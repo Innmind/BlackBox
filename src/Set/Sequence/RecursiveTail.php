@@ -11,7 +11,7 @@ use Innmind\BlackBox\Set\{
 /**
  * @internal
  */
-final class RecursiveHalf
+final class RecursiveTail
 {
     /**
      * @internal
@@ -32,8 +32,8 @@ final class RecursiveHalf
         }
 
         return Dichotomy::of(
-            RemoveHalf::of($value),
             RemoveTail::of($value),
+            RemoveHead::of($value),
         );
     }
 }
