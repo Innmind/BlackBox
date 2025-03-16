@@ -71,8 +71,8 @@ final class Immutable
     public function map(callable $map): self
     {
         // avoid recomputing the map operation on each unwrap
-        /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
-        $value = $map($this->unwrapped);
+        /** @psalm-suppress ImpureMethodCall Since everything is supposed immutable this should be fine */
+        $value = Map::noop()->with($map)($this->unwrapped);
 
         /** @var self<V> */
         return new self(
