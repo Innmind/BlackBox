@@ -34,7 +34,7 @@ class CombinationTest extends TestCase
     {
         $immutable = Combination::startWith(Value::immutable(42));
         $immutable = $immutable->add(Value::immutable(24));
-        $mutable = $immutable->add(Value::mutable(static fn() => new \stdClass));
+        $mutable = $immutable->add(Value::immutable(new \stdClass)->flagMutable(true));
         $immutable = $immutable->add(Value::immutable(66));
 
         $this->assertTrue($immutable->immutable());

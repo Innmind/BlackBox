@@ -46,26 +46,6 @@ final class Value
     }
 
     /**
-     * @internal
-     * @deprecated
-     * @psalm-pure
-     * @template V
-     *
-     * @param callable(): (V|Seed<V>) $unwrap
-     *
-     * @return self<V>
-     */
-    public static function mutable(callable $unwrap): self
-    {
-        return new self(
-            false,
-            \Closure::fromCallable($unwrap),
-            static fn() => null,
-            static fn() => true,
-        );
-    }
-
-    /**
      * @psalm-mutation-free
      *
      * @return self<T>

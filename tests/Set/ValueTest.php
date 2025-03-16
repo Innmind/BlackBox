@@ -22,29 +22,25 @@ class ValueTest extends TestCase
         $this->assertTrue($value->isImmutable());
     }
 
-    public function testANewMutableValueIsGeneratedEachTimeItsAccessed()
-    {
-        $value = Value::mutable(static fn() => new \stdClass);
-
-        $this->assertInstanceOf(Value::class, $value);
-        $this->assertFalse($value->isImmutable());
-        $this->assertInstanceOf(\stdClass::class, $value->unwrap());
-        $this->assertNotSame($value->unwrap(), $value->unwrap());
-    }
-
     public function testValueNotShinkrableWhenNoDichotomyGiven()
     {
         $this->assertNull(Value::immutable(new \stdClass)->shrink());
-        $this->assertNull(Value::mutable(static fn() => new \stdClass)->shrink());
+        $this->assertNull(
+            Value::immutable(new \stdClass)
+                ->flagMutable(true)
+                ->shrink(),
+        );
 
         $immutable = Value::immutable(new \stdClass)->shrinkWith(static fn() => Dichotomy::of(
             Value::immutable(new \stdClass),
             Value::immutable(new \stdClass),
         ));
-        $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith(static fn() => Dichotomy::of(
-            Value::mutable(static fn() => new \stdClass),
-            Value::mutable(static fn() => new \stdClass),
-        ));
+        $mutable = Value::immutable(new \stdClass)
+            ->flagMutable(true)
+            ->shrinkWith(static fn() => Dichotomy::of(
+                Value::immutable(new \stdClass)->flagMutable(true),
+                Value::immutable(new \stdClass)->flagMutable(true),
+            ));
 
         $this->assertNotNull($immutable->shrink());
         $this->assertNotNull($mutable->shrink());
@@ -57,11 +53,13 @@ class ValueTest extends TestCase
             Value::immutable(new \stdClass),
         );
         $expectedMutable = Dichotomy::of(
-            Value::mutable(static fn() => new \stdClass),
-            Value::mutable(static fn() => new \stdClass),
+            Value::immutable(new \stdClass)->flagMutable(true),
+            Value::immutable(new \stdClass)->flagMutable(true),
         );
         $immutable = Value::immutable(new \stdClass)->shrinkWith(static fn() => $expectedImmutable);
-        $mutable = Value::mutable(static fn() => new \stdClass)->shrinkWith(static fn() => $expectedMutable);
+        $mutable = Value::immutable(new \stdClass)
+            ->flagMutable(true)
+            ->shrinkWith(static fn() => $expectedMutable);
 
         $this->assertSame($expectedImmutable->a(), $immutable->shrink()->a());
         $this->assertSame($expectedImmutable->b(), $immutable->shrink()->b());
