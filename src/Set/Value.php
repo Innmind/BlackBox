@@ -17,12 +17,12 @@ final class Value
      * @psalm-mutation-free
      *
      * @param Value\Immutable<T>|Value\Mutable<T> $implementation
-     * @param \Closure(Value<T>, Value<T>): ?Dichotomy<T> $shrink
+     * @param Shrinker|(\Closure(self<T>): ?Dichotomy<T>) $shrink
      * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
         private Value\Immutable|Value\Mutable $implementation,
-        private \Closure $shrink,
+        private Shrinker|\Closure $shrink,
         private \Closure $predicate,
     ) {
     }
@@ -68,7 +68,7 @@ final class Value
     {
         return new self(
             $this->implementation,
-            static fn(self $self, self $default) => $shrink($self)?->default($default),
+            $shrink,
             $this->predicate,
         );
     }
@@ -176,7 +176,7 @@ final class Value
     {
         $identity = $this->withoutShrinking();
 
-        return ($this->shrink)($this, $identity) ?? $this
+        return ($this->shrink)($this)?->default($identity) ?? $this
             ->seed
             ?->shrink($this->predicate)
             ?->default($identity);
