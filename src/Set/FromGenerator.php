@@ -102,11 +102,9 @@ final class FromGenerator implements Implementation
         while ($iterations < $this->size && $generator->valid()) {
             /** @var T|Seed<T> */
             $value = $generator->current();
-            $value = match ($this->immutable) {
-                true => Value::immutable($value),
-                false => Value::mutable(static fn() => $value),
-            };
-            $value = $value->predicatedOn($predicate);
+            $value = Value::immutable($value)
+                ->flagMutable(!$this->immutable)
+                ->predicatedOn($predicate);
 
             if ($value->acceptable()) {
                 yield $value;

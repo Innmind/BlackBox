@@ -47,6 +47,7 @@ final class Value
 
     /**
      * @internal
+     * @deprecated
      * @psalm-pure
      * @template V
      *
@@ -61,6 +62,21 @@ final class Value
             \Closure::fromCallable($unwrap),
             static fn() => null,
             static fn() => true,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return self<T>
+     */
+    public function flagMutable(bool $mutable): self
+    {
+        return new self(
+            $this->immutable && !$mutable,
+            $this->unwrap,
+            $this->shrink,
+            $this->predicate,
         );
     }
 
