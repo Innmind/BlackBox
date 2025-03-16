@@ -169,11 +169,6 @@ final class Immutable
         );
     }
 
-    public function acceptable(): bool
-    {
-        return ($this->predicate)($this->unwrap());
-    }
-
     /**
      * @param \Closure(self<T>): Value<T> $wrap
      *

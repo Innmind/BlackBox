@@ -13,9 +13,11 @@ final class Value
      * @psalm-mutation-free
      *
      * @param Value\Immutable<T>|Value\Mutable<T> $implementation
+     * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
         private Value\Immutable|Value\Mutable $implementation,
+        private \Closure $predicate,
     ) {
     }
 
@@ -30,7 +32,10 @@ final class Value
      */
     public static function of($value): self
     {
-        return new self(Value\Immutable::of($value));
+        return new self(
+            Value\Immutable::of($value),
+            static fn() => true,
+        );
     }
 
     /**
@@ -40,7 +45,10 @@ final class Value
      */
     public function mutable(bool $mutable): self
     {
-        return new self($this->implementation->mutable($mutable));
+        return new self(
+            $this->implementation->mutable($mutable),
+            $this->predicate,
+        );
     }
 
     /**
@@ -50,7 +58,10 @@ final class Value
      */
     public function shrinkWith(\Closure $shrink): self
     {
-        return new self($this->implementation->shrinkWith($shrink));
+        return new self(
+            $this->implementation->shrinkWith($shrink),
+            $this->predicate,
+        );
     }
 
     /**
@@ -58,7 +69,10 @@ final class Value
      */
     public function withoutShrinking(): self
     {
-        return new self($this->implementation->withoutShrinking());
+        return new self(
+            $this->implementation->withoutShrinking(),
+            $this->predicate,
+        );
     }
 
     /**
@@ -70,7 +84,10 @@ final class Value
      */
     public function predicatedOn(callable $predicate): self
     {
-        return new self($this->implementation->predicatedOn($predicate));
+        return new self(
+            $this->implementation->predicatedOn($predicate),
+            \Closure::fromCallable($predicate),
+        );
     }
 
     /**
@@ -83,12 +100,15 @@ final class Value
      */
     public function map(callable $map): self
     {
-        return new self($this->implementation->map($map));
+        return new self(
+            $this->implementation->map($map),
+            $this->predicate,
+        );
     }
 
     public function acceptable(): bool
     {
-        return $this->implementation->acceptable();
+        return ($this->predicate)($this->implementation->unwrap());
     }
 
     /**
@@ -104,8 +124,13 @@ final class Value
      */
     public function shrink(): ?Dichotomy
     {
+        $predicate = $this->predicate;
+
         return $this->implementation->shrink(
-            static fn($implementation) => new self($implementation),
+            static fn($implementation) => new self(
+                $implementation,
+                $predicate,
+            ),
         );
     }
 
