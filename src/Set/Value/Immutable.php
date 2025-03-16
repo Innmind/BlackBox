@@ -60,7 +60,7 @@ final class Immutable
             return $this;
         }
 
-        return new Mutable(
+        return Mutable::of(
             $this->source,
             $this->unwrap,
         );

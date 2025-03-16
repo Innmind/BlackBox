@@ -22,7 +22,7 @@ final class Mutable
      *
      * @param \Closure(mixed): (T|Seed<T>) $unwrap
      */
-    public function __construct(
+    private function __construct(
         private mixed $source,
         private \Closure $unwrap,
     ) {
@@ -34,15 +34,13 @@ final class Mutable
      * @template V
      *
      * @param V|Seed<V> $value
+     * @param \Closure(mixed): (T|Seed<T>) $unwrap
      *
      * @return self<V>
      */
-    public static function of($value): self
+    public static function of($value, \Closure $unwrap): self
     {
-        return new self(
-            $value,
-            static fn($source): mixed => $source,
-        );
+        return new self($value, $unwrap);
     }
 
     /**
