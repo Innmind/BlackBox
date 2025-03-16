@@ -63,7 +63,6 @@ final class Immutable
         }
 
         return new Mutable(
-            false,
             $this->source,
             $this->unwrap,
             $this->shrink,
