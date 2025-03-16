@@ -25,7 +25,6 @@ final class Immutable
      * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
-        private bool $immutable,
         private mixed $source,
         private \Closure $unwrap,
         private \Closure $shrink,
@@ -45,7 +44,6 @@ final class Immutable
     public static function of($value): self
     {
         return new self(
-            true,
             $value,
             static fn($source): mixed => $source,
             static fn() => null,
@@ -83,7 +81,6 @@ final class Immutable
     public function shrinkWith(\Closure $shrink): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->unwrap,
             static fn(Value $self, Value $default) => $shrink($self)?->default($default),
@@ -97,7 +94,6 @@ final class Immutable
     public function withoutShrinking(): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->unwrap,
             static fn() => null,
@@ -115,7 +111,6 @@ final class Immutable
     public function predicatedOn(callable $predicate): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->unwrap,
             $this->shrink,
@@ -154,14 +149,11 @@ final class Immutable
         };
 
         // avoid recomputing the map operation on each unwrap
-        if ($this->immutable) {
-            /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
-            $value = $unwrap($this->source);
-            $unwrap = static fn(): mixed => $value;
-        }
+        /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
+        $value = $unwrap($this->source);
+        $unwrap = static fn(): mixed => $value;
 
         return new self(
-            $this->immutable,
             $this->source,
             $unwrap,
             static fn() => null,
@@ -179,7 +171,7 @@ final class Immutable
      */
     public function immutable(): bool
     {
-        return $this->immutable;
+        return true;
     }
 
     /**
