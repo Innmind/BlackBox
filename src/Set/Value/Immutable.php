@@ -19,12 +19,12 @@ final class Immutable
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(mixed): (T|Seed<T>) $unwrap
+     * @param \Closure(mixed): (T|Seed<T>) $map
      * @param T|Seed<T> $unwrapped
      */
     private function __construct(
         private mixed $source,
-        private \Closure $unwrap,
+        private \Closure $map,
         private mixed $unwrapped,
     ) {
     }
@@ -61,7 +61,7 @@ final class Immutable
 
         return Mutable::of(
             $this->source,
-            $this->unwrap,
+            $this->map,
         );
     }
 
@@ -75,8 +75,12 @@ final class Immutable
      */
     public function map(callable $map): self
     {
-        $previous = $this->unwrap;
-        $unwrap = static function(mixed $source) use ($map, $previous): mixed {
+        // avoid recomputing the map operation on each unwrap
+        /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
+        $value = $map($this->unwrapped);
+
+        $previous = $this->map;
+        $map = static function(mixed $source) use ($map, $previous): mixed {
             $value = $previous($source);
 
             if ($value instanceof Seed) {
@@ -95,15 +99,10 @@ final class Immutable
             return $map($value);
         };
 
-        // avoid recomputing the map operation on each unwrap
-        /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
-        $value = $unwrap($this->source);
-        $unwrap = static fn(): mixed => $value;
-
         /** @var self<V> */
         return new self(
             $this->source,
-            $unwrap,
+            $map,
             $value,
         );
     }
