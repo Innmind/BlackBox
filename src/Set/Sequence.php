@@ -92,7 +92,7 @@ final class Sequence implements Implementation
             ->set
             ->values($random, static fn() => true)
             ->current()
-            ?->isImmutable() ?? false;
+            ?->immutable() ?? false;
         $yielded = 0;
 
         do {

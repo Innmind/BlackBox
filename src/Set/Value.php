@@ -158,7 +158,7 @@ final class Value
     /**
      * @psalm-mutation-free
      */
-    public function isImmutable(): bool
+    public function immutable(): bool
     {
         return $this->immutable;
     }

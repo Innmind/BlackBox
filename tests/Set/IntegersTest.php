@@ -117,7 +117,7 @@ class IntegersTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -144,7 +144,7 @@ class IntegersTest extends TestCase
         $ints = Integers::any()->filter(static fn($i) => $i !== 0);
 
         foreach ($ints->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 

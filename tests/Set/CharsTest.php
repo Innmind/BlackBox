@@ -77,7 +77,7 @@ class CharsTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 

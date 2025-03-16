@@ -80,7 +80,7 @@ final class Map implements Implementation
         };
 
         foreach ($this->set->values($random, $mappedPredicate) as $value) {
-            $mutable = !($value->isImmutable() && $this->immutable);
+            $mutable = !($value->immutable() && $this->immutable);
 
             yield Value::of($value)
                 ->mutable($mutable)

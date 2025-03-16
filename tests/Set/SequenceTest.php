@@ -96,7 +96,7 @@ class SequenceTest extends TestCase
         )->toSet();
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
-            $this->assertFalse($sequence->isImmutable());
+            $this->assertFalse($sequence->immutable());
             $this->assertSame(\count($sequence->unwrap()), \count($sequence->unwrap()));
 
             if (\count($sequence->unwrap()) !== 0) {
@@ -224,8 +224,8 @@ class SequenceTest extends TestCase
                 continue;
             }
 
-            $this->assertTrue($dichotomy->a()->isImmutable());
-            $this->assertTrue($dichotomy->b()->isImmutable());
+            $this->assertTrue($dichotomy->a()->immutable());
+            $this->assertTrue($dichotomy->b()->immutable());
         }
 
         $sequences = Sequence::of(
@@ -245,8 +245,8 @@ class SequenceTest extends TestCase
 
             $dichotomy = $value->shrink();
 
-            $this->assertFalse($dichotomy->a()->isImmutable());
-            $this->assertFalse($dichotomy->b()->isImmutable());
+            $this->assertFalse($dichotomy->a()->immutable());
+            $this->assertFalse($dichotomy->b()->immutable());
         }
     }
 

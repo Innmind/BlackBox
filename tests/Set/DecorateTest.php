@@ -117,7 +117,7 @@ class DecorateTest extends TestCase
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -139,7 +139,7 @@ class DecorateTest extends TestCase
         );
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->isImmutable());
+            $this->assertFalse($value->immutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
         }
@@ -173,7 +173,7 @@ class DecorateTest extends TestCase
         $this->assertCount(2, \iterator_to_array($set->values(Random::mersenneTwister)));
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->isImmutable());
+            $this->assertFalse($value->immutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
             $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
@@ -225,8 +225,8 @@ class DecorateTest extends TestCase
         foreach ($mutable->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
-            $this->assertFalse($dichotomy->a()->isImmutable());
-            $this->assertFalse($dichotomy->b()->isImmutable());
+            $this->assertFalse($dichotomy->a()->immutable());
+            $this->assertFalse($dichotomy->b()->immutable());
         }
 
         $immutable = Decorate::immutable(
@@ -239,8 +239,8 @@ class DecorateTest extends TestCase
         foreach ($immutable->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
-            $this->assertTrue($dichotomy->a()->isImmutable());
-            $this->assertTrue($dichotomy->b()->isImmutable());
+            $this->assertTrue($dichotomy->a()->immutable());
+            $this->assertTrue($dichotomy->b()->immutable());
         }
     }
 

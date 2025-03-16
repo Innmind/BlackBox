@@ -41,7 +41,7 @@ final class Combination
     {
         return \array_reduce(
             $this->values,
-            static fn(bool $immutable, Value $value): bool => $immutable && $value->isImmutable(),
+            static fn(bool $immutable, Value $value): bool => $immutable && $value->immutable(),
             true,
         );
     }

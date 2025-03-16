@@ -73,7 +73,7 @@ class UnsafeStringsTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -114,8 +114,8 @@ class UnsafeStringsTest extends TestCase
             $a = $dichotomy->a();
             $b = $dichotomy->b();
 
-            $this->assertTrue($a->isImmutable());
-            $this->assertTrue($b->isImmutable());
+            $this->assertTrue($a->immutable());
+            $this->assertTrue($b->immutable());
             $shrunk = true;
         }
 
