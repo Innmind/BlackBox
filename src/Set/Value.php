@@ -14,12 +14,13 @@ final class Value
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(): (T|Seed<T>) $unwrap
+     * @param \Closure(mixed): (T|Seed<T>) $unwrap
      * @param \Closure(self<T>, self<T>): ?Dichotomy<T> $shrink
      * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
         private bool $immutable,
+        private mixed $source,
         private \Closure $unwrap,
         private \Closure $shrink,
         private \Closure $predicate,
@@ -39,7 +40,8 @@ final class Value
     {
         return new self(
             true,
-            static fn() => $value,
+            $value,
+            static fn($source): mixed => $source,
             static fn() => null,
             static fn() => true,
         );
@@ -54,6 +56,7 @@ final class Value
     {
         return new self(
             $this->immutable && !$mutable,
+            $this->source,
             $this->unwrap,
             $this->shrink,
             $this->predicate,
@@ -69,6 +72,7 @@ final class Value
     {
         return new self(
             $this->immutable,
+            $this->source,
             $this->unwrap,
             static fn(self $self, self $default) => $shrink($self)?->default($default),
             $this->predicate,
@@ -82,6 +86,7 @@ final class Value
     {
         return new self(
             $this->immutable,
+            $this->source,
             $this->unwrap,
             static fn() => null,
             $this->predicate,
@@ -99,6 +104,7 @@ final class Value
     {
         return new self(
             $this->immutable,
+            $this->source,
             $this->unwrap,
             $this->shrink,
             \Closure::fromCallable($predicate),
@@ -116,8 +122,8 @@ final class Value
     public function map(callable $map): self
     {
         $previous = $this->unwrap;
-        $unwrap = static function() use ($map, $previous): mixed {
-            $value = $previous();
+        $unwrap = static function(mixed $source) use ($map, $previous): mixed {
+            $value = $previous($source);
 
             if ($value instanceof Seed) {
                 return $value->flatMap(static function($value) use ($map) {
@@ -138,12 +144,13 @@ final class Value
         // avoid recomputing the map operation on each unwrap
         if ($this->immutable) {
             /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
-            $value = $unwrap();
+            $value = $unwrap($this->source);
             $unwrap = static fn(): mixed => $value;
         }
 
         return new self(
             $this->immutable,
+            $this->source,
             $unwrap,
             static fn() => null,
             $this->predicate,
@@ -178,7 +185,7 @@ final class Value
      */
     public function unwrap()
     {
-        $value = ($this->unwrap)();
+        $value = ($this->unwrap)($this->source);
 
         // This is not ideal to hide the seeded value this way and to hijack
         // the shrinking system in self::shrinkable() and self::shrink() as it
