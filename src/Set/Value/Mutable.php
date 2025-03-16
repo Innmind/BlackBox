@@ -60,13 +60,8 @@ final class Mutable
      */
     public function mutable(bool $mutable): self
     {
-        return new self(
-            $this->immutable && !$mutable,
-            $this->source,
-            $this->unwrap,
-            $this->shrink,
-            $this->predicate,
-        );
+        // Mutable values can't become immutable
+        return $this;
     }
 
     /**
