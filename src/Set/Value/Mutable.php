@@ -19,11 +19,11 @@ final class Mutable
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(mixed): (T|Seed<T>) $map
+     * @param Map<T> $map
      */
     private function __construct(
         private mixed $source,
-        private \Closure $map,
+        private Map $map,
     ) {
     }
 
@@ -33,11 +33,11 @@ final class Mutable
      * @template V
      *
      * @param V|Seed<V> $value
-     * @param \Closure(mixed): (T|Seed<T>) $map
+     * @param Map<V> $map
      *
      * @return self<V>
      */
-    public static function of($value, \Closure $map): self
+    public static function of($value, Map $map): self
     {
         return new self($value, $map);
     }
@@ -63,29 +63,9 @@ final class Mutable
      */
     public function map(callable $map): self
     {
-        $previous = $this->map;
-        $map = static function(mixed $source) use ($map, $previous): mixed {
-            $value = $previous($source);
-
-            if ($value instanceof Seed) {
-                return $value->flatMap(static function($value) use ($map) {
-                    /** @var T $value */
-                    $mapped = $map($value);
-
-                    if ($mapped instanceof Seed) {
-                        return $mapped;
-                    }
-
-                    return Seed::of(Value::of($mapped));
-                });
-            }
-
-            return $map($value);
-        };
-
         return new self(
             $this->source,
-            $map,
+            $this->map->with($map),
         );
     }
 

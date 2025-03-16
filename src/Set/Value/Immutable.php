@@ -19,12 +19,12 @@ final class Immutable
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(mixed): (T|Seed<T>) $map
+     * @param Map<T> $map
      * @param T|Seed<T> $unwrapped
      */
     private function __construct(
         private mixed $source,
-        private \Closure $map,
+        private Map $map,
         private mixed $unwrapped,
     ) {
     }
@@ -43,7 +43,7 @@ final class Immutable
         /** @var self<V> */
         return new self(
             $value,
-            static fn($source): mixed => $source,
+            Map::noop(),
             $value,
         );
     }
@@ -79,30 +79,10 @@ final class Immutable
         /** @psalm-suppress ImpureFunctionCall Since everything is supposed immutable this should be fine */
         $value = $map($this->unwrapped);
 
-        $previous = $this->map;
-        $map = static function(mixed $source) use ($map, $previous): mixed {
-            $value = $previous($source);
-
-            if ($value instanceof Seed) {
-                return $value->flatMap(static function($value) use ($map) {
-                    /** @var T $value */
-                    $mapped = $map($value);
-
-                    if ($mapped instanceof Seed) {
-                        return $mapped;
-                    }
-
-                    return Seed::of(Value::of($mapped));
-                });
-            }
-
-            return $map($value);
-        };
-
         /** @var self<V> */
         return new self(
             $this->source,
-            $map,
+            $this->map->with($map),
             $value,
         );
     }
