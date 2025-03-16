@@ -152,13 +152,13 @@ final class RealNumbers implements Implementation
      */
     private static function divideByTwo(Value $value): ?Value
     {
-        $shrunk = $value->map(static fn(float $value) => $value / 2.0);
+        $shrunk = $value->shrinkVia(static fn(float $value) => $value / 2.0);
 
         if (!$shrunk->acceptable()) {
             return self::reduceByOne($value);
         }
 
-        return $shrunk->shrinkWith(self::shrink(...));
+        return $shrunk;
     }
 
     /**
@@ -170,7 +170,7 @@ final class RealNumbers implements Implementation
     {
         // add one when the value is negative, otherwise subtract one
         /** @psalm-suppress InvalidOperand Don't know why it complains */
-        $shrunk = $value->map(static fn(float $value) => $value + (
+        $shrunk = $value->shrinkVia(static fn(float $value) => $value + (
             ($value <=> 0.0) * -1.0
         ));
 
@@ -178,6 +178,6 @@ final class RealNumbers implements Implementation
             return null;
         }
 
-        return $shrunk->shrinkWith(self::shrink(...));
+        return $shrunk;
     }
 }
