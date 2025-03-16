@@ -140,7 +140,7 @@ final class Composite implements Implementation
             $matrix->next();
 
             $value = Value::of($combination)
-                ->flagMutable(!$immutable)
+                ->mutable(!$immutable)
                 ->predicatedOn($predicate);
             $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
 

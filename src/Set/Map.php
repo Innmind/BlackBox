@@ -83,7 +83,7 @@ final class Map implements Implementation
             $mutable = !($value->isImmutable() && $this->immutable);
 
             yield Value::of($value)
-                ->flagMutable($mutable)
+                ->mutable($mutable)
                 ->map(static fn($value) => $value->unwrap())
                 ->map($this->map)
                 ->predicatedOn($predicate)
@@ -126,7 +126,7 @@ final class Map implements Implementation
         \Closure $predicate,
     ): Value {
         return Value::of($strategy->unwrap())
-            ->flagMutable($mutable)
+            ->mutable($mutable)
             ->map($this->map)
             ->predicatedOn($predicate)
             ->shrinkWith(fn() => $this->shrink($mutable, $strategy, $predicate));

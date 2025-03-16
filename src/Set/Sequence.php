@@ -104,7 +104,7 @@ final class Sequence implements Implementation
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
                 $value = Value::of($values)
-                    ->flagMutable(!$immutable)
+                    ->mutable(!$immutable)
                     ->predicatedOn($predicate);
                 $yieldable = $value->map(Sequence\Detonate::of(...));
 

@@ -50,7 +50,7 @@ final class Value
      *
      * @return self<T>
      */
-    public function flagMutable(bool $mutable): self
+    public function mutable(bool $mutable): self
     {
         return new self(
             $this->immutable && !$mutable,

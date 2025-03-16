@@ -27,7 +27,7 @@ class ValueTest extends TestCase
         $this->assertNull(Value::of(new \stdClass)->shrink());
         $this->assertNull(
             Value::of(new \stdClass)
-                ->flagMutable(true)
+                ->mutable(true)
                 ->shrink(),
         );
 
@@ -36,10 +36,10 @@ class ValueTest extends TestCase
             Value::of(new \stdClass),
         ));
         $mutable = Value::of(new \stdClass)
-            ->flagMutable(true)
+            ->mutable(true)
             ->shrinkWith(static fn() => Dichotomy::of(
-                Value::of(new \stdClass)->flagMutable(true),
-                Value::of(new \stdClass)->flagMutable(true),
+                Value::of(new \stdClass)->mutable(true),
+                Value::of(new \stdClass)->mutable(true),
             ));
 
         $this->assertNotNull($immutable->shrink());
@@ -53,12 +53,12 @@ class ValueTest extends TestCase
             Value::of(new \stdClass),
         );
         $expectedMutable = Dichotomy::of(
-            Value::of(new \stdClass)->flagMutable(true),
-            Value::of(new \stdClass)->flagMutable(true),
+            Value::of(new \stdClass)->mutable(true),
+            Value::of(new \stdClass)->mutable(true),
         );
         $immutable = Value::of(new \stdClass)->shrinkWith(static fn() => $expectedImmutable);
         $mutable = Value::of(new \stdClass)
-            ->flagMutable(true)
+            ->mutable(true)
             ->shrinkWith(static fn() => $expectedMutable);
 
         $this->assertSame($expectedImmutable->a(), $immutable->shrink()->a());
