@@ -112,7 +112,7 @@ final class Sequence implements Implementation
                     continue;
                 }
 
-                yield $yieldable->shrinkWith(static fn() => Sequence\RecursiveHalf::of($value));
+                yield $yieldable->shrinkWith(static fn() => Sequence\Shrinker::recursiveHalf($value));
 
                 ++$yielded;
             }

@@ -11,7 +11,7 @@ use Innmind\BlackBox\Set\{
 /**
  * @internal
  */
-final class RecursiveHalf
+final class Shrinker
 {
     /**
      * @internal
@@ -21,7 +21,7 @@ final class RecursiveHalf
      *
      * @return ?Dichotomy<list<A>>
      */
-    public static function of(Value $value): ?Dichotomy
+    public static function recursiveHalf(Value $value): ?Dichotomy
     {
         if (\count($value->unwrap()) === 0) {
             return null;
@@ -158,7 +158,7 @@ final class RecursiveHalf
             return self::removeTail($value);
         }
 
-        return $detonated->shrinkWith(static fn() => self::of($shrunk));
+        return $detonated->shrinkWith(static fn() => self::recursiveHalf($shrunk));
     }
 
     /**
