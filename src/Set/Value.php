@@ -132,6 +132,28 @@ final class Value
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(mixed): mixed $shrink
+     *
+     * @return ?self<T>
+     */
+    public function maybeShrinkVia(callable $shrink): ?self
+    {
+        $shrunk = $this->implementation->maybeShrinkVia($shrink);
+
+        if (\is_null($shrunk)) {
+            return null;
+        }
+
+        return new self(
+            $shrunk,
+            $this->shrink,
+            $this->predicate,
+        );
+    }
+
     public function acceptable(): bool
     {
         return ($this->predicate)($this->unwrap());

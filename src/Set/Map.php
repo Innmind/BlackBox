@@ -82,53 +82,36 @@ final class Map implements Implementation
         foreach ($this->set->values($random, $mappedPredicate) as $value) {
             $mutable = !($value->immutable() && $this->immutable);
 
+            /** @psalm-suppress InvalidArgument Due to shrinker */
             yield Value::of($value)
                 ->mutable($mutable)
                 ->map(static fn($value) => $value->unwrap())
                 ->map($this->map)
                 ->predicatedOn($predicate)
-                ->shrinkWith(fn() => $this->shrink($mutable, $value, $predicate));
+                ->shrinkWith(self::shrink(...));
         }
     }
 
     /**
-     * @param Value<I> $value
-     * @param \Closure(D): bool $predicate
+     * @template T
      *
-     * @return ?Dichotomy<D>
+     * @param Value<T> $value
+     *
+     * @return ?Dichotomy<T>
      */
-    private function shrink(
-        bool $mutable,
-        Value $value,
-        \Closure $predicate,
-    ): ?Dichotomy {
-        $shrunk = $value->shrink();
+    private static function shrink(Value $value): ?Dichotomy
+    {
+        $a = $value->maybeShrinkVia(static fn(Value $source) => $source->shrink()?->a());
+        $b = $value->maybeShrinkVia(static fn(Value $source) => $source->shrink()?->b());
 
-        if (\is_null($shrunk)) {
-            return null;
+        if (!$a?->acceptable()) {
+            $a = null;
         }
 
-        return Dichotomy::of(
-            $this->shrinkWithStrategy($mutable, $shrunk->a(), $predicate),
-            $this->shrinkWithStrategy($mutable, $shrunk->b(), $predicate),
-        );
-    }
+        if (!$b?->acceptable()) {
+            $b = null;
+        }
 
-    /**
-     * @param Value<I> $strategy
-     * @param \Closure(D): bool $predicate
-     *
-     * @return Value<D>
-     */
-    private function shrinkWithStrategy(
-        bool $mutable,
-        Value $strategy,
-        \Closure $predicate,
-    ): Value {
-        return Value::of($strategy->unwrap())
-            ->mutable($mutable)
-            ->map($this->map)
-            ->predicatedOn($predicate)
-            ->shrinkWith(fn() => $this->shrink($mutable, $strategy, $predicate));
+        return Dichotomy::of($a, $b);
     }
 }
