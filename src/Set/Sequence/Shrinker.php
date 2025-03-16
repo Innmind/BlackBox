@@ -45,7 +45,7 @@ final class Shrinker
      *
      * @return ?Dichotomy<list<A>>
      */
-    private static function recursiveHead(Value $value): ?Dichotomy
+    public static function recursiveHead(Value $value): ?Dichotomy
     {
         if (\count($value->unwrap()) === 0) {
             return null;
@@ -69,7 +69,7 @@ final class Shrinker
      *
      * @return ?Dichotomy<list<A>>
      */
-    private static function recursiveTail(Value $value): ?Dichotomy
+    public static function recursiveTail(Value $value): ?Dichotomy
     {
         if (\count($value->unwrap()) === 0) {
             return null;
@@ -94,7 +94,7 @@ final class Shrinker
      *
      * @return ?Dichotomy<list<A>>
      */
-    private static function recursiveNth(Value $value, int $n = 1): ?Dichotomy
+    public static function recursiveNth(Value $value, int $n = 1): ?Dichotomy
     {
         if (\count($value->unwrap()) === 0) {
             return null;
@@ -119,7 +119,7 @@ final class Shrinker
      *
      * @return ?Dichotomy<list<A>>
      */
-    private static function recursiveNthShrink(Value $value, int $n = 0): ?Dichotomy
+    public static function recursiveNthShrink(Value $value, int $n = 0): ?Dichotomy
     {
         if (\count($value->unwrap()) === 0) {
             return null;
@@ -143,7 +143,7 @@ final class Shrinker
      *
      * @return ?Value<list<A>>
      */
-    private static function removeHalf(Value $value): ?Value
+    public static function removeHalf(Value $value): ?Value
     {
         // we round half down otherwise a sequence of 1 element would be shrunk
         // to a sequence of 1 element resulting in a infinite recursion
@@ -169,7 +169,7 @@ final class Shrinker
      *
      * @return ?Value<list<A>>
      */
-    private static function removeTail(Value $value): ?Value
+    public static function removeTail(Value $value): ?Value
     {
         $shrunk = $value->map(static function($sequence) {
             $shrunk = $sequence;
@@ -194,7 +194,7 @@ final class Shrinker
      *
      * @return ?Value<list<A>>
      */
-    private static function removeHead(Value $value): ?Value
+    public static function removeHead(Value $value): ?Value
     {
         $shrunk = $value->map(static function($sequence) {
             $shrunk = $sequence;
@@ -220,7 +220,7 @@ final class Shrinker
      *
      * @return ?Value<list<A>>
      */
-    private static function removeNth(Value $value, int $n = 1): ?Value
+    public static function removeNth(Value $value, int $n = 1): ?Value
     {
         if (!\array_key_exists($n, $value->unwrap())) {
             return self::shrinkANth($value);
@@ -258,7 +258,7 @@ final class Shrinker
      *
      * @return ?Value<list<A>>
      */
-    private static function shrinkANth(Value $value, int $n = 0): ?Value
+    public static function shrinkANth(Value $value, int $n = 0): ?Value
     {
         $sequence = $value->unwrap();
 
@@ -298,7 +298,7 @@ final class Shrinker
      *
      * @return ?Value<list<A>>
      */
-    private static function shrinkBNth(Value $value, int $n = 0): ?Value
+    public static function shrinkBNth(Value $value, int $n = 0): ?Value
     {
         $sequence = $value->unwrap();
 
