@@ -116,7 +116,7 @@ final class RealNumbers implements Implementation
             $lcg = ($random->between(0, 100) / 100);
             /** @psalm-suppress InvalidOperand Don't know why it complains */
             $value = $random->between($this->min, $this->max) * $lcg;
-            $value = Value::immutable($value)
+            $value = Value::of($value)
                 ->predicatedOn($predicate);
 
             if (!$value->acceptable()) {

@@ -283,7 +283,7 @@ return static function() {
                 ->proof($io, $io, Name::of($name), [])
                 ->failed($io, $io, Failure::of(
                     Assert\Failure::of(Truth::of($truth)),
-                    Value::immutable(Scenario\Inline::of(
+                    Value::of(Scenario\Inline::of(
                         [$val],
                         static fn($assert, $foo) => null,
                     )),
@@ -315,7 +315,7 @@ return static function() {
                 ->proof($io, $io, Name::of($name), [])
                 ->failed($io, $io, Failure::of(
                     Assert\Failure::of(Truth::of($truth)),
-                    Value::immutable(Scenario\Inline::of(
+                    Value::of(Scenario\Inline::of(
                         [$val],
                         static fn($assert, $foo) => null,
                     )),
@@ -352,7 +352,7 @@ return static function() {
                         $property,
                         $message,
                     )),
-                    Value::immutable(Scenario\Inline::of(
+                    Value::of(Scenario\Inline::of(
                         [$val],
                         static fn($assert, $foo) => null,
                     )),
@@ -390,7 +390,7 @@ return static function() {
                         $property,
                         $message,
                     )),
-                    Value::immutable(Scenario\Inline::of(
+                    Value::of(Scenario\Inline::of(
                         [$val],
                         static fn($assert, $foo) => null,
                     )),
@@ -431,7 +431,7 @@ return static function() {
                         $actual,
                         $message,
                     )),
-                    Value::immutable(Scenario\Inline::of(
+                    Value::of(Scenario\Inline::of(
                         [$val],
                         static fn($assert, $foo) => null,
                     )),
@@ -473,7 +473,7 @@ return static function() {
                         $actual,
                         $message,
                     )),
-                    Value::immutable(Scenario\Inline::of(
+                    Value::of(Scenario\Inline::of(
                         [$val],
                         static fn($assert, $foo) => null,
                     )),
@@ -509,7 +509,7 @@ return static function() {
                 ->proof($io, $io, Name::of($name), [])
                 ->failed($io, $io, Failure::of(
                     Assert\Failure::of(Truth::of($message)),
-                    Value::immutable(Scenario\Property::of(
+                    Value::of(Scenario\Property::of(
                         new LowerBoundAtZero,
                         new Counter,
                     )),
@@ -541,7 +541,7 @@ return static function() {
                 ->proof($io, $io, Name::of($name), [])
                 ->failed($io, $io, Failure::of(
                     Assert\Failure::of(Truth::of($message)),
-                    Value::immutable(Scenario\Properties::of(
+                    Value::of(Scenario\Properties::of(
                         Properties::of(new LowerBoundAtZero),
                         new Counter,
                     )),

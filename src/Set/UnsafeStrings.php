@@ -79,7 +79,7 @@ final class UnsafeStrings implements Implementation
 
         while ($iterations < $this->size) {
             $index = $random->between(0, $size);
-            $value = Value::immutable($values[$index])
+            $value = Value::of($values[$index])
                 ->predicatedOn($predicate);
 
             yield $value->shrinkWith(self::shrink(...));

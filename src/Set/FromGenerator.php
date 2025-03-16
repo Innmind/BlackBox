@@ -102,7 +102,7 @@ final class FromGenerator implements Implementation
         while ($iterations < $this->size && $generator->valid()) {
             /** @var T|Seed<T> */
             $value = $generator->current();
-            $value = Value::immutable($value)
+            $value = Value::of($value)
                 ->flagMutable(!$this->immutable)
                 ->predicatedOn($predicate);
 

@@ -35,7 +35,7 @@ final class Value
      *
      * @return self<V>
      */
-    public static function immutable($value): self
+    public static function of($value): self
     {
         return new self(
             true,
@@ -128,7 +128,7 @@ final class Value
                         return $mapped;
                     }
 
-                    return Seed::of(Value::immutable($mapped));
+                    return Seed::of(self::of($mapped));
                 });
             }
 

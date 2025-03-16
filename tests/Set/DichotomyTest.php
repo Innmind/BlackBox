@@ -29,8 +29,8 @@ class DichotomyTest extends TestCase
                 ),
             )
             ->then(function($a, $b) {
-                $expectedA = Value::immutable($a);
-                $expectedB = Value::immutable($b);
+                $expectedA = Value::of($a);
+                $expectedB = Value::of($b);
 
                 $dichotomy = Dichotomy::of(
                     $expectedA,

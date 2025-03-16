@@ -114,7 +114,7 @@ final class FlatMap
             ->previous
             ->shrink($predicate)
             ?->map(
-                static fn($strategy) => Value::immutable(Seed::of($strategy)->flatMap($map))
+                static fn($strategy) => Value::of(Seed::of($strategy)->flatMap($map))
                     ->predicatedOn($predicate),
             );
     }

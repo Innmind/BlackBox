@@ -82,7 +82,7 @@ final class Map implements Implementation
         foreach ($this->set->values($random, $mappedPredicate) as $value) {
             $mutable = !($value->isImmutable() && $this->immutable);
 
-            yield Value::immutable($value)
+            yield Value::of($value)
                 ->flagMutable($mutable)
                 ->map(static fn($value) => $value->unwrap())
                 ->map($this->map)
@@ -125,7 +125,7 @@ final class Map implements Implementation
         Value $strategy,
         \Closure $predicate,
     ): Value {
-        return Value::immutable($strategy->unwrap())
+        return Value::of($strategy->unwrap())
             ->flagMutable($mutable)
             ->map($this->map)
             ->predicatedOn($predicate)

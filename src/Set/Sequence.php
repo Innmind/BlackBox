@@ -103,7 +103,7 @@ final class Sequence implements Implementation
 
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
-                $value = Value::immutable($values)
+                $value = Value::of($values)
                     ->flagMutable(!$immutable)
                     ->predicatedOn($predicate);
                 $yieldable = $value->map(Sequence\Detonate::of(...));

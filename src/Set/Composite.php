@@ -139,7 +139,7 @@ final class Composite implements Implementation
             $immutable = $combination->immutable() && $this->immutable;
             $matrix->next();
 
-            $value = Value::immutable($combination)
+            $value = Value::of($combination)
                 ->flagMutable(!$immutable)
                 ->predicatedOn($predicate);
             $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));

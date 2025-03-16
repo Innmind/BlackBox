@@ -121,7 +121,7 @@ final class Integers implements Implementation
 
         while ($iterations < $this->size) {
             $value = $random->between($this->min, $this->max);
-            $value = Value::immutable($value)
+            $value = Value::of($value)
                 ->predicatedOn($predicate);
 
             if (!$value->acceptable()) {

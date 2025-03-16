@@ -89,9 +89,9 @@ final class Map
         // it's held by the values injected in the new Seeds.
         // No dichotomy because the captured values in the configure lambda is
         // shrunk first
-        $a = Value::immutable(Seed::of($shrunk->a())->map($this->map))
+        $a = Value::of(Seed::of($shrunk->a())->map($this->map))
             ->predicatedOn($predicate);
-        $b = Value::immutable(Seed::of($shrunk->b())->map($this->map))
+        $b = Value::of(Seed::of($shrunk->b())->map($this->map))
             ->predicatedOn($predicate);
 
         // If one of the strategies is not acceptable then we remove it and it

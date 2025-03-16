@@ -14,15 +14,15 @@ class CombinationTest extends TestCase
 {
     public function testToArray()
     {
-        $combination = Combination::startWith(Value::immutable('foo'));
+        $combination = Combination::startWith(Value::of('foo'));
 
         $this->assertSame(['foo'], $combination->detonate(static fn(...$args) => $args));
     }
 
     public function testAdd()
     {
-        $combination = Combination::startWith(Value::immutable('foo'));
-        $combination2 = $combination->add(Value::immutable('baz'));
+        $combination = Combination::startWith(Value::of('foo'));
+        $combination2 = $combination->add(Value::of('baz'));
 
         $this->assertInstanceOf(Combination::class, $combination2);
         $this->assertNotSame($combination, $combination2);
@@ -32,10 +32,10 @@ class CombinationTest extends TestCase
 
     public function testIsImmutableIfAllValuesAreImmutable()
     {
-        $immutable = Combination::startWith(Value::immutable(42));
-        $immutable = $immutable->add(Value::immutable(24));
-        $mutable = $immutable->add(Value::immutable(new \stdClass)->flagMutable(true));
-        $immutable = $immutable->add(Value::immutable(66));
+        $immutable = Combination::startWith(Value::of(42));
+        $immutable = $immutable->add(Value::of(24));
+        $mutable = $immutable->add(Value::of(new \stdClass)->flagMutable(true));
+        $immutable = $immutable->add(Value::of(66));
 
         $this->assertTrue($immutable->immutable());
         $this->assertFalse($mutable->immutable());
@@ -43,24 +43,24 @@ class CombinationTest extends TestCase
 
     public function testCombinationIsShrinkableAsLongAsAtLeastOneValueIsShrinkable()
     {
-        $nonShrinkable = Combination::startWith(Value::immutable(42));
-        $nonShrinkable = $nonShrinkable->add(Value::immutable(24));
-        $nonShrinkable = $nonShrinkable->add(Value::immutable(66));
+        $nonShrinkable = Combination::startWith(Value::of(42));
+        $nonShrinkable = $nonShrinkable->add(Value::of(24));
+        $nonShrinkable = $nonShrinkable->add(Value::of(66));
 
         $this->assertNull($nonShrinkable->aShrinkNth(0));
         $this->assertNull($nonShrinkable->aShrinkNth(1));
         $this->assertNull($nonShrinkable->aShrinkNth(2));
 
-        $shrinkable = Combination::startWith(Value::immutable(42));
+        $shrinkable = Combination::startWith(Value::of(42));
         $shrinkable = $shrinkable->add(
-            Value::immutable(24)->shrinkWith(
+            Value::of(24)->shrinkWith(
                 static fn() => Dichotomy::of(
-                    Value::immutable(12),
-                    Value::immutable(23),
+                    Value::of(12),
+                    Value::of(23),
                 ),
             ),
         );
-        $shrinkable = $shrinkable->add(Value::immutable(66));
+        $shrinkable = $shrinkable->add(Value::of(66));
 
         $this->assertNotNull($shrinkable->aShrinkNth(1));
     }

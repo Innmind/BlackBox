@@ -14,7 +14,7 @@ class ValueTest extends TestCase
     public function testAlwaysUnwrapTheSameImmutableValue()
     {
         $object = new \stdClass;
-        $value = Value::immutable($object);
+        $value = Value::of($object);
 
         $this->assertInstanceOf(Value::class, $value);
         $this->assertSame($object, $value->unwrap());
@@ -24,22 +24,22 @@ class ValueTest extends TestCase
 
     public function testValueNotShinkrableWhenNoDichotomyGiven()
     {
-        $this->assertNull(Value::immutable(new \stdClass)->shrink());
+        $this->assertNull(Value::of(new \stdClass)->shrink());
         $this->assertNull(
-            Value::immutable(new \stdClass)
+            Value::of(new \stdClass)
                 ->flagMutable(true)
                 ->shrink(),
         );
 
-        $immutable = Value::immutable(new \stdClass)->shrinkWith(static fn() => Dichotomy::of(
-            Value::immutable(new \stdClass),
-            Value::immutable(new \stdClass),
+        $immutable = Value::of(new \stdClass)->shrinkWith(static fn() => Dichotomy::of(
+            Value::of(new \stdClass),
+            Value::of(new \stdClass),
         ));
-        $mutable = Value::immutable(new \stdClass)
+        $mutable = Value::of(new \stdClass)
             ->flagMutable(true)
             ->shrinkWith(static fn() => Dichotomy::of(
-                Value::immutable(new \stdClass)->flagMutable(true),
-                Value::immutable(new \stdClass)->flagMutable(true),
+                Value::of(new \stdClass)->flagMutable(true),
+                Value::of(new \stdClass)->flagMutable(true),
             ));
 
         $this->assertNotNull($immutable->shrink());
@@ -49,15 +49,15 @@ class ValueTest extends TestCase
     public function testShrinkReturnTheGivenDichotomy()
     {
         $expectedImmutable = Dichotomy::of(
-            Value::immutable(new \stdClass),
-            Value::immutable(new \stdClass),
+            Value::of(new \stdClass),
+            Value::of(new \stdClass),
         );
         $expectedMutable = Dichotomy::of(
-            Value::immutable(new \stdClass)->flagMutable(true),
-            Value::immutable(new \stdClass)->flagMutable(true),
+            Value::of(new \stdClass)->flagMutable(true),
+            Value::of(new \stdClass)->flagMutable(true),
         );
-        $immutable = Value::immutable(new \stdClass)->shrinkWith(static fn() => $expectedImmutable);
-        $mutable = Value::immutable(new \stdClass)
+        $immutable = Value::of(new \stdClass)->shrinkWith(static fn() => $expectedImmutable);
+        $mutable = Value::of(new \stdClass)
             ->flagMutable(true)
             ->shrinkWith(static fn() => $expectedMutable);
 
