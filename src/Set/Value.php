@@ -9,6 +9,8 @@ namespace Innmind\BlackBox\Set;
  */
 final class Value
 {
+    private ?Seed $seed = null;
+
     /**
      * @psalm-mutation-free
      *
@@ -116,7 +118,7 @@ final class Value
 
     public function acceptable(): bool
     {
-        return ($this->predicate)($this->implementation->unwrap());
+        return ($this->predicate)($this->unwrap());
     }
 
     /**
@@ -135,8 +137,7 @@ final class Value
         $identity = $this->withoutShrinking();
 
         return ($this->shrink)($this, $identity) ?? $this
-            ->implementation
-            ->seed()
+            ->seed
             ?->shrink($this->predicate)
             ?->default($identity);
     }
@@ -146,6 +147,19 @@ final class Value
      */
     public function unwrap()
     {
-        return $this->implementation->unwrap();
+        $value = $this->implementation->unwrap();
+
+        // This is not ideal to hide the seeded value this way and to hijack
+        // the shrinking system in self::shrinkable() and self::shrink() as it
+        // complexifies the understanding of what's happening. Because now the
+        // filtering can happen in 2 places.
+        // Until a better idea comes along, this will stay this way.
+        if ($value instanceof Seed) {
+            $this->seed = $value;
+            /** @var T */
+            $value = $value->unwrap();
+        }
+
+        return $value;
     }
 }

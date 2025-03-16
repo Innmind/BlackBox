@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Value;
 
-use Innmind\BlackBox\Set\{
-    Seed,
-    Value,
-};
+use Innmind\BlackBox\Set\Seed;
 
 /**
  * @internal
@@ -14,8 +11,6 @@ use Innmind\BlackBox\Set\{
  */
 final class Immutable
 {
-    private ?Seed $seed = null;
-
     /**
      * @psalm-mutation-free
      *
@@ -87,29 +82,11 @@ final class Immutable
         );
     }
 
-    public function seed(): ?Seed
-    {
-        return $this->seed;
-    }
-
     /**
-     * @return T
+     * @return T|Seed<T>
      */
     public function unwrap()
     {
-        $value = $this->unwrapped;
-
-        // This is not ideal to hide the seeded value this way and to hijack
-        // the shrinking system in self::shrinkable() and self::shrink() as it
-        // complexifies the understanding of what's happening. Because now the
-        // filtering can happen in 2 places.
-        // Until a better idea comes along, this will stay this way.
-        if ($value instanceof Seed) {
-            $this->seed = $value;
-            /** @var T */
-            $value = $value->unwrap();
-        }
-
-        return $value;
+        return $this->unwrapped;
     }
 }
