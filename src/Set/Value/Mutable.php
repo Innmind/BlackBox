@@ -22,13 +22,11 @@ final class Mutable
      *
      * @param \Closure(mixed): (T|Seed<T>) $unwrap
      * @param \Closure(Value<T>, Value<T>): ?Dichotomy<T> $shrink
-     * @param \Closure(mixed): bool $predicate
      */
     public function __construct(
         private mixed $source,
         private \Closure $unwrap,
         private \Closure $shrink,
-        private \Closure $predicate,
     ) {
     }
 
@@ -47,7 +45,6 @@ final class Mutable
             $value,
             static fn($source): mixed => $source,
             static fn() => null,
-            static fn() => true,
         );
     }
 
@@ -75,7 +72,6 @@ final class Mutable
             $this->source,
             $this->unwrap,
             static fn(Value $self, Value $default) => $shrink($self)?->default($default),
-            $this->predicate,
         );
     }
 
@@ -88,24 +84,6 @@ final class Mutable
             $this->source,
             $this->unwrap,
             static fn() => null,
-            $this->predicate,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param callable(mixed): bool $predicate
-     *
-     * @return self<T>
-     */
-    public function predicatedOn(callable $predicate): self
-    {
-        return new self(
-            $this->source,
-            $this->unwrap,
-            $this->shrink,
-            \Closure::fromCallable($predicate),
         );
     }
 
@@ -143,20 +121,22 @@ final class Mutable
             $this->source,
             $unwrap,
             static fn() => null,
-            $this->predicate,
         );
     }
 
     /**
      * @param \Closure(self<T>): Value<T> $wrap
+     * @param \Closure(mixed): bool $predicate
      *
      * @return ?Dichotomy<T>
      */
-    public function shrink(\Closure $wrap): ?Dichotomy
-    {
+    public function shrink(
+        \Closure $wrap,
+        \Closure $predicate,
+    ): ?Dichotomy {
         $identity = $wrap($this->withoutShrinking());
 
-        return ($this->shrink)($wrap($this), $identity) ?? $this->seed?->shrink($this->predicate)?->default($identity);
+        return ($this->shrink)($wrap($this), $identity) ?? $this->seed?->shrink($predicate)?->default($identity);
     }
 
     /**

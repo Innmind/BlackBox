@@ -85,7 +85,7 @@ final class Value
     public function predicatedOn(callable $predicate): self
     {
         return new self(
-            $this->implementation->predicatedOn($predicate),
+            $this->implementation,
             \Closure::fromCallable($predicate),
         );
     }
@@ -131,6 +131,7 @@ final class Value
                 $implementation,
                 $predicate,
             ),
+            $predicate,
         );
     }
 
