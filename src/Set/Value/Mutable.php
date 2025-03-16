@@ -71,7 +71,7 @@ final class Mutable
      *
      * @return self<T>
      */
-    public function shrinkVia(callable $shrink): self
+    public function shrinkMap(callable $shrink): self
     {
         /**
          * @psalm-suppress ImpureFunctionCall

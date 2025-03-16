@@ -123,10 +123,10 @@ final class Value
      *
      * @return self<T>
      */
-    public function shrinkVia(callable $shrink): self
+    public function shrinkMap(callable $shrink): self
     {
         return new self(
-            $this->implementation->shrinkVia($shrink),
+            $this->implementation->shrinkMap($shrink),
             $this->shrink,
             $this->predicate,
         );

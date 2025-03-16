@@ -157,7 +157,7 @@ final class Integers implements Implementation
      */
     private static function divideByTwo(Value $value): ?Value
     {
-        $shrunk = $value->shrinkVia(static fn($int) => (int) \round(
+        $shrunk = $value->shrinkMap(static fn($int) => (int) \round(
             $int / 2,
             0,
             \PHP_ROUND_HALF_DOWN,
@@ -178,7 +178,7 @@ final class Integers implements Implementation
     private static function reduceByOne(Value $value): ?Value
     {
         // add one when the value is negative, otherwise subtract one
-        $shrunk = $value->shrinkVia(static fn($int) => $int + (($int <=> 0) * -1));
+        $shrunk = $value->shrinkMap(static fn($int) => $int + (($int <=> 0) * -1));
 
         if (!$shrunk->acceptable()) {
             return null;

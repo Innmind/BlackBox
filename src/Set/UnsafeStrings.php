@@ -111,7 +111,7 @@ final class UnsafeStrings implements Implementation
      */
     private static function removeTrailingCharacter(Value $value): ?Value
     {
-        $shrunk = $value->shrinkVia(static fn($string) => \mb_substr(
+        $shrunk = $value->shrinkMap(static fn($string) => \mb_substr(
             $string,
             0,
             -1,
@@ -132,7 +132,7 @@ final class UnsafeStrings implements Implementation
      */
     private static function removeLeadingCharacter(Value $value): ?Value
     {
-        $shrunk = $value->shrinkVia(static fn($string) => \mb_substr(
+        $shrunk = $value->shrinkMap(static fn($string) => \mb_substr(
             $string,
             1,
             null,
