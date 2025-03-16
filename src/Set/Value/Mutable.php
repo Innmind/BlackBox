@@ -24,7 +24,7 @@ final class Mutable
      * @param \Closure(Value<T>, Value<T>): ?Dichotomy<T> $shrink
      * @param \Closure(mixed): bool $predicate
      */
-    private function __construct(
+    public function __construct(
         private bool $immutable,
         private mixed $source,
         private \Closure $unwrap,
@@ -70,6 +70,8 @@ final class Mutable
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param \Closure(Value<T>): ?Dichotomy<T> $shrink
      *
      * @return self<T>

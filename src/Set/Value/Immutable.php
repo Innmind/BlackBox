@@ -56,12 +56,16 @@ final class Immutable
     /**
      * @psalm-mutation-free
      *
-     * @return self<T>
+     * @return self<T>|Mutable<T>
      */
-    public function mutable(bool $mutable): self
+    public function mutable(bool $mutable): self|Mutable
     {
-        return new self(
-            $this->immutable && !$mutable,
+        if (!$mutable) {
+            return $this;
+        }
+
+        return new Mutable(
+            false,
             $this->source,
             $this->unwrap,
             $this->shrink,
@@ -70,6 +74,8 @@ final class Immutable
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @param \Closure(Value<T>): ?Dichotomy<T> $shrink
      *
      * @return self<T>
