@@ -128,62 +128,8 @@ final class Integers implements Implementation
                 continue;
             }
 
-            yield $value->shrinkWith(self::shrink(...));
+            yield $value->shrinkWith(Integers\Shrinker::instance);
             ++$iterations;
         }
-    }
-
-    /**
-     * @param Value<int> $value
-     *
-     * @return Dichotomy<int>|null
-     */
-    private static function shrink(Value $value): ?Dichotomy
-    {
-        if ($value->unwrap() === 0) {
-            return null;
-        }
-
-        return Dichotomy::of(
-            self::divideByTwo($value),
-            self::reduceByOne($value),
-        );
-    }
-
-    /**
-     * @param Value<int> $value
-     *
-     * @return ?Value<int>
-     */
-    private static function divideByTwo(Value $value): ?Value
-    {
-        $shrunk = $value->shrinkVia(static fn($int) => (int) \round(
-            $int / 2,
-            0,
-            \PHP_ROUND_HALF_DOWN,
-        ));
-
-        if (!$shrunk->acceptable()) {
-            return self::reduceByOne($value);
-        }
-
-        return $shrunk;
-    }
-
-    /**
-     * @param Value<int> $value
-     *
-     * @return ?Value<int>
-     */
-    private static function reduceByOne(Value $value): ?Value
-    {
-        // add one when the value is negative, otherwise subtract one
-        $shrunk = $value->shrinkVia(static fn($int) => $int + (($int <=> 0) * -1));
-
-        if (!$shrunk->acceptable()) {
-            return null;
-        }
-
-        return $shrunk;
     }
 }

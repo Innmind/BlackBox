@@ -82,36 +82,12 @@ final class Map implements Implementation
         foreach ($this->set->values($random, $mappedPredicate) as $value) {
             $mutable = !($value->immutable() && $this->immutable);
 
-            /** @psalm-suppress InvalidArgument Due to shrinker */
             yield Value::of($value)
                 ->mutable($mutable)
                 ->map(static fn($value) => $value->unwrap())
                 ->map($this->map)
                 ->predicatedOn($predicate)
-                ->shrinkWith(self::shrink(...));
+                ->shrinkWith(Map\Shrinker::instance);
         }
-    }
-
-    /**
-     * @template T
-     *
-     * @param Value<T> $value
-     *
-     * @return ?Dichotomy<T>
-     */
-    private static function shrink(Value $value): ?Dichotomy
-    {
-        $a = $value->maybeShrinkVia(static fn(Value $source) => $source->shrink()?->a());
-        $b = $value->maybeShrinkVia(static fn(Value $source) => $source->shrink()?->b());
-
-        if (!$a?->acceptable()) {
-            $a = null;
-        }
-
-        if (!$b?->acceptable()) {
-            $b = null;
-        }
-
-        return Dichotomy::of($a, $b);
     }
 }

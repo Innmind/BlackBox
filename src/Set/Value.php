@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
+use Innmind\BlackBox\Set\Value\Shrinker;
+
 /**
  * @internal
  * @template-covariant T
@@ -58,11 +60,11 @@ final class Value
     }
 
     /**
-     * @param \Closure(self<T>): ?Dichotomy<T> $shrink
+     * @param Shrinker|(\Closure(self<T>): ?Dichotomy<T>) $shrink
      *
      * @return self<T>
      */
-    public function shrinkWith(\Closure $shrink): self
+    public function shrinkWith(\Closure|Shrinker $shrink): self
     {
         return new self(
             $this->implementation,

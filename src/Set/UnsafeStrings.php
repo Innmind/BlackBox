@@ -82,67 +82,8 @@ final class UnsafeStrings implements Implementation
             $value = Value::of($values[$index])
                 ->predicatedOn($predicate);
 
-            yield $value->shrinkWith(self::shrink(...));
+            yield $value->shrinkWith(UnsafeStrings\Shrinker::instance);
             ++$iterations;
         }
-    }
-
-    /**
-     * @param Value<string> $value
-     *
-     * @return Dichotomy<string>|null
-     */
-    private static function shrink(Value $value): ?Dichotomy
-    {
-        if ($value->unwrap() === '') {
-            return null;
-        }
-
-        return Dichotomy::of(
-            self::removeTrailingCharacter($value),
-            self::removeLeadingCharacter($value),
-        );
-    }
-
-    /**
-     * @param Value<string> $value
-     *
-     * @return ?Value<string>
-     */
-    private static function removeTrailingCharacter(Value $value): ?Value
-    {
-        $shrunk = $value->shrinkVia(static fn($string) => \mb_substr(
-            $string,
-            0,
-            -1,
-            'ASCII',
-        ));
-
-        if (!$shrunk->acceptable()) {
-            return null;
-        }
-
-        return $shrunk;
-    }
-
-    /**
-     * @param Value<string> $value
-     *
-     * @return ?Value<string>
-     */
-    private static function removeLeadingCharacter(Value $value): ?Value
-    {
-        $shrunk = $value->shrinkVia(static fn($string) => \mb_substr(
-            $string,
-            1,
-            null,
-            'ASCII',
-        ));
-
-        if (!$shrunk->acceptable()) {
-            return null;
-        }
-
-        return $shrunk;
     }
 }

@@ -123,61 +123,8 @@ final class RealNumbers implements Implementation
                 continue;
             }
 
-            yield $value->shrinkWith(self::shrink(...));
+            yield $value->shrinkWith(RealNumbers\Shrinker::instance);
             ++$iterations;
         }
-    }
-
-    /**
-     * @param Value<float> $value
-     *
-     * @return Dichotomy<float>|null
-     */
-    private static function shrink(Value $value): ?Dichotomy
-    {
-        if (\round($value->unwrap(), 5) === 0.0) {
-            return null;
-        }
-
-        return Dichotomy::of(
-            self::divideByTwo($value),
-            self::reduceByOne($value),
-        );
-    }
-
-    /**
-     * @param Value<float> $value
-     *
-     * @return ?Value<float>
-     */
-    private static function divideByTwo(Value $value): ?Value
-    {
-        $shrunk = $value->shrinkVia(static fn(float $value) => $value / 2.0);
-
-        if (!$shrunk->acceptable()) {
-            return self::reduceByOne($value);
-        }
-
-        return $shrunk;
-    }
-
-    /**
-     * @param Value<float> $value
-     *
-     * @return ?Value<float>
-     */
-    private static function reduceByOne(Value $value): ?Value
-    {
-        // add one when the value is negative, otherwise subtract one
-        /** @psalm-suppress InvalidOperand Don't know why it complains */
-        $shrunk = $value->shrinkVia(static fn(float $value) => $value + (
-            ($value <=> 0.0) * -1.0
-        ));
-
-        if (!$shrunk->acceptable()) {
-            return null;
-        }
-
-        return $shrunk;
     }
 }
