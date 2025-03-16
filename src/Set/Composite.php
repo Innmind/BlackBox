@@ -148,10 +148,7 @@ final class Composite implements Implementation
                 continue;
             }
 
-            yield $mapped->shrinkWith(fn() => Composite\RecursiveNthShrink::of(
-                $this->aggregate,
-                $value,
-            ));
+            yield $mapped->shrinkWith(Composite\RecursiveNthShrink::start());
 
             ++$iterations;
         }

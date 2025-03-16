@@ -67,6 +67,14 @@ final class Combination
     }
 
     /**
+     * @param int<0, max> $n
+     */
+    public function has(int $n): bool
+    {
+        return \array_key_exists($n, $this->values);
+    }
+
+    /**
      * @param 0|positive-int $n
      */
     public function aShrinkNth(int $n): ?self

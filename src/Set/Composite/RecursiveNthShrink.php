@@ -5,77 +5,56 @@ namespace Innmind\BlackBox\Set\Composite;
 
 use Innmind\BlackBox\Set\{
     Dichotomy,
-    Seed,
     Value,
+    Value\Shrinker,
+    Value\End,
 };
 
 /**
  * @internal
+ * @implements Shrinker<mixed>
  */
-final class RecursiveNthShrink
+final class RecursiveNthShrink implements Shrinker
 {
+    private static ?self $start = null;
+
     /**
-     * @param callable(mixed...): (mixed|Seed<mixed>) $aggregate,
      * @param int<0, max> $n
      */
-    public function __construct(
-        private $aggregate,
+    private function __construct(
         private int $n = 0,
     ) {
     }
 
-    /**
-     * @param Value<Combination> $value
-     */
+    #[\Override]
     public function __invoke(Value $value): ?Dichotomy
     {
-        $mapped = $value->map(fn($combination) => $combination->detonate($this->aggregate));
-        $combination = $value->unwrap();
-
-        if (!$mapped->acceptable()) {
-            return null;
-        }
-
         return Dichotomy::of(
             $this->shrinkANth($value, $this->n),
             $this->shrinkANth($value, $this->n + 1),
         );
     }
 
-    /**
-     * @internal
-     * @template A
-     *
-     * @param callable(mixed...): (mixed|Seed<mixed>) $aggregate
-     * @param Value<Combination> $value
-     * @param 0|positive-int $n
-     *
-     * @return ?Dichotomy<Mixed>
-     */
-    public static function of(
-        callable $aggregate,
-        Value $value,
-        int $n = 0,
-    ): ?Dichotomy {
-        return (new self($aggregate, $n))($value);
+    public static function start(): Shrinker
+    {
+        return self::$start ??= new self;
     }
 
     /**
-     * @param Value<Combination> $value
      * @param int<0, max> $n
      */
     private function shrinkANth(Value $value, int $n): ?Value
     {
-        $combination = $value->unwrap();
-        $values = $combination->values();
+        $shrunk = $value->maybeShrinkVia(
+            static fn(Combination $combination) => match ($combination->has($n)) {
+                false => End::instance,
+                true => $combination->aShrinkNth($n),
+            },
+        );
 
-        if (!\array_key_exists($n, $values)) {
-            return $this->shrinkBNth(
-                $value,
-            );
+        if ($shrunk instanceof End) {
+            return $this->shrinkBNth($value);
         }
-
-        $shrunk = $combination->aShrinkNth($n);
 
         if (\is_null($shrunk)) {
             return $this->shrinkANth(
@@ -84,41 +63,31 @@ final class RecursiveNthShrink
             );
         }
 
-        $shrunk = $value->map(static fn() => $shrunk);
-        $mapped = $shrunk->map(
-            fn($combination) => $combination->detonate($this->aggregate),
-        );
-
-        if (!$mapped->acceptable()) {
+        if (!$shrunk->acceptable()) {
             return $this->shrinkANth(
                 $value,
                 $n + 1,
             );
         }
 
-        return $mapped->shrinkWith(fn() => self::of(
-            $this->aggregate,
-            $shrunk,
-            $n,
-        ));
+        return $shrunk->shrinkWith(new self($n));
     }
 
     /**
-     * @param Value<Combination> $value
      * @param int<0, max> $n
      */
-    private function shrinkBNth(
-        Value $value,
-        int $n = 0,
-    ): ?Value {
-        $combination = $value->unwrap();
-        $values = $combination->values();
+    private function shrinkBNth(Value $value, int $n = 0): ?Value
+    {
+        $shrunk = $value->maybeShrinkVia(
+            static fn(Combination $combination) => match ($combination->has($n)) {
+                false => End::instance,
+                true => $combination->bShrinkNth($n),
+            },
+        );
 
-        if (!\array_key_exists($n, $values)) {
+        if ($shrunk instanceof End) {
             return null;
         }
-
-        $shrunk = $combination->bShrinkNth($n);
 
         if (\is_null($shrunk)) {
             return $this->shrinkBNth(
@@ -127,22 +96,13 @@ final class RecursiveNthShrink
             );
         }
 
-        $shrunk = $value->map(static fn() => $shrunk);
-        $mapped = $shrunk->map(
-            fn($combination) => $combination->detonate($this->aggregate),
-        );
-
-        if (!$mapped->acceptable()) {
+        if (!$shrunk->acceptable()) {
             return $this->shrinkBNth(
                 $value,
                 $n + 1,
             );
         }
 
-        return $mapped->shrinkWith(fn() => RecursiveNthShrink::of(
-            $this->aggregate,
-            $shrunk,
-            $n,
-        ));
+        return $shrunk->shrinkWith(new self($n));
     }
 }
