@@ -89,7 +89,7 @@ final class Immutable
      *
      * @return self<T>
      */
-    public function shrinkMap(callable $shrink): self
+    public function shrinkVia(callable $shrink): self
     {
         /**
          * @psalm-suppress ImpureFunctionCall
