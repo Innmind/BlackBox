@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set\Value\Shrinker;
+use Innmind\BlackBox\Set\Value\{
+    Shrinker,
+    End,
+};
 
 /**
  * @internal
@@ -137,16 +140,20 @@ final class Value
     /**
      * @psalm-mutation-free
      *
-     * @param callable(mixed): mixed $shrink
+     * @param callable(mixed): (mixed|End) $shrink
      *
-     * @return ?self<T>
+     * @return self<T>|End|null
      */
-    public function maybeShrinkVia(callable $shrink): ?self
+    public function maybeShrinkVia(callable $shrink): self|End|null
     {
         $shrunk = $this->implementation->maybeShrinkVia($shrink);
 
         if (\is_null($shrunk)) {
             return null;
+        }
+
+        if ($shrunk instanceof End) {
+            return $shrunk;
         }
 
         return new self(

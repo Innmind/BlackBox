@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set\Map;
 use Innmind\BlackBox\Set\{
     Dichotomy,
     Value,
+    Value\End,
 };
 
 /**
@@ -22,11 +23,11 @@ enum Shrinker implements Value\Shrinker
         $a = $value->maybeShrinkVia(static fn(Value $source) => $source->shrink()?->a());
         $b = $value->maybeShrinkVia(static fn(Value $source) => $source->shrink()?->b());
 
-        if (!$a?->acceptable()) {
+        if ($a instanceof End || !$a?->acceptable()) {
             $a = null;
         }
 
-        if (!$b?->acceptable()) {
+        if ($b instanceof End || !$b?->acceptable()) {
             $b = null;
         }
 

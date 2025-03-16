@@ -108,11 +108,11 @@ final class Immutable
     /**
      * @psalm-mutation-free
      *
-     * @param callable(T): ?T $shrink
+     * @param callable(T): (T|End|null) $shrink
      *
-     * @return ?self<T>
+     * @return self<T>|End|null
      */
-    public function maybeShrinkVia(callable $shrink): ?self
+    public function maybeShrinkVia(callable $shrink): self|End|null
     {
         /**
          * @psalm-suppress ImpureFunctionCall
@@ -122,6 +122,10 @@ final class Immutable
 
         if (\is_null($shrunk)) {
             return null;
+        }
+
+        if ($shrunk instanceof End) {
+            return $shrunk;
         }
 
         /** @psalm-suppress ImpureMethodCall */
