@@ -134,10 +134,10 @@ final class Value
     {
         $identity = $this->withoutShrinking();
 
-        return ($this->shrink)($this, $identity) ?? $this->implementation->shrink(
-            $identity,
-            $this->predicate,
-        );
+        return ($this->shrink)($this, $identity) ?? $this
+            ->implementation
+            ->shrink($this->predicate)
+            ?->default($identity);
     }
 
     /**

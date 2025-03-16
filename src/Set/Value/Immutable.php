@@ -110,16 +110,13 @@ final class Immutable
     }
 
     /**
-     * @param Value<T> $identity
      * @param \Closure(mixed): bool $predicate
      *
      * @return ?Dichotomy<T>
      */
-    public function shrink(
-        Value $identity,
-        \Closure $predicate,
-    ): ?Dichotomy {
-        return $this->seed?->shrink($predicate)?->default($identity);
+    public function shrink(\Closure $predicate): ?Dichotomy
+    {
+        return $this->seed?->shrink($predicate);
     }
 
     /**
