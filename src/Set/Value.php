@@ -13,10 +13,12 @@ final class Value
      * @psalm-mutation-free
      *
      * @param Value\Immutable<T>|Value\Mutable<T> $implementation
+     * @param \Closure(Value<T>, Value<T>): ?Dichotomy<T> $shrink
      * @param \Closure(mixed): bool $predicate
      */
     private function __construct(
         private Value\Immutable|Value\Mutable $implementation,
+        private \Closure $shrink,
         private \Closure $predicate,
     ) {
     }
@@ -34,6 +36,7 @@ final class Value
     {
         return new self(
             Value\Immutable::of($value),
+            static fn() => null,
             static fn() => true,
         );
     }
@@ -47,6 +50,7 @@ final class Value
     {
         return new self(
             $this->implementation->mutable($mutable),
+            $this->shrink,
             $this->predicate,
         );
     }
@@ -59,7 +63,8 @@ final class Value
     public function shrinkWith(\Closure $shrink): self
     {
         return new self(
-            $this->implementation->shrinkWith($shrink),
+            $this->implementation,
+            static fn(self $self, self $default) => $shrink($self)?->default($default),
             $this->predicate,
         );
     }
@@ -70,7 +75,8 @@ final class Value
     public function withoutShrinking(): self
     {
         return new self(
-            $this->implementation->withoutShrinking(),
+            $this->implementation,
+            static fn() => null,
             $this->predicate,
         );
     }
@@ -86,6 +92,7 @@ final class Value
     {
         return new self(
             $this->implementation,
+            $this->shrink,
             \Closure::fromCallable($predicate),
         );
     }
@@ -102,6 +109,7 @@ final class Value
     {
         return new self(
             $this->implementation->map($map),
+            static fn() => null,
             $this->predicate,
         );
     }
@@ -124,13 +132,16 @@ final class Value
      */
     public function shrink(): ?Dichotomy
     {
+        $shrink = $this->shrink;
         $predicate = $this->predicate;
 
         return $this->implementation->shrink(
             static fn($implementation) => new self(
                 $implementation,
+                $shrink,
                 $predicate,
             ),
+            $shrink,
             $predicate,
         );
     }
