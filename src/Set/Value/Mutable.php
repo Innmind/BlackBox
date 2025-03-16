@@ -65,6 +65,25 @@ final class Mutable
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @param callable(T): T $shrink
+     *
+     * @return self<T>
+     */
+    public function shrinkVia(callable $shrink): self
+    {
+        /**
+         * @psalm-suppress ImpureFunctionCall
+         * @psalm-suppress MixedArgument
+         */
+        return new self(
+            $shrink($this->source),
+            $this->map,
+        );
+    }
+
+    /**
      * @return T|Seed<T>
      */
     public function unwrap()

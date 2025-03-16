@@ -83,6 +83,29 @@ final class Immutable
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @param callable(T): T $shrink
+     *
+     * @return self<T>
+     */
+    public function shrinkVia(callable $shrink): self
+    {
+        /**
+         * @psalm-suppress ImpureFunctionCall
+         * @psalm-suppress MixedArgument
+         */
+        $shrunk = $shrink($this->source);
+
+        /** @psalm-suppress ImpureMethodCall */
+        return new self(
+            $shrunk,
+            $this->map,
+            ($this->map)($shrunk),
+        );
+    }
+
+    /**
      * @return T|Seed<T>
      */
     public function unwrap()

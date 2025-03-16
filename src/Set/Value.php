@@ -116,6 +116,22 @@ final class Value
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(T): T $shrink
+     *
+     * @return self<T>
+     */
+    public function shrinkVia(callable $shrink): self
+    {
+        return new self(
+            $this->implementation->shrinkVia($shrink),
+            $this->shrink,
+            $this->predicate,
+        );
+    }
+
     public function acceptable(): bool
     {
         return ($this->predicate)($this->unwrap());
