@@ -96,7 +96,7 @@ final class Value
      */
     public function immutable(): bool
     {
-        return $this->implementation->immutable();
+        return $this->implementation instanceof Value\Immutable;
     }
 
     /**

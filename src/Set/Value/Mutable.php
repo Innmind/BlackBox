@@ -153,14 +153,6 @@ final class Mutable
     }
 
     /**
-     * @psalm-mutation-free
-     */
-    public function immutable(): bool
-    {
-        return false;
-    }
-
-    /**
      * @param \Closure(self<T>): Value<T> $wrap
      *
      * @return ?Dichotomy<T>
