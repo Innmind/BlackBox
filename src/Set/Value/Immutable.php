@@ -23,12 +23,14 @@ final class Immutable
      * @param \Closure(mixed): (T|Seed<T>) $unwrap
      * @param \Closure(Value<T>, Value<T>): ?Dichotomy<T> $shrink
      * @param \Closure(mixed): bool $predicate
+     * @param T|Seed<T> $unwrapped
      */
     private function __construct(
         private mixed $source,
         private \Closure $unwrap,
         private \Closure $shrink,
         private \Closure $predicate,
+        private mixed $unwrapped,
     ) {
     }
 
@@ -43,11 +45,13 @@ final class Immutable
      */
     public static function of($value): self
     {
+        /** @var self<V> */
         return new self(
             $value,
             static fn($source): mixed => $source,
             static fn() => null,
             static fn() => true,
+            $value,
         );
     }
 
@@ -84,6 +88,7 @@ final class Immutable
             $this->unwrap,
             static fn(Value $self, Value $default) => $shrink($self)?->default($default),
             $this->predicate,
+            $this->unwrapped,
         );
     }
 
@@ -97,6 +102,7 @@ final class Immutable
             $this->unwrap,
             static fn() => null,
             $this->predicate,
+            $this->unwrapped,
         );
     }
 
@@ -114,6 +120,7 @@ final class Immutable
             $this->unwrap,
             $this->shrink,
             \Closure::fromCallable($predicate),
+            $this->unwrapped,
         );
     }
 
@@ -152,11 +159,13 @@ final class Immutable
         $value = $unwrap($this->source);
         $unwrap = static fn(): mixed => $value;
 
+        /** @var self<V> */
         return new self(
             $this->source,
             $unwrap,
             static fn() => null,
             $this->predicate,
+            $value,
         );
     }
 
@@ -182,7 +191,7 @@ final class Immutable
      */
     public function unwrap()
     {
-        $value = ($this->unwrap)($this->source);
+        $value = $this->unwrapped;
 
         // This is not ideal to hide the seeded value this way and to hijack
         // the shrinking system in self::shrinkable() and self::shrink() as it
