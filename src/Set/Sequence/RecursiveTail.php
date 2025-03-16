@@ -13,6 +13,12 @@ use Innmind\BlackBox\Set\{
  */
 final class RecursiveTail
 {
+    private static ?self $instance = null;
+
+    private function __construct()
+    {
+    }
+
     /**
      * @internal
      * @template A
@@ -21,7 +27,7 @@ final class RecursiveTail
      *
      * @return ?Dichotomy<list<A>>
      */
-    public static function of(Value $value): ?Dichotomy
+    public function __invoke(Value $value): ?Dichotomy
     {
         if (\count($value->unwrap()) === 0) {
             return null;
@@ -35,5 +41,23 @@ final class RecursiveTail
             RemoveTail::of($value),
             RemoveHead::of($value),
         );
+    }
+
+    /**
+     * @internal
+     * @template A
+     *
+     * @param Value<list<Value<A>>> $value
+     *
+     * @return ?Dichotomy<list<A>>
+     */
+    public static function of(Value $value): ?Dichotomy
+    {
+        return self::instance()($value);
+    }
+
+    public static function instance(): self
+    {
+        return self::$instance ??= new self;
     }
 }
