@@ -136,7 +136,8 @@ final class Value
 
         return ($this->shrink)($this, $identity) ?? $this
             ->implementation
-            ->shrink($this->predicate)
+            ->seed()
+            ?->shrink($this->predicate)
             ?->default($identity);
     }
 

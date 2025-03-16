@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set\Value;
 
 use Innmind\BlackBox\Set\{
-    Dichotomy,
     Seed,
     Value,
 };
@@ -109,14 +108,9 @@ final class Immutable
         );
     }
 
-    /**
-     * @param \Closure(mixed): bool $predicate
-     *
-     * @return ?Dichotomy<T>
-     */
-    public function shrink(\Closure $predicate): ?Dichotomy
+    public function seed(): ?Seed
     {
-        return $this->seed?->shrink($predicate);
+        return $this->seed;
     }
 
     /**
