@@ -148,7 +148,7 @@ final class Composite implements Implementation
                 continue;
             }
 
-            yield $mapped->shrinkWith(Composite\RecursiveNthShrink::start());
+            yield $mapped->shrinkWith(Composite\Shrinker::start());
 
             ++$iterations;
         }

@@ -6,15 +6,14 @@ namespace Innmind\BlackBox\Set\Composite;
 use Innmind\BlackBox\Set\{
     Dichotomy,
     Value,
-    Value\Shrinker,
     Value\End,
 };
 
 /**
  * @internal
- * @implements Shrinker<mixed>
+ * @implements Value\Shrinker<mixed>
  */
-final class RecursiveNthShrink implements Shrinker
+final class Shrinker implements Value\Shrinker
 {
     private static ?self $start = null;
 
