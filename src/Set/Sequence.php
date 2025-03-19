@@ -85,6 +85,7 @@ final class Sequence implements Implementation
     #[\Override]
     public function values(Random $random, \Closure $predicate): \Generator
     {
+        $shrinker = new Sequence\Shrinker;
         $min = $this->min;
         $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
         $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
@@ -112,7 +113,7 @@ final class Sequence implements Implementation
                     continue;
                 }
 
-                yield $yieldable->shrinkWith(static fn() => Sequence\RecursiveHalf::of($value));
+                yield $yieldable->shrinkWith($shrinker);
 
                 ++$yielded;
             }
