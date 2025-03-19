@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\Set\Value\{
     Shrinker,
     End,
+    Map,
 };
 
 /**
@@ -19,14 +20,18 @@ final class Value
     /**
      * @psalm-mutation-free
      *
-     * @param Value\Immutable<T>|Value\Mutable<T> $implementation
+     * @param Map<T> $map
      * @param Shrinker|(\Closure(self<T>): ?Dichotomy<T>) $shrink
      * @param \Closure(mixed): bool $predicate
+     * @param T|Seed<T> $unwrapped
      */
     private function __construct(
-        private Value\Immutable|Value\Mutable $implementation,
+        private bool $immutable,
+        private mixed $source,
+        private Map $map,
         private Shrinker|\Closure $shrink,
         private \Closure $predicate,
+        private mixed $unwrapped,
     ) {
     }
 
@@ -42,9 +47,12 @@ final class Value
     public static function of($value): self
     {
         return new self(
-            Value\Immutable::of($value),
+            true,
+            $value,
+            Map::noop(),
             static fn() => null,
             static fn() => true,
+            $value,
         );
     }
 
@@ -55,10 +63,23 @@ final class Value
      */
     public function mutable(bool $mutable): self
     {
+        if (!$this->immutable) {
+            // Mutable values can't become immutable
+            return $this;
+        }
+
+        if (!$mutable) {
+            // Already immutable
+            return $this;
+        }
+
         return new self(
-            $this->implementation->mutable($mutable),
+            !$mutable,
+            $this->source,
+            $this->map,
             $this->shrink,
             $this->predicate,
+            null, // no need to keep the pre-computed value when mutable
         );
     }
 
@@ -70,9 +91,12 @@ final class Value
     public function shrinkWith(\Closure|Shrinker $shrink): self
     {
         return new self(
-            $this->implementation,
+            $this->immutable,
+            $this->source,
+            $this->map,
             $shrink,
             $this->predicate,
+            $this->unwrapped,
         );
     }
 
@@ -82,9 +106,12 @@ final class Value
     public function withoutShrinking(): self
     {
         return new self(
-            $this->implementation,
+            $this->immutable,
+            $this->source,
+            $this->map,
             static fn() => null,
             $this->predicate,
+            $this->unwrapped,
         );
     }
 
@@ -98,9 +125,12 @@ final class Value
     public function predicatedOn(callable $predicate): self
     {
         return new self(
-            $this->implementation,
+            $this->immutable,
+            $this->source,
+            $this->map,
             $this->shrink,
             \Closure::fromCallable($predicate),
+            $this->unwrapped,
         );
     }
 
@@ -114,10 +144,21 @@ final class Value
      */
     public function map(callable $map): self
     {
+        $unwrapped = $this->unwrapped;
+
+        if ($this->immutable) {
+            // avoid recomputing the map operation on each unwrap
+            /** @psalm-suppress ImpureMethodCall Since everything is supposed immutable this should be fine */
+            $unwrapped = Map::noop()->with($map)($unwrapped);
+        }
+
         return new self(
-            $this->implementation->map($map),
+            $this->immutable,
+            $this->source,
+            $this->map->with($map),
             static fn() => null,
             $this->predicate,
+            $unwrapped,
         );
     }
 
@@ -130,10 +171,25 @@ final class Value
      */
     public function shrinkVia(callable $shrink): self
     {
+        /**
+         * @psalm-suppress ImpureFunctionCall
+         * @psalm-suppress MixedArgument
+         */
+        $shrunk = $shrink($this->source);
+        $unwrapped = $this->unwrapped;
+
+        if ($this->immutable) {
+            /** @psalm-suppress ImpureMethodCall */
+            $unwrapped = ($this->map)($shrunk);
+        }
+
         return new self(
-            $this->implementation->shrinkVia($shrink),
+            $this->immutable,
+            $shrunk,
+            $this->map,
             $this->shrink,
             $this->predicate,
+            $unwrapped,
         );
     }
 
@@ -146,7 +202,11 @@ final class Value
      */
     public function maybeShrinkVia(callable $shrink): self|End|null
     {
-        $shrunk = $this->implementation->maybeShrinkVia($shrink);
+        /**
+         * @psalm-suppress ImpureFunctionCall
+         * @psalm-suppress MixedAssignment
+         */
+        $shrunk = $shrink($this->source);
 
         if (\is_null($shrunk)) {
             return null;
@@ -156,10 +216,20 @@ final class Value
             return $shrunk;
         }
 
+        $unwrapped = $this->unwrapped;
+
+        if ($this->immutable) {
+            /** @psalm-suppress ImpureMethodCall */
+            $unwrapped = ($this->map)($shrunk);
+        }
+
         return new self(
+            $this->immutable,
             $shrunk,
+            $this->map,
             $this->shrink,
             $this->predicate,
+            $unwrapped,
         );
     }
 
@@ -173,7 +243,7 @@ final class Value
      */
     public function immutable(): bool
     {
-        return $this->implementation instanceof Value\Immutable;
+        return $this->immutable;
     }
 
     /**
@@ -191,7 +261,11 @@ final class Value
      */
     public function unwrap()
     {
-        $value = $this->implementation->unwrap();
+        if ($this->immutable) {
+            $value = $this->unwrapped;
+        } else {
+            $value = ($this->map)($this->source);
+        }
 
         // This is not ideal to hide the seeded value this way and to hijack
         // the shrinking system in self::shrinkable() and self::shrink() as it
