@@ -64,9 +64,9 @@ final class Report
         return new self($directories, $reportPath);
     }
 
-    public function init(): void
+    public function loadProof(): void
     {
-        $this->coverage->start('Proofs loader');
+        $this->coverage->start('Load proof');
     }
 
     public function start(Name $proof): void
