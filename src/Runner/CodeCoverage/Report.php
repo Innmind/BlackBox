@@ -64,6 +64,11 @@ final class Report
         return new self($directories, $reportPath);
     }
 
+    public function loadProof(): void
+    {
+        $this->coverage->start('Load proof');
+    }
+
     public function start(Name $proof): void
     {
         $this->coverage->start($proof->toString());

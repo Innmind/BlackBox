@@ -20,12 +20,10 @@ final class FromGenerator implements Implementation
      * @psalm-mutation-free
      *
      * @param \Closure(Random): \Generator<T|Seed<T>> $generatorFactory
-     * @param \Closure(T): bool $predicate
      * @param int<1, max> $size
      */
     private function __construct(
         private \Closure $generatorFactory,
-        private \Closure $predicate,
         private int $size,
         private bool $immutable,
     ) {
@@ -47,7 +45,6 @@ final class FromGenerator implements Implementation
     ): self {
         return new self(
             \Closure::fromCallable($generatorFactory),
-            static fn(): bool => true,
             100,
             $immutable,
         );
@@ -91,30 +88,13 @@ final class FromGenerator implements Implementation
     {
         return new self(
             $this->generatorFactory,
-            $this->predicate,
             $size,
             $this->immutable,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->generatorFactory,
-            static fn(mixed $value) => /** @var T $value */ $previous($value) && $predicate($value),
-            $this->size,
-            $this->immutable,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $generator = ($this->generatorFactory)($random);
         $iterations = 0;
@@ -122,11 +102,9 @@ final class FromGenerator implements Implementation
         while ($iterations < $this->size && $generator->valid()) {
             /** @var T|Seed<T> */
             $value = $generator->current();
-            $value = match ($this->immutable) {
-                true => Value::immutable($value),
-                false => Value::mutable(static fn() => $value),
-            };
-            $value = $value->predicatedOn($this->predicate);
+            $value = Value::of($value)
+                ->mutable(!$this->immutable)
+                ->predicatedOn($predicate);
 
             if ($value->acceptable()) {
                 yield $value;

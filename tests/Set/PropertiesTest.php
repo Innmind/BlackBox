@@ -54,7 +54,7 @@ class PropertiesTest extends TestCase
         );
 
         foreach (Collapse::of($properties)->values(Random::mersenneTwister) as $scenario) {
-            $this->assertTrue($scenario->isImmutable());
+            $this->assertTrue($scenario->immutable());
         }
     }
 

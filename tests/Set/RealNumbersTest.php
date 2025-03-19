@@ -106,7 +106,7 @@ class RealNumbersTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -115,7 +115,7 @@ class RealNumbersTest extends TestCase
         $numbers = RealNumbers::between(-1, 1)->filter(static fn($i) => $i === 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 
@@ -124,7 +124,7 @@ class RealNumbersTest extends TestCase
         $numbers = RealNumbers::any()->filter(static fn($i) => $i !== 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 
@@ -133,7 +133,7 @@ class RealNumbersTest extends TestCase
         $numbers = RealNumbers::any()->filter(static fn($i) => $i !== 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -169,7 +169,7 @@ class RealNumbersTest extends TestCase
         $numbers = RealNumbers::any();
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
-            if (!$value->shrinkable()) {
+            if (!$value->shrink()) {
                 // as 0 may be generated
                 continue;
             }
@@ -190,7 +190,7 @@ class RealNumbersTest extends TestCase
         $even = RealNumbers::any()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 0);
 
         foreach ($even->values(Random::mersenneTwister) as $value) {
-            if (!$value->shrinkable()) {
+            if (!$value->shrink()) {
                 continue;
             }
 
@@ -205,6 +205,10 @@ class RealNumbersTest extends TestCase
         foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
 
+            if (\is_null($dichotomy)) {
+                continue;
+            }
+
             $this->assertSame(1, ((int) \round($dichotomy->a()->unwrap())) % 2);
             $this->assertSame(1, ((int) \round($dichotomy->b()->unwrap())) % 2);
         }
@@ -215,10 +219,10 @@ class RealNumbersTest extends TestCase
         $integers = RealNumbers::between(1000, 2000);
 
         $assertInBounds = function(Value $value, string $strategy) {
-            while ($value->shrinkable()) {
+            while ($shrunk = $value->shrink()) {
                 $this->assertGreaterThanOrEqual(1000, $value->unwrap());
                 $this->assertLessThanOrEqual(2000, $value->unwrap());
-                $value = $value->shrink()->$strategy();
+                $value = $shrunk->$strategy();
             }
         };
 
@@ -245,8 +249,8 @@ class RealNumbersTest extends TestCase
         $floats = RealNumbers::above(43);
 
         foreach ($floats->values(Random::mersenneTwister) as $float) {
-            while ($float->shrinkable()) {
-                $float = $float->shrink()->a();
+            while ($shrunk = $float->shrink()) {
+                $float = $shrunk->a();
             }
 
             $this->assertSame(43, (int) $float->unwrap());

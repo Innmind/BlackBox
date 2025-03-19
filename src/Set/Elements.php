@@ -26,12 +26,10 @@ final class Elements implements Implementation
      * @param int<1, max> $size
      * @param T $first
      * @param list<U> $elements
-     * @param \Closure(T|U): bool $predicate
      */
     private function __construct(
         private mixed $first,
         private array $elements,
-        private \Closure $predicate,
         private int $size,
     ) {
     }
@@ -52,7 +50,7 @@ final class Elements implements Implementation
      */
     public static function implementation($first, ...$elements): self
     {
-        return new self($first, $elements, static fn(): bool => true, 100);
+        return new self($first, $elements, 100);
     }
 
     /**
@@ -83,34 +81,17 @@ final class Elements implements Implementation
         return new self(
             $this->first,
             $this->elements,
-            $this->predicate,
             $size,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->first,
-            $this->elements,
-            static fn(mixed $value) => /** @var T|U $value */ $previous($value) && $predicate($value),
-            $this->size,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
         $iterations = 0;
         $elements = \array_values(\array_filter(
             [$this->first, ...$this->elements],
-            $this->predicate,
+            $predicate,
         ));
 
         if (\count($elements) === 0) {
@@ -124,7 +105,7 @@ final class Elements implements Implementation
             /** @var mixed */
             $value = $elements[$index];
 
-            yield Value::immutable($value)->predicatedOn($this->predicate);
+            yield Value::of($value)->predicatedOn($predicate);
             ++$iterations;
         }
     }

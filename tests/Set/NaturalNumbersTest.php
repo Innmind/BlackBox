@@ -76,7 +76,7 @@ class NaturalNumbersTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -85,7 +85,7 @@ class NaturalNumbersTest extends TestCase
         $integers = NaturalNumbers::any();
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 }

@@ -41,17 +41,9 @@ final class Combination
     {
         return \array_reduce(
             $this->values,
-            static fn(bool $immutable, Value $value): bool => $immutable && $value->isImmutable(),
+            static fn(bool $immutable, Value $value): bool => $immutable && $value->immutable(),
             true,
         );
-    }
-
-    /**
-     * @return list<Value>
-     */
-    public function values(): array
-    {
-        return $this->values;
     }
 
     /**
@@ -67,48 +59,45 @@ final class Combination
     }
 
     /**
-     * @param 0|positive-int $n
+     * @param int<0, max> $n
      */
-    public function aShrinkNth(int $n): self
+    public function has(int $n): bool
     {
-        $shrunk = [];
-
-        foreach ($this->values as $i => $value) {
-            if ($i === $n) {
-                $value = $value->shrink()->a();
-            }
-
-            $shrunk[] = $value;
-        }
-
-        return new self($shrunk);
+        return \array_key_exists($n, $this->values);
     }
 
     /**
      * @param 0|positive-int $n
      */
-    public function bShrinkNth(int $n): self
+    public function aShrinkNth(int $n): ?self
     {
-        $shrunk = [];
+        $shrunk = $this->values;
+        $nShrunk = $this->values[$n]->shrink();
 
-        foreach ($this->values as $i => $value) {
-            if ($i === $n) {
-                $value = $value->shrink()->b();
-            }
-
-            $shrunk[] = $value;
+        if (\is_null($nShrunk)) {
+            return null;
         }
 
-        return new self($shrunk);
+        $shrunk[$n] = $nShrunk->a();
+
+        return new self(\array_values($shrunk));
     }
 
-    public function shrinkable(): bool
+    /**
+     * @param 0|positive-int $n
+     */
+    public function bShrinkNth(int $n): ?self
     {
-        return \array_reduce(
-            $this->values,
-            static fn(bool $shrinkable, Value $value): bool => $shrinkable || $value->shrinkable(),
-            false,
-        );
+        $shrunk = $this->values;
+        $nShrunk = $this->values[$n]->shrink();
+
+        if (\is_null($nShrunk)) {
+            return null;
+        }
+
+        $shrunk[$n] = $nShrunk->b();
+
+        return new self(\array_values($shrunk));
     }
 
     private function unwrap(): array

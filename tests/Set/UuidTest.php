@@ -25,7 +25,7 @@ class UuidTest extends TestCase
 
         foreach ($uuids->values(Random::mersenneTwister) as $uuid) {
             $this->assertInstanceOf(Value::class, $uuid);
-            $this->assertTrue($uuid->isImmutable());
+            $this->assertTrue($uuid->immutable());
             $this->assertMatchesRegularExpression(
                 '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
                 $uuid->unwrap(),
@@ -39,7 +39,9 @@ class UuidTest extends TestCase
         $uuids = Uuid::any();
 
         $min = static function($value, $type) use (&$min) {
-            return $value->shrinkable() ? $min($value->shrink()->{$type}(), $type) : $value->unwrap();
+            $shrunk = $value->shrink();
+
+            return $shrunk ? $min($shrunk->{$type}(), $type) : $value->unwrap();
         };
 
         foreach ($uuids->values(Random::mersenneTwister) as $uuid) {

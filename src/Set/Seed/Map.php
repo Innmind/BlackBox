@@ -74,54 +74,38 @@ final class Map
 
     /**
      * @param \Closure(T): bool $predicate
-     */
-    public function shrinkable(\Closure $predicate): bool
-    {
-        if (!$this->value->shrinkable()) {
-            return false;
-        }
-
-        $shrunk = $this->value->shrink();
-
-        $a = Value::immutable(Seed::of($shrunk->a())->map($this->map))
-            ->predicatedOn($predicate);
-        $b = Value::immutable(Seed::of($shrunk->b())->map($this->map))
-            ->predicatedOn($predicate);
-
-        // With the current design we need both values to be acceptable in order
-        // to return a valid dichotomy. But this means that even if "b" is
-        // acceptable we won't test against it. So the shrinking mechanism may
-        // not pinpoint the minimum case every time.
-        return $a->acceptable() && $b->acceptable();
-    }
-
-    /**
-     * @param \Closure(T): bool $predicate
      *
-     * @return Dichotomy<T>
+     * @return ?Dichotomy<T>
      */
-    public function shrink(\Closure $predicate): Dichotomy
+    public function shrink(\Closure $predicate): ?Dichotomy
     {
         $shrunk = $this->value->shrink();
 
-        $a = $shrunk->a();
-        $b = $shrunk->b();
-        $map = $this->map;
+        if (\is_null($shrunk)) {
+            return null;
+        }
 
         // There's no need to define the immutability of the values here because
         // it's held by the values injected in the new Seeds.
-        return new Dichotomy(
-            static fn() => Value::immutable(
-                Seed::of($a)->map($map),
-                // No dichotomy because the captured values in the configure
-                // lambda is shrunk first
-            )->predicatedOn($predicate),
-            static fn() => Value::immutable(
-                Seed::of($b)->map($map),
-                // No dichotomy because the captured values in the configure
-                // lambda is shrunk first
-            )->predicatedOn($predicate),
-        );
+        // No dichotomy because the captured values in the configure lambda is
+        // shrunk first
+        $a = Value::of(Seed::of($shrunk->a())->map($this->map))
+            ->predicatedOn($predicate);
+        $b = Value::of(Seed::of($shrunk->b())->map($this->map))
+            ->predicatedOn($predicate);
+
+        // If one of the strategies is not acceptable then we remove it and it
+        // will de defaulted to the parent value. And if both of them are not
+        // acceptable then the shrinking stops.
+        if (!$a->acceptable()) {
+            $a = null;
+        }
+
+        if (!$b->acceptable()) {
+            $b = null;
+        }
+
+        return Dichotomy::of($a, $b);
     }
 
     /**

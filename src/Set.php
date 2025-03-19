@@ -445,7 +445,10 @@ final class Set
      */
     public function filter(callable $predicate): self
     {
-        return new self($this->implementation->filter($predicate));
+        return new self(Set\Filter::implementation(
+            $this->implementation,
+            $predicate,
+        ));
     }
 
     /**
@@ -469,10 +472,6 @@ final class Set
     /**
      * This allows to configure a Set from a randomly generated value from the
      * current Set.
-     *
-     * Note that the value generated for the input won't be shrunk. The more
-     * your values comes from this composition the less values will be
-     * shrinkable.
      *
      * @psalm-mutation-free
      *
@@ -500,7 +499,10 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from $this->implementation->values($random);
+        yield from $this->implementation->values(
+            $random,
+            static fn() => true,
+        );
     }
 
     /**
