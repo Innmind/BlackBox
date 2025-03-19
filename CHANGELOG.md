@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Performance regression in the previous release
+
 ## 6.0.0 - 2025-03-12
 
 ### Added

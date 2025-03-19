@@ -73,7 +73,7 @@ class IntegersExceptZeroTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -82,7 +82,7 @@ class IntegersExceptZeroTest extends TestCase
         $integers = IntegersExceptZero::any();
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
     }
 }

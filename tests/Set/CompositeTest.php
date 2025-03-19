@@ -128,7 +128,7 @@ class CompositeTest extends TestCase
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -156,7 +156,7 @@ class CompositeTest extends TestCase
         );
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->isImmutable());
+            $this->assertFalse($value->immutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
         }
@@ -195,7 +195,7 @@ class CompositeTest extends TestCase
         $this->assertCount(4, \iterator_to_array($set->values(Random::mersenneTwister)));
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->isImmutable());
+            $this->assertFalse($value->immutable());
             $this->assertNotSame($value->unwrap(), $value->unwrap());
             $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
             $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
@@ -227,7 +227,7 @@ class CompositeTest extends TestCase
         );
 
         foreach ($mutable->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->isImmutable());
+            $this->assertFalse($value->immutable());
         }
 
         $immutable = Composite::immutable(
@@ -243,7 +243,7 @@ class CompositeTest extends TestCase
         );
 
         foreach ($immutable->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
         }
     }
 
@@ -268,7 +268,7 @@ class CompositeTest extends TestCase
         );
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->shrinkable());
+            $this->assertNotNull($value->shrink());
         }
 
         $nonShrinkable = Composite::immutable(
@@ -293,7 +293,7 @@ class CompositeTest extends TestCase
         );
 
         foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->shrinkable());
+            $this->assertNull($value->shrink());
         }
     }
 
@@ -339,8 +339,8 @@ class CompositeTest extends TestCase
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $a = $value;
 
-            while ($a->shrinkable()) {
-                $a = $a->shrink()->a();
+            while ($shrunk = $a->shrink()) {
+                $a = $shrunk->a();
             }
 
             $this->assertSame('', $a->unwrap());

@@ -29,12 +29,12 @@ class DichotomyTest extends TestCase
                 ),
             )
             ->then(function($a, $b) {
-                $expectedA = Value::immutable($a);
-                $expectedB = Value::immutable($b);
+                $expectedA = Value::of($a);
+                $expectedB = Value::of($b);
 
-                $dichotomy = new Dichotomy(
-                    static fn() => $expectedA,
-                    static fn() => $expectedB,
+                $dichotomy = Dichotomy::of(
+                    $expectedA,
+                    $expectedB,
                 );
 
                 $this->assertSame($expectedA, $dichotomy->a());

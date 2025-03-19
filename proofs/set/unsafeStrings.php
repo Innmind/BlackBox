@@ -12,8 +12,8 @@ return static function() {
         'Set::strings()->unsafe() shrink to an empty string',
         static function($assert) {
             foreach (Set::strings()->unsafe()->values(Random::default) as $value) {
-                while ($value->shrinkable()) {
-                    $value = $value->shrink()->a();
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
                 }
 
                 $assert->same('', $value->unwrap());

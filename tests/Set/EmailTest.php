@@ -24,7 +24,7 @@ class EmailTest extends TestCase
 
         foreach ($emails->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->isImmutable());
+            $this->assertTrue($value->immutable());
             $this->assertIsString($value->unwrap());
         }
     }
@@ -43,7 +43,7 @@ class EmailTest extends TestCase
         $emails = Email::any();
 
         foreach ($emails->values(Random::mersenneTwister) as $email) {
-            $this->assertTrue($email->shrinkable());
+            $this->assertNotNull($email->shrink());
         }
     }
 }

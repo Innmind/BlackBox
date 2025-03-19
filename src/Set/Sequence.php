@@ -19,14 +19,14 @@ final class Sequence implements Implementation
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param \Closure(list<I>): bool $predicate
      * @param int<1, max> $size
+     * @param int<1, max> $min
      */
     private function __construct(
         private Implementation $set,
         private Integers $sizes,
-        private \Closure $predicate,
         private int $size,
+        private int $min,
     ) {
     }
 
@@ -44,11 +44,12 @@ final class Sequence implements Implementation
         Implementation $set,
         Integers $sizes,
     ): self {
+        /** @psalm-suppress ArgumentTypeCoercion */
         return new self(
             $set,
             $sizes,
-            static fn(array $sequence): bool => \count($sequence) >= $sizes->min(),
             100,
+            $sizes->min(),
         );
     }
 
@@ -76,53 +77,44 @@ final class Sequence implements Implementation
         return new self(
             $this->set,
             $this->sizes->take($size),
-            $this->predicate,
             $size,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function filter(callable $predicate): self
-    {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->set,
-            $this->sizes,
-            static fn(array $value) => /** @var list<I> $value */ $previous($value) && $predicate($value),
-            $this->size,
+            $this->min,
         );
     }
 
     #[\Override]
-    public function values(Random $random): \Generator
+    public function values(Random $random, \Closure $predicate): \Generator
     {
-        $immutable = $this->set->values($random)->current()?->isImmutable() ?? false;
+        $shrinker = new Sequence\Shrinker;
+        $detonate = new Sequence\Detonate;
+        $min = $this->min;
+        $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
+        $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
+        $immutable = $this
+            ->set
+            ->values($random, static fn() => true)
+            ->current()
+            ?->immutable() ?? false;
         $yielded = 0;
 
         do {
-            foreach ($this->sizes->values($random) as $size) {
+            foreach ($this->sizes->values($random, static fn() => true) as $size) {
                 if ($yielded === $this->size) {
                     return;
                 }
 
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($size->unwrap(), $random);
-                $value = match ($immutable) {
-                    true => Value::immutable($values),
-                    false => Value::mutable(static fn() => $values),
-                };
-                $value = $value->predicatedOn($this->predicate);
-                $yieldable = $value->map(Sequence\Detonate::of(...));
+                $value = Value::of($values)
+                    ->mutable(!$immutable)
+                    ->predicatedOn($predicate);
+                $yieldable = $value->map($detonate);
 
                 if (!$yieldable->acceptable()) {
                     continue;
                 }
 
-                yield $yieldable->shrinkWith(Sequence\RecursiveHalf::of($value));
+                yield $yieldable->shrinkWith($shrinker);
 
                 ++$yielded;
             }
@@ -140,6 +132,9 @@ final class Sequence implements Implementation
             return [];
         }
 
-        return \array_values(\iterator_to_array($this->set->take($size)->values($rand)));
+        return \array_values(\iterator_to_array($this->set->take($size)->values(
+            $rand,
+            static fn() => true,
+        )));
     }
 }

@@ -445,7 +445,10 @@ final class Set
      */
     public function filter(callable $predicate): self
     {
-        return new self($this->implementation->filter($predicate));
+        return new self(Set\Filter::implementation(
+            $this->implementation,
+            $predicate,
+        ));
     }
 
     /**
@@ -496,7 +499,10 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from $this->implementation->values($random);
+        yield from $this->implementation->values(
+            $random,
+            static fn() => true,
+        );
     }
 
     /**

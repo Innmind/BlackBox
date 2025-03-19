@@ -17,13 +17,11 @@ final class Integers implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(int): bool $predicate
      * @param int<1, max> $size
      */
     private function __construct(
         private int $min,
         private int $max,
-        private \Closure $predicate,
         private int $size,
     ) {
     }
@@ -34,13 +32,9 @@ final class Integers implements Implementation
      */
     public static function implementation(?int $min, ?int $max): self
     {
-        $min ??= \PHP_INT_MIN;
-        $max ??= \PHP_INT_MAX;
-
         return new self(
-            $min,
-            $max,
-            static fn(int $value): bool => $value >= $min && $value <= $max,
+            $min ?? \PHP_INT_MIN,
+            $max ?? \PHP_INT_MAX,
             100,
         );
     }
@@ -112,97 +106,30 @@ final class Integers implements Implementation
         return new self(
             $this->min,
             $this->max,
-            $this->predicate,
             $size,
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     #[\Override]
-    public function filter(callable $predicate): self
+    public function values(Random $random, \Closure $predicate): \Generator
     {
-        $previous = $this->predicate;
-
-        return new self(
-            $this->min,
-            $this->max,
-            static fn(int $value) => $previous($value) && $predicate($value),
-            $this->size,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random): \Generator
-    {
+        $min = $this->min;
+        $max = $this->max;
+        $bounds = static fn(int $value): bool => $value >= $min && $value <= $max;
+        $predicate = static fn(int $value): bool => $bounds($value) && $predicate($value);
         $iterations = 0;
 
         while ($iterations < $this->size) {
             $value = $random->between($this->min, $this->max);
-            $value = Value::immutable($value)
-                ->predicatedOn($this->predicate);
+            $value = Value::of($value)
+                ->predicatedOn($predicate);
 
             if (!$value->acceptable()) {
                 continue;
             }
 
-            yield $value->shrinkWith(self::shrink($value));
+            yield $value->shrinkWith(Integers\Shrinker::instance);
             ++$iterations;
         }
-    }
-
-    /**
-     * @param Value<int> $value
-     *
-     * @return Dichotomy<int>|null
-     */
-    private static function shrink(Value $value): ?Dichotomy
-    {
-        if ($value->unwrap() === 0) {
-            return null;
-        }
-
-        return new Dichotomy(
-            self::divideByTwo($value),
-            self::reduceByOne($value),
-        );
-    }
-
-    /**
-     * @param Value<int> $value
-     *
-     * @return callable(): Value<int>
-     */
-    private static function divideByTwo(Value $value): callable
-    {
-        $shrunk = $value->map(static fn($int) => (int) \round(
-            $int / 2,
-            0,
-            \PHP_ROUND_HALF_DOWN,
-        ));
-
-        if (!$shrunk->acceptable()) {
-            return self::reduceByOne($value);
-        }
-
-        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
-    }
-
-    /**
-     * @param Value<int> $value
-     *
-     * @return callable(): Value<int>
-     */
-    private static function reduceByOne(Value $value): callable
-    {
-        // add one when the value is negative, otherwise subtract one
-        $shrunk = $value->map(static fn($int) => $int + (($int <=> 0) * -1));
-
-        if (!$shrunk->acceptable()) {
-            return static fn() => $value->withoutShrinking();
-        }
-
-        return static fn(): Value => $shrunk->shrinkWith(self::shrink($shrunk));
     }
 }

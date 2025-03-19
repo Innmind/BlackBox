@@ -11,17 +11,16 @@ use Innmind\BlackBox\Set\Value;
 final class Detonate
 {
     /**
-     * @internal
      * @template A
      *
-     * @param list<Value<A>> $sequence
+     * @param list<Value<mixed>> $sequence
      *
-     * @return list<A>
+     * @return list<mixed>
      */
-    public static function of(array $sequence): array
+    public function __invoke(array $sequence): array
     {
         return \array_map(
-            static fn($value) => $value->unwrap(),
+            static fn($value): mixed => $value->unwrap(),
             $sequence,
         );
     }
