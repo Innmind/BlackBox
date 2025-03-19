@@ -125,7 +125,6 @@ final class Runner
         }
 
         $this->print->end($this->output, $this->error, $stats);
-        $coverage?->shutdown();
         $coverage?->dump();
     }
 

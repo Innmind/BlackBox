@@ -79,11 +79,6 @@ final class Report
         $this->coverage->stop();
     }
 
-    public function shutdown(): void
-    {
-        $this->coverage->stop();
-    }
-
     public function dump(): void
     {
         (new Clover)->process($this->coverage, $this->reportPath);
