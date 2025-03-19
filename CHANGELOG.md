@@ -5,6 +5,7 @@
 ### Fixed
 
 - Performance regression in the previous release
+- Code in proofs generator were not covered by the code coverage report
 
 ## 6.0.0 - 2025-03-12
 

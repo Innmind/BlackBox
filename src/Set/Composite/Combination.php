@@ -47,14 +47,6 @@ final class Combination
     }
 
     /**
-     * @return list<Value>
-     */
-    public function values(): array
-    {
-        return $this->values;
-    }
-
-    /**
      * @template T
      *
      * @param callable(mixed...): T $aggregate
