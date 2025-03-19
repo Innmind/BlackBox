@@ -183,7 +183,7 @@ final class Shrinker implements Value\Shrinker
         });
 
         if ($shrunk instanceof End) {
-            return null; // todo shrink b nth
+            return $this->shrinkBNth($value);
         }
 
         if (\is_null($shrunk)) {
@@ -192,6 +192,46 @@ final class Shrinker implements Value\Shrinker
 
         if (!$shrunk->acceptable()) {
             return $this->shrinkANth($value, $n + 1);
+        }
+
+        return $shrunk->shrinkWith(new self(Strategy::recursiveNthShrink, $n));
+    }
+
+    /**
+     * @param Value<list<Value<mixed>>> $value
+     * @param int<0, max> $n
+     *
+     * @return Value<list<Value<mixed>>>
+     */
+    private function shrinkBNth(Value $value, int $n = 0): ?Value
+    {
+        $shrunk = $value->maybeShrinkVia(static function(array $sequence) use ($n) {
+            /** @var list<Value<mixed>> $sequence */
+            if (!\array_key_exists($n, $sequence)) {
+                return End::instance;
+            }
+
+            $shrunk = $sequence[$n]->shrink()?->b();
+
+            if (\is_null($shrunk)) {
+                return null;
+            }
+
+            $sequence[$n] = $shrunk;
+
+            return $sequence;
+        });
+
+        if ($shrunk instanceof End) {
+            return null;
+        }
+
+        if (\is_null($shrunk)) {
+            return $this->shrinkBNth($value, $n + 1);
+        }
+
+        if (!$shrunk->acceptable()) {
+            return $this->shrinkBNth($value, $n + 1);
         }
 
         return $shrunk->shrinkWith(new self(Strategy::recursiveNthShrink, $n));
