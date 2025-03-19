@@ -16,11 +16,11 @@ final class Map implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(I): (Seed<D>|D) $map
+     * @param Value\Map<D> $map
      * @param Implementation<I> $set
      */
     private function __construct(
-        private \Closure $map,
+        private Value\Map $map,
         private Implementation $set,
         private bool $immutable,
     ) {
@@ -43,8 +43,17 @@ final class Map implements Implementation
         Implementation $set,
         bool $immutable,
     ): self {
+        if ($set instanceof self) {
+            /** @psalm-suppress ImpurePropertyFetch */
+            return new self(
+                $set->map->with($map),
+                $set->set,
+                $set->immutable && $immutable,
+            );
+        }
+
         return new self(
-            \Closure::fromCallable($map),
+            Value\Map::noop()->with($map),
             $set,
             $immutable,
         );
