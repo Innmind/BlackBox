@@ -86,6 +86,7 @@ final class Sequence implements Implementation
     public function values(Random $random, \Closure $predicate): \Generator
     {
         $shrinker = new Sequence\Shrinker;
+        $detonate = new Sequence\Detonate;
         $min = $this->min;
         $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
         $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
@@ -107,7 +108,7 @@ final class Sequence implements Implementation
                 $value = Value::of($values)
                     ->mutable(!$immutable)
                     ->predicatedOn($predicate);
-                $yieldable = $value->map(Sequence\Detonate::of(...));
+                $yieldable = $value->map($detonate);
 
                 if (!$yieldable->acceptable()) {
                     continue;
