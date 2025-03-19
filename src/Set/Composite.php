@@ -129,6 +129,7 @@ final class Composite implements Implementation
     #[\Override]
     public function values(Random $random, \Closure $predicate): \Generator
     {
+        $shrinker = Composite\Shrinker::new();
         $matrix = $this->matrix()->values($random);
         $aggregate = $this->aggregate;
         $iterations = 0;
@@ -148,7 +149,7 @@ final class Composite implements Implementation
                 continue;
             }
 
-            yield $mapped->shrinkWith(Composite\Shrinker::start());
+            yield $mapped->shrinkWith($shrinker);
 
             ++$iterations;
         }

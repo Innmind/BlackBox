@@ -15,8 +15,6 @@ use Innmind\BlackBox\Set\{
  */
 final class Shrinker implements Value\Shrinker
 {
-    private static ?self $start = null;
-
     /**
      * @param int<0, max> $n
      */
@@ -34,9 +32,9 @@ final class Shrinker implements Value\Shrinker
         );
     }
 
-    public static function start(): Shrinker
+    public static function new(): self
     {
-        return self::$start ??= new self;
+        return new self;
     }
 
     /**
