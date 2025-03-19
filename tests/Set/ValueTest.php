@@ -31,16 +31,26 @@ class ValueTest extends TestCase
                 ->shrink(),
         );
 
-        $immutable = Value::of(new \stdClass)->shrinkWith(static fn() => Dichotomy::of(
-            Value::of(new \stdClass),
-            Value::of(new \stdClass),
-        ));
+        $immutable = Value::of(new \stdClass)->shrinkWith(
+            new class implements Value\Shrinker {
+                public function __invoke(Value $value): ?Dichotomy {
+                    return Dichotomy::of(
+                        Value::of(new \stdClass),
+                        Value::of(new \stdClass),
+                    );
+                }
+            },
+        );
         $mutable = Value::of(new \stdClass)
             ->mutable(true)
-            ->shrinkWith(static fn() => Dichotomy::of(
-                Value::of(new \stdClass)->mutable(true),
-                Value::of(new \stdClass)->mutable(true),
-            ));
+            ->shrinkWith(new class implements Value\Shrinker {
+                public function __invoke(Value $value): ?Dichotomy {
+                    return Dichotomy::of(
+                        Value::of(new \stdClass)->mutable(true),
+                        Value::of(new \stdClass)->mutable(true),
+                    );
+                }
+            });
 
         $this->assertNotNull($immutable->shrink());
         $this->assertNotNull($mutable->shrink());
@@ -56,10 +66,30 @@ class ValueTest extends TestCase
             Value::of(new \stdClass)->mutable(true),
             Value::of(new \stdClass)->mutable(true),
         );
-        $immutable = Value::of(new \stdClass)->shrinkWith(static fn() => $expectedImmutable);
+        $immutable = Value::of(new \stdClass)->shrinkWith(
+            new class($expectedImmutable) implements Value\Shrinker {
+                public function __construct(
+                    private $dichotomy,
+                ) {
+                }
+
+                public function __invoke(Value $value): ?Dichotomy {
+                    return $this->dichotomy;
+                }
+            },
+        );
         $mutable = Value::of(new \stdClass)
             ->mutable(true)
-            ->shrinkWith(static fn() => $expectedMutable);
+            ->shrinkWith(new class($expectedMutable) implements Value\Shrinker {
+                public function __construct(
+                    private $dichotomy,
+                ) {
+                }
+
+                public function __invoke(Value $value): ?Dichotomy {
+                    return $this->dichotomy;
+                }
+            });
 
         $this->assertSame($expectedImmutable->a(), $immutable->shrink()->a());
         $this->assertSame($expectedImmutable->b(), $immutable->shrink()->b());

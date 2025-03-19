@@ -21,7 +21,6 @@ final class Value
      * @psalm-mutation-free
      *
      * @param Map<T> $map
-     * @param Shrinker|(\Closure(self<T>): ?Dichotomy<T>) $shrink
      * @param \Closure(mixed): bool $predicate
      * @param T|Seed<T> $unwrapped
      */
@@ -29,7 +28,7 @@ final class Value
         private bool $immutable,
         private mixed $source,
         private Map $map,
-        private Shrinker|\Closure $shrink,
+        private ?Shrinker $shrink,
         private \Closure $predicate,
         private mixed $unwrapped,
     ) {
@@ -50,7 +49,7 @@ final class Value
             true,
             $value,
             Map::noop(),
-            static fn() => null,
+            null,
             static fn() => true,
             $value,
         );
@@ -84,11 +83,9 @@ final class Value
     }
 
     /**
-     * @param Shrinker|(\Closure(self<T>): ?Dichotomy<T>) $shrink
-     *
      * @return self<T>
      */
-    public function shrinkWith(\Closure|Shrinker $shrink): self
+    public function shrinkWith(Shrinker $shrink): self
     {
         return new self(
             $this->immutable,
@@ -109,7 +106,7 @@ final class Value
             $this->immutable,
             $this->source,
             $this->map,
-            static fn() => null,
+            null,
             $this->predicate,
             $this->unwrapped,
         );
@@ -156,7 +153,7 @@ final class Value
             $this->immutable,
             $this->source,
             $this->map->with($map),
-            static fn() => null,
+            null,
             $this->predicate,
             $unwrapped,
         );
@@ -251,7 +248,7 @@ final class Value
      */
     public function shrink(): ?Dichotomy
     {
-        $dichotomy = ($this->shrink)($this) ?? $this->seed?->shrink($this->predicate);
+        $dichotomy = ($this->shrink)?->__invoke($this) ?? $this->seed?->shrink($this->predicate);
 
         return $dichotomy?->default($this->withoutShrinking());
     }

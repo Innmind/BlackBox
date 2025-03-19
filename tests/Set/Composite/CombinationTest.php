@@ -54,10 +54,14 @@ class CombinationTest extends TestCase
         $shrinkable = Combination::startWith(Value::of(42));
         $shrinkable = $shrinkable->add(
             Value::of(24)->shrinkWith(
-                static fn() => Dichotomy::of(
-                    Value::of(12),
-                    Value::of(23),
-                ),
+                new class implements Value\Shrinker {
+                    public function __invoke(Value $value): ?Dichotomy {
+                        return Dichotomy::of(
+                            Value::of(12),
+                            Value::of(23),
+                        );
+                    }
+                }
             ),
         );
         $shrinkable = $shrinkable->add(Value::of(66));
