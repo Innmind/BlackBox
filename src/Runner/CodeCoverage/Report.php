@@ -64,12 +64,22 @@ final class Report
         return new self($directories, $reportPath);
     }
 
+    public function init(): void
+    {
+        $this->coverage->start('Proofs loader');
+    }
+
     public function start(Name $proof): void
     {
         $this->coverage->start($proof->toString());
     }
 
     public function stop(): void
+    {
+        $this->coverage->stop();
+    }
+
+    public function shutdown(): void
     {
         $this->coverage->stop();
     }

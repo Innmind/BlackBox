@@ -64,6 +64,7 @@ final class Runner
 
         $coverage = $codeCoverage?->build();
         $this->print->start($this->output, $this->error);
+        $coverage?->init();
 
         foreach ($this->proofs as $proof) {
             $stats->incrementProofs();
@@ -124,6 +125,7 @@ final class Runner
         }
 
         $this->print->end($this->output, $this->error, $stats);
+        $coverage?->shutdown();
         $coverage?->dump();
     }
 
