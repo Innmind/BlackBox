@@ -55,13 +55,14 @@ class CombinationTest extends TestCase
         $shrinkable = $shrinkable->add(
             Value::of(24)->shrinkWith(
                 new class implements Value\Shrinker {
-                    public function __invoke(Value $value): ?Dichotomy {
+                    public function __invoke(Value $value): ?Dichotomy
+                    {
                         return Dichotomy::of(
                             Value::of(12),
                             Value::of(23),
                         );
                     }
-                }
+                },
             ),
         );
         $shrinkable = $shrinkable->add(Value::of(66));

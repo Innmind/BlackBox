@@ -133,7 +133,7 @@ final class Shrinker implements Value\Shrinker
     {
         $shrunk = $value->maybeShrinkVia(static function(array $sequence) use ($n) {
             if (!\array_key_exists($n, $sequence)) {
-                return null;
+                return;
             }
 
             return [
@@ -174,7 +174,7 @@ final class Shrinker implements Value\Shrinker
             $shrunk = $sequence[$n]->shrink()?->a();
 
             if (\is_null($shrunk)) {
-                return null;
+                return;
             }
 
             $sequence[$n] = $shrunk;
@@ -214,7 +214,7 @@ final class Shrinker implements Value\Shrinker
             $shrunk = $sequence[$n]->shrink()?->b();
 
             if (\is_null($shrunk)) {
-                return null;
+                return;
             }
 
             $sequence[$n] = $shrunk;

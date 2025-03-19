@@ -33,7 +33,8 @@ class ValueTest extends TestCase
 
         $immutable = Value::of(new \stdClass)->shrinkWith(
             new class implements Value\Shrinker {
-                public function __invoke(Value $value): ?Dichotomy {
+                public function __invoke(Value $value): ?Dichotomy
+                {
                     return Dichotomy::of(
                         Value::of(new \stdClass),
                         Value::of(new \stdClass),
@@ -44,7 +45,8 @@ class ValueTest extends TestCase
         $mutable = Value::of(new \stdClass)
             ->mutable(true)
             ->shrinkWith(new class implements Value\Shrinker {
-                public function __invoke(Value $value): ?Dichotomy {
+                public function __invoke(Value $value): ?Dichotomy
+                {
                     return Dichotomy::of(
                         Value::of(new \stdClass)->mutable(true),
                         Value::of(new \stdClass)->mutable(true),
@@ -73,7 +75,8 @@ class ValueTest extends TestCase
                 ) {
                 }
 
-                public function __invoke(Value $value): ?Dichotomy {
+                public function __invoke(Value $value): ?Dichotomy
+                {
                     return $this->dichotomy;
                 }
             },
@@ -86,7 +89,8 @@ class ValueTest extends TestCase
                 ) {
                 }
 
-                public function __invoke(Value $value): ?Dichotomy {
+                public function __invoke(Value $value): ?Dichotomy
+                {
                     return $this->dichotomy;
                 }
             });
