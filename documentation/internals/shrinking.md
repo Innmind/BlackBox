@@ -1,5 +1,19 @@
 # Shrinking
 
+## Description
+
+Each generated `Value` can be shrunk to 2 new values. These are named `a` and `b` and wrapped in a `Dichotomy`.
+
+This allows to take a _different route_ when a shrunk value makes a test pass.
+
+Usually the `a` strategy is the more _aggressive_ shrinking strategy to try to find the smallest value as fast as possible. And `b` is the more fine grained one, but will take longer.
+
+The difficult part of the shrinking mechanism is that values can be mapped/composed to new ones and must adhere to a predicate. And each low level shrunk value must be mapped/composed back and still adhere to the predicate.
+
+To keep the shrinkers as simple as possible the mapping and predicates are hidden from them.
+
+To do this a `Value` will always keep the original value, all the transformations steps (aka mapping) and the predicate it must adhere to. Then when a shrinker applies a shrinking strategy to a `Value`, the value can re-apply the transformations to the shrunk value and make sure the new value adheres to the predicate.
+
 ## `Sequence`
 
 ```mermaid
