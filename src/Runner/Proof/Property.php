@@ -108,7 +108,8 @@ final class Property implements Proof
             $this->systemUnderTest,
         )
             ->immutable()
-            ->take($count)
-            ->randomize();
+            ->toSet()
+            ->randomize()
+            ->take($count);
     }
 }

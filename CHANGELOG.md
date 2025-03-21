@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- The number of scenarii per proof wasn't respected for properties
+
 ## 6.0.1 - 2025-03-19
 
 ### Fixed
