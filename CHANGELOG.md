@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\Application::allowProofsToNotMakeAnyAssertions()`
+
 ## 6.0.2 - 2025-03-21
 
 ### Fixed

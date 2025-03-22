@@ -34,6 +34,7 @@ final class Application
     private bool $useGlobalFunctions;
     private bool $disableMemoryLimit;
     private bool $stopOnFailure;
+    private bool $failWhenNoAssertions;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
@@ -53,6 +54,7 @@ final class Application
         bool $useGlobalFunctions,
         bool $disableMemoryLimit,
         bool $stopOnFailure,
+        bool $failWhenNoAssertions,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -66,6 +68,7 @@ final class Application
         $this->useGlobalFunctions = $useGlobalFunctions;
         $this->disableMemoryLimit = $disableMemoryLimit;
         $this->stopOnFailure = $stopOnFailure;
+        $this->failWhenNoAssertions = $failWhenNoAssertions;
     }
 
     /**
@@ -86,6 +89,7 @@ final class Application
             true,
             false,
             false,
+            true,
         );
     }
 
@@ -107,6 +111,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -128,6 +133,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -149,6 +155,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -170,6 +177,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -191,6 +199,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -214,6 +223,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -237,6 +247,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -258,6 +269,7 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -279,6 +291,7 @@ final class Application
             false,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -300,6 +313,7 @@ final class Application
             $this->useGlobalFunctions,
             true,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
     }
 
@@ -321,6 +335,29 @@ final class Application
             $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             true,
+            $this->failWhenNoAssertions,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function allowProofsToNotMakeAnyAssertions(): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
+            $this->stopOnFailure,
+            false,
         );
     }
 
@@ -371,6 +408,7 @@ final class Application
             $this->scenariiPerProof,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
+            $this->failWhenNoAssertions,
         );
         $stats = Stats::new();
         $assert = Assert::of($stats);
