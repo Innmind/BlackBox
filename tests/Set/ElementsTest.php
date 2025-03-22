@@ -104,18 +104,6 @@ class ElementsTest extends TestCase
         $this->assertGreaterThan(1, $frequency['baz']);
     }
 
-    public function testTakeNoElement()
-    {
-        $this->assertCount(
-            0,
-            \iterator_to_array(
-                Elements::of(1, 2, 3)
-                    ->take(0)
-                    ->values(Random::mersenneTwister),
-            ),
-        );
-    }
-
     public function testThrowWhenCannotFindAValue()
     {
         $this->expectException(EmptySet::class);

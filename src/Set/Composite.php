@@ -22,16 +22,50 @@ final class Composite implements Implementation
      *
      * @param \Closure(mixed...): (C|Seed<C>) $aggregate
      * @param list<Implementation> $sets
-     * @param ?int<1, max> $size
      */
     private function __construct(
         private \Closure $aggregate,
         private Implementation $first,
         private Implementation $second,
         private array $sets,
-        private ?int $size,
         private bool $immutable,
     ) {
+    }
+
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $shrinker = Composite\Shrinker::new();
+        $matrix = $this->matrix()->values($random);
+        $aggregate = $this->aggregate;
+        $iterations = 0;
+
+        while ($matrix->valid() && $this->continue($iterations, $size)) {
+            /** @var Composite\Combination */
+            $combination = $matrix->current();
+            $immutable = $combination->immutable() && $this->immutable;
+            $matrix->next();
+
+            $value = Value::of($combination)
+                ->mutable(!$immutable)
+                ->predicatedOn($predicate);
+            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
+
+            if (!$mapped->acceptable()) {
+                continue;
+            }
+
+            yield $mapped->shrinkWith($shrinker);
+
+            ++$iterations;
+        }
+
+        if ($iterations === 0) {
+            throw new EmptySet;
+        }
     }
 
     /**
@@ -57,7 +91,6 @@ final class Composite implements Implementation
             $first,
             $second,
             $sets,
-            null, // by default allow all combinations
             $immutable,
         );
     }
@@ -106,59 +139,6 @@ final class Composite implements Implementation
             ->toSet();
     }
 
-    /**
-     * @psalm-mutation-free
-     *
-     * @param int<1, max> $size
-     *
-     * @return self<C>
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->aggregate,
-            $this->first,
-            $this->second,
-            $this->sets,
-            $size,
-            $this->immutable,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
-    {
-        $shrinker = Composite\Shrinker::new();
-        $matrix = $this->matrix()->values($random);
-        $aggregate = $this->aggregate;
-        $iterations = 0;
-
-        while ($matrix->valid() && $this->continue($iterations)) {
-            /** @var Composite\Combination */
-            $combination = $matrix->current();
-            $immutable = $combination->immutable() && $this->immutable;
-            $matrix->next();
-
-            $value = Value::of($combination)
-                ->mutable(!$immutable)
-                ->predicatedOn($predicate);
-            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
-
-            if (!$mapped->acceptable()) {
-                continue;
-            }
-
-            yield $mapped->shrinkWith($shrinker);
-
-            ++$iterations;
-        }
-
-        if ($iterations === 0) {
-            throw new EmptySet;
-        }
-    }
-
     private function matrix(): Matrix
     {
         $sets = [$this->first, $this->second, ...$this->sets];
@@ -174,12 +154,8 @@ final class Composite implements Implementation
         );
     }
 
-    private function continue(int $iterations): bool
+    private function continue(int $iterations, int $size): bool
     {
-        if (\is_null($this->size)) {
-            return true;
-        }
-
-        return $iterations < $this->size;
+        return $iterations < $size;
     }
 }

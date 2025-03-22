@@ -26,6 +26,7 @@ final class Runner
     private int $scenariiPerProof;
     private bool $disableMemoryLimit;
     private bool $stopOnFailure;
+    private bool $failWhenNoAssertions;
 
     /**
      * @param \Generator<Proof> $proofs
@@ -41,6 +42,7 @@ final class Runner
         int $scenariiPerProof,
         bool $disableMemoryLimit,
         bool $stopOnFailure,
+        bool $failWhenNoAssertions,
     ) {
         $this->random = $random;
         $this->print = $print;
@@ -51,6 +53,7 @@ final class Runner
         $this->scenariiPerProof = $scenariiPerProof;
         $this->disableMemoryLimit = $disableMemoryLimit;
         $this->stopOnFailure = $stopOnFailure;
+        $this->failWhenNoAssertions = $failWhenNoAssertions;
     }
 
     public function __invoke(
@@ -87,6 +90,7 @@ final class Runner
 
                 foreach ($scenarii as $scenario) {
                     $stats->incrementScenarii();
+                    $assertions = $stats->assertions();
 
                     try {
                         ($this->run)(
@@ -96,6 +100,15 @@ final class Runner
                             $assert,
                             $scenario,
                         );
+
+                        if ($this->failWhenNoAssertions && $stats->assertions() === $assertions) {
+                            throw Proof\Scenario\Failure::of(
+                                Assert\Failure::of(Assert\Failure\Truth::of(
+                                    'The proof did not make any assertion',
+                                )),
+                                $scenario,
+                            );
+                        }
                     } catch (Proof\Scenario\Failure $e) {
                         // We unset the initial scenario here to free any object
                         // that may be kept in a WeakReference or WeakMap inside
@@ -149,6 +162,7 @@ final class Runner
         int $scenariiPerProof,
         bool $disableMemoryLimit,
         bool $stopOnFailure,
+        bool $failWhenNoAssertions,
     ): self {
         return new self(
             $random,
@@ -160,6 +174,7 @@ final class Runner
             $scenariiPerProof,
             $disableMemoryLimit,
             $stopOnFailure,
+            $failWhenNoAssertions,
         );
     }
 }

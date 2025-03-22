@@ -433,7 +433,10 @@ final class Set
      */
     public function take(int $size): self
     {
-        return new self($this->implementation->take($size));
+        return new self(Set\Take::implementation(
+            $this->implementation,
+            $size,
+        ));
     }
 
     /**
@@ -499,9 +502,10 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from $this->implementation->values(
+        yield from ($this->implementation)(
             $random,
             static fn() => true,
+            100,
         );
     }
 

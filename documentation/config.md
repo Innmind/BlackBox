@@ -111,3 +111,33 @@ Application::new([])
     ->tryToProve(Load::everythingIn('proofs/'))
     ->exit();
 ```
+
+## Allow proofs to not make any assertions
+
+By default BlackBox will fail a proof when a scenario did not make any assertion. This is to make sure proof are correctly written and none that make no assertions goes unnoticed.
+
+However if your style of making assertions may not always lead to a proof making one, then you can disable this feature this way:
+
+```php hl_lines="4 8"
+use Innmind\BlackBox\{
+    Application,
+};
+
+Application::new([])
+    ->allowProofsToNotMakeAnyAssertions()
+    ->tryToProve(static function() {
+        yield proof(
+            'Some proof',
+            given(Set::of('some input')),
+            static function($assert, $input) {
+                try {
+                    doSomething($input);
+                    $assert->fail('It should throw');
+                } catch (\Exception $e) {
+                    // expected behaviour
+                }
+            },
+        );
+    })
+    ->exit();
+```

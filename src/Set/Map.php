@@ -26,6 +26,37 @@ final class Map implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $map = $this->map;
+        $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
+            /** @var I $value */
+            $mapped = $map($value);
+
+            if ($mapped instanceof Seed) {
+                /** @var D */
+                $mapped = $mapped->unwrap();
+            }
+
+            return $predicate($mapped);
+        };
+
+        foreach (($this->set)($random, $mappedPredicate, $size) as $value) {
+            $mutable = !($value->immutable() && $this->immutable);
+
+            yield Value::of($value)
+                ->mutable($mutable)
+                ->map(static fn($value) => $value->unwrap())
+                ->map($this->map)
+                ->predicatedOn($predicate)
+                ->shrinkWith(Map\Shrinker::instance);
+        }
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -57,46 +88,5 @@ final class Map implements Implementation
             $set,
             $immutable,
         );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->map,
-            $this->set->take($size),
-            $this->immutable,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
-    {
-        $map = $this->map;
-        $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
-            /** @var I $value */
-            $mapped = $map($value);
-
-            if ($mapped instanceof Seed) {
-                /** @var D */
-                $mapped = $mapped->unwrap();
-            }
-
-            return $predicate($mapped);
-        };
-
-        foreach ($this->set->values($random, $mappedPredicate) as $value) {
-            $mutable = !($value->immutable() && $this->immutable);
-
-            yield Value::of($value)
-                ->mutable($mutable)
-                ->map(static fn($value) => $value->unwrap())
-                ->map($this->map)
-                ->predicatedOn($predicate)
-                ->shrinkWith(Map\Shrinker::instance);
-        }
     }
 }

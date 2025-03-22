@@ -10,6 +10,16 @@ use Innmind\BlackBox\{
     Runner\Printer\Standard,
     Tag,
 };
+use Fixtures\Innmind\BlackBox\{
+    Counter,
+    DownAndUpIsAnIdentityFunction,
+    DownChangeState,
+    LowerBoundAtZero,
+    RaiseBy,
+    UpAndDownIsAnIdentityFunction,
+    UpChangeState,
+    UpperBoundAtHundred,
+};
 
 return static function() {
     yield proof(
@@ -22,7 +32,8 @@ return static function() {
                 ->useRandom($random)
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
-                ->tryToProve(Load::file(__DIR__.'/fixtures.php'));
+                ->allowProofsToNotMakeAnyAssertions()
+                ->tryToProve(Load::file(__DIR__.'/../fixtures/proofs.php'));
 
             $assert->true($result->successful());
         },
@@ -51,6 +62,68 @@ return static function() {
                 ->contains("Scenarii: $scenarii");
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'BlackBox can run with a specified number of scenarii per property',
+        given(Set\Integers::between(1, 50)), // limit to 50 so it doesn't take too much time
+        static function($assert, $scenarii) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->scenariiPerProof($scenarii)
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->tryToProve(static function() {
+                    yield property(
+                        LowerBoundAtZero::class,
+                        Set\Elements::of(new Counter),
+                    );
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains("Scenarii: $scenarii");
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'BlackBox can run with a specified number of scenarii per properties',
+        given(Set\Integers::between(1, 50)), // limit to 50 so it doesn't take too much time
+        static function($assert, $scenarii) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->scenariiPerProof($scenarii)
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->allowProofsToNotMakeAnyAssertions()
+                ->tryToProve(static function() {
+                    yield properties(
+                        'Counter properties',
+                        Set\Properties::any(
+                            DownAndUpIsAnIdentityFunction::any(),
+                            DownChangeState::any(),
+                            LowerBoundAtZero::any(),
+                            RaiseBy::any(),
+                            UpAndDownIsAnIdentityFunction::any(),
+                            UpChangeState::any(),
+                            UpperBoundAtHundred::any(),
+                        ),
+                        Set\Decorate::mutable(
+                            static fn($initial) => new Counter($initial),
+                            Set\Integers::between(0, 100),
+                        ),
+                    );
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains("Scenarii: $scenarii");
+        },
+    )->tag(Tag::ci, Tag::local);
+
     yield test(
         'BlackBox can shrink the values of the proofs by default',
         static function($assert) {
@@ -297,6 +370,51 @@ return static function() {
             $assert
                 ->string($io->toString())
                 ->contains('Proofs: 3,');
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Application::allowProofsToNotMakeAnyAssertions()',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => null,
+                    );
+                });
+
+            $assert->false($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('The proof did not make any assertion');
+
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->allowProofsToNotMakeAnyAssertions()
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => null,
+                    );
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->string($io->toString())
+                ->not()
+                ->contains('The proof did not make any assertion');
         },
     )->tag(Tag::ci, Tag::local);
 };
