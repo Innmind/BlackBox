@@ -97,6 +97,7 @@ return static function() {
                 ->scenariiPerProof($scenarii)
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
+                ->allowProofsToNotMakeAnyAssertions()
                 ->tryToProve(static function() {
                     yield properties(
                         'Counter properties',
