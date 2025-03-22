@@ -36,7 +36,7 @@ final class Matrix
         /** @var Implementation<Combination> */
         $combinations = FromGenerator::implementation(
             static function(Random $rand) use ($b): \Generator {
-                foreach ($b->values($rand, static fn() => true) as $value) {
+                foreach ($b->values($rand, static fn() => true, 100) as $value) {
                     yield Combination::startWith($value);
                 }
             },
@@ -64,8 +64,8 @@ final class Matrix
      */
     public function values(Random $rand): \Generator
     {
-        foreach ($this->a->values($rand, static fn() => true) as $a) {
-            foreach ($this->combinations->values($rand, static fn() => true) as $combination) {
+        foreach ($this->a->values($rand, static fn() => true, 100) as $a) {
+            foreach ($this->combinations->values($rand, static fn() => true, 100) as $combination) {
                 yield $combination->unwrap()->add($a);
             }
         }

@@ -94,7 +94,7 @@ final class FromGenerator implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $generator = ($this->generatorFactory)($random);
         $iterations = 0;

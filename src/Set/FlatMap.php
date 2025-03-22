@@ -65,17 +65,17 @@ final class FlatMap implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $iterations = 0;
 
         // By default we favor reusing the same seed to generate multiple values
         // from the underlying set. To generate a more wide range of seeds one
         // can use the ->randomize() method.
-        foreach ($this->set->values($random, static fn() => true) as $seed) {
+        foreach ($this->set->values($random, static fn() => true, $size) as $seed) {
             $set = ($this->decorate)(Seed::of($seed));
 
-            foreach ($set->values($random, $predicate) as $value) {
+            foreach ($set->values($random, $predicate, $size) as $value) {
                 yield $value;
                 ++$iterations;
 

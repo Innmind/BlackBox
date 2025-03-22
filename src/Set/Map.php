@@ -73,7 +73,7 @@ final class Map implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $map = $this->map;
         $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
@@ -88,7 +88,7 @@ final class Map implements Implementation
             return $predicate($mapped);
         };
 
-        foreach ($this->set->values($random, $mappedPredicate) as $value) {
+        foreach ($this->set->values($random, $mappedPredicate, $size) as $value) {
             $mutable = !($value->immutable() && $this->immutable);
 
             yield Value::of($value)

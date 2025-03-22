@@ -83,7 +83,7 @@ final class Sequence implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $shrinker = new Sequence\Shrinker;
         $detonate = new Sequence\Detonate;
@@ -92,19 +92,19 @@ final class Sequence implements Implementation
         $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
         $immutable = $this
             ->set
-            ->values($random, static fn() => true)
+            ->values($random, static fn() => true, 1)
             ->current()
             ?->immutable() ?? false;
         $yielded = 0;
 
         do {
-            foreach ($this->sizes->values($random, static fn() => true) as $size) {
+            foreach ($this->sizes->values($random, static fn() => true, $size) as $nextSize) {
                 if ($yielded === $this->size) {
                     return;
                 }
 
                 /** @psalm-suppress ArgumentTypeCoercion */
-                $values = $this->generate($size->unwrap(), $random);
+                $values = $this->generate($nextSize->unwrap(), $random);
                 $value = Value::of($values)
                     ->mutable(!$immutable)
                     ->predicatedOn($predicate);
@@ -135,6 +135,7 @@ final class Sequence implements Implementation
         return \array_values(\iterator_to_array($this->set->take($size)->values(
             $rand,
             static fn() => true,
+            $size,
         )));
     }
 }

@@ -505,6 +505,7 @@ final class Set
         yield from $this->implementation->values(
             $random,
             static fn() => true,
+            100,
         );
     }
 

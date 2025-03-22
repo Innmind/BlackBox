@@ -27,10 +27,15 @@ interface Implementation
      * @psalm-suppress InvalidTemplateParam
      *
      * @param \Closure(T): bool $predicate
+     * @param int<1, max> $size
      *
      * @throws EmptySet When no value can be generated
      *
      * @return \Generator<Value<T>>
      */
-    public function values(Random $random, \Closure $predicate): \Generator;
+    public function values(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator;
 }

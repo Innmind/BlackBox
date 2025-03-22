@@ -55,7 +55,7 @@ final class UnsafeStrings implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
 

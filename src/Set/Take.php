@@ -65,11 +65,12 @@ final class Take implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         yield from $this->set->values(
             $random,
             $predicate,
+            $this->size,
         );
     }
 }

@@ -127,7 +127,7 @@ final class Composite implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $shrinker = Composite\Shrinker::new();
         $matrix = $this->matrix()->values($random);

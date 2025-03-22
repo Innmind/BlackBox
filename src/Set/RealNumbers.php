@@ -103,7 +103,7 @@ final class RealNumbers implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
+    public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $min = $this->min;
         $max = $this->max;
