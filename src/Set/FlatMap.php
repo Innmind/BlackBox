@@ -25,7 +25,6 @@ final class FlatMap implements Implementation
     private function __construct(
         private \Closure $decorate,
         private Implementation $set,
-        private int $size,
     ) {
     }
 
@@ -45,23 +44,7 @@ final class FlatMap implements Implementation
         callable $decorate,
         Implementation $set,
     ): self {
-        return new self(\Closure::fromCallable($decorate), $set, 100);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        $decorate = $this->decorate;
-
-        /** @psalm-suppress MixedArgument */
-        return new self(
-            static fn($value) => $decorate($value)->take($size),
-            $this->set->take($size),
-            $size,
-        );
+        return new self(\Closure::fromCallable($decorate), $set);
     }
 
     #[\Override]
@@ -79,7 +62,7 @@ final class FlatMap implements Implementation
                 yield $value;
                 ++$iterations;
 
-                if ($iterations === $this->size) {
+                if ($iterations === $size) {
                     return;
                 }
             }

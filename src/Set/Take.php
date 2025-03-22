@@ -49,19 +49,7 @@ final class Take implements Implementation
             $set = $set->set;
         }
 
-        return new self($set->take($size), $size);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->set->take($size),
-            $size,
-        );
+        return new self($set, $size);
     }
 
     #[\Override]

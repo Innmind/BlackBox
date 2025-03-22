@@ -16,13 +16,10 @@ final class RealNumbers implements Implementation
 {
     /**
      * @psalm-mutation-free
-     *
-     * @param int<1, max> $size
      */
     private function __construct(
         private int $min,
         private int $max,
-        private int $size,
     ) {
     }
 
@@ -35,7 +32,6 @@ final class RealNumbers implements Implementation
         return new self(
             $min ?? \PHP_INT_MIN,
             $max ?? \PHP_INT_MAX,
-            100,
         );
     }
 
@@ -89,19 +85,6 @@ final class RealNumbers implements Implementation
             ->toSet();
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->min,
-            $this->max,
-            $size,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
@@ -111,7 +94,7 @@ final class RealNumbers implements Implementation
         $predicate = static fn(float $value): bool => $bounds($value) && $predicate($value);
         $iterations = 0;
 
-        while ($iterations < $this->size) {
+        while ($iterations < $size) {
             // simulate the function lcg_value()
             $lcg = ($random->between(0, 100) / 100);
             /** @psalm-suppress InvalidOperand Don't know why it complains */

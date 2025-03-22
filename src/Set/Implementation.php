@@ -15,15 +15,6 @@ use Innmind\BlackBox\{
 interface Implementation
 {
     /**
-     * @psalm-mutation-free
-     *
-     * @param positive-int $size
-     *
-     * @return self<T>
-     */
-    public function take(int $size): self;
-
-    /**
      * @psalm-suppress InvalidTemplateParam
      *
      * @param \Closure(T): bool $predicate

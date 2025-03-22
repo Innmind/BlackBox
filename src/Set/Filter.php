@@ -56,18 +56,6 @@ final class Filter implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->set->take($size),
-            $this->predicate,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {

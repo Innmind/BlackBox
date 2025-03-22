@@ -23,14 +23,12 @@ final class Elements implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param int<1, max> $size
      * @param T $first
      * @param list<U> $elements
      */
     private function __construct(
         private mixed $first,
         private array $elements,
-        private int $size,
     ) {
     }
 
@@ -50,7 +48,7 @@ final class Elements implements Implementation
      */
     public static function implementation($first, ...$elements): self
     {
-        return new self($first, $elements, 100);
+        return new self($first, $elements);
     }
 
     /**
@@ -72,19 +70,6 @@ final class Elements implements Implementation
         return Set::of($first, ...$elements);
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->first,
-            $this->elements,
-            $size,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
@@ -100,7 +85,7 @@ final class Elements implements Implementation
 
         $max = \count($elements) - 1;
 
-        while ($iterations < $this->size) {
+        while ($iterations < $size) {
             $index = $random->between(0, $max);
             /** @var mixed */
             $value = $elements[$index];

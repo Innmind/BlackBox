@@ -20,11 +20,9 @@ final class Randomize implements Implementation
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param int<1, max> $size
      */
     private function __construct(
         private Implementation $set,
-        private int $size,
     ) {
     }
 
@@ -40,7 +38,7 @@ final class Randomize implements Implementation
      */
     public static function implementation(Implementation $set): self
     {
-        return new self($set, 100);
+        return new self($set);
     }
 
     /**
@@ -58,26 +56,17 @@ final class Randomize implements Implementation
         return Collapse::of($set)->randomize();
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->set,
-            $size,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
         $iterations = 0;
 
-        while ($iterations < $this->size) {
+        while ($iterations < $size) {
             try {
-                $value = $this->set->values($random, $predicate, $this->size)->current();
+                $value = $this
+                    ->set
+                    ->values($random, $predicate, $size)
+                    ->current();
             } catch (EmptySet $e) {
                 continue;
             }

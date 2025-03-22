@@ -59,19 +59,6 @@ final class Map implements Implementation
         );
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->map,
-            $this->set->take($size),
-            $this->immutable,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {

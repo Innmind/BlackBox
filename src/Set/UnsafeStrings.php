@@ -18,10 +18,8 @@ final class UnsafeStrings implements Implementation
 {
     /**
      * @psalm-mutation-free
-     *
-     * @param int<1, max> $size
      */
-    private function __construct(private int $size)
+    private function __construct()
     {
     }
 
@@ -31,7 +29,7 @@ final class UnsafeStrings implements Implementation
      */
     public static function implementation(): self
     {
-        return new self(100);
+        return new self;
     }
 
     /**
@@ -43,15 +41,6 @@ final class UnsafeStrings implements Implementation
     public static function any(): Set
     {
         return Set::strings()->unsafe();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self($size);
     }
 
     #[\Override]
@@ -74,11 +63,11 @@ final class UnsafeStrings implements Implementation
             throw new EmptySet;
         }
 
-        $size = \count($values) - 1;
+        $maxSize = \count($values) - 1;
         $iterations = 0;
 
-        while ($iterations < $this->size) {
-            $index = $random->between(0, $size);
+        while ($iterations < $size) {
+            $index = $random->between(0, $maxSize);
             $value = Value::of($values[$index])
                 ->predicatedOn($predicate);
 

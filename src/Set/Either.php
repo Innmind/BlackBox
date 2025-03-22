@@ -24,13 +24,11 @@ final class Either implements Implementation
      * @param Implementation<T> $first
      * @param Implementation<U> $second
      * @param list<Implementation<V>> $rest
-     * @param int<1, max> $size
      */
     private function __construct(
         private Implementation $first,
         private Implementation $second,
         private array $rest,
-        private int $size,
     ) {
     }
 
@@ -55,7 +53,7 @@ final class Either implements Implementation
         Implementation $second,
         Implementation ...$rest,
     ): self {
-        return new self($first, $second, $rest, 100);
+        return new self($first, $second, $rest);
     }
 
     /**
@@ -82,23 +80,6 @@ final class Either implements Implementation
         return Set::either($first, $second, ...$rest);
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->first->take($size),
-            $this->second->take($size),
-            \array_map(
-                static fn(Implementation $set): Implementation => $set->take($size),
-                $this->rest,
-            ),
-            $size,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
@@ -106,7 +87,7 @@ final class Either implements Implementation
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
 
-        while ($iterations < $this->size) {
+        while ($iterations < $size) {
             $count = \count($sets);
 
             if ($count === 0 && $iterations === 0) {

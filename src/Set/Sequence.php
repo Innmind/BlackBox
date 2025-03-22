@@ -19,13 +19,11 @@ final class Sequence implements Implementation
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param int<1, max> $size
      * @param int<1, max> $min
      */
     private function __construct(
         private Implementation $set,
         private Integers $sizes,
-        private int $size,
         private int $min,
     ) {
     }
@@ -48,7 +46,6 @@ final class Sequence implements Implementation
         return new self(
             $set,
             $sizes,
-            100,
             $sizes->min(),
         );
     }
@@ -68,20 +65,6 @@ final class Sequence implements Implementation
         return Set::sequence($set);
     }
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->set,
-            $this->sizes->take($size),
-            $size,
-            $this->min,
-        );
-    }
-
     #[\Override]
     public function values(Random $random, \Closure $predicate, int $size): \Generator
     {
@@ -99,7 +82,7 @@ final class Sequence implements Implementation
 
         do {
             foreach ($this->sizes->values($random, static fn() => true, $size) as $nextSize) {
-                if ($yielded === $this->size) {
+                if ($yielded === $size) {
                     return;
                 }
 
@@ -118,7 +101,7 @@ final class Sequence implements Implementation
 
                 ++$yielded;
             }
-        } while ($yielded < $this->size);
+        } while ($yielded < $size);
     }
 
     /**
@@ -132,7 +115,7 @@ final class Sequence implements Implementation
             return [];
         }
 
-        return \array_values(\iterator_to_array($this->set->take($size)->values(
+        return \array_values(\iterator_to_array($this->set->values(
             $rand,
             static fn() => true,
             $size,
