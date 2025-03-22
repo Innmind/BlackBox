@@ -10,6 +10,16 @@ use Innmind\BlackBox\{
     Runner\Printer\Standard,
     Tag,
 };
+use Fixtures\Innmind\BlackBox\{
+    Counter,
+    DownAndUpIsAnIdentityFunction,
+    DownChangeState,
+    LowerBoundAtZero,
+    RaiseBy,
+    UpAndDownIsAnIdentityFunction,
+    UpChangeState,
+    UpperBoundAtHundred,
+};
 
 return static function() {
     yield proof(
@@ -22,7 +32,8 @@ return static function() {
                 ->useRandom($random)
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
-                ->tryToProve(Load::file(__DIR__.'/fixtures.php'));
+                ->allowProofsToNotMakeAnyAssertions()
+                ->tryToProve(Load::file(__DIR__.'/../fixtures/proofs.php'));
 
             $assert->true($result->successful());
         },
@@ -97,7 +108,7 @@ return static function() {
                             UpAndDownIsAnIdentityFunction::any(),
                             UpChangeState::any(),
                             UpperBoundAtHundred::any(),
-                        )->atLeast(10), // to avoid not making any assertion
+                        ),
                         Set\Decorate::mutable(
                             static fn($initial) => new Counter($initial),
                             Set\Integers::between(0, 100),
