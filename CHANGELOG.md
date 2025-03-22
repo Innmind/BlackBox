@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\Set\Properties::atLeast()`
+
 ## 6.0.2 - 2025-03-21
 
 ### Fixed
