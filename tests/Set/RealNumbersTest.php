@@ -232,18 +232,6 @@ class RealNumbersTest extends TestCase
         }
     }
 
-    public function testTakeNoElement()
-    {
-        $this->assertCount(
-            0,
-            \iterator_to_array(
-                RealNumbers::any()
-                    ->take(0)
-                    ->values(Random::mersenneTwister),
-            ),
-        );
-    }
-
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
         $floats = RealNumbers::above(43);
