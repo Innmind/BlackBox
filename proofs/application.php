@@ -299,4 +299,49 @@ return static function() {
                 ->contains('Proofs: 3,');
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Application::allowProofsToNotMakeAnyAssertions()',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => null,
+                    );
+                });
+
+            $assert->false($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('The proof did not make any assertion');
+
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->allowProofsToNotMakeAnyAssertions()
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set\Integers::any()),
+                        static fn($assert, $i) => null,
+                    );
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->string($io->toString())
+                ->not()
+                ->contains('The proof did not make any assertion');
+        },
+    )->tag(Tag::ci, Tag::local);
 };

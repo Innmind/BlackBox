@@ -131,7 +131,7 @@ return static function() {
                             UpAndDownIsAnIdentityFunction::any(),
                             UpChangeState::any(),
                             UpperBoundAtHundred::any(),
-                        ),
+                        )->atLeast(10), // to avoid not making any assertion
                         Set\Decorate::mutable(
                             static fn($initial) => new Counter($initial),
                             Set\Integers::between(0, 100),

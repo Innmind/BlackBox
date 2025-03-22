@@ -5,6 +5,7 @@
 ### Added
 
 - `Innmind\BlackBox\Set\Properties::atLeast()`
+- `Innmind\BlackBox\Application::allowProofsToNotMakeAnyAssertions()`
 
 ## 6.0.2 - 2025-03-21
 
