@@ -24,14 +24,55 @@ final class Either implements Implementation
      * @param Implementation<T> $first
      * @param Implementation<U> $second
      * @param list<Implementation<V>> $rest
-     * @param int<1, max> $size
      */
     private function __construct(
         private Implementation $first,
         private Implementation $second,
         private array $rest,
-        private int $size,
     ) {
+    }
+
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $iterations = 0;
+        /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
+        $sets = [$this->first, $this->second, ...$this->rest];
+
+        while ($iterations < $size) {
+            $count = \count($sets);
+
+            if ($count === 0 && $iterations === 0) {
+                throw new EmptySet;
+            }
+
+            if ($count === 0) {
+                return;
+            }
+
+            $setToChoose = $random->between(0, $count - 1);
+
+            try {
+                $value = $sets[$setToChoose]($random, $predicate, $size)
+                    ->current();
+
+                if (\is_null($value)) {
+                    continue;
+                }
+
+                yield $value;
+            } catch (EmptySet $e) {
+                unset($sets[$setToChoose]);
+                $sets = \array_values($sets);
+
+                continue;
+            }
+
+            ++$iterations;
+        }
     }
 
     /**
@@ -55,7 +96,7 @@ final class Either implements Implementation
         Implementation $second,
         Implementation ...$rest,
     ): self {
-        return new self($first, $second, $rest, 100);
+        return new self($first, $second, $rest);
     }
 
     /**
@@ -80,61 +121,5 @@ final class Either implements Implementation
         Set|Provider ...$rest,
     ): Set {
         return Set::either($first, $second, ...$rest);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->first->take($size),
-            $this->second->take($size),
-            \array_map(
-                static fn(Implementation $set): Implementation => $set->take($size),
-                $this->rest,
-            ),
-            $size,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
-    {
-        $iterations = 0;
-        /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
-        $sets = [$this->first, $this->second, ...$this->rest];
-
-        while ($iterations < $this->size) {
-            $count = \count($sets);
-
-            if ($count === 0 && $iterations === 0) {
-                throw new EmptySet;
-            }
-
-            if ($count === 0) {
-                return;
-            }
-
-            $setToChoose = $random->between(0, $count - 1);
-
-            try {
-                $value = $sets[$setToChoose]->values($random, $predicate)->current();
-
-                if (\is_null($value)) {
-                    continue;
-                }
-
-                yield $value;
-            } catch (EmptySet $e) {
-                unset($sets[$setToChoose]);
-                $sets = \array_values($sets);
-
-                continue;
-            }
-
-            ++$iterations;
-        }
     }
 }

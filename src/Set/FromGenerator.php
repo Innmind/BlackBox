@@ -20,13 +20,41 @@ final class FromGenerator implements Implementation
      * @psalm-mutation-free
      *
      * @param \Closure(Random): \Generator<T|Seed<T>> $generatorFactory
-     * @param int<1, max> $size
      */
     private function __construct(
         private \Closure $generatorFactory,
-        private int $size,
         private bool $immutable,
     ) {
+    }
+
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $generator = ($this->generatorFactory)($random);
+        $iterations = 0;
+
+        while ($iterations < $size && $generator->valid()) {
+            /** @var T|Seed<T> */
+            $value = $generator->current();
+            $value = Value::of($value)
+                ->mutable(!$this->immutable)
+                ->predicatedOn($predicate);
+
+            if ($value->acceptable()) {
+                yield $value;
+
+                ++$iterations;
+            }
+
+            $generator->next();
+        }
+
+        if ($iterations === 0) {
+            throw new EmptySet;
+        }
     }
 
     /**
@@ -45,7 +73,6 @@ final class FromGenerator implements Implementation
     ): self {
         return new self(
             \Closure::fromCallable($generatorFactory),
-            100,
             $immutable,
         );
     }
@@ -78,46 +105,6 @@ final class FromGenerator implements Implementation
         return Set::generator(self::guard($generatorFactory))
             ->mutable()
             ->toSet();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->generatorFactory,
-            $size,
-            $this->immutable,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
-    {
-        $generator = ($this->generatorFactory)($random);
-        $iterations = 0;
-
-        while ($iterations < $this->size && $generator->valid()) {
-            /** @var T|Seed<T> */
-            $value = $generator->current();
-            $value = Value::of($value)
-                ->mutable(!$this->immutable)
-                ->predicatedOn($predicate);
-
-            if ($value->acceptable()) {
-                yield $value;
-
-                ++$iterations;
-            }
-
-            $generator->next();
-        }
-
-        if ($iterations === 0) {
-            throw new EmptySet;
-        }
     }
 
     /**

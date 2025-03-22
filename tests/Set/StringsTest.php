@@ -198,18 +198,6 @@ class StringsTest extends TestCase
         }
     }
 
-    public function testTakeNoElement()
-    {
-        $this->assertCount(
-            0,
-            \iterator_to_array(
-                Strings::any()
-                    ->take(0)
-                    ->values(Random::mersenneTwister),
-            ),
-        );
-    }
-
     public function testMadeOf()
     {
         $set = Strings::madeOf(Chars::lowercaseLetter());

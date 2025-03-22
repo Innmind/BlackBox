@@ -23,15 +23,41 @@ final class Elements implements Implementation
     /**
      * @psalm-mutation-free
      *
-     * @param int<1, max> $size
      * @param T $first
      * @param list<U> $elements
      */
     private function __construct(
         private mixed $first,
         private array $elements,
-        private int $size,
     ) {
+    }
+
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $iterations = 0;
+        $elements = \array_values(\array_filter(
+            [$this->first, ...$this->elements],
+            $predicate,
+        ));
+
+        if (\count($elements) === 0) {
+            throw new EmptySet;
+        }
+
+        $max = \count($elements) - 1;
+
+        while ($iterations < $size) {
+            $index = $random->between(0, $max);
+            /** @var mixed */
+            $value = $elements[$index];
+
+            yield Value::of($value)->predicatedOn($predicate);
+            ++$iterations;
+        }
     }
 
     /**
@@ -50,7 +76,7 @@ final class Elements implements Implementation
      */
     public static function implementation($first, ...$elements): self
     {
-        return new self($first, $elements, 100);
+        return new self($first, $elements);
     }
 
     /**
@@ -70,43 +96,5 @@ final class Elements implements Implementation
     public static function of($first, ...$elements): Set
     {
         return Set::of($first, ...$elements);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self(
-            $this->first,
-            $this->elements,
-            $size,
-        );
-    }
-
-    #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
-    {
-        $iterations = 0;
-        $elements = \array_values(\array_filter(
-            [$this->first, ...$this->elements],
-            $predicate,
-        ));
-
-        if (\count($elements) === 0) {
-            throw new EmptySet;
-        }
-
-        $max = \count($elements) - 1;
-
-        while ($iterations < $this->size) {
-            $index = $random->between(0, $max);
-            /** @var mixed */
-            $value = $elements[$index];
-
-            yield Value::of($value)->predicatedOn($predicate);
-            ++$iterations;
-        }
     }
 }

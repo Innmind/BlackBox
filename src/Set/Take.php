@@ -10,17 +10,17 @@ use Innmind\BlackBox\Random;
  * @template I
  * @implements Implementation<I>
  */
-final class Filter implements Implementation
+final class Take implements Implementation
 {
     /**
      * @psalm-mutation-free
      *
      * @param Implementation<I> $set
-     * @param \Closure(I): bool $predicate
+     * @param int<1, max> $size
      */
     private function __construct(
         private Implementation $set,
-        private \Closure $predicate,
+        private int $size,
     ) {
     }
 
@@ -30,12 +30,10 @@ final class Filter implements Implementation
         \Closure $predicate,
         int $size,
     ): \Generator {
-        $own = $this->predicate;
-
         yield from ($this->set)(
             $random,
-            static fn($value) => /** @var I $value */ $own($value) && $predicate($value),
-            $size,
+            $predicate,
+            $this->size,
         );
     }
 
@@ -46,28 +44,24 @@ final class Filter implements Implementation
      * @template T
      *
      * @param Implementation<T> $set
-     * @param callable(T): bool $predicate
+     * @param int<1, max> $size
      *
      * @return self<T>
      */
     public static function implementation(
         Implementation $set,
-        callable $predicate,
+        int $size,
     ): self {
         if ($set instanceof self) {
             /** @psalm-suppress ImpurePropertyFetch */
-            $previous = $set->predicate;
+            if ($set->size < $size) {
+                return $set;
+            }
 
             /** @psalm-suppress ImpurePropertyFetch */
-            return new self(
-                $set->set,
-                static fn($value) => /** @var T $value */ $previous($value) && $predicate($value),
-            );
+            $set = $set->set;
         }
 
-        return new self(
-            $set,
-            \Closure::fromCallable($predicate),
-        );
+        return new self($set, $size);
     }
 }

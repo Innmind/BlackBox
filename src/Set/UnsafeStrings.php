@@ -18,45 +18,17 @@ final class UnsafeStrings implements Implementation
 {
     /**
      * @psalm-mutation-free
-     *
-     * @param int<1, max> $size
      */
-    private function __construct(private int $size)
+    private function __construct()
     {
-    }
-
-    /**
-     * @internal
-     * @psalm-pure
-     */
-    public static function implementation(): self
-    {
-        return new self(100);
-    }
-
-    /**
-     * @deprecated Use Set::strings()->unsafe() instead
-     * @psalm-pure
-     *
-     * @return Set<string>
-     */
-    public static function any(): Set
-    {
-        return Set::strings()->unsafe();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function take(int $size): self
-    {
-        return new self($size);
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
 
         if ($json === false) {
@@ -74,16 +46,36 @@ final class UnsafeStrings implements Implementation
             throw new EmptySet;
         }
 
-        $size = \count($values) - 1;
+        $maxSize = \count($values) - 1;
         $iterations = 0;
 
-        while ($iterations < $this->size) {
-            $index = $random->between(0, $size);
+        while ($iterations < $size) {
+            $index = $random->between(0, $maxSize);
             $value = Value::of($values[$index])
                 ->predicatedOn($predicate);
 
             yield $value->shrinkWith(UnsafeStrings\Shrinker::instance);
             ++$iterations;
         }
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function implementation(): self
+    {
+        return new self;
+    }
+
+    /**
+     * @deprecated Use Set::strings()->unsafe() instead
+     * @psalm-pure
+     *
+     * @return Set<string>
+     */
+    public static function any(): Set
+    {
+        return Set::strings()->unsafe();
     }
 }

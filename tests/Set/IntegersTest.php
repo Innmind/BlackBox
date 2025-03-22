@@ -276,18 +276,6 @@ class IntegersTest extends TestCase
         }
     }
 
-    public function testTakeNoElement()
-    {
-        $this->assertCount(
-            0,
-            \iterator_to_array(
-                Integers::any()
-                    ->take(0)
-                    ->values(Random::mersenneTwister),
-            ),
-        );
-    }
-
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
         $ints = Integers::above(43);
