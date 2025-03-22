@@ -433,7 +433,10 @@ final class Set
      */
     public function take(int $size): self
     {
-        return new self($this->implementation->take($size));
+        return new self(Set\Take::implementation(
+            $this->implementation,
+            $size,
+        ));
     }
 
     /**
