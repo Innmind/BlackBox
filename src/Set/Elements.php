@@ -71,8 +71,11 @@ final class Elements implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $iterations = 0;
         $elements = \array_values(\array_filter(
             [$this->first, ...$this->elements],

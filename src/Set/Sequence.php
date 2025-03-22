@@ -66,22 +66,23 @@ final class Sequence implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $shrinker = new Sequence\Shrinker;
         $detonate = new Sequence\Detonate;
         $min = $this->min;
         $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
         $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
-        $immutable = $this
-            ->set
-            ->values($random, static fn() => true, 1)
+        $immutable = ($this->set)($random, static fn() => true, 1)
             ->current()
             ?->immutable() ?? false;
         $yielded = 0;
 
         do {
-            foreach ($this->sizes->values($random, static fn() => true, $size) as $nextSize) {
+            foreach (($this->sizes)($random, static fn() => true, $size) as $nextSize) {
                 if ($yielded === $size) {
                     return;
                 }
@@ -115,7 +116,7 @@ final class Sequence implements Implementation
             return [];
         }
 
-        return \array_values(\iterator_to_array($this->set->values(
+        return \array_values(\iterator_to_array(($this->set)(
             $rand,
             static fn() => true,
             $size,

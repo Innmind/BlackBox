@@ -57,16 +57,16 @@ final class Randomize implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $iterations = 0;
 
         while ($iterations < $size) {
             try {
-                $value = $this
-                    ->set
-                    ->values($random, $predicate, $size)
-                    ->current();
+                $value = ($this->set)($random, $predicate, $size)->current();
             } catch (EmptySet $e) {
                 continue;
             }

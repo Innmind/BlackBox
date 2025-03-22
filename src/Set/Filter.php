@@ -57,11 +57,14 @@ final class Filter implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $own = $this->predicate;
 
-        yield from $this->set->values(
+        yield from ($this->set)(
             $random,
             static fn($value) => /** @var I $value */ $own($value) && $predicate($value),
             $size,

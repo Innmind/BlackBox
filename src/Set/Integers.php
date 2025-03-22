@@ -94,8 +94,11 @@ final class Integers implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $min = $this->min;
         $max = $this->max;
         $bounds = static fn(int $value): bool => $value >= $min && $value <= $max;

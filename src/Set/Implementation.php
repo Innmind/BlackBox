@@ -24,7 +24,7 @@ interface Implementation
      *
      * @return \Generator<Value<T>>
      */
-    public function values(
+    public function __invoke(
         Random $random,
         \Closure $predicate,
         int $size,

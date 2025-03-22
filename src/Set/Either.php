@@ -81,8 +81,11 @@ final class Either implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $iterations = 0;
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
@@ -101,8 +104,7 @@ final class Either implements Implementation
             $setToChoose = $random->between(0, $count - 1);
 
             try {
-                $value = $sets[$setToChoose]
-                    ->values($random, $predicate, $size)
+                $value = $sets[$setToChoose]($random, $predicate, $size)
                     ->current();
 
                 if (\is_null($value)) {

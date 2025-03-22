@@ -86,8 +86,11 @@ final class RealNumbers implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
         $min = $this->min;
         $max = $this->max;
         $bounds = static fn(float $value): bool => $value >= $min && $value <= $max;

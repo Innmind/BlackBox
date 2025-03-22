@@ -53,9 +53,12 @@ final class Take implements Implementation
     }
 
     #[\Override]
-    public function values(Random $random, \Closure $predicate, int $size): \Generator
-    {
-        yield from $this->set->values(
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        yield from ($this->set)(
             $random,
             $predicate,
             $this->size,

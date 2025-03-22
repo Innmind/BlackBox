@@ -502,7 +502,7 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from $this->implementation->values(
+        yield from ($this->implementation)(
             $random,
             static fn() => true,
             100,
