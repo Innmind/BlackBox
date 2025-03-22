@@ -23,26 +23,6 @@ final class UnsafeStrings implements Implementation
     {
     }
 
-    /**
-     * @internal
-     * @psalm-pure
-     */
-    public static function implementation(): self
-    {
-        return new self;
-    }
-
-    /**
-     * @deprecated Use Set::strings()->unsafe() instead
-     * @psalm-pure
-     *
-     * @return Set<string>
-     */
-    public static function any(): Set
-    {
-        return Set::strings()->unsafe();
-    }
-
     #[\Override]
     public function __invoke(
         Random $random,
@@ -77,5 +57,25 @@ final class UnsafeStrings implements Implementation
             yield $value->shrinkWith(UnsafeStrings\Shrinker::instance);
             ++$iterations;
         }
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     */
+    public static function implementation(): self
+    {
+        return new self;
+    }
+
+    /**
+     * @deprecated Use Set::strings()->unsafe() instead
+     * @psalm-pure
+     *
+     * @return Set<string>
+     */
+    public static function any(): Set
+    {
+        return Set::strings()->unsafe();
     }
 }

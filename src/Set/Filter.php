@@ -24,6 +24,21 @@ final class Filter implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $own = $this->predicate;
+
+        yield from ($this->set)(
+            $random,
+            static fn($value) => /** @var I $value */ $own($value) && $predicate($value),
+            $size,
+        );
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -53,21 +68,6 @@ final class Filter implements Implementation
         return new self(
             $set,
             \Closure::fromCallable($predicate),
-        );
-    }
-
-    #[\Override]
-    public function __invoke(
-        Random $random,
-        \Closure $predicate,
-        int $size,
-    ): \Generator {
-        $own = $this->predicate;
-
-        yield from ($this->set)(
-            $random,
-            static fn($value) => /** @var I $value */ $own($value) && $predicate($value),
-            $size,
         );
     }
 }

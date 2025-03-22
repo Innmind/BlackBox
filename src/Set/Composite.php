@@ -32,6 +32,42 @@ final class Composite implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $shrinker = Composite\Shrinker::new();
+        $matrix = $this->matrix()->values($random);
+        $aggregate = $this->aggregate;
+        $iterations = 0;
+
+        while ($matrix->valid() && $this->continue($iterations, $size)) {
+            /** @var Composite\Combination */
+            $combination = $matrix->current();
+            $immutable = $combination->immutable() && $this->immutable;
+            $matrix->next();
+
+            $value = Value::of($combination)
+                ->mutable(!$immutable)
+                ->predicatedOn($predicate);
+            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
+
+            if (!$mapped->acceptable()) {
+                continue;
+            }
+
+            yield $mapped->shrinkWith($shrinker);
+
+            ++$iterations;
+        }
+
+        if ($iterations === 0) {
+            throw new EmptySet;
+        }
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -101,42 +137,6 @@ final class Composite implements Implementation
         return Set::compose($aggregate, $first, $second, ...$sets)
             ->mutable()
             ->toSet();
-    }
-
-    #[\Override]
-    public function __invoke(
-        Random $random,
-        \Closure $predicate,
-        int $size,
-    ): \Generator {
-        $shrinker = Composite\Shrinker::new();
-        $matrix = $this->matrix()->values($random);
-        $aggregate = $this->aggregate;
-        $iterations = 0;
-
-        while ($matrix->valid() && $this->continue($iterations, $size)) {
-            /** @var Composite\Combination */
-            $combination = $matrix->current();
-            $immutable = $combination->immutable() && $this->immutable;
-            $matrix->next();
-
-            $value = Value::of($combination)
-                ->mutable(!$immutable)
-                ->predicatedOn($predicate);
-            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
-
-            if (!$mapped->acceptable()) {
-                continue;
-            }
-
-            yield $mapped->shrinkWith($shrinker);
-
-            ++$iterations;
-        }
-
-        if ($iterations === 0) {
-            throw new EmptySet;
-        }
     }
 
     private function matrix(): Matrix

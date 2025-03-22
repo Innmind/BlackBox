@@ -32,6 +32,34 @@ final class Elements implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $iterations = 0;
+        $elements = \array_values(\array_filter(
+            [$this->first, ...$this->elements],
+            $predicate,
+        ));
+
+        if (\count($elements) === 0) {
+            throw new EmptySet;
+        }
+
+        $max = \count($elements) - 1;
+
+        while ($iterations < $size) {
+            $index = $random->between(0, $max);
+            /** @var mixed */
+            $value = $elements[$index];
+
+            yield Value::of($value)->predicatedOn($predicate);
+            ++$iterations;
+        }
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -68,33 +96,5 @@ final class Elements implements Implementation
     public static function of($first, ...$elements): Set
     {
         return Set::of($first, ...$elements);
-    }
-
-    #[\Override]
-    public function __invoke(
-        Random $random,
-        \Closure $predicate,
-        int $size,
-    ): \Generator {
-        $iterations = 0;
-        $elements = \array_values(\array_filter(
-            [$this->first, ...$this->elements],
-            $predicate,
-        ));
-
-        if (\count($elements) === 0) {
-            throw new EmptySet;
-        }
-
-        $max = \count($elements) - 1;
-
-        while ($iterations < $size) {
-            $index = $random->between(0, $max);
-            /** @var mixed */
-            $value = $elements[$index];
-
-            yield Value::of($value)->predicatedOn($predicate);
-            ++$iterations;
-        }
     }
 }

@@ -23,6 +23,35 @@ final class RealNumbers implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $min = $this->min;
+        $max = $this->max;
+        $bounds = static fn(float $value): bool => $value >= $min && $value <= $max;
+        $predicate = static fn(float $value): bool => $bounds($value) && $predicate($value);
+        $iterations = 0;
+
+        while ($iterations < $size) {
+            // simulate the function lcg_value()
+            $lcg = ($random->between(0, 100) / 100);
+            /** @psalm-suppress InvalidOperand Don't know why it complains */
+            $value = $random->between($this->min, $this->max) * $lcg;
+            $value = Value::of($value)
+                ->predicatedOn($predicate);
+
+            if (!$value->acceptable()) {
+                continue;
+            }
+
+            yield $value->shrinkWith(RealNumbers\Shrinker::instance);
+            ++$iterations;
+        }
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -83,34 +112,5 @@ final class RealNumbers implements Implementation
         return Set::realNumbers()
             ->below($max)
             ->toSet();
-    }
-
-    #[\Override]
-    public function __invoke(
-        Random $random,
-        \Closure $predicate,
-        int $size,
-    ): \Generator {
-        $min = $this->min;
-        $max = $this->max;
-        $bounds = static fn(float $value): bool => $value >= $min && $value <= $max;
-        $predicate = static fn(float $value): bool => $bounds($value) && $predicate($value);
-        $iterations = 0;
-
-        while ($iterations < $size) {
-            // simulate the function lcg_value()
-            $lcg = ($random->between(0, 100) / 100);
-            /** @psalm-suppress InvalidOperand Don't know why it complains */
-            $value = $random->between($this->min, $this->max) * $lcg;
-            $value = Value::of($value)
-                ->predicatedOn($predicate);
-
-            if (!$value->acceptable()) {
-                continue;
-            }
-
-            yield $value->shrinkWith(RealNumbers\Shrinker::instance);
-            ++$iterations;
-        }
     }
 }

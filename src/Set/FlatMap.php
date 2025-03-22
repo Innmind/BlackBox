@@ -28,25 +28,6 @@ final class FlatMap implements Implementation
     ) {
     }
 
-    /**
-     * @internal
-     * @psalm-pure
-     *
-     * @template T
-     * @template V
-     *
-     * @param callable(Seed<V>): Implementation<T> $decorate It must be a pure function (no randomness, no side effects)
-     * @param Implementation<V> $set
-     *
-     * @return self<T,V>
-     */
-    public static function implementation(
-        callable $decorate,
-        Implementation $set,
-    ): self {
-        return new self(\Closure::fromCallable($decorate), $set);
-    }
-
     #[\Override]
     public function __invoke(Random $random, \Closure $predicate, int $size): \Generator
     {
@@ -67,5 +48,24 @@ final class FlatMap implements Implementation
                 }
             }
         }
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     *
+     * @template T
+     * @template V
+     *
+     * @param callable(Seed<V>): Implementation<T> $decorate It must be a pure function (no randomness, no side effects)
+     * @param Implementation<V> $set
+     *
+     * @return self<T,V>
+     */
+    public static function implementation(
+        callable $decorate,
+        Implementation $set,
+    ): self {
+        return new self(\Closure::fromCallable($decorate), $set);
     }
 }

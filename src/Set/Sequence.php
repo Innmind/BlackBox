@@ -28,43 +28,6 @@ final class Sequence implements Implementation
     ) {
     }
 
-    /**
-     * @internal
-     * @psalm-pure
-     *
-     * @template U
-     *
-     * @param Implementation<U> $set
-     *
-     * @return self<U>
-     */
-    public static function implementation(
-        Implementation $set,
-        Integers $sizes,
-    ): self {
-        /** @psalm-suppress ArgumentTypeCoercion */
-        return new self(
-            $set,
-            $sizes,
-            $sizes->min(),
-        );
-    }
-
-    /**
-     * @deprecated Use Set::sequence() instead
-     * @psalm-pure
-     *
-     * @template U
-     *
-     * @param Set<U>|Provider<U> $set
-     *
-     * @return Provider\Sequence<U>
-     */
-    public static function of(Set|Provider $set): Provider\Sequence
-    {
-        return Set::sequence($set);
-    }
-
     #[\Override]
     public function __invoke(
         Random $random,
@@ -103,6 +66,43 @@ final class Sequence implements Implementation
                 ++$yielded;
             }
         } while ($yielded < $size);
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     *
+     * @template U
+     *
+     * @param Implementation<U> $set
+     *
+     * @return self<U>
+     */
+    public static function implementation(
+        Implementation $set,
+        Integers $sizes,
+    ): self {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        return new self(
+            $set,
+            $sizes,
+            $sizes->min(),
+        );
+    }
+
+    /**
+     * @deprecated Use Set::sequence() instead
+     * @psalm-pure
+     *
+     * @template U
+     *
+     * @param Set<U>|Provider<U> $set
+     *
+     * @return Provider\Sequence<U>
+     */
+    public static function of(Set|Provider $set): Provider\Sequence
+    {
+        return Set::sequence($set);
     }
 
     /**

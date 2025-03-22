@@ -32,6 +32,49 @@ final class Either implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $iterations = 0;
+        /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
+        $sets = [$this->first, $this->second, ...$this->rest];
+
+        while ($iterations < $size) {
+            $count = \count($sets);
+
+            if ($count === 0 && $iterations === 0) {
+                throw new EmptySet;
+            }
+
+            if ($count === 0) {
+                return;
+            }
+
+            $setToChoose = $random->between(0, $count - 1);
+
+            try {
+                $value = $sets[$setToChoose]($random, $predicate, $size)
+                    ->current();
+
+                if (\is_null($value)) {
+                    continue;
+                }
+
+                yield $value;
+            } catch (EmptySet $e) {
+                unset($sets[$setToChoose]);
+                $sets = \array_values($sets);
+
+                continue;
+            }
+
+            ++$iterations;
+        }
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -78,48 +121,5 @@ final class Either implements Implementation
         Set|Provider ...$rest,
     ): Set {
         return Set::either($first, $second, ...$rest);
-    }
-
-    #[\Override]
-    public function __invoke(
-        Random $random,
-        \Closure $predicate,
-        int $size,
-    ): \Generator {
-        $iterations = 0;
-        /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
-        $sets = [$this->first, $this->second, ...$this->rest];
-
-        while ($iterations < $size) {
-            $count = \count($sets);
-
-            if ($count === 0 && $iterations === 0) {
-                throw new EmptySet;
-            }
-
-            if ($count === 0) {
-                return;
-            }
-
-            $setToChoose = $random->between(0, $count - 1);
-
-            try {
-                $value = $sets[$setToChoose]($random, $predicate, $size)
-                    ->current();
-
-                if (\is_null($value)) {
-                    continue;
-                }
-
-                yield $value;
-            } catch (EmptySet $e) {
-                unset($sets[$setToChoose]);
-                $sets = \array_values($sets);
-
-                continue;
-            }
-
-            ++$iterations;
-        }
     }
 }

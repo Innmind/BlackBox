@@ -26,6 +26,30 @@ final class Randomize implements Implementation
     ) {
     }
 
+    #[\Override]
+    public function __invoke(
+        Random $random,
+        \Closure $predicate,
+        int $size,
+    ): \Generator {
+        $iterations = 0;
+
+        while ($iterations < $size) {
+            try {
+                $value = ($this->set)($random, $predicate, $size)->current();
+            } catch (EmptySet $e) {
+                continue;
+            }
+
+            if (\is_null($value)) {
+                continue;
+            }
+
+            yield $value;
+            ++$iterations;
+        }
+    }
+
     /**
      * @internal
      * @psalm-pure
@@ -54,29 +78,5 @@ final class Randomize implements Implementation
     public static function of(Set|Provider $set): Set
     {
         return Collapse::of($set)->randomize();
-    }
-
-    #[\Override]
-    public function __invoke(
-        Random $random,
-        \Closure $predicate,
-        int $size,
-    ): \Generator {
-        $iterations = 0;
-
-        while ($iterations < $size) {
-            try {
-                $value = ($this->set)($random, $predicate, $size)->current();
-            } catch (EmptySet $e) {
-                continue;
-            }
-
-            if (\is_null($value)) {
-                continue;
-            }
-
-            yield $value;
-            ++$iterations;
-        }
     }
 }
