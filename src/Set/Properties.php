@@ -53,19 +53,7 @@ final class Properties implements Provider
      */
     public function atMost(int $max): Set
     {
-        return $this->ensure(null, $max);
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param positive-int $min
-     *
-     * @return Set<Ensure>
-     */
-    public function atLeast(int $min): Set
-    {
-        return $this->ensure($min);
+        return $this->ensure($max);
     }
 
     /**
@@ -128,24 +116,20 @@ final class Properties implements Provider
     #[\Override]
     public function toSet(): Set
     {
-        return $this->ensure();
+        return $this->ensure(100);
     }
 
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $min
      * @param positive-int $max
      *
      * @return Set<Ensure>
      */
-    private function ensure(?int $min = null, ?int $max = null): Set
+    private function ensure(int $max): Set
     {
-        $min ??= 1;
-        $max ??= $min + 99;
-
         /** @var Set<non-empty-list<Concrete>> */
-        $sequences = Set::sequence($this->properties)->between($min, $max);
+        $sequences = Set::sequence($this->properties)->between(1, $max);
 
         return $sequences->map(
             static fn(array $properties): Ensure => Ensure::of(...$properties),
