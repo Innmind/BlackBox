@@ -118,10 +118,8 @@ By default BlackBox will fail a proof when a scenario did not make any assertion
 
 However if your style of making assertions may not always lead to a proof making one, then you can disable this feature this way:
 
-```php hl_lines="4 8"
-use Innmind\BlackBox\{
-    Application,
-};
+```php hl_lines="4"
+use Innmind\BlackBox\Application;
 
 Application::new([])
     ->allowProofsToNotMakeAnyAssertions()
