@@ -334,7 +334,6 @@ final class Set
             $tld,
         )
             ->immutable()
-            ->take(100)
             ->filter(static function(string $email): bool {
                 return !\preg_match('~(\-.|\.\-)~', $email);
             });

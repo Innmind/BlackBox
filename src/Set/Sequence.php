@@ -47,16 +47,12 @@ final class Sequence implements Implementation
             foreach (($this->sizes)($random, static fn() => true, $size) as $nextSize) {
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($nextSize->unwrap(), $random);
-                $value = Value::of($values)
+
+                yield Value::of($values)
                     ->mutable(!$immutable)
-                    ->predicatedOn($predicate);
-                $yieldable = $value->map($detonate);
-
-                if (!$yieldable->acceptable()) {
-                    continue;
-                }
-
-                yield $yieldable->shrinkWith($shrinker);
+                    ->predicatedOn($predicate)
+                    ->map($detonate)
+                    ->shrinkWith($shrinker);
             }
         } while (true);
     }

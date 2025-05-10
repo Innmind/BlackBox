@@ -39,14 +39,14 @@ final class RealNumbers implements Implementation
             $lcg = ($random->between(0, 100) / 100);
             /** @psalm-suppress InvalidOperand Don't know why it complains */
             $value = $random->between($this->min, $this->max) * $lcg;
-            $value = Value::of($value)
-                ->predicatedOn($predicate);
 
-            if (!$value->acceptable()) {
+            if (!$bounds($value)) {
                 continue;
             }
 
-            yield $value->shrinkWith(RealNumbers\Shrinker::instance);
+            yield Value::of($value)
+                ->predicatedOn($predicate)
+                ->shrinkWith(RealNumbers\Shrinker::instance);
         }
     }
 

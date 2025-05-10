@@ -44,16 +44,11 @@ final class Composite implements Implementation
         foreach ($matrix as $combination) {
             $immutable = $combination->immutable() && $this->immutable;
 
-            $value = Value::of($combination)
+            yield Value::of($combination)
                 ->mutable(!$immutable)
-                ->predicatedOn($predicate);
-            $mapped = $value->map(static fn($combination) => $combination->detonate($aggregate));
-
-            if (!$mapped->acceptable()) {
-                continue;
-            }
-
-            yield $mapped->shrinkWith($shrinker);
+                ->predicatedOn($predicate)
+                ->map(static fn($combination) => $combination->detonate($aggregate))
+                ->shrinkWith($shrinker);
         }
     }
 

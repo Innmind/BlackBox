@@ -36,14 +36,10 @@ final class Integers implements Implementation
 
         while (true) {
             $value = $random->between($this->min, $this->max);
-            $value = Value::of($value)
-                ->predicatedOn($predicate);
 
-            if (!$value->acceptable()) {
-                continue;
-            }
-
-            yield $value->shrinkWith(Integers\Shrinker::instance);
+            yield Value::of($value)
+                ->predicatedOn($predicate)
+                ->shrinkWith(Integers\Shrinker::instance);
         }
     }
 
