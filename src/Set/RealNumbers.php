@@ -33,9 +33,8 @@ final class RealNumbers implements Implementation
         $max = $this->max;
         $bounds = static fn(float $value): bool => $value >= $min && $value <= $max;
         $predicate = static fn(float $value): bool => $bounds($value) && $predicate($value);
-        $iterations = 0;
 
-        while ($iterations < $size) {
+        while (true) {
             // simulate the function lcg_value()
             $lcg = ($random->between(0, 100) / 100);
             /** @psalm-suppress InvalidOperand Don't know why it complains */
@@ -48,7 +47,6 @@ final class RealNumbers implements Implementation
             }
 
             yield $value->shrinkWith(RealNumbers\Shrinker::instance);
-            ++$iterations;
         }
     }
 

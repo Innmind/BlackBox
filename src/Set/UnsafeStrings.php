@@ -46,15 +46,13 @@ final class UnsafeStrings implements Implementation
         }
 
         $maxSize = \count($values) - 1;
-        $iterations = 0;
 
-        while ($iterations < $size) {
+        while (true) {
             $index = $random->between(0, $maxSize);
             $value = Value::of($values[$index])
                 ->predicatedOn($predicate);
 
             yield $value->shrinkWith(UnsafeStrings\Shrinker::instance);
-            ++$iterations;
         }
     }
 

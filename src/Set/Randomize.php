@@ -31,9 +31,7 @@ final class Randomize implements Implementation
         \Closure $predicate,
         int $size,
     ): \Generator {
-        $iterations = 0;
-
-        while ($iterations < $size) {
+        while (true) {
             $value = ($this->set)($random, $predicate, $size)->current();
 
             if (\is_null($value)) {
@@ -41,7 +39,6 @@ final class Randomize implements Implementation
             }
 
             yield $value;
-            ++$iterations;
         }
     }
 

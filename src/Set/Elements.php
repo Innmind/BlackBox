@@ -37,7 +37,6 @@ final class Elements implements Implementation
         \Closure $predicate,
         int $size,
     ): \Generator {
-        $iterations = 0;
         $elements = \array_values(\array_filter(
             [$this->first, ...$this->elements],
             $predicate,
@@ -49,13 +48,12 @@ final class Elements implements Implementation
 
         $max = \count($elements) - 1;
 
-        while ($iterations < $size) {
+        while (true) {
             $index = $random->between(0, $max);
             /** @var mixed */
             $value = $elements[$index];
 
             yield Value::of($value)->predicatedOn($predicate);
-            ++$iterations;
         }
     }
 

@@ -42,14 +42,9 @@ final class Sequence implements Implementation
         $immutable = ($this->set)($random, static fn() => true, 1)
             ->current()
             ?->immutable() ?? false;
-        $yielded = 0;
 
         do {
             foreach (($this->sizes)($random, static fn() => true, $size) as $nextSize) {
-                if ($yielded === $size) {
-                    return;
-                }
-
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($nextSize->unwrap(), $random);
                 $value = Value::of($values)
@@ -62,10 +57,8 @@ final class Sequence implements Implementation
                 }
 
                 yield $yieldable->shrinkWith($shrinker);
-
-                ++$yielded;
             }
-        } while ($yielded < $size);
+        } while (true);
     }
 
     /**
@@ -116,7 +109,12 @@ final class Sequence implements Implementation
             return [];
         }
 
-        return \array_values(\iterator_to_array(($this->set)(
+        $set = Take::implementation(
+            $this->set,
+            $size,
+        );
+
+        return \array_values(\iterator_to_array($set(
             $rand,
             static fn() => true,
             $size,

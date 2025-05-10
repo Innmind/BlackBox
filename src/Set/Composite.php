@@ -40,13 +40,9 @@ final class Composite implements Implementation
         $shrinker = Composite\Shrinker::new();
         $matrix = $this->matrix()->values($random);
         $aggregate = $this->aggregate;
-        $iterations = 0;
 
-        while ($matrix->valid() && $this->continue($iterations, $size)) {
-            /** @var Composite\Combination */
-            $combination = $matrix->current();
+        foreach ($matrix as $combination) {
             $immutable = $combination->immutable() && $this->immutable;
-            $matrix->next();
 
             $value = Value::of($combination)
                 ->mutable(!$immutable)
@@ -58,8 +54,6 @@ final class Composite implements Implementation
             }
 
             yield $mapped->shrinkWith($shrinker);
-
-            ++$iterations;
         }
     }
 
@@ -147,10 +141,5 @@ final class Composite implements Implementation
             static fn(Matrix $matrix, Implementation $set): Matrix => $matrix->dot($set),
             Matrix::of($second, $first),
         );
-    }
-
-    private function continue(int $iterations, int $size): bool
-    {
-        return $iterations < $size;
     }
 }

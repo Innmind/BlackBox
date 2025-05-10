@@ -37,11 +37,10 @@ final class Either implements Implementation
         \Closure $predicate,
         int $size,
     ): \Generator {
-        $iterations = 0;
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
 
-        while ($iterations < $size) {
+        while (true) {
             $count = \count($sets);
 
             if ($count === 0) {
@@ -61,8 +60,6 @@ final class Either implements Implementation
             }
 
             yield $value;
-
-            ++$iterations;
         }
     }
 
