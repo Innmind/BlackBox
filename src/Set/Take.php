@@ -35,9 +35,15 @@ final class Take implements Implementation
             $predicate,
             $this->size,
         );
+        $remaining = $this->size;
 
         foreach ($values as $value) {
             yield $value->bounded();
+            --$remaining;
+
+            if ($remaining === 0) {
+                return;
+            }
         }
     }
 
