@@ -30,11 +30,15 @@ final class Take implements Implementation
         \Closure $predicate,
         int $size,
     ): \Generator {
-        yield from ($this->set)(
+        $values = ($this->set)(
             $random,
             $predicate,
             $this->size,
         );
+
+        foreach ($values as $value) {
+            yield $value->bounded();
+        }
     }
 
     /**

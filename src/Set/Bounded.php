@@ -34,13 +34,16 @@ final class Bounded implements Implementation
             $size,
         );
 
-        $iterations = 0;
+        $remaining = 100;
 
         foreach ($values as $value) {
             yield $value;
-            ++$iterations;
 
-            if ($iterations === 100) {
+            if ($value->unbounded()) {
+                --$remaining;
+            }
+
+            if ($remaining === 0) {
                 return;
             }
         }
