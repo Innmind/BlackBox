@@ -137,6 +137,47 @@ If you want to take a look at a migration you can look at [BlackBox's own PHPUni
 !!! success ""
     Running BlackBox's PHPUnit tests via BlackBox increase execution speed by 35% (from ~7.1s down to ~4.6s) on a MackBook Pro M1 Max.
 
+### Display all scenarii
+
+If you've declared your [proofs inside a PHPUnit test method](#like-blackbox), when run directly via BlackBox it will show up as a single scenario. On top of that you can't see the [shrinking mechanism](preface/terminology.md#shrinking).
+
+You can better integrate these proofs inside BlackBox via these changes:
+
+```php title="MyTestCase.php" hl_lines="11 13 18"
+use Innmind\BlackBox\{
+    PHPUnit\BlackBox,
+    Set,
+};
+use PHPUnit\Framework\TestCase;
+
+final class MyTestCase extends TestCase
+{
+    use BlackBox;
+
+    public function testAddIsCommutative(int $a, int $b): BlackBox\Proof
+    {
+        return $this
+            ->forAll(
+                Set::integers(),
+                Set::integers(),
+            )
+            ->prove(function(int $a, int $b) {
+                $this->assertSame(
+                    add($a, $b),
+                    add($b, $a),
+                );
+            });
+    }
+}
+```
+
+Instead of calling `#!php $this->forAll()->then()` you call `#!php $this->forAll()->prove()` and return the object.
+
+Now each scenario will be correctly displayed and the number of scenarii configured in `Innmind\BlackBox\Application` is correctly respected (no need to use the `BLACKBOX_SET_SIZE` environment variable anymore).
+
+??? note
+    Note that the calls to `#!php ->take()` and `#!php ->disableShrinking()` won't do anything in this context as it uses the global configuration.
+
 ### Feature coverage
 
 PHPUnit is a very large testing framework with lots of features. BlackBox doesn't support all its features when running your tests.

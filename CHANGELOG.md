@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.2.0 - 2025-05-10
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Compatibility::prove()`
+
 ## 6.1.0 - 2025-03-22
 
 ### Added

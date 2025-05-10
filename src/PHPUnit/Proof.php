@@ -7,6 +7,8 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Proof as ProofInterface,
     Runner\Proof\Name,
+    Runner\Assert,
+    Runner\Stats,
     Set,
 };
 
@@ -104,6 +106,26 @@ final class Proof implements ProofInterface
     #[\Override]
     public function scenarii(int $count): Set
     {
+        $refl = new \ReflectionMethod($this->class, $this->method);
+        $return = (string) $refl->getReturnType();
+
+        if ($return === BlackBox\Proof::class) {
+            // The true Assert instance is injected in Proof\Bridge
+            $test = new ($this->class)(Assert::of(Stats::new()));
+            /** @var BlackBox\Proof */
+            $proof = $test->{$this->method}(...$this->args);
+
+            return $proof
+                ->given()
+                ->set()
+                ->map(static fn($args) => Proof\Bridge::of(
+                    $proof->test(),
+                    $args,
+                ))
+                ->randomize()
+                ->take($count);
+        }
+
         return Set::of(Proof\Scenario::of(
             $this->class,
             $this->method,
