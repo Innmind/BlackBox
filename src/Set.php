@@ -547,7 +547,10 @@ final class Set
      */
     private function bound(): self
     {
-        return $this->take(100);
+        return new self(
+            Set\Bounded::implementation($this->implementation),
+            false,
+        );
     }
 
     /**
