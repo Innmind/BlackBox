@@ -15,9 +15,9 @@ class DichotomyTest extends TestCase
 {
     use BlackBox;
 
-    public function testInterface()
+    public function testInterface(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(
                 Set\Either::any(
                     Set\Integers::any(),
@@ -28,7 +28,7 @@ class DichotomyTest extends TestCase
                     Set\Strings::any(),
                 ),
             )
-            ->then(function($a, $b) {
+            ->prove(function($a, $b) {
                 $expectedA = Value::of($a);
                 $expectedB = Value::of($b);
 

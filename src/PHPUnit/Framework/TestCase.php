@@ -34,14 +34,15 @@ abstract class TestCase
     /**
      * @internal
      *
+     * @param callable(...mixed): void $test
      * @param list<mixed> $args
      */
-    final public function executeTest(string $method, array $args): void
+    final public function executeClosure(callable $test, array $args): void
     {
         $this->setUp();
 
         try {
-            $this->$method(...$args);
+            $test(...$args);
             $this->tearDown();
         } catch (Assert\Failure|Scenario\Failure $e) {
             throw $e;
@@ -71,6 +72,21 @@ abstract class TestCase
                 );
             }
         }
+    }
+
+    /**
+     * @internal
+     *
+     * @param list<mixed> $args
+     */
+    final public function executeTest(string $method, array $args): void
+    {
+        $this->executeClosure(
+            function(...$args) use ($method): void {
+                $this->$method(...$args);
+            },
+            $args,
+        );
     }
 
     final public function assert(): Assert
