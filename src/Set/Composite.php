@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     Set,
     Set\Composite\Matrix,
     Random,
-    Exception\EmptySet,
 };
 
 /**
@@ -61,10 +60,6 @@ final class Composite implements Implementation
             yield $mapped->shrinkWith($shrinker);
 
             ++$iterations;
-        }
-
-        if ($iterations === 0) {
-            throw new EmptySet;
         }
     }
 

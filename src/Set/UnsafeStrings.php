@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 use Innmind\Json\Json;
 
@@ -43,7 +42,7 @@ final class UnsafeStrings implements Implementation
         ));
 
         if (\count($values) === 0) {
-            throw new EmptySet;
+            return;
         }
 
         $maxSize = \count($values) - 1;

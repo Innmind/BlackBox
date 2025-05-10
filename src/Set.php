@@ -532,7 +532,7 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from match ($this->unbounded) {
+        $values = match ($this->unbounded) {
             true => $this->bound()->values($random),
             false => ($this->implementation)(
                 $random,
@@ -540,6 +540,16 @@ final class Set
                 100,
             ),
         };
+        $empty = true;
+
+        foreach ($values as $value) {
+            yield $value;
+            $empty = false;
+        }
+
+        if ($empty) {
+            throw new EmptySet;
+        }
     }
 
     /**

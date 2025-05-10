@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 
 /**
@@ -50,10 +49,6 @@ final class FromGenerator implements Implementation
             }
 
             $generator->next();
-        }
-
-        if ($iterations === 0) {
-            throw new EmptySet;
         }
     }
 

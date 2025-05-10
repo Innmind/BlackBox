@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 
 /**
@@ -45,31 +44,23 @@ final class Either implements Implementation
         while ($iterations < $size) {
             $count = \count($sets);
 
-            if ($count === 0 && $iterations === 0) {
-                throw new EmptySet;
-            }
-
             if ($count === 0) {
                 return;
             }
 
             $setToChoose = $random->between(0, $count - 1);
 
-            try {
-                $value = $sets[$setToChoose]($random, $predicate, $size)
-                    ->current();
+            $value = $sets[$setToChoose]($random, $predicate, $size)
+                ->current();
 
-                if (\is_null($value)) {
-                    continue;
-                }
-
-                yield $value;
-            } catch (EmptySet $e) {
+            if (\is_null($value)) {
                 unset($sets[$setToChoose]);
                 $sets = \array_values($sets);
 
                 continue;
             }
+
+            yield $value;
 
             ++$iterations;
         }
