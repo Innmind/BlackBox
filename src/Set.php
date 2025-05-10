@@ -24,6 +24,7 @@ final class Set
      */
     private function __construct(
         private Implementation $implementation,
+        private bool $unbounded,
     ) {
     }
 
@@ -42,7 +43,10 @@ final class Set
      */
     public static function of(mixed $first, mixed ...$rest): self
     {
-        return new self(Set\Elements::implementation($first, ...$rest));
+        return new self(
+            Set\Elements::implementation($first, ...$rest),
+            true,
+        );
     }
 
     /**
@@ -148,16 +152,21 @@ final class Set
         callable $decorate,
         self|Provider $set,
     ): self {
+        $set = Collapse::of($set);
+
         /**
          * @psalm-suppress InvalidArgument
          * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
          * @psalm-suppress ImpureFunctionCall
          */
-        return new self(Set\Map::implementation(
-            $decorate,
-            Collapse::of($set)->implementation,
-            false,
-        ));
+        return new self(
+            Set\Map::implementation(
+                $decorate,
+                $set->implementation,
+                false,
+            ),
+            $set->unbounded,
+        );
     }
 
     /**
@@ -231,14 +240,17 @@ final class Set
          * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
          * @psalm-suppress ImpureFunctionCall
          */
-        return new self(Set\Either::implementation(
-            Collapse::of($first)->implementation,
-            Collapse::of($second)->implementation,
-            ...\array_map(
-                static fn($set) => Collapse::of($set)->implementation,
-                $rest,
+        return new self(
+            Set\Either::implementation(
+                Collapse::of($first)->implementation,
+                Collapse::of($second)->implementation,
+                ...\array_map(
+                    static fn($set) => Collapse::of($set)->implementation,
+                    $rest,
+                ),
             ),
-        ));
+            true,
+        );
     }
 
     /**
@@ -404,10 +416,13 @@ final class Set
      */
     public function nullable(): self
     {
-        return new self(Set\Either::implementation(
-            $this->implementation,
-            Set\Elements::implementation(null),
-        ));
+        return new self(
+            Set\Either::implementation(
+                $this->implementation,
+                Set\Elements::implementation(null),
+            ),
+            $this->unbounded,
+        );
     }
 
     /**
@@ -421,7 +436,10 @@ final class Set
      */
     public function randomize(): self
     {
-        return new self(Set\Randomize::implementation($this->implementation));
+        return new self(
+            Set\Randomize::implementation($this->implementation),
+            $this->unbounded,
+        );
     }
 
     /**
@@ -433,10 +451,13 @@ final class Set
      */
     public function take(int $size): self
     {
-        return new self(Set\Take::implementation(
-            $this->implementation,
-            $size,
-        ));
+        return new self(
+            Set\Take::implementation(
+                $this->implementation,
+                $size,
+            ),
+            false,
+        );
     }
 
     /**
@@ -448,10 +469,13 @@ final class Set
      */
     public function filter(callable $predicate): self
     {
-        return new self(Set\Filter::implementation(
-            $this->implementation,
-            $predicate,
-        ));
+        return new self(
+            Set\Filter::implementation(
+                $this->implementation,
+                $predicate,
+            ),
+            $this->unbounded,
+        );
     }
 
     /**
@@ -465,11 +489,14 @@ final class Set
      */
     public function map(callable $map): self
     {
-        return new self(Set\Map::implementation(
-            $map,
-            $this->implementation,
-            true,
-        ));
+        return new self(
+            Set\Map::implementation(
+                $map,
+                $this->implementation,
+                true,
+            ),
+            $this->unbounded,
+        );
     }
 
     /**
@@ -487,10 +514,13 @@ final class Set
     public function flatMap(callable $map): self
     {
         /** @psalm-suppress InvalidArgument */
-        return new self(Set\FlatMap::implementation(
-            static fn($input) => Collapse::of($map($input))->implementation,
-            $this->implementation,
-        ));
+        return new self(
+            Set\FlatMap::implementation(
+                static fn($input) => Collapse::of($map($input))->implementation,
+                $this->implementation,
+            ),
+            $this->unbounded,
+        );
     }
 
     /**
@@ -502,11 +532,22 @@ final class Set
      */
     public function values(Random $random): \Generator
     {
-        yield from ($this->implementation)(
-            $random,
-            static fn() => true,
-            100,
-        );
+        yield from match ($this->unbounded) {
+            true => $this->bound()->values($random),
+            false => ($this->implementation)(
+                $random,
+                static fn() => true,
+                100,
+            ),
+        };
+    }
+
+    /**
+     * @return self<T>
+     */
+    private function bound(): self
+    {
+        return $this->take(100);
     }
 
     /**
@@ -519,6 +560,6 @@ final class Set
      */
     private static function build(Implementation $implementation): self
     {
-        return new self($implementation);
+        return new self($implementation, true);
     }
 }
