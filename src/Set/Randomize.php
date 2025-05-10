@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 
 /**
@@ -35,11 +34,7 @@ final class Randomize implements Implementation
         $iterations = 0;
 
         while ($iterations < $size) {
-            try {
-                $value = ($this->set)($random, $predicate, $size)->current();
-            } catch (EmptySet $e) {
-                continue;
-            }
+            $value = ($this->set)($random, $predicate, $size)->current();
 
             if (\is_null($value)) {
                 continue;
