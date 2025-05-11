@@ -62,11 +62,11 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = $this->unwrap($this->set->take(50)->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->take(500)->values(Random::mersenneTwister));
 
         $this
             ->assert()
-            ->count(50, $values);
+            ->count(500, $values);
         $this
             ->assert()
             ->array($values)
