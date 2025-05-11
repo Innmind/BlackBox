@@ -11,7 +11,6 @@ use Innmind\BlackBox\{
     Set\Value,
     Random,
     PHPUnit\BlackBox,
-    Exception\EmptySet,
     Runner\Proof\Scenario\Failure,
 };
 use PHPUnit\Framework\Attributes\Group;
@@ -28,18 +27,9 @@ class CompositeTest extends TestCase
             static function(string ...$args) {
                 return \implode('', $args);
             },
-            FromGenerator::of(static function() {
-                yield 'e';
-                yield 'f';
-            }),
-            FromGenerator::of(static function() {
-                yield 'a';
-                yield 'b';
-            }),
-            FromGenerator::of(static function() {
-                yield 'c';
-                yield 'd';
-            }),
+            Set::of('e', 'f'),
+            Set::of('a', 'b'),
+            Set::of('c', 'd'),
         );
     }
 
@@ -72,15 +62,16 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = $this->unwrap($this->set->take(2)->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->take(50)->values(Random::mersenneTwister));
 
-        $this->assertSame(
-            [
-                'eac',
-                'ead',
-            ],
-            $values,
-        );
+        $this
+            ->assert()
+            ->count(50, $values);
+        $this
+            ->assert()
+            ->array($values)
+            ->contains('eac')
+            ->contains('ead');
     }
 
     public function testFilter()
@@ -91,40 +82,41 @@ class CompositeTest extends TestCase
                 return $value[0] === 'e';
             });
 
-        $this->assertSame(
-            [
-                'eac',
-                'ead',
-                'ebc',
-                'ebd',
-            ],
-            $this->unwrap($values->values(Random::mersenneTwister)),
-        );
+        $this
+            ->assert()
+            ->array($this->unwrap($values->values(Random::mersenneTwister)))
+            ->contains('eac')
+            ->contains('ead')
+            ->contains('ebc')
+            ->contains('ebd')
+            ->not()
+            ->contains('fac')
+            ->contains('fad')
+            ->contains('fbc')
+            ->contains('fbd');
     }
 
     public function testReduce()
     {
         $values = $this->unwrap($this->set->values(Random::mersenneTwister));
 
-        $this->assertSame(
-            [
-                'eac',
-                'ead',
-                'ebc',
-                'ebd',
-                'fac',
-                'fad',
-                'fbc',
-                'fbd',
-            ],
-            $values,
-        );
+        $this
+            ->assert()
+            ->array($values)
+            ->contains('eac')
+            ->contains('ead')
+            ->contains('ebc')
+            ->contains('ebd')
+            ->contains('fac')
+            ->contains('fad')
+            ->contains('fbc')
+            ->contains('fbd');
     }
 
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
-        $this->assertCount(8, $this->unwrap($this->set->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($this->set->values(Random::mersenneTwister)));
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
@@ -192,7 +184,7 @@ class CompositeTest extends TestCase
             }),
         )->filter(static fn($object) => $object->prop->prop[0] === 'e');
 
-        $this->assertCount(4, \iterator_to_array($set->values(Random::mersenneTwister)));
+        $this->assertCount(100, \iterator_to_array($set->values(Random::mersenneTwister)));
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->immutable());
@@ -345,17 +337,6 @@ class CompositeTest extends TestCase
 
             $this->assertSame('', $a->unwrap());
         }
-    }
-
-    public function testThrowWhenUnableToGenerateValues()
-    {
-        $this->expectException(EmptySet::class);
-
-        $this
-            ->set
-            ->filter(static fn() => false)
-            ->values(Random::mersenneTwister)
-            ->current();
     }
 
     /**

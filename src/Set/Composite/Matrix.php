@@ -64,9 +64,57 @@ final class Matrix
      */
     public function values(Random $rand): \Generator
     {
+        do {
+            $strategy = match ($rand->between(0, 2)) {
+                0 => $this->favorTail($rand),
+                1 => $this->favorHead($rand),
+                2 => $this->favorRandom($rand),
+            };
+
+            foreach ($strategy as $value) {
+                yield $value;
+
+                // 50% chance to switch strategy for the next value to yield
+                if ($rand->between(0, 1) === 0) {
+                    break;
+                }
+            }
+        } while (true);
+    }
+
+    /**
+     * @return \Generator<Combination>
+     */
+    private function favorTail(Random $rand): \Generator
+    {
         foreach (($this->a)($rand, static fn() => true, 100) as $a) {
             foreach (($this->combinations)($rand, static fn() => true, 100) as $combination) {
                 yield $combination->unwrap()->add($a);
+            }
+        }
+    }
+
+    /**
+     * @return \Generator<Combination>
+     */
+    private function favorHead(Random $rand): \Generator
+    {
+        foreach (($this->combinations)($rand, static fn() => true, 100) as $combination) {
+            foreach (($this->a)($rand, static fn() => true, 100) as $a) {
+                yield $combination->unwrap()->add($a);
+            }
+        }
+    }
+
+    /**
+     * @return \Generator<Combination>
+     */
+    private function favorRandom(Random $rand): \Generator
+    {
+        foreach (($this->a)($rand, static fn() => true, 100) as $a) {
+            foreach (($this->combinations)($rand, static fn() => true, 100) as $combination) {
+                yield $combination->unwrap()->add($a);
+                break;
             }
         }
     }

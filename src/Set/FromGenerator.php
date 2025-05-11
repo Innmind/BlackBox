@@ -33,20 +33,15 @@ final class FromGenerator implements Implementation
         int $size,
     ): \Generator {
         $generator = ($this->generatorFactory)($random);
-        $iterations = 0;
 
-        while ($iterations < $size && $generator->valid()) {
+        while ($generator->valid()) {
             /** @var T|Seed<T> */
             $value = $generator->current();
             $value = Value::of($value)
                 ->mutable(!$this->immutable)
                 ->predicatedOn($predicate);
 
-            if ($value->acceptable()) {
-                yield $value;
-
-                ++$iterations;
-            }
+            yield $value;
 
             $generator->next();
         }
