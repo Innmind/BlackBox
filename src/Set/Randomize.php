@@ -29,10 +29,9 @@ final class Randomize implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         while (true) {
-            $value = ($this->set)($random, $predicate, $size)->current();
+            $value = ($this->set)($random, $predicate)->current();
 
             if (\is_null($value)) {
                 continue;

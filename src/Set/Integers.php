@@ -27,7 +27,6 @@ final class Integers implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $min = $this->min;
         $max = $this->max;

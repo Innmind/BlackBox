@@ -36,7 +36,7 @@ final class Matrix
         /** @var Implementation<Combination> */
         $combinations = FromGenerator::implementation(
             static function(Random $rand) use ($b): \Generator {
-                foreach ($b($rand, static fn() => true, 100) as $value) {
+                foreach ($b($rand, static fn() => true) as $value) {
                     yield Combination::startWith($value);
                 }
             },
@@ -87,8 +87,8 @@ final class Matrix
      */
     private function favorTail(Random $rand): \Generator
     {
-        foreach (($this->a)($rand, static fn() => true, 100) as $a) {
-            foreach (($this->combinations)($rand, static fn() => true, 100) as $combination) {
+        foreach (($this->a)($rand, static fn() => true) as $a) {
+            foreach (($this->combinations)($rand, static fn() => true) as $combination) {
                 yield $combination->unwrap()->add($a);
             }
         }
@@ -99,8 +99,8 @@ final class Matrix
      */
     private function favorHead(Random $rand): \Generator
     {
-        foreach (($this->combinations)($rand, static fn() => true, 100) as $combination) {
-            foreach (($this->a)($rand, static fn() => true, 100) as $a) {
+        foreach (($this->combinations)($rand, static fn() => true) as $combination) {
+            foreach (($this->a)($rand, static fn() => true) as $a) {
                 yield $combination->unwrap()->add($a);
             }
         }
@@ -111,8 +111,8 @@ final class Matrix
      */
     private function favorRandom(Random $rand): \Generator
     {
-        foreach (($this->a)($rand, static fn() => true, 100) as $a) {
-            foreach (($this->combinations)($rand, static fn() => true, 100) as $combination) {
+        foreach (($this->a)($rand, static fn() => true) as $a) {
+            foreach (($this->combinations)($rand, static fn() => true) as $combination) {
                 yield $combination->unwrap()->add($a);
                 break;
             }

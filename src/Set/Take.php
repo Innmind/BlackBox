@@ -28,12 +28,10 @@ final class Take implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $values = ($this->set)(
             $random,
             $predicate,
-            $this->size,
         );
         $remaining = $this->size;
 

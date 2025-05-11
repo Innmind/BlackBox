@@ -26,12 +26,10 @@ final class Bounded implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $values = ($this->set)(
             $random,
             $predicate,
-            $size,
         );
 
         $remaining = 100;

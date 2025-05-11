@@ -35,7 +35,6 @@ final class Either implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
@@ -49,8 +48,7 @@ final class Either implements Implementation
 
             $setToChoose = $random->between(0, $count - 1);
 
-            $value = $sets[$setToChoose]($random, $predicate, $size)
-                ->current();
+            $value = $sets[$setToChoose]($random, $predicate)->current();
 
             if (\is_null($value)) {
                 unset($sets[$setToChoose]);

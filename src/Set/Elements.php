@@ -35,7 +35,6 @@ final class Elements implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $elements = \array_values(\array_filter(
             [$this->first, ...$this->elements],

@@ -26,7 +26,6 @@ final class UnsafeStrings implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
 

@@ -30,20 +30,15 @@ final class FromGenerator implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $generator = ($this->generatorFactory)($random);
 
-        while ($generator->valid()) {
-            /** @var T|Seed<T> */
-            $value = $generator->current();
+        foreach ($generator as $value) {
             $value = Value::of($value)
                 ->mutable(!$this->immutable)
                 ->predicatedOn($predicate);
 
             yield $value;
-
-            $generator->next();
         }
     }
 

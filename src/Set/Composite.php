@@ -35,7 +35,6 @@ final class Composite implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $shrinker = Composite\Shrinker::new();
         $matrix = $this->matrix()->values($random);

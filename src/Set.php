@@ -536,7 +536,6 @@ final class Set
             false => ($this->implementation)(
                 $random,
                 static fn() => true,
-                100,
             ),
         };
         $empty = true;
