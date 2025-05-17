@@ -28,13 +28,21 @@ final class Take implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
-        yield from ($this->set)(
+        $values = ($this->set)(
             $random,
             $predicate,
-            $this->size,
         );
+        $remaining = $this->size;
+
+        foreach ($values as $value) {
+            yield $value->bounded();
+            --$remaining;
+
+            if ($remaining === 0) {
+                return;
+            }
+        }
     }
 
     /**

@@ -32,40 +32,28 @@ final class Sequence implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $shrinker = new Sequence\Shrinker;
         $detonate = new Sequence\Detonate;
         $min = $this->min;
         $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
         $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
-        $immutable = ($this->set)($random, static fn() => true, 1)
+        $immutable = ($this->set)($random, static fn() => true)
             ->current()
             ?->immutable() ?? false;
-        $yielded = 0;
 
         do {
-            foreach (($this->sizes)($random, static fn() => true, $size) as $nextSize) {
-                if ($yielded === $size) {
-                    return;
-                }
-
+            foreach (($this->sizes)($random, static fn() => true) as $nextSize) {
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $values = $this->generate($nextSize->unwrap(), $random);
-                $value = Value::of($values)
+
+                yield Value::of($values)
                     ->mutable(!$immutable)
-                    ->predicatedOn($predicate);
-                $yieldable = $value->map($detonate);
-
-                if (!$yieldable->acceptable()) {
-                    continue;
-                }
-
-                yield $yieldable->shrinkWith($shrinker);
-
-                ++$yielded;
+                    ->predicatedOn($predicate)
+                    ->map($detonate)
+                    ->shrinkWith($shrinker);
             }
-        } while ($yielded < $size);
+        } while (true);
     }
 
     /**
@@ -116,10 +104,14 @@ final class Sequence implements Implementation
             return [];
         }
 
-        return \array_values(\iterator_to_array(($this->set)(
+        $set = Take::implementation(
+            $this->set,
+            $size,
+        );
+
+        return \array_values(\iterator_to_array($set(
             $rand,
             static fn() => true,
-            $size,
         )));
     }
 }

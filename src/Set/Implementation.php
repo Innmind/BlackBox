@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Random,
-    Exception\EmptySet,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -18,15 +15,15 @@ interface Implementation
      * @psalm-suppress InvalidTemplateParam
      *
      * @param \Closure(T): bool $predicate
-     * @param int<1, max> $size
-     *
-     * @throws EmptySet When no value can be generated
      *
      * @return \Generator<Value<T>>
      */
     public function __invoke(
         Random $random,
+        // The predicate is still sent through the composition stack as it
+        // allows implementations like `Elements` to rule out values from ever
+        // being generated as these would never match the predicate when verified
+        // above in the stack.
         \Closure $predicate,
-        int $size,
     ): \Generator;
 }

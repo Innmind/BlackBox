@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 use Innmind\Json\Json;
 
@@ -27,7 +26,6 @@ final class UnsafeStrings implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $json = \file_get_contents(__DIR__.'/unsafeStrings.json');
 
@@ -43,19 +41,17 @@ final class UnsafeStrings implements Implementation
         ));
 
         if (\count($values) === 0) {
-            throw new EmptySet;
+            return;
         }
 
         $maxSize = \count($values) - 1;
-        $iterations = 0;
 
-        while ($iterations < $size) {
+        while (true) {
             $index = $random->between(0, $maxSize);
             $value = Value::of($values[$index])
                 ->predicatedOn($predicate);
 
             yield $value->shrinkWith(UnsafeStrings\Shrinker::instance);
-            ++$iterations;
         }
     }
 

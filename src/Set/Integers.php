@@ -27,25 +27,18 @@ final class Integers implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $min = $this->min;
         $max = $this->max;
         $bounds = static fn(int $value): bool => $value >= $min && $value <= $max;
         $predicate = static fn(int $value): bool => $bounds($value) && $predicate($value);
-        $iterations = 0;
 
-        while ($iterations < $size) {
+        while (true) {
             $value = $random->between($this->min, $this->max);
-            $value = Value::of($value)
-                ->predicatedOn($predicate);
 
-            if (!$value->acceptable()) {
-                continue;
-            }
-
-            yield $value->shrinkWith(Integers\Shrinker::instance);
-            ++$iterations;
+            yield Value::of($value)
+                ->predicatedOn($predicate)
+                ->shrinkWith(Integers\Shrinker::instance);
         }
     }
 
