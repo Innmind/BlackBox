@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- `Set::composite()` now longer produces an exhaustive matrix of all possibilities but random compositions
+
+### Fixed
+
+- `Set::composite()` no longer hangs when a very restrictive filter is applied on it
+
 ## 6.2.0 - 2025-05-10
 
 ### Added

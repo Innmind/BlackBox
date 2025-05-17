@@ -31,6 +31,7 @@ final class Value
         private ?Shrinker $shrink,
         private \Closure $predicate,
         private mixed $unwrapped,
+        private bool $unbounded,
     ) {
     }
 
@@ -52,6 +53,7 @@ final class Value
             null,
             static fn() => true,
             $value,
+            true,
         );
     }
 
@@ -79,6 +81,7 @@ final class Value
             $this->shrink,
             $this->predicate,
             null, // no need to keep the pre-computed value when mutable
+            $this->unbounded,
         );
     }
 
@@ -94,6 +97,7 @@ final class Value
             $shrink,
             $this->predicate,
             $this->unwrapped,
+            $this->unbounded,
         );
     }
 
@@ -109,6 +113,7 @@ final class Value
             null,
             $this->predicate,
             $this->unwrapped,
+            $this->unbounded,
         );
     }
 
@@ -128,6 +133,7 @@ final class Value
             $this->shrink,
             \Closure::fromCallable($predicate),
             $this->unwrapped,
+            $this->unbounded,
         );
     }
 
@@ -156,6 +162,7 @@ final class Value
             null,
             $this->predicate,
             $unwrapped,
+            $this->unbounded,
         );
     }
 
@@ -187,6 +194,7 @@ final class Value
             $this->shrink,
             $this->predicate,
             $unwrapped,
+            $this->unbounded,
         );
     }
 
@@ -227,7 +235,26 @@ final class Value
             $this->shrink,
             $this->predicate,
             $unwrapped,
+            $this->unbounded,
         );
+    }
+
+    public function bounded(): self
+    {
+        return new self(
+            $this->immutable,
+            $this->source,
+            $this->map,
+            $this->shrink,
+            $this->predicate,
+            $this->unwrapped,
+            false,
+        );
+    }
+
+    public function unbounded(): bool
+    {
+        return $this->unbounded;
     }
 
     public function acceptable(): bool

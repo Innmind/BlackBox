@@ -30,7 +30,6 @@ final class Map implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $map = $this->map;
         $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
@@ -45,7 +44,7 @@ final class Map implements Implementation
             return $predicate($mapped);
         };
 
-        foreach (($this->set)($random, $mappedPredicate, $size) as $value) {
+        foreach (($this->set)($random, $mappedPredicate) as $value) {
             $mutable = !($value->immutable() && $this->immutable);
 
             yield Value::of($value)

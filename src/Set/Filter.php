@@ -28,15 +28,19 @@ final class Filter implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $own = $this->predicate;
 
-        yield from ($this->set)(
+        $values = ($this->set)(
             $random,
             static fn($value) => /** @var I $value */ $own($value) && $predicate($value),
-            $size,
         );
+
+        foreach ($values as $value) {
+            if ($value->acceptable()) {
+                yield $value;
+            }
+        }
     }
 
     /**

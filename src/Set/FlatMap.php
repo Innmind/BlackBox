@@ -29,24 +29,15 @@ final class FlatMap implements Implementation
     }
 
     #[\Override]
-    public function __invoke(Random $random, \Closure $predicate, int $size): \Generator
+    public function __invoke(Random $random, \Closure $predicate): \Generator
     {
-        $iterations = 0;
-
         // By default we favor reusing the same seed to generate multiple values
         // from the underlying set. To generate a more wide range of seeds one
         // can use the ->randomize() method.
-        foreach (($this->set)($random, static fn() => true, $size) as $seed) {
+        foreach (($this->set)($random, static fn() => true) as $seed) {
             $set = ($this->decorate)(Seed::of($seed));
 
-            foreach ($set($random, $predicate, $size) as $value) {
-                yield $value;
-                ++$iterations;
-
-                if ($iterations === $size) {
-                    return;
-                }
-            }
+            yield from $set($random, $predicate);
         }
     }
 

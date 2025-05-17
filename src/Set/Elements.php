@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 
 /**
@@ -36,27 +35,24 @@ final class Elements implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
-        $iterations = 0;
         $elements = \array_values(\array_filter(
             [$this->first, ...$this->elements],
             $predicate,
         ));
 
         if (\count($elements) === 0) {
-            throw new EmptySet;
+            return;
         }
 
         $max = \count($elements) - 1;
 
-        while ($iterations < $size) {
+        while (true) {
             $index = $random->between(0, $max);
             /** @var mixed */
             $value = $elements[$index];
 
             yield Value::of($value)->predicatedOn($predicate);
-            ++$iterations;
         }
     }
 

@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Set;
 use Innmind\BlackBox\{
     Set,
     Random,
-    Exception\EmptySet,
 };
 
 /**
@@ -31,29 +30,15 @@ final class FromGenerator implements Implementation
     public function __invoke(
         Random $random,
         \Closure $predicate,
-        int $size,
     ): \Generator {
         $generator = ($this->generatorFactory)($random);
-        $iterations = 0;
 
-        while ($iterations < $size && $generator->valid()) {
-            /** @var T|Seed<T> */
-            $value = $generator->current();
+        foreach ($generator as $value) {
             $value = Value::of($value)
                 ->mutable(!$this->immutable)
                 ->predicatedOn($predicate);
 
-            if ($value->acceptable()) {
-                yield $value;
-
-                ++$iterations;
-            }
-
-            $generator->next();
-        }
-
-        if ($iterations === 0) {
-            throw new EmptySet;
+            yield $value;
         }
     }
 

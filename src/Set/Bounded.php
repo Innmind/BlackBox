@@ -3,17 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
  * @template I
  * @implements Implementation<I>
  */
-final class Randomize implements Implementation
+final class Bounded implements Implementation
 {
     /**
      * @psalm-mutation-free
@@ -30,14 +27,23 @@ final class Randomize implements Implementation
         Random $random,
         \Closure $predicate,
     ): \Generator {
-        while (true) {
-            $value = ($this->set)($random, $predicate)->current();
+        $values = ($this->set)(
+            $random,
+            $predicate,
+        );
 
-            if (\is_null($value)) {
-                continue;
+        $remaining = 100;
+
+        foreach ($values as $value) {
+            yield $value;
+
+            if ($value->unbounded()) {
+                --$remaining;
             }
 
-            yield $value;
+            if ($remaining === 0) {
+                return;
+            }
         }
     }
 
@@ -51,23 +57,9 @@ final class Randomize implements Implementation
      *
      * @return self<T>
      */
-    public static function implementation(Implementation $set): self
-    {
+    public static function implementation(
+        Implementation $set,
+    ): self {
         return new self($set);
-    }
-
-    /**
-     * @deprecated Use $set->randomize() instead
-     * @psalm-pure
-     *
-     * @template T
-     *
-     * @param Set<T>|Provider<T> $set
-     *
-     * @return Set<T>
-     */
-    public static function of(Set|Provider $set): Set
-    {
-        return Collapse::of($set)->randomize();
     }
 }
