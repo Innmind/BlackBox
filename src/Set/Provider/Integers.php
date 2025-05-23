@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set\Provider,
     Set\Seed,
     Set\Implementation,
+    Exception\EmptySet,
 };
 
 /**
@@ -150,6 +151,36 @@ final class Integers implements Provider
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<int>
+     */
+    public function randomize(): Set
+    {
+        return $this->toSet()->randomize();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<?int>
+     */
+    public function nullable(): Set
+    {
+        return $this->toSet()->nullable();
+    }
+
+    /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<int>
+     */
+    public function enumerate(): iterable
+    {
+        return $this->toSet()->enumerate();
     }
 
     /**

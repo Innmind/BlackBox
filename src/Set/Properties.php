@@ -7,6 +7,7 @@ use Innmind\BlackBox\{
     Set,
     Property as Concrete,
     Properties as Ensure,
+    Exception\EmptySet,
 };
 
 /**
@@ -106,6 +107,36 @@ final class Properties implements Provider
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<?Ensure>
+     */
+    public function nullable(): Set
+    {
+        return $this->toSet()->nullable();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<Ensure>
+     */
+    public function randomize(): Set
+    {
+        return $this->toSet()->randomize();
+    }
+
+    /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<Ensure>
+     */
+    public function enumerate(): iterable
+    {
+        return $this->toSet()->enumerate();
     }
 
     /**

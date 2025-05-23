@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Set\Provider,
     Set\Seed,
     Set\MadeOf,
+    Exception\EmptySet,
 };
 
 /**
@@ -55,6 +56,9 @@ final class Unicode implements Provider
                     'filter',
                     'map',
                     'flatMap',
+                    'randomize',
+                    'nullable',
+                    'enumerate',
                     'toSet',
                     'block',
                 ],
@@ -2912,6 +2916,36 @@ final class Unicode implements Provider
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<string>
+     */
+    public function randomize(): Set
+    {
+        return $this->toSet()->randomize();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<?string>
+     */
+    public function nullable(): Set
+    {
+        return $this->toSet()->nullable();
+    }
+
+    /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<string>
+     */
+    public function enumerate(): iterable
+    {
+        return $this->toSet()->enumerate();
     }
 
     /**
