@@ -523,6 +523,18 @@ final class Set
     }
 
     /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<T>
+     */
+    public function enumerate(): iterable
+    {
+        foreach ($this->values(Random::default) as $value) {
+            yield $value->unwrap();
+        }
+    }
+
+    /**
      * @internal End users mustn't use this method directly (BC breaks may be introduced)
      *
      * @throws EmptySet When no value can be generated

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\BlackBox\Set::enumerate()`
+
 ### Fixed
 
 - `Set::uuid()` could only produce at most `100` values even when more asked
