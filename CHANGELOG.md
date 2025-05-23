@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- `Set::uuid()` could only produce at most `100` values even when more asked
+
 ## 6.3.0 - 2025-05-17
 
 ### Changed

@@ -405,7 +405,7 @@ final class Set
             $part(12),
         )
             ->immutable()
-            ->take(100);
+            ->toSet();
     }
 
     /**
