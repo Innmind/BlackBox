@@ -379,4 +379,45 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Set->enumerate() returns 100 elements by default',
+        given($anySet),
+        static function($assert, $set) {
+            $values = \iterator_to_array($set->enumerate());
+
+            $assert->count(100, $values);
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Set->take()->enumerate() returns 100 elements by default',
+        given(
+            $anySet,
+            Set::integers()->between(1, 1_000),
+        ),
+        static function($assert, $set, $size) {
+            $values = \iterator_to_array($set->take($size)->enumerate());
+
+            $assert->count($size, $values);
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Set->enumerate() contains the expressed type',
+        given(Set::of(
+            [[true, false], Set::of(true, false)],
+            [\range(0, 101), Set::integers()->between(0, 100)->toSet()],
+        )),
+        static function($assert, $pair) {
+            [$accepted, $set] = $pair;
+            $values = \iterator_to_array($set->enumerate());
+
+            foreach ($values as $value) {
+                $assert
+                    ->array($accepted)
+                    ->contains($value);
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };

@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.4.0 - 2025-05-23
+
+### Added
+
+- `Innmind\BlackBox\Set::enumerate()`
+
+### Fixed
+
+- `Set::uuid()` could only produce at most `100` values even when more asked
+
 ## 6.3.0 - 2025-05-17
 
 ### Changed

@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     Set\Seed,
     Set\Implementation,
     Set\Integers,
+    Exception\EmptySet,
 };
 
 /**
@@ -147,6 +148,36 @@ final class Sequence implements Provider
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<list<V>>
+     */
+    public function randomize(): Set
+    {
+        return $this->toSet()->randomize();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<?list<V>>
+     */
+    public function nullable(): Set
+    {
+        return $this->toSet()->nullable();
+    }
+
+    /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<list<V>>
+     */
+    public function enumerate(): iterable
+    {
+        return $this->toSet()->enumerate();
     }
 
     /**

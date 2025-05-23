@@ -405,7 +405,7 @@ final class Set
             $part(12),
         )
             ->immutable()
-            ->take(100);
+            ->toSet();
     }
 
     /**
@@ -520,6 +520,18 @@ final class Set
             ),
             $this->unbounded,
         );
+    }
+
+    /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<T>
+     */
+    public function enumerate(): iterable
+    {
+        foreach ($this->values(Random::default) as $value) {
+            yield $value->unwrap();
+        }
     }
 
     /**

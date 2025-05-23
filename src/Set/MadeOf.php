@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\Set;
+use Innmind\BlackBox\{
+    Set,
+    Exception\EmptySet,
+};
 
 /**
  * @implements Provider<string>
@@ -130,6 +133,36 @@ final class MadeOf implements Provider
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<string>
+     */
+    public function randomize(): Set
+    {
+        return $this->toSet()->randomize();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<?string>
+     */
+    public function nullable(): Set
+    {
+        return $this->toSet()->nullable();
+    }
+
+    /**
+     * @throws EmptySet When no value can be generated
+     *
+     * @return iterable<string>
+     */
+    public function enumerate(): iterable
+    {
+        return $this->toSet()->enumerate();
     }
 
     /**
