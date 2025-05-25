@@ -54,4 +54,34 @@ final class Bridge implements ScenarioInterface
     {
         return new self($test, $args);
     }
+
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function parameters(): array
+    {
+        $reflection = new \ReflectionFunction($this->test);
+        /**
+         * @psalm-suppress MixedArrayAccess
+         * @var \Closure
+         */
+        $innerTest = $reflection->getClosureUsedVariables()['test'];
+        $parameters = (new \ReflectionFunction($innerTest))->getParameters();
+
+        $parameters = \array_map(
+            static fn($parameter) => $parameter->getName(),
+            $parameters,
+        );
+        $args = [];
+
+        /** @var mixed $arg */
+        foreach ($this->args as $index => $arg) {
+            $args[] = [
+                $parameters[$index] ?? 'undefined',
+                $arg,
+            ];
+        }
+
+        return $args;
+    }
 }

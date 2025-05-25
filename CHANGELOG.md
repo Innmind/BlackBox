@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Scenario values weren't displayed on failure when coming from the PHPUnit bridge
+
 ## 6.4.0 - 2025-05-23
 
 ### Added
