@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 6.4.1 - 2025-05-25
 
 ### Fixed
 
