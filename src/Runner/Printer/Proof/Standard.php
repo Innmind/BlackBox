@@ -3,14 +3,15 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Printer\Proof;
 
-use Innmind\BlackBox\Runner\{
-    Proof\Scenario\Failure,
-    Assert\Failure\Truth,
-    Assert\Failure\Property,
-    Assert\Failure\Comparison,
-    IO,
-    Printer\Proof,
-    Proof\Scenario,
+use Innmind\BlackBox\{
+    Runner\Proof\Scenario\Failure,
+    Runner\Assert\Failure\Truth,
+    Runner\Assert\Failure\Property,
+    Runner\Assert\Failure\Comparison,
+    Runner\IO,
+    Runner\Printer\Proof,
+    Runner\Proof\Scenario,
+    PHPUnit\Proof\Bridge,
 };
 use Symfony\Component\VarDumper\{
     Dumper\CliDumper,
@@ -201,7 +202,10 @@ final class Standard implements Proof
 
     private function renderScenario(IO $output, Scenario $scenario): void
     {
-        if ($scenario instanceof Scenario\Inline) {
+        if (
+            $scenario instanceof Scenario\Inline ||
+            $scenario instanceof Bridge
+        ) {
             $this->renderInlineScenario($output, $scenario);
         }
 
@@ -214,7 +218,7 @@ final class Standard implements Proof
         }
     }
 
-    private function renderInlineScenario(IO $output, Scenario\Inline $scenario): void
+    private function renderInlineScenario(IO $output, Scenario\Inline|Bridge $scenario): void
     {
         /** @var mixed $value */
         foreach ($scenario->parameters() as [$name, $value]) {
