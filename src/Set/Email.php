@@ -13,6 +13,7 @@ final class Email
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::email();

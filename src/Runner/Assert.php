@@ -40,6 +40,7 @@ final class Assert
         return $assert($this);
     }
 
+    #[\NoDiscard]
     public function not(): Assert\Not
     {
         return Assert\Not::of($this->stats);
@@ -74,6 +75,7 @@ final class Assert
         return $this;
     }
 
+    #[\NoDiscard]
     public function expected(mixed $value): Expected
     {
         return Expected::of($this->stats, $value);
@@ -321,6 +323,7 @@ final class Assert
     /**
      * @param callable(): void $action
      */
+    #[\NoDiscard]
     public function time(callable $action): Assert\Time
     {
         return Assert\Time::of($this->stats, $action);
@@ -329,6 +332,7 @@ final class Assert
     /**
      * @param callable(): void $action
      */
+    #[\NoDiscard]
     public function memory(callable $action): Assert\Memory
     {
         return Assert\Memory::of($this->stats, $action);

@@ -15,6 +15,7 @@ final class Call
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public static function of(callable $call): Set
     {
         return Set::call($call);

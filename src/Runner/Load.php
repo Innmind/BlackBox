@@ -30,6 +30,7 @@ final class Load
     /**
      * @return \Closure(): \Generator<Proof>
      */
+    #[\NoDiscard]
     public static function file(string $path): \Closure
     {
         return static function() use ($path) {
@@ -40,6 +41,7 @@ final class Load
     /**
      * @return \Closure(): \Generator<Proof>
      */
+    #[\NoDiscard]
     public static function directory(string $path): \Closure
     {
         return static function() use ($path) {
@@ -58,6 +60,7 @@ final class Load
     /**
      * @return \Closure(): \Generator<Proof>
      */
+    #[\NoDiscard]
     public static function everythingIn(string $path): \Closure
     {
         return static function() use ($path) {

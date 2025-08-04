@@ -38,6 +38,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function char(): Set
     {
         $methods = \get_class_methods(self::class);
@@ -88,6 +89,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function between(int $min, int $max): Set
     {
         return MadeOf::of($this->char())->between($min, $max);
@@ -100,6 +102,7 @@ final class Unicode implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function atLeast(int $min): Set
     {
         return MadeOf::of($this->char())->atLeast($min);
@@ -112,6 +115,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function atMost(int $max): Set
     {
         return MadeOf::of($this->char())->atMost($max);
@@ -122,6 +126,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function controlCharater(): Set
     {
         return $this->block(0x0000, 0X001F);
@@ -132,6 +137,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function basicLatin(): Set
     {
         return $this->block(0x0020, 0x007F);
@@ -142,6 +148,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latin1Supplement(): Set
     {
         return $this->block(0x0080, 0x00FF);
@@ -152,6 +159,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latinExtendedA(): Set
     {
         return $this->block(0x0100, 0x017F);
@@ -162,6 +170,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latinExtendedB(): Set
     {
         return $this->block(0x0180, 0x024F);
@@ -172,6 +181,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ipaExtensions(): Set
     {
         return $this->block(0x0250, 0x02AF);
@@ -182,6 +192,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function spacingModifierLetters(): Set
     {
         return $this->block(0x02B0, 0x02FF);
@@ -192,6 +203,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function combiningDiacriticalMarks(): Set
     {
         return $this->block(0x0300, 0x036F);
@@ -202,6 +214,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function greekAndCoptic(): Set
     {
         return $this->block(0x0370, 0x03FF);
@@ -212,6 +225,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cyrillic(): Set
     {
         return $this->block(0x0400, 0x04FF);
@@ -222,6 +236,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cyrillicSupplement(): Set
     {
         return $this->block(0x0500, 0x052F);
@@ -232,6 +247,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function armenian(): Set
     {
         return $this->block(0x0530, 0x058F);
@@ -242,6 +258,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hebrew(): Set
     {
         return $this->block(0x0590, 0x05FF);
@@ -252,6 +269,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arabic(): Set
     {
         return $this->block(0x0600, 0x06FF);
@@ -262,6 +280,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function syriac(): Set
     {
         return $this->block(0x0700, 0x074F);
@@ -272,6 +291,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arabicSupplement(): Set
     {
         return $this->block(0x0750, 0x077F);
@@ -282,6 +302,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function thaana(): Set
     {
         return $this->block(0x0780, 0x07BF);
@@ -292,6 +313,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function nko(): Set
     {
         return $this->block(0x07C0, 0x07FF);
@@ -302,6 +324,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function samaritan(): Set
     {
         return $this->block(0x0800, 0x083F);
@@ -312,6 +335,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mandaic(): Set
     {
         return $this->block(0x0840, 0x085F);
@@ -322,6 +346,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function syriacSupplement(): Set
     {
         return $this->block(0x0860, 0x086F);
@@ -332,6 +357,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arabicExtendedA(): Set
     {
         return $this->block(0x08A0, 0x08FF);
@@ -342,6 +368,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function devanagari(): Set
     {
         return $this->block(0x0900, 0x097F);
@@ -352,6 +379,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bengali(): Set
     {
         return $this->block(0x0980, 0x09FF);
@@ -362,6 +390,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function gurmukhi(): Set
     {
         return $this->block(0x0A00, 0x0A7F);
@@ -372,6 +401,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function gujarati(): Set
     {
         return $this->block(0x0A80, 0x0AFF);
@@ -382,6 +412,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oriya(): Set
     {
         return $this->block(0x0B00, 0x0B7F);
@@ -392,6 +423,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tamil(): Set
     {
         return $this->block(0x0B80, 0x0BFF);
@@ -402,6 +434,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function telugu(): Set
     {
         return $this->block(0x0C00, 0x0C7F);
@@ -412,6 +445,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kannada(): Set
     {
         return $this->block(0x0C80, 0x0CFF);
@@ -422,6 +456,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function malayalam(): Set
     {
         return $this->block(0x0D00, 0x0D7F);
@@ -432,6 +467,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function sinhala(): Set
     {
         return $this->block(0x0D80, 0x0DFF);
@@ -442,6 +478,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function thai(): Set
     {
         return $this->block(0x0E00, 0x0E7F);
@@ -452,6 +489,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function lao(): Set
     {
         return $this->block(0x0E80, 0x0EFF);
@@ -462,6 +500,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tibetan(): Set
     {
         return $this->block(0x0F00, 0x0FFF);
@@ -472,6 +511,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function myanmar(): Set
     {
         return $this->block(0x1000, 0x109F);
@@ -482,6 +522,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function georgian(): Set
     {
         return $this->block(0x10A0, 0x10FF);
@@ -492,6 +533,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hangulJamo(): Set
     {
         return $this->block(0x1100, 0x11FF);
@@ -502,6 +544,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ethiopic(): Set
     {
         return $this->block(0x1200, 0x137F);
@@ -512,6 +555,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ethiopicSupplement(): Set
     {
         return $this->block(0x1380, 0x139F);
@@ -522,6 +566,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cherokee(): Set
     {
         return $this->block(0x13A0, 0x13FF);
@@ -532,6 +577,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function unifiedCanadianAboriginalSyllabics(): Set
     {
         return $this->block(0x1400, 0x167F);
@@ -542,6 +588,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ogham(): Set
     {
         return $this->block(0x1680, 0x169F);
@@ -552,6 +599,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function runic(): Set
     {
         return $this->block(0x16A0, 0x16FF);
@@ -562,6 +610,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tagalog(): Set
     {
         return $this->block(0x1700, 0x171F);
@@ -572,6 +621,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hanunoo(): Set
     {
         return $this->block(0x1720, 0x173F);
@@ -582,6 +632,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function buhid(): Set
     {
         return $this->block(0x1740, 0x175F);
@@ -592,6 +643,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tagbanwa(): Set
     {
         return $this->block(0x1760, 0x177F);
@@ -602,6 +654,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function khmer(): Set
     {
         return $this->block(0x1780, 0x17FF);
@@ -612,6 +665,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mongolian(): Set
     {
         return $this->block(0x1800, 0x18AF);
@@ -622,6 +676,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function unifiedCanadianAboriginalSyllabicsExtended(): Set
     {
         return $this->block(0x18B0, 0x18FF);
@@ -632,6 +687,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function limbu(): Set
     {
         return $this->block(0x1900, 0x194F);
@@ -642,6 +698,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function taiLe(): Set
     {
         return $this->block(0x1950, 0x197F);
@@ -652,6 +709,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function newTaiLue(): Set
     {
         return $this->block(0x1980, 0x19DF);
@@ -662,6 +720,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function khmerSymbols(): Set
     {
         return $this->block(0x19E0, 0x19FF);
@@ -672,6 +731,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function buginese(): Set
     {
         return $this->block(0x1A00, 0x1A1F);
@@ -682,6 +742,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function taiTham(): Set
     {
         return $this->block(0x1A20, 0x1AAF);
@@ -692,6 +753,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function combiningDiacriticalMarksExtended(): Set
     {
         return $this->block(0x1AB0, 0x1AFF);
@@ -702,6 +764,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function balinese(): Set
     {
         return $this->block(0x1B00, 0x1B7F);
@@ -712,6 +775,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function sundanese(): Set
     {
         return $this->block(0x1B80, 0x1BBF);
@@ -722,6 +786,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function batak(): Set
     {
         return $this->block(0x1BC0, 0x1BFF);
@@ -732,6 +797,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function lepcha(): Set
     {
         return $this->block(0x1C00, 0x1C4F);
@@ -742,6 +808,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function olChiki(): Set
     {
         return $this->block(0x1C50, 0x1C7F);
@@ -752,6 +819,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cyrillicExtendedC(): Set
     {
         return $this->block(0x1C80, 0x1C8F);
@@ -762,6 +830,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function sundaneseSupplement(): Set
     {
         return $this->block(0x1CC0, 0x1CCF);
@@ -772,6 +841,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function vedicExtensions(): Set
     {
         return $this->block(0x1CD0, 0x1CFF);
@@ -782,6 +852,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function phoneticExtensions(): Set
     {
         return $this->block(0x1D00, 0x1D7F);
@@ -792,6 +863,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function phoneticExtensionsSupplement(): Set
     {
         return $this->block(0x1D80, 0x1D8F);
@@ -802,6 +874,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function combiningDiacriticalMarksSupplement(): Set
     {
         return $this->block(0x1DC0, 0x1DFF);
@@ -812,6 +885,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latinExtendedAdditional(): Set
     {
         return $this->block(0x1E00, 0x1EFF);
@@ -822,6 +896,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function greekExtended(): Set
     {
         return $this->block(0x1F00, 0x1FFF);
@@ -832,6 +907,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function generalPunctuation(): Set
     {
         return $this->block(0x2000, 0x206F);
@@ -842,6 +918,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function superscriptsAndSubscripts(): Set
     {
         return $this->block(0x2070, 0x209F);
@@ -852,6 +929,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function currencySymbols(): Set
     {
         return $this->block(0x20A0, 0x20CF);
@@ -862,6 +940,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function combiningDiacriticalMarksForSymbols(): Set
     {
         return $this->block(0x20D0, 0x20FF);
@@ -872,6 +951,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function letterlikeSymbols(): Set
     {
         return $this->block(0x2100, 0x214F);
@@ -882,6 +962,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function numberForms(): Set
     {
         return $this->block(0x2150, 0x218F);
@@ -892,6 +973,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arrows(): Set
     {
         return $this->block(0x2190, 0x21FF);
@@ -902,6 +984,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mathematicalOperators(): Set
     {
         return $this->block(0x2200, 0x22FF);
@@ -912,6 +995,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miscellaneousTechnical(): Set
     {
         return $this->block(0x2300, 0x23FF);
@@ -922,6 +1006,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function controlPictures(): Set
     {
         return $this->block(0x2400, 0x243F);
@@ -932,6 +1017,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function opticalCharacterRecognition(): Set
     {
         return $this->block(0x2440, 0x245F);
@@ -942,6 +1028,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function enclosedAlphanumerics(): Set
     {
         return $this->block(0x2460, 0x247F);
@@ -952,6 +1039,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function boxDrawing(): Set
     {
         return $this->block(0x2500, 0x257F);
@@ -962,6 +1050,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function blockElements(): Set
     {
         return $this->block(0x2580, 0x259F);
@@ -972,6 +1061,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function geometricShapes(): Set
     {
         return $this->block(0x25A0, 0x25FF);
@@ -982,6 +1072,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miscellaneousSymbols(): Set
     {
         return $this->block(0x2600, 0x26FF);
@@ -992,6 +1083,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function dingbats(): Set
     {
         return $this->block(0x270, 0x27BF);
@@ -1002,6 +1094,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miscellaneousMathematicalSymbolsA(): Set
     {
         return $this->block(0x27C0, 0x27EF);
@@ -1012,6 +1105,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function supplementalArrowsA(): Set
     {
         return $this->block(0x27F0, 0x27FF);
@@ -1022,6 +1116,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function braillePatterns(): Set
     {
         return $this->block(0x2800, 0x28FF);
@@ -1032,6 +1127,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function supplementalArrowsB(): Set
     {
         return $this->block(0x2900, 0x297F);
@@ -1042,6 +1138,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miscellaneousMathematicalSymbolsB(): Set
     {
         return $this->block(0x2980, 0x29FF);
@@ -1052,6 +1149,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function supplementalMathematicalOperators(): Set
     {
         return $this->block(0x2A00, 0x2AFF);
@@ -1062,6 +1160,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miscellaneousSymbolsAndArrows(): Set
     {
         return $this->block(0x2B00, 0x2BFF);
@@ -1072,6 +1171,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function glagolitic(): Set
     {
         return $this->block(0x2C00, 0x2C5F);
@@ -1082,6 +1182,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latinExtendedC(): Set
     {
         return $this->block(0x2C60, 0x2C7F);
@@ -1092,6 +1193,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function coptic(): Set
     {
         return $this->block(0x2C80, 0x2CFF);
@@ -1102,6 +1204,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function georgianSupplement(): Set
     {
         return $this->block(0x2D00, 0x2D2F);
@@ -1112,6 +1215,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tifinagh(): Set
     {
         return $this->block(0x2D30, 0x2D7F);
@@ -1122,6 +1226,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ethiopicExtended(): Set
     {
         return $this->block(0x2D80, 0x2DDF);
@@ -1132,6 +1237,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cyrillicExtendedA(): Set
     {
         return $this->block(0x2DE0, 0x2DFF);
@@ -1142,6 +1248,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function supplementalPunctuation(): Set
     {
         return $this->block(0x2E00, 0x2E7F);
@@ -1152,6 +1259,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkRadicalsSupplement(): Set
     {
         return $this->block(0x2E80, 0x2EFF);
@@ -1162,6 +1270,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kangxiRadicals(): Set
     {
         return $this->block(0x2F00, 0x2FDF);
@@ -1172,6 +1281,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ideographicDescriptionCharacters(): Set
     {
         return $this->block(0x2FF0, 0x2FFF);
@@ -1182,6 +1292,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkSymbolsAndPunctuation(): Set
     {
         return $this->block(0x3000, 0x303F);
@@ -1192,6 +1303,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hiragana(): Set
     {
         return $this->block(0x3040, 0x309F);
@@ -1202,6 +1314,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function katakana(): Set
     {
         return $this->block(0x30A0, 0x30FF);
@@ -1212,6 +1325,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bopomofo(): Set
     {
         return $this->block(0x3100, 0x312F);
@@ -1222,6 +1336,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hangulCompatibilityJamo(): Set
     {
         return $this->block(0x3130, 0x318F);
@@ -1232,6 +1347,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kanbun(): Set
     {
         return $this->block(0x3190, 0x319F);
@@ -1242,6 +1358,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bopomofoExtended(): Set
     {
         return $this->block(0x31A0, 0x31BF);
@@ -1252,6 +1369,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkStrokes(): Set
     {
         return $this->block(0x31C0, 0x31EF);
@@ -1262,6 +1380,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function katakanaPhoneticExtensions(): Set
     {
         return $this->block(0x31F0, 0x31FF);
@@ -1272,6 +1391,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function enclosedCJKLettersAndMonths(): Set
     {
         return $this->block(0x3200, 0x32FF);
@@ -1282,6 +1402,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkCompatibility(): Set
     {
         return $this->block(0x3300, 0x33FF);
@@ -1292,6 +1413,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographsExtensionA(): Set
     {
         return $this->block(0x3400, 0x4DBF);
@@ -1302,6 +1424,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function yijingHexagramSymbols(): Set
     {
         return $this->block(0x4DC0, 0x4DFF);
@@ -1312,6 +1435,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographs(): Set
     {
         return $this->block(0x4E00, 0x9FFF);
@@ -1322,6 +1446,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function yiSyllables(): Set
     {
         return $this->block(0xA000, 0xA48F);
@@ -1332,6 +1457,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function yiRadicals(): Set
     {
         return $this->block(0xA490, 0xA4CF);
@@ -1342,6 +1468,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function lisu(): Set
     {
         return $this->block(0xA4D0, 0xA4FF);
@@ -1352,6 +1479,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function vai(): Set
     {
         return $this->block(0xA500, 0xA63F);
@@ -1362,6 +1490,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cyrillicExtendedB(): Set
     {
         return $this->block(0xA640, 0xA69F);
@@ -1372,6 +1501,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bamum(): Set
     {
         return $this->block(0xA6A0, 0xA6FF);
@@ -1382,6 +1512,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function modifierToneLetters(): Set
     {
         return $this->block(0xA700, 0xA71F);
@@ -1392,6 +1523,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latinExtendedD(): Set
     {
         return $this->block(0xA720, 0xA7FF);
@@ -1402,6 +1534,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function sylotiNagri(): Set
     {
         return $this->block(0xA800, 0xA82F);
@@ -1412,6 +1545,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function commonIndicNumberForms(): Set
     {
         return $this->block(0xA830, 0xA83F);
@@ -1422,6 +1556,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function phagsPa(): Set
     {
         return $this->block(0xA840, 0xA87F);
@@ -1432,6 +1567,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function saurashtra(): Set
     {
         return $this->block(0xA880, 0xA8DF);
@@ -1442,6 +1578,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function devanagariExtended(): Set
     {
         return $this->block(0xA8E0, 0xA8FF);
@@ -1452,6 +1589,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kayahLi(): Set
     {
         return $this->block(0xA900, 0xA92F);
@@ -1462,6 +1600,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function rejang(): Set
     {
         return $this->block(0xA930, 0xA95F);
@@ -1472,6 +1611,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hangulJamoExtendedA(): Set
     {
         return $this->block(0xA960, 0xA97F);
@@ -1482,6 +1622,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function javanese(): Set
     {
         return $this->block(0xA980, 0xA9DF);
@@ -1492,6 +1633,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function myanmarExtendedB(): Set
     {
         return $this->block(0xA9E0, 0xA9FF);
@@ -1502,6 +1644,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cham(): Set
     {
         return $this->block(0xAA00, 0xAA5F);
@@ -1512,6 +1655,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function myanmarExtendedA(): Set
     {
         return $this->block(0xAA60, 0xAA7F);
@@ -1522,6 +1666,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function taiViet(): Set
     {
         return $this->block(0xAA80, 0xAADF);
@@ -1532,6 +1677,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function meeteiMayekExtensions(): Set
     {
         return $this->block(0xAAE0, 0xAAFF);
@@ -1542,6 +1688,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ethiopicExtendedA(): Set
     {
         return $this->block(0xAB00, 0xAB2F);
@@ -1552,6 +1699,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function latinExtendedE(): Set
     {
         return $this->block(0xAB30, 0xAB6F);
@@ -1562,6 +1710,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cherokeeSupplement(): Set
     {
         return $this->block(0xAB70, 0xABBF);
@@ -1572,6 +1721,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function meeteiMayek(): Set
     {
         return $this->block(0xABC0, 0xABFF);
@@ -1582,6 +1732,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hangulSyllables(): Set
     {
         return $this->block(0xAC00, 0xD7AF);
@@ -1592,6 +1743,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hangulJamoExtendedB(): Set
     {
         return $this->block(0xB7B0, 0xD7FF);
@@ -1602,6 +1754,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkCompatibilityIdeographs(): Set
     {
         return $this->block(0xF900, 0xFAFF);
@@ -1612,6 +1765,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function alphabeticPresentationForms(): Set
     {
         return $this->block(0xFB00, 0xFB4F);
@@ -1622,6 +1776,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arabicPresentationFormsA(): Set
     {
         return $this->block(0xFB50, 0xFDFF);
@@ -1632,6 +1787,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function variationSelectors(): Set
     {
         return $this->block(0xFE00, 0xFE0F);
@@ -1642,6 +1798,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function verticalForms(): Set
     {
         return $this->block(0xFE10, 0xFE1F);
@@ -1652,6 +1809,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function combiningHalfMarks(): Set
     {
         return $this->block(0xFE20, 0xFE2F);
@@ -1662,6 +1820,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkCompatibilityForms(): Set
     {
         return $this->block(0xFE30, 0xFE4F);
@@ -1672,6 +1831,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function smallFormVariants(): Set
     {
         return $this->block(0xFE50, 0xFE6F);
@@ -1682,6 +1842,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arabicPresentationFormsB(): Set
     {
         return $this->block(0xFE70, 0xFEFF);
@@ -1692,6 +1853,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function halfwidthAndFullwidthForms(): Set
     {
         return $this->block(0xFF00, 0xFFEF);
@@ -1702,6 +1864,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function specials(): Set
     {
         return $this->block(0xFFF0, 0xFFFF);
@@ -1712,6 +1875,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function linearBSyllabary(): Set
     {
         return $this->block(0x10000, 0x1007F);
@@ -1722,6 +1886,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function linearBIdeograms(): Set
     {
         return $this->block(0x10080, 0x100FF);
@@ -1732,6 +1897,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function aeganNumbers(): Set
     {
         return $this->block(0x10100, 0x1013F);
@@ -1742,6 +1908,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ancientGreekNumbers(): Set
     {
         return $this->block(0x10140, 0x1018F);
@@ -1752,6 +1919,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ancientSymbols(): Set
     {
         return $this->block(0x10190, 0x101CF);
@@ -1762,6 +1930,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function phaistosDisc(): Set
     {
         return $this->block(0x101D0, 0x101FF);
@@ -1772,6 +1941,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function lycian(): Set
     {
         return $this->block(0x10280, 0x1029F);
@@ -1782,6 +1952,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function carian(): Set
     {
         return $this->block(0x102A0, 0x102DF);
@@ -1792,6 +1963,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function copticEpactNumbers(): Set
     {
         return $this->block(0x102E0, 0x102FF);
@@ -1802,6 +1974,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldItalic(): Set
     {
         return $this->block(0x10300, 0x1032F);
@@ -1812,6 +1985,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function gothic(): Set
     {
         return $this->block(0x10330, 0x1034F);
@@ -1822,6 +1996,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldPermic(): Set
     {
         return $this->block(0x10350, 0x1037F);
@@ -1832,6 +2007,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ugaritic(): Set
     {
         return $this->block(0x10380, 0x1039F);
@@ -1842,6 +2018,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldPersian(): Set
     {
         return $this->block(0x103A0, 0x103DF);
@@ -1852,6 +2029,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function deseret(): Set
     {
         return $this->block(0x1040, 0x1044F);
@@ -1862,6 +2040,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function shavian(): Set
     {
         return $this->block(0x10450, 0x1047F);
@@ -1872,6 +2051,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function osmanya(): Set
     {
         return $this->block(0x10480, 0x104AF);
@@ -1882,6 +2062,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function osage(): Set
     {
         return $this->block(0x104B0, 0x104FF);
@@ -1892,6 +2073,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function elbasan(): Set
     {
         return $this->block(0x10500, 0x1052F);
@@ -1902,6 +2084,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function caucasianAlbanian(): Set
     {
         return $this->block(0x10530, 0x1056F);
@@ -1912,6 +2095,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function linearA(): Set
     {
         return $this->block(0x10600, 0x1077F);
@@ -1922,6 +2106,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cypriotSyllabary(): Set
     {
         return $this->block(0x10800, 0x1083F);
@@ -1932,6 +2117,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function imperialAramaic(): Set
     {
         return $this->block(0x10840, 0x1085F);
@@ -1942,6 +2128,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function palmyrene(): Set
     {
         return $this->block(0x10860, 0x1087F);
@@ -1952,6 +2139,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function nabataean(): Set
     {
         return $this->block(0x10880, 0x108AF);
@@ -1962,6 +2150,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function hatran(): Set
     {
         return $this->block(0x108E0, 0x108FF);
@@ -1972,6 +2161,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function phoenician(): Set
     {
         return $this->block(0x10900, 0x1091F);
@@ -1982,6 +2172,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function lydian(): Set
     {
         return $this->block(0x10920, 0x1093F);
@@ -1992,6 +2183,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function meroiticHieroglyphs(): Set
     {
         return $this->block(0x10980, 0x1099F);
@@ -2002,6 +2194,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function meroiticCursive(): Set
     {
         return $this->block(0x109A0, 0x109FF);
@@ -2012,6 +2205,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kharoshthi(): Set
     {
         return $this->block(0x10A00, 0x10A5F);
@@ -2022,6 +2216,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldSouthArabian(): Set
     {
         return $this->block(0x10A60, 0x10A7F);
@@ -2032,6 +2227,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldNorthArabian(): Set
     {
         return $this->block(0x10A80, 0x10A9F);
@@ -2042,6 +2238,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function manichaean(): Set
     {
         return $this->block(0x10AC0, 0x10AFF);
@@ -2052,6 +2249,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function avestan(): Set
     {
         return $this->block(0x10B00, 0x10B3F);
@@ -2062,6 +2260,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function inscriptionalParthian(): Set
     {
         return $this->block(0x10B40, 0x10B5F);
@@ -2072,6 +2271,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function inscriptionalPahlavi(): Set
     {
         return $this->block(0x10B60, 0x10B7F);
@@ -2082,6 +2282,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function psalterPahlavi(): Set
     {
         return $this->block(0x10B80, 0x10BAF);
@@ -2092,6 +2293,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldTurkic(): Set
     {
         return $this->block(0x10C00, 0x10C4F);
@@ -2102,6 +2304,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function oldHungarian(): Set
     {
         return $this->block(0x10C80, 0x10CFF);
@@ -2112,6 +2315,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function rumiNumeralSymbols(): Set
     {
         return $this->block(0x10E60, 0x10E7F);
@@ -2122,6 +2326,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function brahmi(): Set
     {
         return $this->block(0x11000, 0x1107F);
@@ -2132,6 +2337,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kaithi(): Set
     {
         return $this->block(0x11080, 0x110CF);
@@ -2142,6 +2348,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function soraSompeg(): Set
     {
         return $this->block(0x110D0, 0x110FF);
@@ -2152,6 +2359,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function chakma(): Set
     {
         return $this->block(0x11100, 0x1114F);
@@ -2162,6 +2370,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mahajani(): Set
     {
         return $this->block(0x11150, 0x1117F);
@@ -2172,6 +2381,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function sharada(): Set
     {
         return $this->block(0x11180, 0x111DF);
@@ -2182,6 +2392,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function sinhalaArchaicNumbers(): Set
     {
         return $this->block(0x111E0, 0x111FF);
@@ -2192,6 +2403,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function khojki(): Set
     {
         return $this->block(0x11200, 0x1124F);
@@ -2202,6 +2414,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function multani(): Set
     {
         return $this->block(0x11280, 0x112AF);
@@ -2212,6 +2425,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function khudawadi(): Set
     {
         return $this->block(0x112B0, 0x112FF);
@@ -2222,6 +2436,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function grantha(): Set
     {
         return $this->block(0x11300, 0x1137F);
@@ -2232,6 +2447,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function newa(): Set
     {
         return $this->block(0x11400, 0x1147F);
@@ -2242,6 +2458,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tirhuta(): Set
     {
         return $this->block(0x11480, 0x114DF);
@@ -2252,6 +2469,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function siddham(): Set
     {
         return $this->block(0x11580, 0x115FF);
@@ -2262,6 +2480,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function modi(): Set
     {
         return $this->block(0x11600, 0x1165F);
@@ -2272,6 +2491,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mongolianSupplement(): Set
     {
         return $this->block(0x11660, 0x1167F);
@@ -2282,6 +2502,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function takri(): Set
     {
         return $this->block(0x11680, 0x116CF);
@@ -2292,6 +2513,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ahom(): Set
     {
         return $this->block(0x11700, 0x1173F);
@@ -2302,6 +2524,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function warangCiti(): Set
     {
         return $this->block(0x118A0, 0x118FF);
@@ -2312,6 +2535,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function zanabazarSquare(): Set
     {
         return $this->block(0x11A00, 0x11A4F);
@@ -2322,6 +2546,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function soyombo(): Set
     {
         return $this->block(0x11A50, 0x11AAF);
@@ -2332,6 +2557,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function pauCinHau(): Set
     {
         return $this->block(0x11AC0, 0x11AFF);
@@ -2342,6 +2568,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bhaiksuki(): Set
     {
         return $this->block(0x11C00, 0x11C6F);
@@ -2352,6 +2579,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function marchen(): Set
     {
         return $this->block(0x11C70, 0x11CBF);
@@ -2362,6 +2590,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function masaramGondi(): Set
     {
         return $this->block(0x11D00, 0x11D5F);
@@ -2372,6 +2601,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cuneiform(): Set
     {
         return $this->block(0x12000, 0x123FF);
@@ -2382,6 +2612,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cuneiformNumbersAndPunctuation(): Set
     {
         return $this->block(0x12400, 0x1247F);
@@ -2392,6 +2623,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function earlyDynasticCuneiform(): Set
     {
         return $this->block(0x12480, 0x1254F);
@@ -2402,6 +2634,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function egyptianHieroglyphs(): Set
     {
         return $this->block(0x13000, 0x1342F);
@@ -2412,6 +2645,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function anatolianHieroglyphs(): Set
     {
         return $this->block(0x14400, 0x1467F);
@@ -2422,6 +2656,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bamumSupplement(): Set
     {
         return $this->block(0x16800, 0x16A3F);
@@ -2432,6 +2667,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mro(): Set
     {
         return $this->block(0x16A40, 0x16A6F);
@@ -2442,6 +2678,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function bassaVah(): Set
     {
         return $this->block(0x16AD0, 0x16AFF);
@@ -2452,6 +2689,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function pahawhHmong(): Set
     {
         return $this->block(0x16B00, 0x16B8F);
@@ -2462,6 +2700,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miao(): Set
     {
         return $this->block(0x16F00, 0x16F9F);
@@ -2472,6 +2711,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ideographicSymbolsAndPunctuation(): Set
     {
         return $this->block(0x16FE0, 0x16FFF);
@@ -2482,6 +2722,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tangut(): Set
     {
         return $this->block(0x17000, 0x187FF);
@@ -2492,6 +2733,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tangutComponents(): Set
     {
         return $this->block(0x18800, 0x18AFF);
@@ -2502,6 +2744,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kanaSupplement(): Set
     {
         return $this->block(0x1B000, 0x1B0FF);
@@ -2512,6 +2755,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function kanaExtendedA(): Set
     {
         return $this->block(0x1B100, 0x1B12F);
@@ -2522,6 +2766,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function nushu(): Set
     {
         return $this->block(0x1B170, 0x1B2FF);
@@ -2532,6 +2777,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function duployan(): Set
     {
         return $this->block(0x1BC00, 0x1BC9F);
@@ -2542,6 +2788,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function shorthandFormatControls(): Set
     {
         return $this->block(0x1BCA0, 0x1BCAF);
@@ -2552,6 +2799,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function byzantineMusicalSymbols(): Set
     {
         return $this->block(0x1D000, 0x1D0FF);
@@ -2562,6 +2810,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function musicalSymbols(): Set
     {
         return $this->block(0x1D100, 0x1D1FF);
@@ -2572,6 +2821,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ancientGreekMusicalNotation(): Set
     {
         return $this->block(0x1D200, 0x1D24F);
@@ -2582,6 +2832,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function taiXuanJingSymbols(): Set
     {
         return $this->block(0x1D300, 0x1D35F);
@@ -2592,6 +2843,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function countingRodNumerals(): Set
     {
         return $this->block(0x1D360, 0x1D37F);
@@ -2602,6 +2854,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mathematicalAlphanumericSymbols(): Set
     {
         return $this->block(0x1D400, 0x1D7FF);
@@ -2612,6 +2865,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function suttonSignWriting(): Set
     {
         return $this->block(0x1D800, 0x1DAAF);
@@ -2622,6 +2876,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function glagoliticSupplement(): Set
     {
         return $this->block(0x1E000, 0x1E02F);
@@ -2632,6 +2887,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mendeKikakui(): Set
     {
         return $this->block(0x1E800, 0x1E8DF);
@@ -2642,6 +2898,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function adlam(): Set
     {
         return $this->block(0x1E900, 0x1E95F);
@@ -2652,6 +2909,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function arabicMathematicalAlphabeticSymbols(): Set
     {
         return $this->block(0x1EE00, 0x1EEFF);
@@ -2662,6 +2920,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function mahjongTiles(): Set
     {
         return $this->block(0x1F000, 0x1F02F);
@@ -2672,6 +2931,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function dominoTiles(): Set
     {
         return $this->block(0x1F030, 0x1F09F);
@@ -2682,6 +2942,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function playingCards(): Set
     {
         return $this->block(0x1F0A0, 0x1F0FF);
@@ -2692,6 +2953,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function enclosedAlphanumericSupplement(): Set
     {
         return $this->block(0x1F100, 0x1F1FF);
@@ -2702,6 +2964,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function enclosedIdeopgraphicSupplement(): Set
     {
         return $this->block(0x1F200, 0x1F2FF);
@@ -2712,6 +2975,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function miscellaneousSymbolsAndPictographs(): Set
     {
         return $this->block(0x1F300, 0x1F5FF);
@@ -2722,6 +2986,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function emoticons(): Set
     {
         return $this->block(0x1F600, 0x1F64F);
@@ -2732,6 +2997,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function ornamentalDingbats(): Set
     {
         return $this->block(0x1F650, 0x1F67F);
@@ -2742,6 +3008,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function transportAndMapSymbols(): Set
     {
         return $this->block(0x1F680, 0x1F6FF);
@@ -2752,6 +3019,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function alchemicalSymbols(): Set
     {
         return $this->block(0x1F700, 0x1F77F);
@@ -2762,6 +3030,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function geometricShapesExtended(): Set
     {
         return $this->block(0x1F780, 0x1F7FF);
@@ -2772,6 +3041,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function supplementalArrowsC(): Set
     {
         return $this->block(0x1F800, 0x1F8FF);
@@ -2782,6 +3052,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function supplementalSymbolsAndPictographs(): Set
     {
         return $this->block(0x1F900, 0x1F9FF);
@@ -2792,6 +3063,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographsExtensionB(): Set
     {
         return $this->block(0x20000, 0x2A6DF);
@@ -2802,6 +3074,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographsExtensionC(): Set
     {
         return $this->block(0x2A700, 0x2B73F);
@@ -2812,6 +3085,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographsExtensionD(): Set
     {
         return $this->block(0x2B740, 0x2B81F);
@@ -2822,6 +3096,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographsExtensionE(): Set
     {
         return $this->block(0x2B820, 0x2CEAF);
@@ -2832,6 +3107,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkUnifiedIdeographsExtensionF(): Set
     {
         return $this->block(0x2CEB0, 0x2EBEF);
@@ -2842,6 +3118,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function cjkCompatibilityIdeographsSupplement(): Set
     {
         return $this->block(0x2F800, 0x2FA1F);
@@ -2852,6 +3129,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function tags(): Set
     {
         return $this->block(0xE0000, 0xE007F);
@@ -2862,6 +3140,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function variationSelectorsSupplement(): Set
     {
         return $this->block(0xE0100, 0xE01EF);
@@ -2874,6 +3153,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -2886,6 +3166,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -2898,6 +3179,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function exclude(callable $predicate): Set
     {
         return $this->toSet()->exclude($predicate);
@@ -2912,6 +3194,7 @@ final class Unicode implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -2926,6 +3209,7 @@ final class Unicode implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -2936,6 +3220,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -2946,6 +3231,7 @@ final class Unicode implements Provider
      *
      * @return Set<?string>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -2956,6 +3242,7 @@ final class Unicode implements Provider
      *
      * @return iterable<string>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -2965,6 +3252,7 @@ final class Unicode implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return Set::strings()
@@ -2977,6 +3265,7 @@ final class Unicode implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     private function block(int $min, int $max): Set
     {
         /** @var Set<string> */

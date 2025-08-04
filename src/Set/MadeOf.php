@@ -34,6 +34,7 @@ final class MadeOf implements Provider
      * @param Set<string>|Provider<string> $first
      * @param Set<string>|Provider<string> $rest
      */
+    #[\NoDiscard]
     public static function of(Set|Provider $first, Set|Provider ...$rest): self
     {
         $chars = $first;
@@ -53,6 +54,7 @@ final class MadeOf implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function between(int $minLength, int $maxLength): Set
     {
         return $this->build($minLength, $maxLength);
@@ -65,6 +67,7 @@ final class MadeOf implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function atLeast(int $length): Set
     {
         /** @var Set<non-empty-string> */
@@ -78,6 +81,7 @@ final class MadeOf implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function atMost(int $length): Set
     {
         return $this->build(0, $length);
@@ -90,6 +94,7 @@ final class MadeOf implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -102,6 +107,7 @@ final class MadeOf implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -114,6 +120,7 @@ final class MadeOf implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function exclude(callable $predicate): Set
     {
         return $this->toSet()->exclude($predicate);
@@ -128,6 +135,7 @@ final class MadeOf implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -142,6 +150,7 @@ final class MadeOf implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -152,6 +161,7 @@ final class MadeOf implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -162,6 +172,7 @@ final class MadeOf implements Provider
      *
      * @return Set<?string>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -172,6 +183,7 @@ final class MadeOf implements Provider
      *
      * @return iterable<string>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -183,6 +195,7 @@ final class MadeOf implements Provider
      * @return Set<string>
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return $this->build(0, 128);

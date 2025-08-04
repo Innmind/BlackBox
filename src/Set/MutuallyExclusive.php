@@ -17,6 +17,7 @@ final class MutuallyExclusive
      *
      * @return Set<non-empty-list<string>>
      */
+    #[\NoDiscard]
     public static function of(
         Set|Provider $first,
         Set|Provider $second,

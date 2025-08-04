@@ -74,6 +74,7 @@ final class Application
     /**
      * @param list<string> $args
      */
+    #[\NoDiscard]
     public static function new(array $args): self
     {
         return new self(
@@ -96,6 +97,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function useRandom(Random $random): self
     {
         return new self(
@@ -118,6 +120,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function usePrinter(Printer $printer): self
     {
         return new self(
@@ -140,6 +143,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function displayOutputVia(IO $output): self
     {
         return new self(
@@ -162,6 +166,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function displayErrorVia(IO $error): self
     {
         return new self(
@@ -184,6 +189,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function disableShrinking(): self
     {
         return new self(
@@ -208,6 +214,7 @@ final class Application
      *
      * @param callable(string): ?\UnitEnum $parser
      */
+    #[\NoDiscard]
     public function parseTagWith(callable $parser): self
     {
         return new self(
@@ -232,6 +239,7 @@ final class Application
      *
      * @param positive-int $count
      */
+    #[\NoDiscard]
     public function scenariiPerProof(int $count): self
     {
         return new self(
@@ -254,6 +262,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function codeCoverage(CodeCoverage $codeCoverage): self
     {
         return new self(
@@ -276,6 +285,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function disableGlobalFunctions(): self
     {
         return new self(
@@ -298,6 +308,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function disableMemoryLimit(): self
     {
         return new self(
@@ -320,6 +331,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function stopOnFailure(): self
     {
         return new self(
@@ -342,6 +354,7 @@ final class Application
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function allowProofsToNotMakeAnyAssertions(): self
     {
         return new self(
@@ -366,6 +379,7 @@ final class Application
      *
      * @param callable(self): self $map
      */
+    #[\NoDiscard]
     public function map(callable $map): self
     {
         /** @psalm-suppress ImpureFunctionCall */
@@ -377,6 +391,7 @@ final class Application
      *
      * @param callable(self): self $map
      */
+    #[\NoDiscard]
     public function when(bool $active, callable $map): self
     {
         return match ($active) {
@@ -388,6 +403,7 @@ final class Application
     /**
      * @param callable(): \Generator<Proof> $proofs
      */
+    #[\NoDiscard]
     public function tryToProve(callable $proofs): Result
     {
         if ($this->useGlobalFunctions) {

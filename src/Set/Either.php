@@ -101,6 +101,7 @@ final class Either implements Implementation
      *
      * @return Set<A|B|C>
      */
+    #[\NoDiscard]
     public static function any(
         Set|Provider $first,
         Set|Provider $second,

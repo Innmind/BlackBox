@@ -13,6 +13,7 @@ final class Chars
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::strings()
@@ -26,6 +27,7 @@ final class Chars
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function lowercaseLetter(): Set
     {
         return Set::strings()
@@ -39,6 +41,7 @@ final class Chars
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function uppercaseLetter(): Set
     {
         return Set::strings()
@@ -52,6 +55,7 @@ final class Chars
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function number(): Set
     {
         return Set::strings()
@@ -65,6 +69,7 @@ final class Chars
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function ascii(): Set
     {
         return Set::strings()
@@ -78,6 +83,7 @@ final class Chars
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public static function alphanumerical(): Set
     {
         return Set::strings()
