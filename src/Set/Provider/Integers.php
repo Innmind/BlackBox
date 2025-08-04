@@ -128,6 +128,18 @@ final class Integers implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(int): bool $predicate
+     *
+     * @return Set<int>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(int): (V|Seed<V>) $map

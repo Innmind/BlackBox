@@ -480,6 +480,19 @@ final class Set
     /**
      * @psalm-mutation-free
      *
+     * @param callable(T): bool $predicate
+     *
+     * @return self<T>
+     */
+    public function exclude(callable $predicate): self
+    {
+        /** @psalm-suppress MixedArgument For some reason Psalm doesn't understand $value's type */
+        return $this->filter(static fn($value) => !$predicate($value));
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(T): (V|Seed<V>) $map

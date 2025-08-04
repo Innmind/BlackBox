@@ -120,6 +120,18 @@ final class Chars implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(non-empty-string): bool $predicate
+     *
+     * @return Set<non-empty-string>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(non-empty-string): (V|Seed<V>) $map

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\BlackBox\Set::exclude()`
+
 ### Changed
 
 - `Innmind\BlackBox\Runner\Assert::fail()` now returns `never`

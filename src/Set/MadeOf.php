@@ -110,6 +110,18 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(string): bool $predicate
+     *
+     * @return Set<string>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(string): (V|Seed<V>) $map

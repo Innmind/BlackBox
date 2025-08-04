@@ -54,6 +54,7 @@ final class Unicode implements Provider
                     'atMost',
                     'take',
                     'filter',
+                    'exclude',
                     'map',
                     'flatMap',
                     'randomize',
@@ -2888,6 +2889,18 @@ final class Unicode implements Provider
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(string): bool $predicate
+     *
+     * @return Set<string>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
     }
 
     /**

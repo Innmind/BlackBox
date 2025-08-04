@@ -125,6 +125,18 @@ final class Sequence implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(list<V>): bool $predicate
+     *
+     * @return Set<list<V>>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template U
      *
      * @param callable(list<V>): (U|Seed<U>) $map

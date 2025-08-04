@@ -84,6 +84,18 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(Ensure): bool $predicate
+     *
+     * @return Set<Ensure>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(Ensure): (V|Seed<V>) $map
