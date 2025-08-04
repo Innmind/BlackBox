@@ -50,7 +50,7 @@ final class Assert
      *
      * @throws Failure
      */
-    public function fail(string $message): void
+    public function fail(string $message): never
     {
         throw Failure::of(Truth::of($message));
     }
