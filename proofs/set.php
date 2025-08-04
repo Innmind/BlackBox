@@ -420,4 +420,18 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Set->exclude()',
+        static function($assert) {
+            $odds = Set::integers()
+                ->above(0)
+                ->exclude(static fn($i) => $i % 2 === 0)
+                ->enumerate();
+
+            foreach ($odds as $i) {
+                $assert->same(1, $i % 2);
+            }
+        },
+    )->tag(Tag::ci, Tag::local);
 };

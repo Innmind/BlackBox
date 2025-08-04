@@ -480,6 +480,18 @@ final class Set
     /**
      * @psalm-mutation-free
      *
+     * @param callable(T): bool $predicate
+     *
+     * @return self<T>
+     */
+    public function exclude(callable $predicate): self
+    {
+        return $this->filter(static fn($value) => !$predicate($value));
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(T): (V|Seed<V>) $map

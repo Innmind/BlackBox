@@ -90,6 +90,18 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(float): bool $predicate
+     *
+     * @return Set<float>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(float): (V|Seed<V>) $map

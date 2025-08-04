@@ -116,6 +116,18 @@ final class Composite implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(T): bool $predicate
+     *
+     * @return Set<T>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(T): (V|Seed<V>) $map

@@ -95,6 +95,18 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @param callable(Util): bool $predicate
+     *
+     * @return Set<Util>
+     */
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(Util): (V|Seed<V>) $map
