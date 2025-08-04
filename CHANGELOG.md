@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- `Innmind\BlackBox\Runner\Assert::fail()` now returns `never`
+
 ## 6.4.1 - 2025-05-25
 
 ### Fixed
