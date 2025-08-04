@@ -40,6 +40,7 @@ final class Strings implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function chars(): Strings\Chars
     {
         return Strings\Chars::of();
@@ -48,6 +49,7 @@ final class Strings implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function unicode(): Strings\Unicode
     {
         return Strings\Unicode::of();
@@ -58,6 +60,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function unsafe(): Set
     {
         return ($this->wrap)(Set\UnsafeStrings::implementation());
@@ -71,6 +74,7 @@ final class Strings implements Provider
      * @param Set<string>|Provider<string> $first
      * @param Set<string>|Provider<string> $rest
      */
+    #[\NoDiscard]
     public function madeOf(Set|Provider $first, Set|Provider ...$rest): Set\MadeOf
     {
         return Set\MadeOf::of($first, ...$rest);
@@ -84,6 +88,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function between(int $min, int $max): Set
     {
         return Set::sequence($this->chars())
@@ -98,6 +103,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function atMost(int $max): Set
     {
         return $this->between(0, $max);
@@ -110,6 +116,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function atLeast(int $min): Set
     {
         return $this->between($min, $min + 128);
@@ -122,6 +129,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -134,6 +142,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -146,6 +155,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function exclude(callable $predicate): Set
     {
         return $this->toSet()->exclude($predicate);
@@ -160,6 +170,7 @@ final class Strings implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -174,6 +185,7 @@ final class Strings implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -184,6 +196,7 @@ final class Strings implements Provider
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -194,6 +207,7 @@ final class Strings implements Provider
      *
      * @return Set<?string>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -204,6 +218,7 @@ final class Strings implements Provider
      *
      * @return iterable<string>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -213,6 +228,7 @@ final class Strings implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return $this->between(0, 128);

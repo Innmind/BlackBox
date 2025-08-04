@@ -67,6 +67,7 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::realNumbers()->toSet();
@@ -78,6 +79,7 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public static function between(int $min, int $max): Set
     {
         return Set::realNumbers()
@@ -91,6 +93,7 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public static function above(int $min): Set
     {
         return Set::realNumbers()
@@ -104,6 +107,7 @@ final class RealNumbers implements Implementation
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public static function below(int $max): Set
     {
         return Set::realNumbers()

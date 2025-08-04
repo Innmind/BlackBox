@@ -10,6 +10,7 @@ interface Printer
     /**
      * @param list<\UnitEnum> $tags
      */
+    #[\NoDiscard]
     public function proof(
         IO $output,
         IO $error,

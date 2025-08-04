@@ -13,6 +13,7 @@ final class NaturalNumbersExceptZero
      *
      * @return Set<positive-int>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::integers()->naturalNumbersExceptZero();

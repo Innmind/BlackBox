@@ -13,6 +13,7 @@ final class IntegersExceptZero
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::integers()->exceptZero();

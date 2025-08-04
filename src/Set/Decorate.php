@@ -22,6 +22,7 @@ final class Decorate
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public static function immutable(callable $decorate, Set|Provider $set): Set
     {
         return Collapse::of($set)->map($decorate);
@@ -39,6 +40,7 @@ final class Decorate
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public static function mutable(callable $decorate, Set|Provider $set): Set
     {
         return Set::decorate($decorate, $set);

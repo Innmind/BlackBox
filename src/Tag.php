@@ -14,6 +14,7 @@ enum Tag
     case ci;
     case local;
 
+    #[\NoDiscard]
     public static function of(string $name): ?self
     {
         return match ($name) {

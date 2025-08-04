@@ -13,6 +13,7 @@ final class Strings
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::strings()->toSet();
@@ -27,6 +28,7 @@ final class Strings
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function between(int $min, int $max): Set
     {
         return Set::strings()->between($min, $max);
@@ -40,6 +42,7 @@ final class Strings
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function atMost(int $max): Set
     {
         return Set::strings()->atMost($max);
@@ -53,6 +56,7 @@ final class Strings
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function atLeast(int $min): Set
     {
         return Set::strings()->atLeast($min);
@@ -67,6 +71,7 @@ final class Strings
      * @param Set<string>|Provider<string> $first
      * @param Set<string>|Provider<string> $rest
      */
+    #[\NoDiscard]
     public static function madeOf(Set|Provider $first, Set|Provider ...$rest): MadeOf
     {
         return MadeOf::of($first, ...$rest);

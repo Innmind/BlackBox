@@ -25,6 +25,7 @@ final class Result
         return new self($stats->successful());
     }
 
+    #[\NoDiscard]
     public function successful(): bool
     {
         return $this->successful;

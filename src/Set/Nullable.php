@@ -17,6 +17,7 @@ final class Nullable
      *
      * @return Set<?T>
      */
+    #[\NoDiscard]
     public static function of(Set|Provider $set): Set
     {
         return Collapse::of($set)->nullable();

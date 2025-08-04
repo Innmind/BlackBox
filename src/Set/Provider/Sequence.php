@@ -57,6 +57,7 @@ final class Sequence implements Provider
      *
      * @return self<V>
      */
+    #[\NoDiscard]
     public function between(int $min, int $max): self
     {
         return new self(
@@ -73,6 +74,7 @@ final class Sequence implements Provider
      *
      * @return self<V>
      */
+    #[\NoDiscard]
     public function atLeast(int $size): self
     {
         return new self(
@@ -89,6 +91,7 @@ final class Sequence implements Provider
      *
      * @return self<V>
      */
+    #[\NoDiscard]
     public function atMost(int $size): self
     {
         return new self(
@@ -105,6 +108,7 @@ final class Sequence implements Provider
      *
      * @return Set<list<V>>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -117,6 +121,7 @@ final class Sequence implements Provider
      *
      * @return Set<list<V>>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -129,6 +134,7 @@ final class Sequence implements Provider
      *
      * @return Set<list<V>>
      */
+    #[\NoDiscard]
     public function exclude(callable $predicate): Set
     {
         return $this->toSet()->exclude($predicate);
@@ -143,6 +149,7 @@ final class Sequence implements Provider
      *
      * @return Set<U>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -157,6 +164,7 @@ final class Sequence implements Provider
      *
      * @return Set<U>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -167,6 +175,7 @@ final class Sequence implements Provider
      *
      * @return Set<list<V>>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -177,6 +186,7 @@ final class Sequence implements Provider
      *
      * @return Set<?list<V>>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -187,6 +197,7 @@ final class Sequence implements Provider
      *
      * @return iterable<list<V>>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -196,6 +207,7 @@ final class Sequence implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return ($this->wrap)(Set\Sequence::implementation(

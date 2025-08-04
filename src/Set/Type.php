@@ -14,6 +14,7 @@ final class Type
      * @deprecated Use Set::type() instead
      * @return Set<mixed>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::type();

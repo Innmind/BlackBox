@@ -89,6 +89,7 @@ final class Elements implements Implementation
      *
      * @return Set<A|B>
      */
+    #[\NoDiscard]
     public static function of($first, ...$elements): Set
     {
         return Set::of($first, ...$elements);

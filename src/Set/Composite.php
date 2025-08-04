@@ -89,6 +89,7 @@ final class Composite implements Implementation
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public static function immutable(
         callable $aggregate,
         Set|Provider $first,
@@ -111,6 +112,7 @@ final class Composite implements Implementation
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public static function mutable(
         callable $aggregate,
         Set|Provider $first,

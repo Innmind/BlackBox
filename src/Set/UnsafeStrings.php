@@ -70,6 +70,7 @@ final class UnsafeStrings implements Implementation
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::strings()->unsafe();

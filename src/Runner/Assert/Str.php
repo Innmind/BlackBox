@@ -27,6 +27,7 @@ final class Str
         return new self($stats, $value);
     }
 
+    #[\NoDiscard]
     public function not(): Str\Not
     {
         return Str\Not::of($this->stats, $this->value);

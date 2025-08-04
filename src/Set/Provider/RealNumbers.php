@@ -42,6 +42,7 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function between(int $min, int $max): self
     {
         return new self($this->wrap, $min, $max);
@@ -50,6 +51,7 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function above(int $min): self
     {
         return new self($this->wrap, $min, null);
@@ -58,6 +60,7 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function below(int $max): self
     {
         return new self($this->wrap, null, $max);
@@ -70,6 +73,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -82,6 +86,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
@@ -94,6 +99,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public function exclude(callable $predicate): Set
     {
         return $this->toSet()->exclude($predicate);
@@ -108,6 +114,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -122,6 +129,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -132,6 +140,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<float>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -142,6 +151,7 @@ final class RealNumbers implements Provider
      *
      * @return Set<?float>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -152,6 +162,7 @@ final class RealNumbers implements Provider
      *
      * @return iterable<float>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -161,6 +172,7 @@ final class RealNumbers implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return ($this->wrap)(Set\RealNumbers::implementation(
