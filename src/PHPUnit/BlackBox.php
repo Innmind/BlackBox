@@ -14,6 +14,7 @@ use Innmind\BlackBox\{
 
 trait BlackBox
 {
+    #[\NoDiscard]
     protected static function forAll(
         Set|Provider $first,
         Set|Provider ...$rest,

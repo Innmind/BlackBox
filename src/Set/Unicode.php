@@ -14,6 +14,7 @@ final class Unicode
      * @deprecated Use Set::strings()->unicode() instead
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function strings(): MadeOf
     {
         return Set::strings()->madeOf(
@@ -27,6 +28,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::strings()->unicode()->char();
@@ -38,6 +40,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function controlCharater(): Set
     {
         return Set::strings()
@@ -51,6 +54,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function basicLatin(): Set
     {
         return Set::strings()
@@ -64,6 +68,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latin1Supplement(): Set
     {
         return Set::strings()
@@ -77,6 +82,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latinExtendedA(): Set
     {
         return Set::strings()
@@ -90,6 +96,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latinExtendedB(): Set
     {
         return Set::strings()
@@ -103,6 +110,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ipaExtensions(): Set
     {
         return Set::strings()
@@ -116,6 +124,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function spacingModifierLetters(): Set
     {
         return Set::strings()
@@ -129,6 +138,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function combiningDiacriticalMarks(): Set
     {
         return Set::strings()
@@ -142,6 +152,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function greekAndCoptic(): Set
     {
         return Set::strings()
@@ -155,6 +166,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cyrillic(): Set
     {
         return Set::strings()
@@ -168,6 +180,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cyrillicSupplement(): Set
     {
         return Set::strings()
@@ -181,6 +194,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function armenian(): Set
     {
         return Set::strings()
@@ -194,6 +208,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hebrew(): Set
     {
         return Set::strings()
@@ -207,6 +222,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arabic(): Set
     {
         return Set::strings()
@@ -220,6 +236,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function syriac(): Set
     {
         return Set::strings()
@@ -233,6 +250,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arabicSupplement(): Set
     {
         return Set::strings()
@@ -246,6 +264,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function thaana(): Set
     {
         return Set::strings()
@@ -259,6 +278,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function nko(): Set
     {
         return Set::strings()
@@ -272,6 +292,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function samaritan(): Set
     {
         return Set::strings()
@@ -285,6 +306,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mandaic(): Set
     {
         return Set::strings()
@@ -298,6 +320,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function syriacSupplement(): Set
     {
         return Set::strings()
@@ -311,6 +334,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arabicExtendedA(): Set
     {
         return Set::strings()
@@ -324,6 +348,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function devanagari(): Set
     {
         return Set::strings()
@@ -337,6 +362,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bengali(): Set
     {
         return Set::strings()
@@ -350,6 +376,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function gurmukhi(): Set
     {
         return Set::strings()
@@ -363,6 +390,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function gujarati(): Set
     {
         return Set::strings()
@@ -376,6 +404,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oriya(): Set
     {
         return Set::strings()
@@ -389,6 +418,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tamil(): Set
     {
         return Set::strings()
@@ -402,6 +432,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function telugu(): Set
     {
         return Set::strings()
@@ -415,6 +446,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kannada(): Set
     {
         return Set::strings()
@@ -428,6 +460,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function malayalam(): Set
     {
         return Set::strings()
@@ -441,6 +474,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function sinhala(): Set
     {
         return Set::strings()
@@ -454,6 +488,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function thai(): Set
     {
         return Set::strings()
@@ -467,6 +502,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function lao(): Set
     {
         return Set::strings()
@@ -480,6 +516,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tibetan(): Set
     {
         return Set::strings()
@@ -493,6 +530,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function myanmar(): Set
     {
         return Set::strings()
@@ -506,6 +544,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function georgian(): Set
     {
         return Set::strings()
@@ -519,6 +558,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hangulJamo(): Set
     {
         return Set::strings()
@@ -532,6 +572,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ethiopic(): Set
     {
         return Set::strings()
@@ -545,6 +586,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ethiopicSupplement(): Set
     {
         return Set::strings()
@@ -558,6 +600,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cherokee(): Set
     {
         return Set::strings()
@@ -571,6 +614,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function unifiedCanadianAboriginalSyllabics(): Set
     {
         return Set::strings()
@@ -584,6 +628,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ogham(): Set
     {
         return Set::strings()
@@ -597,6 +642,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function runic(): Set
     {
         return Set::strings()
@@ -610,6 +656,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tagalog(): Set
     {
         return Set::strings()
@@ -623,6 +670,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hanunoo(): Set
     {
         return Set::strings()
@@ -636,6 +684,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function buhid(): Set
     {
         return Set::strings()
@@ -649,6 +698,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tagbanwa(): Set
     {
         return Set::strings()
@@ -662,6 +712,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function khmer(): Set
     {
         return Set::strings()
@@ -675,6 +726,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mongolian(): Set
     {
         return Set::strings()
@@ -688,6 +740,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function unifiedCanadianAboriginalSyllabicsExtended(): Set
     {
         return Set::strings()
@@ -701,6 +754,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function limbu(): Set
     {
         return Set::strings()
@@ -714,6 +768,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function taiLe(): Set
     {
         return Set::strings()
@@ -727,6 +782,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function newTaiLue(): Set
     {
         return Set::strings()
@@ -740,6 +796,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function khmerSymbols(): Set
     {
         return Set::strings()
@@ -753,6 +810,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function buginese(): Set
     {
         return Set::strings()
@@ -766,6 +824,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function taiTham(): Set
     {
         return Set::strings()
@@ -779,6 +838,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function combiningDiacriticalMarksExtended(): Set
     {
         return Set::strings()
@@ -792,6 +852,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function balinese(): Set
     {
         return Set::strings()
@@ -805,6 +866,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function sundanese(): Set
     {
         return Set::strings()
@@ -818,6 +880,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function batak(): Set
     {
         return Set::strings()
@@ -831,6 +894,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function lepcha(): Set
     {
         return Set::strings()
@@ -844,6 +908,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function olChiki(): Set
     {
         return Set::strings()
@@ -857,6 +922,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cyrillicExtendedC(): Set
     {
         return Set::strings()
@@ -870,6 +936,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function sundaneseSupplement(): Set
     {
         return Set::strings()
@@ -883,6 +950,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function vedicExtensions(): Set
     {
         return Set::strings()
@@ -896,6 +964,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function phoneticExtensions(): Set
     {
         return Set::strings()
@@ -909,6 +978,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function phoneticExtensionsSupplement(): Set
     {
         return Set::strings()
@@ -922,6 +992,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function combiningDiacriticalMarksSupplement(): Set
     {
         return Set::strings()
@@ -935,6 +1006,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latinExtendedAdditional(): Set
     {
         return Set::strings()
@@ -948,6 +1020,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function greekExtended(): Set
     {
         return Set::strings()
@@ -961,6 +1034,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function generalPunctuation(): Set
     {
         return Set::strings()
@@ -974,6 +1048,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function superscriptsAndSubscripts(): Set
     {
         return Set::strings()
@@ -987,6 +1062,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function currencySymbols(): Set
     {
         return Set::strings()
@@ -1000,6 +1076,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function combiningDiacriticalMarksForSymbols(): Set
     {
         return Set::strings()
@@ -1013,6 +1090,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function letterlikeSymbols(): Set
     {
         return Set::strings()
@@ -1026,6 +1104,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function numberForms(): Set
     {
         return Set::strings()
@@ -1039,6 +1118,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arrows(): Set
     {
         return Set::strings()
@@ -1052,6 +1132,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mathematicalOperators(): Set
     {
         return Set::strings()
@@ -1065,6 +1146,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miscellaneousTechnical(): Set
     {
         return Set::strings()
@@ -1078,6 +1160,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function controlPictures(): Set
     {
         return Set::strings()
@@ -1091,6 +1174,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function opticalCharacterRecognition(): Set
     {
         return Set::strings()
@@ -1104,6 +1188,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function enclosedAlphanumerics(): Set
     {
         return Set::strings()
@@ -1117,6 +1202,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function boxDrawing(): Set
     {
         return Set::strings()
@@ -1130,6 +1216,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function blockElements(): Set
     {
         return Set::strings()
@@ -1143,6 +1230,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function geometricShapes(): Set
     {
         return Set::strings()
@@ -1156,6 +1244,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miscellaneousSymbols(): Set
     {
         return Set::strings()
@@ -1169,6 +1258,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function dingbats(): Set
     {
         return Set::strings()
@@ -1182,6 +1272,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miscellaneousMathematicalSymbolsA(): Set
     {
         return Set::strings()
@@ -1195,6 +1286,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function supplementalArrowsA(): Set
     {
         return Set::strings()
@@ -1208,6 +1300,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function braillePatterns(): Set
     {
         return Set::strings()
@@ -1221,6 +1314,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function supplementalArrowsB(): Set
     {
         return Set::strings()
@@ -1234,6 +1328,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miscellaneousMathematicalSymbolsB(): Set
     {
         return Set::strings()
@@ -1247,6 +1342,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function supplementalMathematicalOperators(): Set
     {
         return Set::strings()
@@ -1260,6 +1356,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miscellaneousSymbolsAndArrows(): Set
     {
         return Set::strings()
@@ -1273,6 +1370,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function glagolitic(): Set
     {
         return Set::strings()
@@ -1286,6 +1384,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latinExtendedC(): Set
     {
         return Set::strings()
@@ -1299,6 +1398,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function coptic(): Set
     {
         return Set::strings()
@@ -1312,6 +1412,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function georgianSupplement(): Set
     {
         return Set::strings()
@@ -1325,6 +1426,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tifinagh(): Set
     {
         return Set::strings()
@@ -1338,6 +1440,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ethiopicExtended(): Set
     {
         return Set::strings()
@@ -1351,6 +1454,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cyrillicExtendedA(): Set
     {
         return Set::strings()
@@ -1364,6 +1468,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function supplementalPunctuation(): Set
     {
         return Set::strings()
@@ -1377,6 +1482,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkRadicalsSupplement(): Set
     {
         return Set::strings()
@@ -1390,6 +1496,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kangxiRadicals(): Set
     {
         return Set::strings()
@@ -1403,6 +1510,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ideographicDescriptionCharacters(): Set
     {
         return Set::strings()
@@ -1416,6 +1524,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkSymbolsAndPunctuation(): Set
     {
         return Set::strings()
@@ -1429,6 +1538,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hiragana(): Set
     {
         return Set::strings()
@@ -1442,6 +1552,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function katakana(): Set
     {
         return Set::strings()
@@ -1455,6 +1566,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bopomofo(): Set
     {
         return Set::strings()
@@ -1468,6 +1580,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hangulCompatibilityJamo(): Set
     {
         return Set::strings()
@@ -1481,6 +1594,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kanbun(): Set
     {
         return Set::strings()
@@ -1494,6 +1608,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bopomofoExtended(): Set
     {
         return Set::strings()
@@ -1507,6 +1622,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkStrokes(): Set
     {
         return Set::strings()
@@ -1520,6 +1636,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function katakanaPhoneticExtensions(): Set
     {
         return Set::strings()
@@ -1533,6 +1650,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function enclosedCJKLettersAndMonths(): Set
     {
         return Set::strings()
@@ -1546,6 +1664,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkCompatibility(): Set
     {
         return Set::strings()
@@ -1559,6 +1678,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographsExtensionA(): Set
     {
         return Set::strings()
@@ -1572,6 +1692,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function yijingHexagramSymbols(): Set
     {
         return Set::strings()
@@ -1585,6 +1706,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographs(): Set
     {
         return Set::strings()
@@ -1598,6 +1720,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function yiSyllables(): Set
     {
         return Set::strings()
@@ -1611,6 +1734,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function yiRadicals(): Set
     {
         return Set::strings()
@@ -1624,6 +1748,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function lisu(): Set
     {
         return Set::strings()
@@ -1637,6 +1762,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function vai(): Set
     {
         return Set::strings()
@@ -1650,6 +1776,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cyrillicExtendedB(): Set
     {
         return Set::strings()
@@ -1663,6 +1790,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bamum(): Set
     {
         return Set::strings()
@@ -1676,6 +1804,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function modifierToneLetters(): Set
     {
         return Set::strings()
@@ -1689,6 +1818,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latinExtendedD(): Set
     {
         return Set::strings()
@@ -1702,6 +1832,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function sylotiNagri(): Set
     {
         return Set::strings()
@@ -1715,6 +1846,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function commonIndicNumberForms(): Set
     {
         return Set::strings()
@@ -1728,6 +1860,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function phagsPa(): Set
     {
         return Set::strings()
@@ -1741,6 +1874,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function saurashtra(): Set
     {
         return Set::strings()
@@ -1754,6 +1888,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function devanagariExtended(): Set
     {
         return Set::strings()
@@ -1767,6 +1902,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kayahLi(): Set
     {
         return Set::strings()
@@ -1780,6 +1916,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function rejang(): Set
     {
         return Set::strings()
@@ -1793,6 +1930,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hangulJamoExtendedA(): Set
     {
         return Set::strings()
@@ -1806,6 +1944,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function javanese(): Set
     {
         return Set::strings()
@@ -1819,6 +1958,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function myanmarExtendedB(): Set
     {
         return Set::strings()
@@ -1832,6 +1972,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cham(): Set
     {
         return Set::strings()
@@ -1845,6 +1986,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function myanmarExtendedA(): Set
     {
         return Set::strings()
@@ -1858,6 +2000,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function taiViet(): Set
     {
         return Set::strings()
@@ -1871,6 +2014,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function meeteiMayekExtensions(): Set
     {
         return Set::strings()
@@ -1884,6 +2028,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ethiopicExtendedA(): Set
     {
         return Set::strings()
@@ -1897,6 +2042,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function latinExtendedE(): Set
     {
         return Set::strings()
@@ -1910,6 +2056,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cherokeeSupplement(): Set
     {
         return Set::strings()
@@ -1923,6 +2070,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function meeteiMayek(): Set
     {
         return Set::strings()
@@ -1936,6 +2084,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hangulSyllables(): Set
     {
         return Set::strings()
@@ -1949,6 +2098,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hangulJamoExtendedB(): Set
     {
         return Set::strings()
@@ -1962,6 +2112,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkCompatibilityIdeographs(): Set
     {
         return Set::strings()
@@ -1975,6 +2126,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function alphabeticPresentationForms(): Set
     {
         return Set::strings()
@@ -1988,6 +2140,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arabicPresentationFormsA(): Set
     {
         return Set::strings()
@@ -2001,6 +2154,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function variationSelectors(): Set
     {
         return Set::strings()
@@ -2014,6 +2168,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function verticalForms(): Set
     {
         return Set::strings()
@@ -2027,6 +2182,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function combiningHalfMarks(): Set
     {
         return Set::strings()
@@ -2040,6 +2196,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkCompatibilityForms(): Set
     {
         return Set::strings()
@@ -2053,6 +2210,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function smallFormVariants(): Set
     {
         return Set::strings()
@@ -2066,6 +2224,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arabicPresentationFormsB(): Set
     {
         return Set::strings()
@@ -2079,6 +2238,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function halfwidthAndFullwidthForms(): Set
     {
         return Set::strings()
@@ -2092,6 +2252,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function specials(): Set
     {
         return Set::strings()
@@ -2105,6 +2266,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function linearBSyllabary(): Set
     {
         return Set::strings()
@@ -2118,6 +2280,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function linearBIdeograms(): Set
     {
         return Set::strings()
@@ -2131,6 +2294,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function aeganNumbers(): Set
     {
         return Set::strings()
@@ -2144,6 +2308,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ancientGreekNumbers(): Set
     {
         return Set::strings()
@@ -2157,6 +2322,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ancientSymbols(): Set
     {
         return Set::strings()
@@ -2170,6 +2336,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function phaistosDisc(): Set
     {
         return Set::strings()
@@ -2183,6 +2350,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function lycian(): Set
     {
         return Set::strings()
@@ -2196,6 +2364,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function carian(): Set
     {
         return Set::strings()
@@ -2209,6 +2378,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function copticEpactNumbers(): Set
     {
         return Set::strings()
@@ -2222,6 +2392,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldItalic(): Set
     {
         return Set::strings()
@@ -2235,6 +2406,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function gothic(): Set
     {
         return Set::strings()
@@ -2248,6 +2420,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldPermic(): Set
     {
         return Set::strings()
@@ -2261,6 +2434,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ugaritic(): Set
     {
         return Set::strings()
@@ -2274,6 +2448,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldPersian(): Set
     {
         return Set::strings()
@@ -2287,6 +2462,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function deseret(): Set
     {
         return Set::strings()
@@ -2300,6 +2476,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function shavian(): Set
     {
         return Set::strings()
@@ -2313,6 +2490,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function osmanya(): Set
     {
         return Set::strings()
@@ -2326,6 +2504,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function osage(): Set
     {
         return Set::strings()
@@ -2339,6 +2518,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function elbasan(): Set
     {
         return Set::strings()
@@ -2352,6 +2532,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function caucasianAlbanian(): Set
     {
         return Set::strings()
@@ -2365,6 +2546,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function linearA(): Set
     {
         return Set::strings()
@@ -2378,6 +2560,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cypriotSyllabary(): Set
     {
         return Set::strings()
@@ -2391,6 +2574,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function imperialAramaic(): Set
     {
         return Set::strings()
@@ -2404,6 +2588,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function palmyrene(): Set
     {
         return Set::strings()
@@ -2417,6 +2602,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function nabataean(): Set
     {
         return Set::strings()
@@ -2430,6 +2616,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function hatran(): Set
     {
         return Set::strings()
@@ -2443,6 +2630,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function phoenician(): Set
     {
         return Set::strings()
@@ -2456,6 +2644,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function lydian(): Set
     {
         return Set::strings()
@@ -2469,6 +2658,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function meroiticHieroglyphs(): Set
     {
         return Set::strings()
@@ -2482,6 +2672,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function meroiticCursive(): Set
     {
         return Set::strings()
@@ -2495,6 +2686,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kharoshthi(): Set
     {
         return Set::strings()
@@ -2508,6 +2700,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldSouthArabian(): Set
     {
         return Set::strings()
@@ -2521,6 +2714,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldNorthArabian(): Set
     {
         return Set::strings()
@@ -2534,6 +2728,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function manichaean(): Set
     {
         return Set::strings()
@@ -2547,6 +2742,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function avestan(): Set
     {
         return Set::strings()
@@ -2560,6 +2756,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function inscriptionalParthian(): Set
     {
         return Set::strings()
@@ -2573,6 +2770,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function inscriptionalPahlavi(): Set
     {
         return Set::strings()
@@ -2586,6 +2784,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function psalterPahlavi(): Set
     {
         return Set::strings()
@@ -2599,6 +2798,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldTurkic(): Set
     {
         return Set::strings()
@@ -2612,6 +2812,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function oldHungarian(): Set
     {
         return Set::strings()
@@ -2625,6 +2826,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function rumiNumeralSymbols(): Set
     {
         return Set::strings()
@@ -2638,6 +2840,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function brahmi(): Set
     {
         return Set::strings()
@@ -2651,6 +2854,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kaithi(): Set
     {
         return Set::strings()
@@ -2664,6 +2868,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function soraSompeg(): Set
     {
         return Set::strings()
@@ -2677,6 +2882,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function chakma(): Set
     {
         return Set::strings()
@@ -2690,6 +2896,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mahajani(): Set
     {
         return Set::strings()
@@ -2703,6 +2910,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function sharada(): Set
     {
         return Set::strings()
@@ -2716,6 +2924,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function sinhalaArchaicNumbers(): Set
     {
         return Set::strings()
@@ -2729,6 +2938,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function khojki(): Set
     {
         return Set::strings()
@@ -2742,6 +2952,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function multani(): Set
     {
         return Set::strings()
@@ -2755,6 +2966,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function khudawadi(): Set
     {
         return Set::strings()
@@ -2768,6 +2980,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function grantha(): Set
     {
         return Set::strings()
@@ -2781,6 +2994,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function newa(): Set
     {
         return Set::strings()
@@ -2794,6 +3008,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tirhuta(): Set
     {
         return Set::strings()
@@ -2807,6 +3022,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function siddham(): Set
     {
         return Set::strings()
@@ -2820,6 +3036,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function modi(): Set
     {
         return Set::strings()
@@ -2833,6 +3050,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mongolianSupplement(): Set
     {
         return Set::strings()
@@ -2846,6 +3064,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function takri(): Set
     {
         return Set::strings()
@@ -2859,6 +3078,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ahom(): Set
     {
         return Set::strings()
@@ -2872,6 +3092,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function warangCiti(): Set
     {
         return Set::strings()
@@ -2885,6 +3106,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function zanabazarSquare(): Set
     {
         return Set::strings()
@@ -2898,6 +3120,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function soyombo(): Set
     {
         return Set::strings()
@@ -2911,6 +3134,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function pauCinHau(): Set
     {
         return Set::strings()
@@ -2924,6 +3148,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bhaiksuki(): Set
     {
         return Set::strings()
@@ -2937,6 +3162,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function marchen(): Set
     {
         return Set::strings()
@@ -2950,6 +3176,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function masaramGondi(): Set
     {
         return Set::strings()
@@ -2963,6 +3190,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cuneiform(): Set
     {
         return Set::strings()
@@ -2976,6 +3204,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cuneiformNumbersAndPunctuation(): Set
     {
         return Set::strings()
@@ -2989,6 +3218,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function earlyDynasticCuneiform(): Set
     {
         return Set::strings()
@@ -3002,6 +3232,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function egyptianHieroglyphs(): Set
     {
         return Set::strings()
@@ -3015,6 +3246,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function anatolianHieroglyphs(): Set
     {
         return Set::strings()
@@ -3028,6 +3260,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bamumSupplement(): Set
     {
         return Set::strings()
@@ -3041,6 +3274,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mro(): Set
     {
         return Set::strings()
@@ -3054,6 +3288,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function bassaVah(): Set
     {
         return Set::strings()
@@ -3067,6 +3302,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function pahawhHmong(): Set
     {
         return Set::strings()
@@ -3080,6 +3316,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miao(): Set
     {
         return Set::strings()
@@ -3093,6 +3330,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ideographicSymbolsAndPunctuation(): Set
     {
         return Set::strings()
@@ -3106,6 +3344,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tangut(): Set
     {
         return Set::strings()
@@ -3119,6 +3358,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tangutComponents(): Set
     {
         return Set::strings()
@@ -3132,6 +3372,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kanaSupplement(): Set
     {
         return Set::strings()
@@ -3145,6 +3386,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function kanaExtendedA(): Set
     {
         return Set::strings()
@@ -3158,6 +3400,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function nushu(): Set
     {
         return Set::strings()
@@ -3171,6 +3414,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function duployan(): Set
     {
         return Set::strings()
@@ -3184,6 +3428,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function shorthandFormatControls(): Set
     {
         return Set::strings()
@@ -3197,6 +3442,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function byzantineMusicalSymbols(): Set
     {
         return Set::strings()
@@ -3210,6 +3456,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function musicalSymbols(): Set
     {
         return Set::strings()
@@ -3223,6 +3470,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ancientGreekMusicalNotation(): Set
     {
         return Set::strings()
@@ -3236,6 +3484,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function taiXuanJingSymbols(): Set
     {
         return Set::strings()
@@ -3249,6 +3498,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function countingRodNumerals(): Set
     {
         return Set::strings()
@@ -3262,6 +3512,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mathematicalAlphanumericSymbols(): Set
     {
         return Set::strings()
@@ -3275,6 +3526,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function suttonSignWriting(): Set
     {
         return Set::strings()
@@ -3288,6 +3540,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function glagoliticSupplement(): Set
     {
         return Set::strings()
@@ -3301,6 +3554,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mendeKikakui(): Set
     {
         return Set::strings()
@@ -3314,6 +3568,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function adlam(): Set
     {
         return Set::strings()
@@ -3327,6 +3582,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function arabicMathematicalAlphabeticSymbols(): Set
     {
         return Set::strings()
@@ -3340,6 +3596,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function mahjongTiles(): Set
     {
         return Set::strings()
@@ -3353,6 +3610,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function dominoTiles(): Set
     {
         return Set::strings()
@@ -3366,6 +3624,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function playingCards(): Set
     {
         return Set::strings()
@@ -3379,6 +3638,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function enclosedAlphanumericSupplement(): Set
     {
         return Set::strings()
@@ -3392,6 +3652,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function enclosedIdeopgraphicSupplement(): Set
     {
         return Set::strings()
@@ -3405,6 +3666,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function miscellaneousSymbolsAndPictographs(): Set
     {
         return Set::strings()
@@ -3418,6 +3680,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function emoticons(): Set
     {
         return Set::strings()
@@ -3431,6 +3694,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function ornamentalDingbats(): Set
     {
         return Set::strings()
@@ -3444,6 +3708,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function transportAndMapSymbols(): Set
     {
         return Set::strings()
@@ -3457,6 +3722,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function alchemicalSymbols(): Set
     {
         return Set::strings()
@@ -3470,6 +3736,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function geometricShapesExtended(): Set
     {
         return Set::strings()
@@ -3483,6 +3750,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function supplementalArrowsC(): Set
     {
         return Set::strings()
@@ -3496,6 +3764,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function supplementalSymbolsAndPictographs(): Set
     {
         return Set::strings()
@@ -3509,6 +3778,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographsExtensionB(): Set
     {
         return Set::strings()
@@ -3522,6 +3792,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographsExtensionC(): Set
     {
         return Set::strings()
@@ -3535,6 +3806,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographsExtensionD(): Set
     {
         return Set::strings()
@@ -3548,6 +3820,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographsExtensionE(): Set
     {
         return Set::strings()
@@ -3561,6 +3834,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkUnifiedIdeographsExtensionF(): Set
     {
         return Set::strings()
@@ -3574,6 +3848,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function cjkCompatibilityIdeographsSupplement(): Set
     {
         return Set::strings()
@@ -3587,6 +3862,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function tags(): Set
     {
         return Set::strings()
@@ -3600,6 +3876,7 @@ final class Unicode
      *
      * @return Set<string>
      */
+    #[\NoDiscard]
     public static function variationSelectorsSupplement(): Set
     {
         return Set::strings()

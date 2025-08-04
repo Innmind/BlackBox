@@ -66,6 +66,7 @@ final class Randomize implements Implementation
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public static function of(Set|Provider $set): Set
     {
         return Collapse::of($set)->randomize();

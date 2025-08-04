@@ -30,11 +30,13 @@ final class Memory
         return new self($stats, $action);
     }
 
+    #[\NoDiscard]
     public function inLessThan(): Memory\InLessThan
     {
         return Memory\InLessThan::of($this->stats, $this->action);
     }
 
+    #[\NoDiscard]
     public function inMoreThan(): Memory\InMoreThan
     {
         return Memory\InMoreThan::of($this->stats, $this->action);

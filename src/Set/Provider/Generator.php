@@ -55,6 +55,7 @@ final class Generator implements Provider
      *
      * @return self<T>
      */
+    #[\NoDiscard]
     public function immutable(): self
     {
         return new self(
@@ -69,6 +70,7 @@ final class Generator implements Provider
      *
      * @return self<T>
      */
+    #[\NoDiscard]
     public function mutable(): self
     {
         return new self(
@@ -85,6 +87,7 @@ final class Generator implements Provider
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -97,9 +100,23 @@ final class Generator implements Provider
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(T): bool $predicate
+     *
+     * @return Set<T>
+     */
+    #[\NoDiscard]
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
     }
 
     /**
@@ -111,6 +128,7 @@ final class Generator implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -125,6 +143,7 @@ final class Generator implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -135,6 +154,7 @@ final class Generator implements Provider
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -145,6 +165,7 @@ final class Generator implements Provider
      *
      * @return Set<?T>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -155,6 +176,7 @@ final class Generator implements Provider
      *
      * @return iterable<T>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -164,6 +186,7 @@ final class Generator implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return ($this->wrap)(Set\FromGenerator::implementation(

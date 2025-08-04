@@ -30,11 +30,13 @@ final class Time
         return new self($stats, $action);
     }
 
+    #[\NoDiscard]
     public function inLessThan(): Time\InLessThan
     {
         return Time\InLessThan::of($this->stats, $this->action);
     }
 
+    #[\NoDiscard]
     public function inMoreThan(): Time\InMoreThan
     {
         return Time\InMoreThan::of($this->stats, $this->action);

@@ -38,6 +38,7 @@ final class Slice implements Provider
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function any(): self
     {
         return new self(0, 100, 0);
@@ -49,6 +50,7 @@ final class Slice implements Provider
      * @param 0|positive-int $min
      * @param 0|positive-int $max
      */
+    #[\NoDiscard]
     public static function between(int $min, int $max): self
     {
         return new self($min, $max, 0);
@@ -59,6 +61,7 @@ final class Slice implements Provider
      *
      * @param 0|positive-int $length
      */
+    #[\NoDiscard]
     public function atLeast(int $length): self
     {
         return new self(
@@ -75,6 +78,7 @@ final class Slice implements Provider
      *
      * @return Set<Util>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -87,9 +91,23 @@ final class Slice implements Provider
      *
      * @return Set<Util>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(Util): bool $predicate
+     *
+     * @return Set<Util>
+     */
+    #[\NoDiscard]
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
     }
 
     /**
@@ -101,6 +119,7 @@ final class Slice implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -115,6 +134,7 @@ final class Slice implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -125,6 +145,7 @@ final class Slice implements Provider
      *
      * @return Set<Util>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -135,6 +156,7 @@ final class Slice implements Provider
      *
      * @return Set<?Util>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -145,6 +167,7 @@ final class Slice implements Provider
      *
      * @return iterable<Util>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -156,6 +179,7 @@ final class Slice implements Provider
      * @return Set<Util>
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return Set::compose(

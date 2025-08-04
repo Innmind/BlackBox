@@ -34,6 +34,7 @@ final class CodeCoverage
      * @param non-empty-string $directory
      * @param non-empty-string $directories
      */
+    #[\NoDiscard]
     public static function of(string $directory, string ...$directories): self
     {
         return new self([$directory, ...$directories], false, null);
@@ -44,6 +45,7 @@ final class CodeCoverage
      *
      * @param non-empty-string $path
      */
+    #[\NoDiscard]
     public function dumpTo(string $path): self
     {
         return new self($this->directories, $this->enabled, $path);
@@ -52,6 +54,7 @@ final class CodeCoverage
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function enableWhen(bool $enabled): self
     {
         return new self($this->directories, $enabled, $this->reportPath);

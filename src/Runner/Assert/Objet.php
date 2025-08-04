@@ -30,6 +30,7 @@ final class Objet
         return new self($stats, $object);
     }
 
+    #[\NoDiscard]
     public function not(): Objet\Not
     {
         return Objet\Not::of($this->stats, $this->object);

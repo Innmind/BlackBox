@@ -38,6 +38,7 @@ final class Given
     /**
      * @param callable(...mixed): bool $filter
      */
+    #[\NoDiscard]
     public function filter(callable $filter): self
     {
         return new self($this->args->filter(static fn($args) => $filter(...$args)));

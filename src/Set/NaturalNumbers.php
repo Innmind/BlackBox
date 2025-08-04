@@ -13,6 +13,7 @@ final class NaturalNumbers
      *
      * @return Set<0|positive-int>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::integers()->naturalNumbers();

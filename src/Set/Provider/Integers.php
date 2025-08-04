@@ -42,6 +42,7 @@ final class Integers implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function between(int $min, int $max): self
     {
         return new self($this->wrap, $min, $max);
@@ -50,6 +51,7 @@ final class Integers implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function above(int $min): self
     {
         return new self($this->wrap, $min, null);
@@ -58,6 +60,7 @@ final class Integers implements Provider
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function below(int $max): self
     {
         return new self($this->wrap, null, $max);
@@ -68,6 +71,7 @@ final class Integers implements Provider
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public function exceptZero(): Set
     {
         return $this->filter(
@@ -80,6 +84,7 @@ final class Integers implements Provider
      *
      * @return Set<int<0, max>>
      */
+    #[\NoDiscard]
     public function naturalNumbers(): Set
     {
         /** @var Set<0|positive-int> */
@@ -93,6 +98,7 @@ final class Integers implements Provider
      *
      * @return Set<int<1, max>>
      */
+    #[\NoDiscard]
     public function naturalNumbersExceptZero(): Set
     {
         /** @var Set<int<1, max>> */
@@ -108,6 +114,7 @@ final class Integers implements Provider
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -120,9 +127,23 @@ final class Integers implements Provider
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(int): bool $predicate
+     *
+     * @return Set<int>
+     */
+    #[\NoDiscard]
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
     }
 
     /**
@@ -134,6 +155,7 @@ final class Integers implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -148,6 +170,7 @@ final class Integers implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -158,6 +181,7 @@ final class Integers implements Provider
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -168,6 +192,7 @@ final class Integers implements Provider
      *
      * @return Set<?int>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -178,6 +203,7 @@ final class Integers implements Provider
      *
      * @return iterable<int>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -187,6 +213,7 @@ final class Integers implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return ($this->wrap)(Set\Integers::implementation(

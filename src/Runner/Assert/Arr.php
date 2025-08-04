@@ -28,6 +28,7 @@ final class Arr
         return new self($stats, $value);
     }
 
+    #[\NoDiscard]
     public function not(): Arr\Not
     {
         return Arr\Not::of($this->stats, $this->value);

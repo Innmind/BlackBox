@@ -36,6 +36,7 @@ final class Properties implements Provider
      * @param Set<Concrete>|Provider<Concrete> $first
      * @param Set<Concrete>|Provider<Concrete> $properties
      */
+    #[\NoDiscard]
     public static function any(Set|Provider $first, Set|Provider ...$properties): self
     {
         if (\count($properties) === 0) {
@@ -52,6 +53,7 @@ final class Properties implements Provider
      *
      * @return Set<Ensure>
      */
+    #[\NoDiscard]
     public function atMost(int $max): Set
     {
         return $this->ensure($max);
@@ -64,6 +66,7 @@ final class Properties implements Provider
      *
      * @return Set<Ensure>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -76,9 +79,23 @@ final class Properties implements Provider
      *
      * @return Set<Ensure>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(Ensure): bool $predicate
+     *
+     * @return Set<Ensure>
+     */
+    #[\NoDiscard]
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
     }
 
     /**
@@ -90,6 +107,7 @@ final class Properties implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -104,6 +122,7 @@ final class Properties implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -114,6 +133,7 @@ final class Properties implements Provider
      *
      * @return Set<?Ensure>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -124,6 +144,7 @@ final class Properties implements Provider
      *
      * @return Set<Ensure>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -134,6 +155,7 @@ final class Properties implements Provider
      *
      * @return iterable<Ensure>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -145,6 +167,7 @@ final class Properties implements Provider
      * @return Set<Ensure>
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return $this->ensure(100);

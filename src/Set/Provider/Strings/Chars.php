@@ -36,6 +36,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function lowercaseLetter(): Set
     {
         return Set::integers()
@@ -48,6 +49,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function uppercaseLetter(): Set
     {
         return Set::integers()
@@ -60,6 +62,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function number(): Set
     {
         return Set::integers()
@@ -72,6 +75,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function ascii(): Set
     {
         return Set::integers()
@@ -84,6 +88,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function alphanumerical(): Set
     {
         return Set::either(
@@ -100,6 +105,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function take(int $size): Set
     {
         return $this->toSet()->take($size);
@@ -112,9 +118,23 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): Set
     {
         return $this->toSet()->filter($predicate);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(non-empty-string): bool $predicate
+     *
+     * @return Set<non-empty-string>
+     */
+    #[\NoDiscard]
+    public function exclude(callable $predicate): Set
+    {
+        return $this->toSet()->exclude($predicate);
     }
 
     /**
@@ -126,6 +146,7 @@ final class Chars implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): Set
     {
         return $this->toSet()->map($map);
@@ -140,6 +161,7 @@ final class Chars implements Provider
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): Set
     {
         return $this->toSet()->flatMap($map);
@@ -150,6 +172,7 @@ final class Chars implements Provider
      *
      * @return Set<non-empty-string>
      */
+    #[\NoDiscard]
     public function randomize(): Set
     {
         return $this->toSet()->randomize();
@@ -160,6 +183,7 @@ final class Chars implements Provider
      *
      * @return Set<?non-empty-string>
      */
+    #[\NoDiscard]
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
@@ -170,6 +194,7 @@ final class Chars implements Provider
      *
      * @return iterable<non-empty-string>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         return $this->toSet()->enumerate();
@@ -179,6 +204,7 @@ final class Chars implements Provider
      * @psalm-mutation-free
      */
     #[\Override]
+    #[\NoDiscard]
     public function toSet(): Set
     {
         return Set::integers()

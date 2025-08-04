@@ -46,6 +46,7 @@ final class Compatibility
     /**
      * @psalm-mutation-free
      */
+    #[\NoDiscard]
     public function disableShrinking(): self
     {
         return new self(
@@ -60,6 +61,7 @@ final class Compatibility
      *
      * @param positive-int $size
      */
+    #[\NoDiscard]
     public function take(int $size): self
     {
         return new self(
@@ -74,6 +76,7 @@ final class Compatibility
      *
      * @param callable(...mixed): bool $predicate
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): self
     {
         return new self(
@@ -90,6 +93,7 @@ final class Compatibility
      *
      * @return iterable<list<mixed>>
      */
+    #[\NoDiscard]
     public function asDataProvider(): iterable
     {
         $values = $this->given->set()->values(Random::default);
@@ -147,6 +151,7 @@ final class Compatibility
     /**
      * @param callable(...mixed): void $test
      */
+    #[\NoDiscard]
     public function prove(callable $test): BlackBox\Proof
     {
         $wrapped = function(mixed ...$args) use ($test): void {

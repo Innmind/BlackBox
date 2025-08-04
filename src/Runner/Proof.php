@@ -17,6 +17,7 @@ interface Proof
      * @psalm-mutation-free
      * @no-named-arguments
      */
+    #[\NoDiscard]
     public function tag(\UnitEnum ...$tags): self;
 
     /**

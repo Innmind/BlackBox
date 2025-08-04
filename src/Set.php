@@ -41,6 +41,7 @@ final class Set
      *
      * @return self<A|B>
      */
+    #[\NoDiscard]
     public static function of(mixed $first, mixed ...$rest): self
     {
         return new self(
@@ -52,6 +53,7 @@ final class Set
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function integers(): Provider\Integers
     {
         /** @psalm-suppress InvalidArgument */
@@ -61,6 +63,7 @@ final class Set
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function realNumbers(): Provider\RealNumbers
     {
         /** @psalm-suppress InvalidArgument */
@@ -79,6 +82,7 @@ final class Set
      *
      * @return Provider\Composite<A>
      */
+    #[\NoDiscard]
     public static function compose(
         callable $aggregate,
         self|Provider $first,
@@ -116,6 +120,7 @@ final class Set
      *
      * @return self<non-empty-list<A|B|C>>
      */
+    #[\NoDiscard]
     public static function tuple(
         self|Provider $first,
         self|Provider $second,
@@ -148,6 +153,7 @@ final class Set
      *
      * @return self<B>
      */
+    #[\NoDiscard]
     public static function decorate(
         callable $decorate,
         self|Provider $set,
@@ -183,6 +189,7 @@ final class Set
      *
      * @return Provider\Generator<V>
      */
+    #[\NoDiscard]
     public static function generator(callable $factory): Provider\Generator
     {
         /**
@@ -204,6 +211,7 @@ final class Set
      *
      * @return Provider\Sequence<V>
      */
+    #[\NoDiscard]
     public static function sequence(self|Provider $set): Provider\Sequence
     {
         /**
@@ -231,6 +239,7 @@ final class Set
      *
      * @return self<A|B|C>
      */
+    #[\NoDiscard]
     public static function either(
         self|Provider $first,
         self|Provider $second,
@@ -262,6 +271,7 @@ final class Set
      *
      * @return self<A>
      */
+    #[\NoDiscard]
     public static function call(callable $call): self
     {
         return self::generator(static function() use ($call) {
@@ -276,6 +286,7 @@ final class Set
     /**
      * @psalm-pure
      */
+    #[\NoDiscard]
     public static function strings(): Provider\Strings
     {
         /**
@@ -290,6 +301,7 @@ final class Set
      *
      * @return self<non-empty-string>
      */
+    #[\NoDiscard]
     public static function email(): self
     {
         $letter = static fn(string ...$extra): self => self::of(
@@ -344,6 +356,7 @@ final class Set
      *
      * @return self<mixed>
      */
+    #[\NoDiscard]
     public static function type(): self
     {
         // no resource is generated as it may result in a fatal error of too
@@ -387,6 +400,7 @@ final class Set
      *
      * @return self<non-empty-string>
      */
+    #[\NoDiscard]
     public static function uuid(): self
     {
         $chars = self::of(...\range('a', 'f'), ...\range(0, 9));
@@ -413,6 +427,7 @@ final class Set
      *
      * @return self<?T>
      */
+    #[\NoDiscard]
     public function nullable(): self
     {
         return new self(
@@ -433,6 +448,7 @@ final class Set
      *
      * @return self<T>
      */
+    #[\NoDiscard]
     public function randomize(): self
     {
         return new self(
@@ -448,6 +464,7 @@ final class Set
      *
      * @return self<T>
      */
+    #[\NoDiscard]
     public function take(int $size): self
     {
         return new self(
@@ -466,6 +483,7 @@ final class Set
      *
      * @return self<T>
      */
+    #[\NoDiscard]
     public function filter(callable $predicate): self
     {
         return new self(
@@ -480,12 +498,27 @@ final class Set
     /**
      * @psalm-mutation-free
      *
+     * @param callable(T): bool $predicate
+     *
+     * @return self<T>
+     */
+    #[\NoDiscard]
+    public function exclude(callable $predicate): self
+    {
+        /** @psalm-suppress MixedArgument For some reason Psalm doesn't understand $value's type */
+        return $this->filter(static fn($value) => !$predicate($value));
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @template V
      *
      * @param callable(T): (V|Seed<V>) $map
      *
      * @return self<V>
      */
+    #[\NoDiscard]
     public function map(callable $map): self
     {
         return new self(
@@ -510,6 +543,7 @@ final class Set
      *
      * @return self<V>
      */
+    #[\NoDiscard]
     public function flatMap(callable $map): self
     {
         /** @psalm-suppress InvalidArgument */
@@ -527,6 +561,7 @@ final class Set
      *
      * @return iterable<T>
      */
+    #[\NoDiscard]
     public function enumerate(): iterable
     {
         foreach ($this->values(Random::default) as $value) {
@@ -541,6 +576,7 @@ final class Set
      *
      * @return \Generator<Value<T>>
      */
+    #[\NoDiscard]
     public function values(Random $random): \Generator
     {
         $values = match ($this->unbounded) {

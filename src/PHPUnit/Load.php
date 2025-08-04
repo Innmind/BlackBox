@@ -29,6 +29,7 @@ final class Load
         $this->parseTag = $parseTag;
     }
 
+    #[\NoDiscard]
     public function __invoke()
     {
         $files = new \RecursiveIteratorIterator(
@@ -101,6 +102,7 @@ final class Load
      *
      * @param callable(string): ?\UnitEnum $parser
      */
+    #[\NoDiscard]
     public function parseTagWith(callable $parser): self
     {
         return new self(
@@ -109,11 +111,13 @@ final class Load
         );
     }
 
+    #[\NoDiscard]
     public static function directory(string $path): self
     {
         return new self($path, Tag::of(...));
     }
 
+    #[\NoDiscard]
     public static function testsAt(string $path): \Generator
     {
         yield from self::directory($path)();

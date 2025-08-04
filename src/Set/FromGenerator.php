@@ -70,6 +70,7 @@ final class FromGenerator implements Implementation
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public static function of(callable $generatorFactory): Set
     {
         return Set::generator(self::guard($generatorFactory))
@@ -85,6 +86,7 @@ final class FromGenerator implements Implementation
      *
      * @return Set<V>
      */
+    #[\NoDiscard]
     public static function mutable(callable $generatorFactory): Set
     {
         return Set::generator(self::guard($generatorFactory))

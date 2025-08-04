@@ -18,6 +18,7 @@ enum Random
     /**
      * This method should be __invoke but Psalm doesn't like it for some reason
      */
+    #[\NoDiscard]
     public function between(int $min, int $max): int
     {
         // By default use a crypto secure engine in order to generate true

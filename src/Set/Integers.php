@@ -60,6 +60,7 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public static function any(): Set
     {
         return Set::integers()->toSet();
@@ -71,6 +72,7 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public static function between(int $min, int $max): Set
     {
         return Set::integers()
@@ -84,6 +86,7 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public static function above(int $min): Set
     {
         return Set::integers()
@@ -97,6 +100,7 @@ final class Integers implements Implementation
      *
      * @return Set<int>
      */
+    #[\NoDiscard]
     public static function below(int $max): Set
     {
         return Set::integers()

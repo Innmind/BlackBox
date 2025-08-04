@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.5.0 - 2025-08-04
+
+### Added
+
+- `Innmind\BlackBox\Set::exclude()`
+
+### Changed
+
+- `Innmind\BlackBox\Runner\Assert::fail()` now returns `never`
+
 ## 6.4.1 - 2025-05-25
 
 ### Fixed

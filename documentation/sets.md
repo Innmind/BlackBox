@@ -165,6 +165,9 @@ $set = Set::strings()
     ->map(static fn(string $string) => new Password($string));
 ```
 
+!!! note
+    You can quickly negate a condition by replacing `->filter()` by `->exclude()`.
+
 ??? warning
     This is an example. You should not enforce your passwords to have a specific value in it. The strength is based on length. ([US](https://www.cisa.gov/secure-our-world/use-strong-passwords) and [French](https://cyber.gouv.fr/publications/recommandations-relatives-lauthentification-multifacteur-et-aux-mots-de-passe) recommendations)
 

@@ -22,6 +22,7 @@ final class Tuple
      *
      * @return Set<non-empty-list<A|B|C>>
      */
+    #[\NoDiscard]
     public static function of(
         Set|Provider $first,
         Set|Provider $second,

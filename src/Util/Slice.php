@@ -30,6 +30,7 @@ final class Slice
         $this->takeLeading = $takeLeading;
     }
 
+    #[\NoDiscard]
     public function __invoke(array $values): array
     {
         $subset = \array_slice($values, $this->offset, $this->length);
@@ -53,6 +54,7 @@ final class Slice
      * @param 0|positive-int $length
      * @param 0|positive-int $minimum
      */
+    #[\NoDiscard]
     public static function of(
         int $offset,
         int $length,
