@@ -40,11 +40,32 @@ class BlackBoxTest extends TestCase
             ->int();
     }
 
+    #[DataProvider('ints2')]
+    #[DataProvider('ints2')]
+    public function testMultipleDataProviders($a, $b)
+    {
+        $this->assertIsInt($a);
+        $this
+            ->assert()
+            ->number($b)
+            ->int();
+    }
+
     public static function ints(): iterable
     {
         return self::forAll(
             Set\Integers::any(),
             Set\Integers::any(),
         )->asDataProvider();
+    }
+
+    public static function ints2(): iterable
+    {
+        return self::forAll(
+            Set\Integers::any(),
+            Set\Integers::any(),
+        )
+            ->take(10)
+            ->asDataProvider();
     }
 }

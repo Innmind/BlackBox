@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\PHPUnit\Load` now uses all declared data providers on a method (instead of just the first one)
+
 ## 6.5.0 - 2025-08-04
 
 ### Added

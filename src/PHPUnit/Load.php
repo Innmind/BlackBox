@@ -72,8 +72,8 @@ final class Load
                     static fn($tag) => $tag instanceof \UnitEnum,
                 ));
 
-                if (isset($attributes[0])) {
-                    $provider = $attributes[0]->newInstance()->methodName();
+                foreach ($attributes as $attribute) {
+                    $provider = $attribute->newInstance()->methodName();
 
                     /**
                      * @var int|string $name
@@ -88,7 +88,9 @@ final class Load
 
                         yield $test->tag(...$tags);
                     }
+                }
 
+                if (\count($attributes) > 0) {
                     continue;
                 }
 
