@@ -35,6 +35,7 @@ jobs:
         uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: ${{ matrix.dependencies }}
+          ignore-cache: true
       - name: PHPUnit
         run: vendor/bin/phpunit --fail-on-risky --coverage-clover=coverage.clover
       - uses: codecov/codecov-action@v4
