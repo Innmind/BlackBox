@@ -33,12 +33,7 @@ final class UnsafeStrings implements Implementation
         }
 
         /** @var list<string> */
-        $values = \json_decode(
-            $json,
-            true,
-            512,
-            \JSON_THROW_ON_ERROR,
-        );
+        $values = \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
         $values = \array_values(\array_filter(
             $values,
             $predicate,
