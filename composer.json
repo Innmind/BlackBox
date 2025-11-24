@@ -16,7 +16,6 @@
     },
     "require": {
         "php": "~8.2",
-        "innmind/json": "^1.1",
         "symfony/var-dumper": "~6.0|~7.0",
         "phpunit/phpunit": "~10.0|~11.0|~12.0",
         "phpunit/php-timer": "~6.0|~7.0|~8.0",

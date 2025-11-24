@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Removed
+
+- Dependency to `innmind/json`
+
 ## 6.6.0 - 2025-11-01
 
 ### Added
