@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.8.0 - 2026-01-11
+
+### Added
+
+- Support for Symfony `8`
+
 ## 6.7.0 - 2025-11-24
 
 ### Removed
