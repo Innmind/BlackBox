@@ -46,6 +46,17 @@ final class Objet
     {
         $this->stats->incrementAssertions();
 
+        // Making sure the class exists allows to use aliases and autoload them
+        if (!\class_exists($class) && !\interface_exists($class)) {
+            throw Failure::of(Property::of(
+                $this->object,
+                \sprintf(
+                    'Class, alias or interface %s does not exist',
+                    $class,
+                ),
+            ));
+        }
+
         if (!($this->object instanceof $class)) {
             throw Failure::of(Property::of(
                 $this->object,
