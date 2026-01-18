@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `$assert->object()->instance()` now check first if the class exist to allow to load aliases
+
 ## 6.8.0 - 2026-01-11
 
 ### Added
