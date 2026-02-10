@@ -1,0 +1,2566 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../assert/own/">
+      
+      
+        <link rel="next" href="../organization/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Sets - Innmind/BlackBox</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Innmind/BlackBox" class="md-header__button md-logo" aria-label="Innmind/BlackBox" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Innmind/BlackBox
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../preface/philosophy/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Preface
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../assert/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Assert
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Sets
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../organization/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Organization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../config/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Config
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../phpunit/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  PHPUnit
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../internals/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Innmind/BlackBox" class="md-nav__button md-logo" aria-label="Innmind/BlackBox" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    Innmind/BlackBox
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Preface
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Preface
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preface/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preface/terminology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terminology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First test
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/proof/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First proof
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/property/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First property
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../assert/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assert
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Assert
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assert/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assert/objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Objects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assert/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exceptions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assert/time/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Time
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assert/memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assert/own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write your own
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sets
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flat-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nullable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nullable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real numbers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-defined-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User defined values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User defined values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-a-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From a generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#higher-order-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Higher order Sets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Higher order Sets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#composite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#either" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Either
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Call
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specific-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specific types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Specific types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#email" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uuid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uuid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../organization/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Organization
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Organization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../organization/tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phpunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PHPUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../internals/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/shrinking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shrinking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/set-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set composition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flat-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat map
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nullable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nullable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real numbers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-defined-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User defined values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User defined values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-a-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From a generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#higher-order-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Higher order Sets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Higher order Sets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#composite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#either" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Either
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Call
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specific-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specific types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Specific types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#email" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uuid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uuid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+
+
+
+
+<h1 id="sets"><code>Set</code>s<a class="headerlink" href="#sets" title="Permanent link">&para;</a></h1>
+<p>So far you've seen hardcoded <code>Set</code>s via <code>Set::of()</code> and integers one via <code>Set::integers()</code>. But there are much more.</p>
+<details class="tip">
+<summary>Tip</summary>
+<p>You can find more on <a href="https://packagist.org/providers/innmind/black-box-sets">Packagist</a>.</p>
+</details>
+<h2 id="common-methods">Common methods<a class="headerlink" href="#common-methods" title="Permanent link">&para;</a></h2>
+<h3 id="map">Map<a class="headerlink" href="#map" title="Permanent link">&para;</a></h3>
+<p>For all <code>Set</code> objects you can transform the generated values with a function of your own.</p>
+<p>Let's say the code you want to prove needs a <code>Password</code> object. You can wrap strings in your object like this:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$set</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">Password</span><span class="p">(</span><span class="nv">$string</span><span class="p">));</span>
+</span></code></pre></div>
+<p>Now if you use <code>$set</code> in a proof it will generate instances of <code>Password</code> with a random string inside it.</p>
+<h3 id="flat-map">Flat map<a class="headerlink" href="#flat-map" title="Permanent link">&para;</a></h3>
+<p>This method allows to generate a <code>Set</code> configured from a randomly generated value from another <code>Set</code>.</p>
+<p>In most cases you'll want to use the <a href="#composite"><code>Set::composite()</code></a>. This method will be useful for advanced cases.</p>
+<p>One example is the ability to randomly generate <code>Set</code>s with associated data. Let's say you want to randomly generate strings defining types (<code>int</code>, <code>string</code>, etc...) with an associated <code>Set</code> to generate values of this type in order to build an imaginary <code>Type</code> class:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\</span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="nx">Set</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nx">Set\Seed</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">};</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">$pairs</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()],</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="p">[</span><span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()],</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">[</span><span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">()],</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">)],</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="c1">// etc...</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">);</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">$types</span> <span class="o">=</span> <span class="nv">$pairs</span><span class="o">-&gt;</span><span class="na">flatMap</span><span class="p">(</span><span class="k">static</span> <span class="k">function</span><span class="p">(</span><span class="nx">Seed</span> <span class="nv">$pair</span><span class="p">)</span> <span class="p">{</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="p">[</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$values</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$pair</span><span class="o">-&gt;</span><span class="na">unwrap</span><span class="p">();</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="k">return</span> <span class="nv">$values</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">));</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>The <code class="language-php highlight"><span class="nv">$types</span></code> <code>Set</code> could generate the values <code class="language-php highlight"><span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span></code>, <code class="language-php highlight"><span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="k">false</span><span class="p">)</span></code>, <code class="language-php highlight"><span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span></code>, etc...</p>
+<p>This example is simple enough and could be expressed without the use of <code>flatMap</code>. Like this:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$types</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">either</span><span class="p">(</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="k">function</span><span class="p">(</span><span class="nv">$pair</span><span class="p">)</span> <span class="p">{</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="p">[</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$pair</span><span class="p">;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="k">return</span> <span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">);</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="p">});</span>
+</span></code></pre></div>
+<p>But say that now you want multiple values instead of a single one. With <code>flatMap</code> it's straightforward, unlike with the other approach.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1"><code>flatMap</code></label><label for="__tabbed_1_2">Alternative</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\</span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="nx">Set</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nx">Set\Seed</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">};</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">$pairs</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()],</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">[</span><span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()],</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">[</span><span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">()],</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">)],</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="c1">// etc...</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">);</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nv">$types</span> <span class="o">=</span> <span class="nv">$pairs</span><span class="o">-&gt;</span><span class="na">flatMap</span><span class="p">(</span><span class="k">static</span> <span class="k">function</span><span class="p">(</span><span class="nx">Seed</span> <span class="nv">$pair</span><span class="p">)</span> <span class="p">{</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="p">[</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$values</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$pair</span><span class="o">-&gt;</span><span class="na">unwrap</span><span class="p">();</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="hll">    <span class="k">return</span> <span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nv">$values</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span>
+</span></span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">),</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="p">);</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">});</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$types</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">either</span><span class="p">(</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="hll">    <span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">())</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span></span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="hll">    <span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">())</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span></span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="hll">    <span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">())</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span></span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="hll">    <span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">))</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]),</span>
+</span></span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="k">function</span><span class="p">(</span><span class="nv">$pair</span><span class="p">)</span> <span class="p">{</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="p">[</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$pair</span><span class="p">;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="k">return</span> <span class="k">new</span> <span class="nx">Type</span><span class="p">(</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">);</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="p">});</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>As you can see with <code>flatMap</code> you can locally define what you want without having to change the <code>Set</code> you rely on. Unlike the alternative where you need to change the initial <code>Set</code> and thus impacting any other <code>Set</code> that could depend on it.</p>
+<details class="note">
+<summary>Shrinking</summary>
+<p>In the examples above the value passed as argument to the <code>flatMap</code> callable can't be <a href="../preface/terminology/#shrinking">shrunk</a>. This is because we call <code>-&gt;unwrap()</code> to acces to the real value behind the <code>Seed</code> object.</p>
+<p>When the <code>Seed</code> value is unwrapped, BlackBox can no longer track how it's used and thus can no longer shrink it.</p>
+<p>In the examples above the seeded value can't be shrunk anyway because it comes from user provided values via <code>Set::of()</code>.</p>
+<p>A simple example to demonstrate the use case is prefixing a <code>string</code> with an <code>int</code>:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\</span><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="nx">Set</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nx">Set\Seed</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">};</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">$set</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">flatMap</span><span class="p">(</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">Seed</span> <span class="nv">$int</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nv">$int</span><span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            <span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$int</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nv">$int</span><span class="o">.</span><span class="nv">$string</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="p">),</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="p">),</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>This way BlackBox knows every transformations of a seeded value and re-apply then after shrinking it.</p>
+<p>And you can also compose multiple <code>Seed</code>s via the <code>Seed::flatMap()</code> method.</p>
+</details>
+<details class="warning">
+<summary>Randomness</summary>
+<p>By default the <code>Set</code> returned by <code>flatMap</code> will produce values with the same <em>seed</em> (the callable argument).</p>
+<p>If you want a more wide range of seeded values you should call the <code>-&gt;randomize()</code> method after <code>-&gt;flatMap()</code>.</p>
+</details>
+<h3 id="filter">Filter<a class="headerlink" href="#filter" title="Permanent link">&para;</a></h3>
+<p>To reuse the password example from above. Say that your password needs to contain the character <code>$</code>. You can do:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$set</span> <span class="o">=</span> <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">\str_contains</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span> <span class="s1">&#39;$&#39;</span><span class="p">))</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="o">-&gt;</span><span class="na">map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">Password</span><span class="p">(</span><span class="nv">$string</span><span class="p">));</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can quickly negate a condition by replacing <code>-&gt;filter()</code> by <code>-&gt;exclude()</code>.</p>
+</div>
+<details class="warning">
+<summary>Warning</summary>
+<p>This is an example. You should not enforce your passwords to have a specific value in it. The strength is based on length. (<a href="https://www.cisa.gov/secure-our-world/use-strong-passwords">US</a> and <a href="https://cyber.gouv.fr/publications/recommandations-relatives-lauthentification-multifacteur-et-aux-mots-de-passe">French</a> recommendations)</p>
+</details>
+<h3 id="nullable">Nullable<a class="headerlink" href="#nullable" title="Permanent link">&para;</a></h3>
+<p>If you need a <code>Set</code> to also generate a <code>null</code> value you can simply do:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$set</span> <span class="o">=</span> <span class="nv">$set</span><span class="o">-&gt;</span><span class="na">nullable</span><span class="p">();</span>
+</span></code></pre></div>
+<h2 id="primitives">Primitives<a class="headerlink" href="#primitives" title="Permanent link">&para;</a></h2>
+<h3 id="strings">Strings<a class="headerlink" href="#strings" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">With a single character</label><label for="__tabbed_2_2">With a random length</label><label for="__tabbed_2_3">Unicode</label><label for="__tabbed_2_4">Unsafe</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:6"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><input id="__tabbed_3_5" name="__tabbed_3" type="radio" /><input id="__tabbed_3_6" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Any</label><label for="__tabbed_3_2">Lowercase letter</label><label for="__tabbed_3_3">Uppercase letter</label><label for="__tabbed_3_4">Number</label><label for="__tabbed_3_5">ASCII</label><label for="__tabbed_3_6">Alphanumerical</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any chars that can be returned by the <code>\chr()</code> function.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lowercaseLetter</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes the range <code>a..z</code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">uppercaseLetter</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes the range <code>A..Z</code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">number</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes the range <code>0..9</code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ascii</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any character that you can typically find on your keyboard.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">alphanumerical</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any character from <code>-&gt;lowercaseLetter()</code>, <code>-&gt;uppercaseLetter()</code> or <code>-&gt;number()</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="tabbed-block">
+<div class="tabbed-set tabbed-alternate" data-tabs="4:5"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><input id="__tabbed_4_5" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Any</label><label for="__tabbed_4_2">Between</label><label for="__tabbed_4_3">At most</label><label for="__tabbed_4_4">At least</label><label for="__tabbed_4_5">Made of specific characters</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any string of a length between <code>0</code> and <code>128</code> containing any character from <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span></code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">between</span><span class="p">(</span><span class="nv">$min</span><span class="p">,</span> <span class="nv">$max</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This is the same as <code>Set::strings()</code> but you specify the length range.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">atMost</span><span class="p">(</span><span class="nv">$max</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">atLeast</span><span class="p">(</span><span class="nv">$min</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">madeOf</span><span class="p">(</span><span class="nv">$set</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This describes any string made of the characters you specify (ie <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">madeOf</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chars</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">alphanumerical</span><span class="p">())</span></code>)</p>
+<div class="admonition tip">
+<p>You can specify the length range via <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">madeOf</span><span class="p">(</span><span class="nx">Set</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">between</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span></code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabbed-block">
+<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Character</label><label for="__tabbed_5_2">Strings</label><label for="__tabbed_5_3">Character from a block</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unicode</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">char</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any single unicode character.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unicode</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This is the same as <code class="language-php highlight"><span class="nx">Se</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">madeOf</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unicode</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">char</span><span class="p">())</span></code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unicode</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">controlCharater</span><span class="p">();</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unicode</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">basicLatin</span><span class="p">();</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unicode</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">spacingModifierLetters</span><span class="p">();</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c1">// etc...</span>
+</span></code></pre></div>
+<p>This set provides all the <a href="https://unicode-table.com/en/blocks/">unicode blocks</a> as dedicated methods.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">unsafe</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any string that could break your code. You can use this to test the robustness of your code.</p>
+</div>
+</div>
+</div>
+<h3 id="integers">Integers<a class="headerlink" href="#integers" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:7"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><input id="__tabbed_6_4" name="__tabbed_6" type="radio" /><input id="__tabbed_6_5" name="__tabbed_6" type="radio" /><input id="__tabbed_6_6" name="__tabbed_6" type="radio" /><input id="__tabbed_6_7" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Any</label><label for="__tabbed_6_2">Between</label><label for="__tabbed_6_3">Above</label><label for="__tabbed_6_4">Below</label><label for="__tabbed_6_5">Any except zero</label><label for="__tabbed_6_6">Natural numbers</label><label for="__tabbed_6_7">Natural numbers except zero</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any integer between <code>\PHP_INT_MIN</code> and <code>\PHP_INT_MAX</code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">between</span><span class="p">(</span><span class="nv">$min</span><span class="p">,</span> <span class="nv">$max</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This describes any integer between the bounds you specify.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">above</span><span class="p">(</span><span class="nv">$min</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">below</span><span class="p">(</span><span class="nv">$max</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">exceptZero</span><span class="p">();</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">naturalNumbers</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This is the same as <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">above</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">naturalNumbersExceptZero</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This is the same as <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">above</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></code>.</p>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p>The bounds are included in the values that can be generated</p>
+</div>
+<h3 id="real-numbers">Real numbers<a class="headerlink" href="#real-numbers" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:4"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><input id="__tabbed_7_3" name="__tabbed_7" type="radio" /><input id="__tabbed_7_4" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Any</label><label for="__tabbed_7_2">Between</label><label for="__tabbed_7_3">Above</label><label for="__tabbed_7_4">Below</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any float between <code>\PHP_INT_MIN</code> and <code>\PHP_INT_MAX</code>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">between</span><span class="p">(</span><span class="nv">$min</span><span class="p">,</span> <span class="nv">$max</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This describes any float between the bounds you specify.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">above</span><span class="p">(</span><span class="nv">$min</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">realNumbers</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">below</span><span class="p">(</span><span class="nv">$max</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p>The bounds are included in the values that can be generated</p>
+</div>
+<h3 id="type">Type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">type</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any type that is supported by PHP. This is useful to prove a code doesn't depend on the type of its arguments.</p>
+<h2 id="user-defined-values">User defined values<a class="headerlink" href="#user-defined-values" title="Permanent link">&para;</a></h2>
+<h3 id="elements">Elements<a class="headerlink" href="#elements" title="Permanent link">&para;</a></h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span><span class="o">...</span><span class="nv">$values</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This describes all the values that you put in (ie <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">of</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">)</span></code> to describe booleans).</p>
+<h3 id="from-a-generator">From a generator<a class="headerlink" href="#from-a-generator" title="Permanent link">&para;</a></h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">generator</span><span class="p">(</span><span class="k">static</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>    <span class="k">yield</span> <span class="nx">from</span> <span class="nv">$values</span><span class="p">;</span>
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>This describes values that you will provide via a <code>Generator</code>.</p>
+<h2 id="higher-order-sets">Higher order <code>Set</code>s<a class="headerlink" href="#higher-order-sets" title="Permanent link">&para;</a></h2>
+<h3 id="composite">Composite<a class="headerlink" href="#composite" title="Permanent link">&para;</a></h3>
+<p>This <code>Set</code> allows to aggregate multiple values to a new one. Let's say you have a <code>User</code> class, you could desribe it via:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nx">Set</span><span class="o">::</span><span class="na">compose</span><span class="p">(</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>    <span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$firstname</span><span class="p">,</span> <span class="nx">string</span> <span class="nv">$lastname</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>        <span class="nv">$firstname</span><span class="p">,</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>        <span class="nv">$lastname</span><span class="p">,</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>    <span class="p">),</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">atLeast</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">atLeast</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>Any additionnal <code>Set</code> provided will give access to a new argument to the callable.</p>
+<h3 id="either">Either<a class="headerlink" href="#either" title="Permanent link">&para;</a></h3>
+<p>You can think of this <code>Set</code> as an <em>OR</em>.</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">either</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">(),</span> <span class="nx">Set</span><span class="o">::</span><span class="na">strings</span><span class="p">());</span>
+</span></code></pre></div>
+<p>This describes any integer or string.</p>
+<h3 id="sequence">Sequence<a class="headerlink" href="#sequence" title="Permanent link">&para;</a></h3>
+<p><code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="p">)</span></code> describes a <em>list</em> (an array of consecutive values) of values of the given <code>Set</code> type.</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">());</span>
+</span></code></pre></div>
+<p>This describes any list of integers.</p>
+<p>By default the list contains between <code>0</code> and <code>100</code> elements, you can change this via <code class="language-php highlight"><span class="nx">Set</span><span class="o">::</span><span class="na">sequence</span><span class="p">(</span><span class="nx">Set</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">between</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span></code>, <code>-&gt;atLeast()</code> or <code>-&gt;atMost()</code>.</p>
+<div class="admonition note">
+<p>The bounds are included.</p>
+</div>
+<h3 id="tuple">Tuple<a class="headerlink" href="#tuple" title="Permanent link">&para;</a></h3>
+<p>This is a special case of <code>Composite</code>. Both examples does the same thing.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Tuple</label><label for="__tabbed_8_2">Composite</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nx">Set</span><span class="o">::</span><span class="na">tuple</span><span class="p">(</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">(),</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">(),</span>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-php highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nx">Set</span><span class="o">::</span><span class="na">compose</span><span class="p">(</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>    <span class="k">static</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$a</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">],</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">(),</span>
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>    <span class="nx">Set</span><span class="o">::</span><span class="na">integers</span><span class="p">(),</span>
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="p">)</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="call">Call<a class="headerlink" href="#call" title="Permanent link">&para;</a></h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="nx">Set</span><span class="o">::</span><span class="na">call</span><span class="p">(</span><span class="k">static</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>    <span class="k">return</span> <span class="nv">$someValue</span><span class="p">;</span>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="p">})</span>
+</span></code></pre></div>
+<p>This set is useful when building the Model to tests via <a href="../getting-started/property/">properties</a>. If BlackBox <a href="../preface/terminology/#shrinking">shrinks</a> properties it will call the provided callable at each shrinking step. This allows to get rid of any state inside your Model between each run.</p>
+<h2 id="specific-types">Specific types<a class="headerlink" href="#specific-types" title="Permanent link">&para;</a></h2>
+<h3 id="email">Email<a class="headerlink" href="#email" title="Permanent link">&para;</a></h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">email</span><span class="p">();</span>
+</span></code></pre></div>
+<p>This describes any valid email string.</p>
+<h3 id="uuid">Uuid<a class="headerlink" href="#uuid" title="Permanent link">&para;</a></h3>
+<p><div class="language-php highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="k">use</span> <span class="nx">Innmind\BlackBox\Set</span><span class="p">;</span>
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="nx">Set</span><span class="o">::</span><span class="na">uuid</span><span class="p">();</span>
+</span></code></pre></div>
+This describes any valid UUID.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+        
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../assert/own/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Write your own">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Write your own
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../organization/" class="md-footer__link md-footer__link--next" aria-label="Next: Organization">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Organization
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Innmind/BlackBox" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/Baptouuuu" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
