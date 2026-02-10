@@ -40,7 +40,8 @@ class DecorateTest extends TestCase
         $this->assertInstanceOf(
             Set::class,
             Decorate::immutable(
-                static function() {},
+                static function() {
+                },
                 FromGenerator::of(static function() {
                     yield 'e';
                     yield 'f';

@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.10.0 - 2026-02-10
+
+### Added
+
+- Support for PHPUnit `13`
+
 ## 6.9.0 - 2026-01-18
 
 ### Added
