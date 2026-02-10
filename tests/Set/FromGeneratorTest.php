@@ -28,7 +28,8 @@ class FromGeneratorTest extends TestCase
         $this->expectException(\TypeError::class);
         $this->expectExceptionMessage('Argument 1 must be of type callable(): \Generator');
 
-        FromGenerator::of(static function() {});
+        FromGenerator::of(static function() {
+        });
     }
 
     public function testTake()
