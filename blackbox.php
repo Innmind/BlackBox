@@ -50,9 +50,10 @@ Application::new($argv)
             ->dumpTo('coverage.clover')
             ->enableWhen(\getenv('ENABLE_COVERAGE') !== false),
     )
-    ->scenariiPerProof(match (\getenv('ENABLE_COVERAGE')) {
-        false => 100,
-        default => 1,
+    ->map(static fn($app) => match (\getenv('BLACKBOX_ENV')) {
+        'coverage' => $app->scenariiPerProof(1),
+        'extensive' => $app->scenariiPerProof(1000),
+        default => $app,
     })
     ->tryToProve(Load::everythingIn(__DIR__.'/proofs/'))
     ->exit();
