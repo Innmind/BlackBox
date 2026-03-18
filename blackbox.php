@@ -40,18 +40,19 @@ if (!$result->successful()) {
 }
 
 Application::new($argv)
-    ->codeCoverage(
-        CodeCoverage::of(
-            __DIR__.'/src/',
-            __DIR__.'/proofs/',
-            __DIR__.'/fixtures/',
-            __DIR__.'/tests/',
-        )
-            ->dumpTo('coverage.clover')
-            ->enableWhen(\getenv('ENABLE_COVERAGE') !== false),
-    )
     ->map(static fn($app) => match (\getenv('BLACKBOX_ENV')) {
-        'coverage' => $app->scenariiPerProof(1),
+        'coverage' => $app
+            ->scenariiPerProof(1)
+            ->codeCoverage(
+                CodeCoverage::of(
+                    __DIR__.'/src/',
+                    __DIR__.'/proofs/',
+                    __DIR__.'/fixtures/',
+                    __DIR__.'/tests/',
+                )
+                    ->dumpTo('coverage.clover')
+                    ->enableWhen(true),
+            ),
         'extensive' => $app->scenariiPerProof(1000),
         default => $app,
     })
