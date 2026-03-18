@@ -53,7 +53,7 @@ final class Not
     }
 
     /**
-     * @param 0|positive-int $expected
+     * @param int<0, max> $expected
      * @param non-empty-string $message
      *
      * @throws Failure

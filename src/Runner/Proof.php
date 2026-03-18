@@ -26,7 +26,7 @@ interface Proof
     public function tags(): array;
 
     /**
-     * @param positive-int $count
+     * @param int<1, max> $count
      *
      * @return Set<Scenario>
      */

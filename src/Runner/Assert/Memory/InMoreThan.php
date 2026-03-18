@@ -35,7 +35,7 @@ final class InMoreThan
     }
 
     /**
-     * @param positive-int $expected
+     * @param int<1, max> $expected
      * @param non-empty-string $message
      *
      * @throws Failure
@@ -50,7 +50,7 @@ final class InMoreThan
     }
 
     /**
-     * @param positive-int $expected
+     * @param int<1, max> $expected
      * @param non-empty-string $message
      *
      * @throws Failure
@@ -65,7 +65,7 @@ final class InMoreThan
     }
 
     /**
-     * @param positive-int $expected
+     * @param int<1, max> $expected
      * @param non-empty-string $message
      *
      * @throws Failure
@@ -80,8 +80,8 @@ final class InMoreThan
     }
 
     /**
-     * @param positive-int $expected
-     * @param positive-int $power
+     * @param int<1, max> $expected
+     * @param int<1, max> $power
      * @param non-empty-string $message
      *
      * @throws Failure
@@ -92,7 +92,7 @@ final class InMoreThan
         $before = \memory_get_usage();
         $max = \memory_get_usage();
         $inspect = static function() use (&$max): void {
-            /** @var 0|positive-int */
+            /** @var int<0, max> */
             $max = \max($max, \memory_get_usage());
         };
         \register_tick_function($inspect);

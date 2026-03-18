@@ -41,6 +41,27 @@ Application::new([])
     ->exit();
 ```
 
+## Use exhaustive shrinking
+
+By default when BlackBox finds an error in a proof it will shrink the values in order to find the smallest values that fails. But if the shrunk values changes the type of error (1) compared to the original failure then it will stop the shrinking process and return the previous shrunk values.
+{.annotate}
+
+1. meaning it's no longer the same assertion that fails
+
+If you still want BlackBox to continue shrinking even if the type of error changes, then you can do:
+
+```php
+use Innmind\BlackBox\{
+    Application,
+    Runner\Load,
+};
+
+Application::new([])
+    ->useExhaustiveShrinking()
+    ->tryToProve(Load::everythingIn('proofs/'))
+    ->exit();
+```
+
 ## Code coverage
 
 You can record the code covered by your proofs and dump the report to a file like this:

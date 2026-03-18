@@ -49,8 +49,8 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param 0|positive-int $minLength
-     * @param positive-int $maxLength
+     * @param int<0, max> $minLength
+     * @param int<1, max> $maxLength
      *
      * @return Set<string>
      */
@@ -63,7 +63,7 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $length
+     * @param int<1, max> $length
      *
      * @return Set<non-empty-string>
      */
@@ -77,7 +77,7 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $length
+     * @param int<1, max> $length
      *
      * @return Set<string>
      */
@@ -90,7 +90,7 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
+     * @param int<1, max> $size
      *
      * @return Set<string>
      */
@@ -204,8 +204,8 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param 0|positive-int $min
-     * @param positive-int $max
+     * @param int<0, max> $min
+     * @param int<1, max> $max
      *
      * @return Set<string>
      */

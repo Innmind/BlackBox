@@ -417,4 +417,65 @@ return static function() {
                 ->contains('The proof did not make any assertion');
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'The application stops shrinking when the type of error changes',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set::integers()->above(0)),
+                        static function($assert, $i) {
+                            if ($i > 42) {
+                                $assert->true(false);
+                            }
+
+                            $assert->true(false);
+                        },
+                    );
+                });
+
+            $assert->false($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('$i = 43');
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Application::useExhaustiveShrinking()',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->useExhaustiveShrinking()
+                ->tryToProve(static function() use (&$value) {
+                    yield proof(
+                        'example',
+                        given(Set::integers()->above(0)),
+                        static function($assert, $i) {
+                            if ($i > 42) {
+                                $assert->true(false);
+                            }
+
+                            $assert->true(false);
+                        },
+                    );
+                });
+
+            $assert->false($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('$i = 0');
+        },
+    )->tag(Tag::ci, Tag::local);
 };

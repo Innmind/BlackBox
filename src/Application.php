@@ -29,7 +29,7 @@ final class Application
     private ?CodeCoverage $codeCoverage;
     /** @var list<string> */
     private array $args;
-    /** @var positive-int */
+    /** @var int<1, max> */
     private int $scenariiPerProof;
     private bool $useGlobalFunctions;
     private bool $disableMemoryLimit;
@@ -39,7 +39,7 @@ final class Application
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
      * @param list<string> $args
-     * @param positive-int $scenariiPerProof
+     * @param int<1, max> $scenariiPerProof
      */
     private function __construct(
         Random $random,
@@ -82,7 +82,7 @@ final class Application
             Printer\Standard::new(),
             IO\Standard::output,
             IO\Standard::error,
-            new WithShrinking,
+            WithShrinking::keepErrorType(),
             Tag::of(...),
             null,
             $args,
@@ -212,6 +212,31 @@ final class Application
     /**
      * @psalm-mutation-free
      *
+     * This will keep shrinking even if the type of error changes
+     */
+    #[\NoDiscard]
+    public function useExhaustiveShrinking(): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            WithShrinking::exhaustive(),
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
+            $this->stopOnFailure,
+            $this->failWhenNoAssertions,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @param callable(string): ?\UnitEnum $parser
      */
     #[\NoDiscard]
@@ -237,7 +262,7 @@ final class Application
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $count
+     * @param int<1, max> $count
      */
     #[\NoDiscard]
     public function scenariiPerProof(int $count): self
