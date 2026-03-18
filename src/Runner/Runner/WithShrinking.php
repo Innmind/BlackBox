@@ -16,6 +16,11 @@ use Innmind\BlackBox\{
  */
 final class WithShrinking
 {
+    private function __construct(
+        private bool $exhaustive,
+    ) {
+    }
+
     /**
      * @param Value<Scenario> $scenario
      *
@@ -41,6 +46,22 @@ final class WithShrinking
                 $scenario,
             );
         }
+    }
+
+    /**
+     * @internal
+     */
+    public static function keepErrorType(): self
+    {
+        return new self(false);
+    }
+
+    /**
+     * @internal
+     */
+    public static function exhaustive(): self
+    {
+        return new self(true);
     }
 
     /**
@@ -117,6 +138,10 @@ final class WithShrinking
 
     private function canShrink(Assert\Failure $e, string $identity): bool
     {
+        if ($this->exhaustive) {
+            return true;
+        }
+
         return $this->hash($e) === $identity;
     }
 

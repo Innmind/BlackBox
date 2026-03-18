@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\BlackBox\Application::useExhaustiveShrinking()`
+
 ### Changed
 
 - By default now the shrinking stops when the type of error changes

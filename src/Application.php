@@ -82,7 +82,7 @@ final class Application
             Printer\Standard::new(),
             IO\Standard::output,
             IO\Standard::error,
-            new WithShrinking,
+            WithShrinking::keepErrorType(),
             Tag::of(...),
             null,
             $args,
@@ -198,6 +198,31 @@ final class Application
             $this->output,
             $this->error,
             new WithoutShrinking,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
+            $this->stopOnFailure,
+            $this->failWhenNoAssertions,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * This will keep shrinking even if the type of error changes
+     */
+    #[\NoDiscard]
+    public function useExhaustiveShrinking(): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            WithShrinking::exhaustive(),
             $this->parseTag,
             $this->codeCoverage,
             $this->args,
