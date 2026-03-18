@@ -14,19 +14,19 @@ use Innmind\BlackBox\{
  */
 final class Slice implements Provider
 {
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $min;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $max;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $atLeast;
 
     /**
      * @psalm-mutation-free
      *
-     * @param 0|positive-int $min
-     * @param 0|positive-int $max
-     * @param 0|positive-int $atLeast
+     * @param int<0, max> $min
+     * @param int<0, max> $max
+     * @param int<0, max> $atLeast
      */
     private function __construct(int $min, int $max, int $atLeast)
     {
@@ -47,8 +47,8 @@ final class Slice implements Provider
     /**
      * @psalm-pure
      *
-     * @param 0|positive-int $min
-     * @param 0|positive-int $max
+     * @param int<0, max> $min
+     * @param int<0, max> $max
      */
     #[\NoDiscard]
     public static function between(int $min, int $max): self
@@ -59,7 +59,7 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param 0|positive-int $length
+     * @param int<0, max> $length
      */
     #[\NoDiscard]
     public function atLeast(int $length): self
@@ -74,7 +74,7 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
+     * @param int<1, max> $size
      *
      * @return Set<Util>
      */

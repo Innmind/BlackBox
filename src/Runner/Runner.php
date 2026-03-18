@@ -22,7 +22,7 @@ final class Runner
     private WithShrinking|WithoutShrinking $run;
     /** @var \Generator<Proof> */
     private \Generator $proofs;
-    /** @var positive-int */
+    /** @var int<1, max> */
     private int $scenariiPerProof;
     private bool $disableMemoryLimit;
     private bool $stopOnFailure;
@@ -30,7 +30,7 @@ final class Runner
 
     /**
      * @param \Generator<Proof> $proofs
-     * @param positive-int $scenariiPerProof
+     * @param int<1, max> $scenariiPerProof
      */
     private function __construct(
         Random $random,
@@ -150,7 +150,7 @@ final class Runner
 
     /**
      * @param \Generator<Proof> $proofs
-     * @param positive-int $scenariiPerProof
+     * @param int<1, max> $scenariiPerProof
      */
     public static function of(
         Random $random,

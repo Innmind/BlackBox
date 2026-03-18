@@ -49,7 +49,7 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $max
+     * @param int<1, max> $max
      *
      * @return Set<Ensure>
      */
@@ -62,7 +62,7 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
+     * @param int<1, max> $size
      *
      * @return Set<Ensure>
      */
@@ -176,7 +176,7 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $max
+     * @param int<1, max> $max
      *
      * @return Set<Ensure>
      */

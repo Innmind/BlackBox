@@ -8,13 +8,13 @@ namespace Innmind\BlackBox\Runner;
  */
 final class Stats
 {
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $proofs = 0;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $scenarii = 0;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $assertions = 0;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $failures = 0;
 
     private function __construct()
@@ -52,7 +52,7 @@ final class Stats
     }
 
     /**
-     * @return 0|positive-int
+     * @return int<0, max>
      */
     public function proofs(): int
     {
@@ -60,7 +60,7 @@ final class Stats
     }
 
     /**
-     * @return 0|positive-int
+     * @return int<0, max>
      */
     public function scenarii(): int
     {
@@ -68,7 +68,7 @@ final class Stats
     }
 
     /**
-     * @return 0|positive-int
+     * @return int<0, max>
      */
     public function assertions(): int
     {
@@ -76,7 +76,7 @@ final class Stats
     }
 
     /**
-     * @return 0|positive-int
+     * @return int<0, max>
      */
     public function failures(): int
     {

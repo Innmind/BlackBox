@@ -11,7 +11,7 @@ final class NaturalNumbersExceptZero
      * @deprecated Use Set::integers()->naturalNumbersExceptZero() instead
      * @psalm-pure
      *
-     * @return Set<positive-int>
+     * @return Set<int<1, max>>
      */
     #[\NoDiscard]
     public static function any(): Set

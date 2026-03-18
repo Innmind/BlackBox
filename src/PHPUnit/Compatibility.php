@@ -59,7 +59,7 @@ final class Compatibility
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
+     * @param int<1, max> $size
      */
     #[\NoDiscard]
     public function take(int $size): self

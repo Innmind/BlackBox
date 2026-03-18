@@ -67,7 +67,7 @@ final class Combination
     }
 
     /**
-     * @param 0|positive-int $n
+     * @param int<0, max> $n
      */
     public function aShrinkNth(int $n): ?self
     {
@@ -84,7 +84,7 @@ final class Combination
     }
 
     /**
-     * @param 0|positive-int $n
+     * @param int<0, max> $n
      */
     public function bShrinkNth(int $n): ?self
     {

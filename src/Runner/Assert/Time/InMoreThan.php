@@ -35,7 +35,7 @@ final class InMoreThan
     }
 
     /**
-     * @param positive-int $expected
+     * @param int<1, max> $expected
      * @param non-empty-string $message
      *
      * @throws Failure
@@ -43,12 +43,12 @@ final class InMoreThan
     public function milliseconds(int $expected, ?string $message = null): void
     {
         $this->stats->incrementAssertions();
-        /** @var array{0|positive-int, 0|positive-int} */
+        /** @var array{int<0, max>, int<0, max>} */
         $before = \hrtime();
 
         ($this->action)();
 
-        /** @var array{0|positive-int, 0|positive-int} */
+        /** @var array{int<0, max>, int<0, max>} */
         $after = \hrtime();
 
         $nanoseconds = $this->diff($before, $after);
@@ -64,7 +64,7 @@ final class InMoreThan
     }
 
     /**
-     * @param positive-int $expected
+     * @param int<1, max> $expected
      * @param non-empty-string $message
      *
      * @throws Failure
@@ -72,12 +72,12 @@ final class InMoreThan
     public function seconds(int $expected, ?string $message = null): void
     {
         $this->stats->incrementAssertions();
-        /** @var array{0|positive-int, 0|positive-int} */
+        /** @var array{int<0, max>, int<0, max>} */
         $before = \hrtime();
 
         ($this->action)();
 
-        /** @var array{0|positive-int, 0|positive-int} */
+        /** @var array{int<0, max>, int<0, max>} */
         $after = \hrtime();
 
         $nanoseconds = $this->diff($before, $after);
@@ -93,10 +93,10 @@ final class InMoreThan
     }
 
     /**
-     * @param array{0|positive-int, 0|positive-int} $before
-     * @param array{0|positive-int, 0|positive-int} $after
+     * @param array{int<0, max>, int<0, max>} $before
+     * @param array{int<0, max>, int<0, max>} $after
      *
-     * @return 0|positive-int
+     * @return int<0, max>
      */
     private function diff(array $before, array $after): int
     {
@@ -106,7 +106,7 @@ final class InMoreThan
             default => (1_000_000_000 + $after[1]) - $before[1],
         };
 
-        /** @var 0|positive-int */
+        /** @var int<0, max> */
         return ($seconds * 1_000_000_000) + $nanoseconds;
     }
 }

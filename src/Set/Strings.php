@@ -23,8 +23,8 @@ final class Strings
      * @deprecated Use Set::strings()->between() instead
      * @psalm-pure
      *
-     * @param 0|positive-int $min
-     * @param positive-int $max
+     * @param int<0, max> $min
+     * @param int<1, max> $max
      *
      * @return Set<string>
      */
@@ -38,7 +38,7 @@ final class Strings
      * @deprecated Use Set::strings()->atMost() instead
      * @psalm-pure
      *
-     * @param positive-int $max
+     * @param int<1, max> $max
      *
      * @return Set<string>
      */
@@ -52,7 +52,7 @@ final class Strings
      * @deprecated Use Set::strings()->atLeast() instead
      * @psalm-pure
      *
-     * @param positive-int $min
+     * @param int<1, max> $min
      *
      * @return Set<string>
      */
