@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- By default now the shrinking stops when the type of error changes
+
 ## 6.10.0 - 2026-02-10
 
 ### Added
