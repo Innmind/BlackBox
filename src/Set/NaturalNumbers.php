@@ -11,7 +11,7 @@ final class NaturalNumbers
      * @deprecated Use Set::integers()->naturalNumbers() instead
      * @psalm-pure
      *
-     * @return Set<0|positive-int>
+     * @return Set<int<0, max>>
      */
     #[\NoDiscard]
     public static function any(): Set

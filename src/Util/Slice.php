@@ -5,18 +5,18 @@ namespace Innmind\BlackBox\Util;
 
 final class Slice
 {
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $offset;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $length;
-    /** @var 0|positive-int */
+    /** @var int<0, max> */
     private int $minimum;
     private bool $takeLeading;
 
     /**
-     * @param 0|positive-int $offset
-     * @param 0|positive-int $length
-     * @param 0|positive-int $minimum
+     * @param int<0, max> $offset
+     * @param int<0, max> $length
+     * @param int<0, max> $minimum
      */
     private function __construct(
         int $offset,
@@ -50,9 +50,9 @@ final class Slice
     }
 
     /**
-     * @param 0|positive-int $offset
-     * @param 0|positive-int $length
-     * @param 0|positive-int $minimum
+     * @param int<0, max> $offset
+     * @param int<0, max> $length
+     * @param int<0, max> $minimum
      */
     #[\NoDiscard]
     public static function of(

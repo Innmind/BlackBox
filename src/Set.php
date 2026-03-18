@@ -460,7 +460,7 @@ final class Set
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $size
+     * @param int<1, max> $size
      *
      * @return self<T>
      */

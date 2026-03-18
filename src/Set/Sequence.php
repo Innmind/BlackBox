@@ -95,7 +95,7 @@ final class Sequence implements Implementation
     }
 
     /**
-     * @param 0|positive-int $size
+     * @param int<0, max> $size
      *
      * @return list<Value<I>>
      */

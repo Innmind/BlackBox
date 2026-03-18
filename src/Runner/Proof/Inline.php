@@ -18,13 +18,13 @@ final class Inline implements Proof
     private \Closure $test;
     /** @var list<\UnitEnum> */
     private array $tags;
-    /** @var ?positive-int */
+    /** @var ?int<1, max> */
     private ?int $scenarii;
 
     /**
      * @param \Closure(Assert, ...mixed): void $test
      * @param list<\UnitEnum> $tags
-     * @param ?positive-int $scenarii
+     * @param ?int<1, max> $scenarii
      */
     private function __construct(
         Name $name,
@@ -90,7 +90,7 @@ final class Inline implements Proof
     }
 
     /**
-     * @param positive-int $take
+     * @param int<1, max> $take
      */
     public function take(int $take): self
     {

@@ -29,7 +29,7 @@ final class Application
     private ?CodeCoverage $codeCoverage;
     /** @var list<string> */
     private array $args;
-    /** @var positive-int */
+    /** @var int<1, max> */
     private int $scenariiPerProof;
     private bool $useGlobalFunctions;
     private bool $disableMemoryLimit;
@@ -39,7 +39,7 @@ final class Application
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
      * @param list<string> $args
-     * @param positive-int $scenariiPerProof
+     * @param int<1, max> $scenariiPerProof
      */
     private function __construct(
         Random $random,
@@ -262,7 +262,7 @@ final class Application
     /**
      * @psalm-mutation-free
      *
-     * @param positive-int $count
+     * @param int<1, max> $count
      */
     #[\NoDiscard]
     public function scenariiPerProof(int $count): self

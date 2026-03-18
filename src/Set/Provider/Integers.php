@@ -87,7 +87,7 @@ final class Integers implements Provider
     #[\NoDiscard]
     public function naturalNumbers(): Set
     {
-        /** @var Set<0|positive-int> */
+        /** @var Set<int<0, max>> */
         return $this
             ->above(0)
             ->toSet();
