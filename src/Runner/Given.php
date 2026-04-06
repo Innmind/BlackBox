@@ -48,7 +48,7 @@ final class Given
      * @param callable(...mixed): bool $filter
      */
     #[\NoDiscard]
-    public function excldue(callable $filter): self
+    public function exclude(callable $filter): self
     {
         return $this->filter(static fn(...$args) => !$filter(...$args));
     }
