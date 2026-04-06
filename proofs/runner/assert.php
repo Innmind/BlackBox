@@ -119,7 +119,7 @@ return static function($load) {
             Set\Sequence::of(Set\Type::any()),
             Set\Integers::above(0),
             Set\Strings::any(),
-        )->filter(static fn($values, $count) => \count($values) !== $count),
+        )->exclude(static fn($values, $count) => \count($values) === $count),
         static function($assert, $values, $count, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -150,7 +150,7 @@ return static function($load) {
             Set\Sequence::of(Set\Type::any()),
             Set\Integers::above(0),
             Set\Strings::any(),
-        )->filter(static fn($values, $count) => \count($values) !== $count),
+        )->exclude(static fn($values, $count) => \count($values) === $count),
         static function($assert, $values, $count, $message) {
             $sut = Assert::of($stats = Stats::new());
 
