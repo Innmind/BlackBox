@@ -434,4 +434,20 @@ return static function() {
             }
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield proof(
+        'Set::via()',
+        given(
+            $anySet,
+            $anySet,
+        ),
+        static fn($assert, $in, $out) => $assert->same(
+            $out,
+            $in->via(static function($set) use ($assert, $in, $out) {
+                $assert->same($in, $test);
+
+                return $out;
+            }),
+        ),
+    );
 };
