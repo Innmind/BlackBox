@@ -35,11 +35,14 @@ final class Application
     private bool $disableMemoryLimit;
     private bool $stopOnFailure;
     private bool $failWhenNoAssertions;
+    /** @var ?list<\UnitEnum> */
+    private ?array $tags;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
      * @param list<string> $args
      * @param int<1, max> $scenariiPerProof
+     * @param ?list<\UnitEnum> $tags
      */
     private function __construct(
         Random $random,
@@ -55,6 +58,7 @@ final class Application
         bool $disableMemoryLimit,
         bool $stopOnFailure,
         bool $failWhenNoAssertions,
+        ?array $tags,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -69,6 +73,7 @@ final class Application
         $this->disableMemoryLimit = $disableMemoryLimit;
         $this->stopOnFailure = $stopOnFailure;
         $this->failWhenNoAssertions = $failWhenNoAssertions;
+        $this->tags = $tags;
     }
 
     /**
@@ -91,6 +96,7 @@ final class Application
             false,
             false,
             true,
+            null,
         );
     }
 
@@ -114,6 +120,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -137,6 +144,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -160,6 +168,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -183,6 +192,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -206,6 +216,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -231,6 +242,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -256,6 +268,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -281,6 +294,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -304,6 +318,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -327,6 +342,7 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -350,6 +366,7 @@ final class Application
             true,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -373,6 +390,7 @@ final class Application
             $this->disableMemoryLimit,
             true,
             $this->failWhenNoAssertions,
+            $this->tags,
         );
     }
 
@@ -396,6 +414,32 @@ final class Application
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             false,
+            $this->tags,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @no-named-arguments
+     */
+    #[\NoDiscard]
+    public function filterOnTags(\UnitEnum ...$tags): self
+    {
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->useGlobalFunctions,
+            $this->disableMemoryLimit,
+            $this->stopOnFailure,
+            $this->failWhenNoAssertions,
+            $tags,
         );
     }
 
@@ -435,8 +479,13 @@ final class Application
             require_once __DIR__.'/Runner/global.php';
         }
 
-        $tags = \array_map($this->parseTag, $this->args);
-        $tags = \array_filter($tags, static fn($tag) => $tag instanceof \UnitEnum);
+        if (\is_null($this->tags)) {
+            $tags = \array_map($this->parseTag, $this->args);
+            $tags = \array_filter($tags, static fn($tag) => $tag instanceof \UnitEnum);
+        } else {
+            $tags = $this->tags;
+        }
+
         $filter = Filter::new()->onTags(...$tags);
 
         $run = Runner::of(

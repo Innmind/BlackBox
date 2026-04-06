@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `Innmind\BlackBox\Application::filterOnTags()`
+
 ## 6.11.0 - 2026-03-18
 
 ### Added
