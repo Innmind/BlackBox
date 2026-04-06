@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Runner\Load,
     Runner\CodeCoverage,
     Runner\IO\Collect,
+    Tag,
 };
 use function Innmind\BlackBox\Runner\test;
 
@@ -54,6 +55,7 @@ Application::new($argv)
                     ->enableWhen(true),
             ),
         'extensive' => $app->scenariiPerProof(1000),
+        'lab_station' => $app->filterOnTags(Tag::local),
         default => $app,
     })
     ->tryToProve(Load::everythingIn(__DIR__.'/proofs/'))
