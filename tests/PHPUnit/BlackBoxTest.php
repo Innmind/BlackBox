@@ -6,14 +6,21 @@ namespace Tests\Innmind\BlackBox\PHPUnit;
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     PHPUnit\Framework\TestCase,
+    PHPUnit\Framework\Attributes\DataProvider,
+    PHPUnit\Framework\Attributes\Group,
     Set,
 };
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\{
+    DataProvider as PHPUnitDataProvider,
+    Group as PHPUnitGroup,
+};
 
 class BlackBoxTest extends TestCase
 {
     use BlackBox;
 
+    #[PHPUnitGroup('local')]
+    #[Group('ci')]
     public function testDoesntFailWhenTheExceptionIsExpected()
     {
         $this
@@ -41,7 +48,7 @@ class BlackBoxTest extends TestCase
     }
 
     #[DataProvider('ints2')]
-    #[DataProvider('ints2')]
+    #[PHPUnitDataProvider('ints2')]
     public function testMultipleDataProviders($a, $b)
     {
         $this->assertIsInt($a);
