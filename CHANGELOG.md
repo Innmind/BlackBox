@@ -8,6 +8,7 @@
 - `Innmind\BlackBox\PHPUnit\Framework\Attributes\DataProvider`
 - `Innmind\BlackBox\PHPUnit\Framework\Attributes\Group`
 - `Innmind\BlackBox\Set::via()`
+- `Innmind\BlackBox\Runner\Given::exclude()`
 
 ## 6.11.0 - 2026-03-18
 

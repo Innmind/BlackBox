@@ -45,6 +45,15 @@ final class Given
     }
 
     /**
+     * @param callable(...mixed): bool $filter
+     */
+    #[\NoDiscard]
+    public function excldue(callable $filter): self
+    {
+        return $this->filter(static fn(...$args) => !$filter(...$args));
+    }
+
+    /**
      * @return Set<list<mixed>>
      */
     public function set(): Set
