@@ -114,6 +114,9 @@ Application::new([])
     ->exit();
 ```
 
+??? warning
+    This method is deprecated and will be removed in the next major version.
+
 ## Disable GitHub Action output
 
 When it detects it's run inside a GitHub Action the framework groups each proof output to make the output more compact for large suites. It also adds annotations to quickly jump to each failing proof.

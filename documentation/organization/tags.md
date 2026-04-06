@@ -27,18 +27,21 @@ use Innmind\BlackBox\{
     Application,
     Tag,
     Runner\Assert,
+    Prove,
 };
 
 Application::new($argv) #(1)
-    ->tryToProve(static function(): \Generator {
-        yield test(
-            'WIP test',
-            static function(Assert $assert) {
-                // your code here
-            },
-        )->tag(Tag::wip);
+    ->tryToProve(static function(Prove $prove): \Generator {
+        yield $prove
+            ->test(
+                'WIP test',
+                static function(Assert $assert) {
+                    // your code here
+                },
+            )
+            ->tag(Tag::wip);
 
-        yield test(
+        yield $prove->test(
             'Another test',
             static function(Assert $assert) {
                 // your code here
@@ -87,24 +90,29 @@ Then make BlackBox aware of it:
 use Innmind\BlackBox\{
     Application,
     Runner\Assert,
+    Prove,
 };
 
 Application::new($argv)
     ->parseTagWith(Business::of(...))
-    ->tryToProve(static function(): \Generator {
-        yield test(
-            'Shipping test',
-            static function(Assert $assert) {
-                // your code here
-            },
-        )->tag(Business::shipping);
+    ->tryToProve(static function(Prove $prove): \Generator {
+        yield $prove
+            ->test(
+                'Shipping test',
+                static function(Assert $assert) {
+                    // your code here
+                },
+            )
+            ->tag(Business::shipping);
 
-        yield test(
-            'Billing test',
-            static function(Assert $assert) {
-                // your code here
-            },
-        )->tag(Business::billing);
+        yield $prove
+            ->test(
+                'Billing test',
+                static function(Assert $assert) {
+                    // your code here
+                },
+            )
+            ->tag(Business::billing);
     })
     ->exit();
 ```
