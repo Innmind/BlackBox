@@ -323,6 +323,7 @@ final class Application
     }
 
     /**
+     * @deprecated
      * @psalm-mutation-free
      */
     #[\NoDiscard]

@@ -12,6 +12,7 @@ use Innmind\BlackBox\{
 };
 
 /**
+ * @deprecated
  * @param non-empty-string $name
  * @param callable(Assert, ...mixed): void $test
  */
@@ -28,6 +29,7 @@ function proof(
 }
 
 /**
+ * @deprecated
  * @param non-empty-string $name
  * @param callable(Assert): void $test
  */
@@ -40,6 +42,7 @@ function test(string $name, callable $test): Proof
 }
 
 /**
+ * @deprecated
  * @no-named-arguments
  */
 function given(Set|Provider $first, Set|Provider ...$rest): Given
@@ -61,6 +64,7 @@ function given(Set|Provider $first, Set|Provider ...$rest): Given
 }
 
 /**
+ * @deprecated
  * @param class-string<Property> $property
  * @param Set<object>|Provider<object> $systemUnderTest
  */
@@ -72,6 +76,7 @@ function property(
 }
 
 /**
+ * @deprecated
  * @param non-empty-string $name
  * @param Set<Properties>|Provider<Properties> $properties
  * @param Set<object>|Provider<object> $systemUnderTest
