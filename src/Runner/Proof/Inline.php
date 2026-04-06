@@ -22,6 +22,8 @@ final class Inline implements Proof
     private ?int $scenarii;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param \Closure(Assert, ...mixed): void $test
      * @param list<\UnitEnum> $tags
      * @param ?int<1, max> $scenarii
@@ -41,6 +43,8 @@ final class Inline implements Proof
     }
 
     /**
+     * @psalm-pure
+     *
      * @param \Closure(Assert, ...mixed): void $test
      */
     public static function of(
@@ -52,6 +56,8 @@ final class Inline implements Proof
     }
 
     /**
+     * @psalm-pure
+     *
      * @param \Closure(Assert): void $test
      */
     public static function test(

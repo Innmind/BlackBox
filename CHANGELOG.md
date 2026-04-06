@@ -9,6 +9,11 @@
 - `Innmind\BlackBox\PHPUnit\Framework\Attributes\Group`
 - `Innmind\BlackBox\Set::via()`
 - `Innmind\BlackBox\Runner\Given::exclude()`
+- `Innmind\BlackBox\Prove`
+
+### Changed
+
+- The callable passed to `Application::tryToProve()` now has access to an instance of `Prove`
 
 ## 6.11.0 - 2026-03-18
 

@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Proof;
 
+/**
+ * @psalm-immutable
+ */
 final class Name
 {
     /** @var non-empty-string */
@@ -17,6 +20,8 @@ final class Name
     }
 
     /**
+     * @psalm-pure
+     *
      * @param non-empty-string $name
      */
     public static function of(string $name): self
