@@ -478,4 +478,33 @@ return static function() {
                 ->contains('$i = 0');
         },
     )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Application::filterOnTags()',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->filterOnTags(Tag::local)
+                ->tryToProve(static function() {
+                    yield test(
+                        'example',
+                        static fn($assert) => $assert->true(true),
+                    )->tag(Tag::local);
+
+                    yield test(
+                        'example',
+                        static fn($assert) => $assert->true(true),
+                    )->tag(Tag::ci);
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('Proofs: 1, Scenarii: 1');
+        },
+    )->tag(Tag::ci, Tag::local);
 };
