@@ -220,7 +220,7 @@ return static function() {
                 ->expected('-1')
                 ->same(\ini_get('memory_limit'));
         },
-    )->tag(Tag::ci, Tag::local);
+    )->tag(Tag::ci);
 
     yield test(
         'BlackBox can stop on first failure',
