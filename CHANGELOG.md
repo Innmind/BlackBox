@@ -5,6 +5,8 @@
 ### Added
 
 - `Innmind\BlackBox\Application::filterOnTags()`
+- `Innmind\BlackBox\PHPUnit\Framework\Attributes\DataProvider`
+- `Innmind\BlackBox\PHPUnit\Framework\Attributes\Group`
 
 ## 6.11.0 - 2026-03-18
 
