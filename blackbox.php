@@ -15,8 +15,8 @@ use function Innmind\BlackBox\Runner\test;
 // This test has to be done here because other tests use global functions
 $result = Application::new([])
     ->disableGlobalFunctions()
-    ->tryToProve(function() {
-        yield test(
+    ->tryToProve(function($prove) {
+        yield $prove->test(
             'Global functions can be disabled',
             static fn($assert) => $assert->true(
                 Application::new([])

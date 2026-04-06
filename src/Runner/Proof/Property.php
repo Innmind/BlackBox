@@ -21,6 +21,8 @@ final class Property implements Proof
     private array $tags;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param class-string<Concrete> $property
      * @param ?non-empty-string $name
      * @param Set<object> $systemUnderTest
@@ -39,6 +41,8 @@ final class Property implements Proof
     }
 
     /**
+     * @psalm-pure
+     *
      * @param class-string<Concrete> $property
      * @param Set<object> $systemUnderTest
      */

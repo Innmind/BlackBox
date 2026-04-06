@@ -20,6 +20,8 @@ final class Properties implements Proof
     private array $tags;
 
     /**
+     * @psalm-mutation-free
+     *
      * @param Set<Concrete> $properties
      * @param Set<object> $systemUnderTest
      * @param list<\UnitEnum> $tags
@@ -37,6 +39,8 @@ final class Properties implements Proof
     }
 
     /**
+     * @psalm-pure
+     *
      * @param Set<Concrete> $properties
      * @param Set<object> $systemUnderTest
      */

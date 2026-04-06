@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner;
 
+use Innmind\BlackBox\Prove;
+
 final class Load
 {
     private function __construct()
@@ -19,8 +21,9 @@ final class Load
         /**
          * @psalm-suppress UnresolvableInclude Presume the developer uses a valid absolute path
          * @var mixed $value
+         * @todo switch $this in Prove in v7
          */
-        foreach ((require $path)($this) as $value) {
+        foreach ((require $path)($this, Prove::new()) as $value) {
             if ($value instanceof Proof) {
                 yield $value;
             }

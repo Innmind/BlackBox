@@ -61,27 +61,27 @@ You can run this property like this:
     use Innmind\BlackBox\{
         Application,
         Runner\Assert,
+        Prove,
         Set,
     };
 
     Application::new([])
-        ->tryToProve(static function(): \Generator {
+        ->tryToProve(static function(Prove $prove): \Generator {
             $add = new Add;
 
-            yield proof(
-                'Add is commutative',
-                given(
+            yield $prove
+                ->proof('Add is commutative')
+                ->given(
                     AddIsCommutative::any()->filter(
                         static fn($property) => $property->applicableTo($add),
                     ),
-                ),
-                static function(
+                )
+                ->test(static function(
                     Assert $assert,
                     AddIsCommutative $property
                 ) use ($add): void {
                     $property->ensureHeldBy($assert, $add);
-                },
-            );
+                });
         })
         ->exit();
     ```
@@ -94,12 +94,13 @@ You can run this property like this:
     use Innmind\BlackBox\{
         Application,
         Runner\Assert,
+        Prove,
         Set,
     };
 
     Application::new([])
-        ->tryToProve(static function(): \Generator {
-            yield property(
+        ->tryToProve(static function(Prove $prove): \Generator {
+            yield $prove->property(
                 AddIsCommutative::class,
                 Set::of(new Add),
             );
@@ -121,12 +122,13 @@ To run all possible scenarii you would write:
 use Innmind\BlackBox\{
     Application,
     Runner\Assert,
+    Prove,
     Set,
 };
 
 Application::new([])
-    ->tryToProve(static function(): \Generator {
-        yield properties(
+    ->tryToProve(static function(Prove $prove): \Generator {
+        yield $prove->properties(
             'Add properties',
             Set\Properties::any(
                 AddIsCommutative::any(),
@@ -136,17 +138,17 @@ Application::new([])
             Set::of(new Add),
         );
 
-        yield property(
+        yield $prove->property(
             AddIsCommutative::class,
             Set::of(new Add),
         );
 
-        yield property(
+        yield $prove->property(
             AddIsCumulative::class,
             Set::of(new Add),
         );
 
-        yield property(
+        yield $prove->property(
             ZeroIsAnIdentityValue::class,
             Set::of(new Add),
         );

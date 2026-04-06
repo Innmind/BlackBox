@@ -323,6 +323,7 @@ final class Application
     }
 
     /**
+     * @deprecated
      * @psalm-mutation-free
      */
     #[\NoDiscard]
@@ -470,7 +471,7 @@ final class Application
     }
 
     /**
-     * @param callable(): \Generator<Proof> $proofs
+     * @param callable(Prove): \Generator<Proof> $proofs
      */
     #[\NoDiscard]
     public function tryToProve(callable $proofs): Result
@@ -494,7 +495,7 @@ final class Application
             $this->output,
             $this->error,
             $this->runner,
-            $filter($proofs()),
+            $filter($proofs(Prove::new())),
             $this->scenariiPerProof,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
