@@ -10,6 +10,7 @@
 - `Innmind\BlackBox\Set::via()`
 - `Innmind\BlackBox\Runner\Given::exclude()`
 - `Innmind\BlackBox\Prove`
+- Support for `phpunit/php-code-coverage:~14.0`
 
 ### Changed
 
