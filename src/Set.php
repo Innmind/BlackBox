@@ -557,6 +557,18 @@ final class Set
     }
 
     /**
+     * @template V
+     *
+     * @param callable(self<T>): self<V> $via
+     *
+     * @return self<V>
+     */
+    public function via(callable $via): self
+    {
+        return $via($this);
+    }
+
+    /**
      * @throws EmptySet When no value can be generated
      *
      * @return iterable<T>

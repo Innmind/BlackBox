@@ -31,24 +31,24 @@ Its Functional[^1] design also allows you to use it for your own scenarii.
         Application
         Set,
         Runner\Assert,
+        Prove,
     };
 
     Application::new([])
         ->scenariiPerProof(1_000)
-        ->tryToProve(static function() {
-            yield proof(
-                'Add is commutative',
-                given(
+        ->tryToProve(static function(Prove $prove) {
+            yield $prove
+                ->proof('Add is commutative')
+                ->given(
                     Set::integers(),
                     Set::integers(),
-                ),
-                static function(Assert $assert, int $a, int $b) {
+                )
+                ->test(static function(Assert $assert, int $a, int $b) {
                     $assert->same(
                         add($a, $b),
                         add($b, $a),
                     );
-                },
-            );
+                });
         })
         ->exit();
     ```

@@ -1,5 +1,35 @@
 # Changelog
 
+## 6.12.0 - 2026-04-11
+
+### Added
+
+- `Innmind\BlackBox\Application::filterOnTags()`
+- `Innmind\BlackBox\PHPUnit\Framework\Attributes\DataProvider`
+- `Innmind\BlackBox\PHPUnit\Framework\Attributes\Group`
+- `Innmind\BlackBox\Set::via()`
+- `Innmind\BlackBox\Runner\Given::exclude()`
+- `Innmind\BlackBox\Prove`
+- Support for `phpunit/php-code-coverage:~14.0`
+
+### Changed
+
+- The callable passed to `Application::tryToProve()` now has access to an instance of `Prove`
+
+### Depercated
+
+- `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Runner\proof()`
+- `Innmind\BlackBox\Runner\test()`
+- `Innmind\BlackBox\Runner\given()`
+- `Innmind\BlackBox\Runner\property()`
+- `Innmind\BlackBox\Runner\properties()`
+- `proof()`
+- `test()`
+- `given()`
+- `property()`
+- `properties()`
+
 ## 6.11.0 - 2026-03-18
 
 ### Added

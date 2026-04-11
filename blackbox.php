@@ -8,14 +8,15 @@ use Innmind\BlackBox\{
     Runner\Load,
     Runner\CodeCoverage,
     Runner\IO\Collect,
+    Tag,
 };
 use function Innmind\BlackBox\Runner\test;
 
 // This test has to be done here because other tests use global functions
 $result = Application::new([])
     ->disableGlobalFunctions()
-    ->tryToProve(function() {
-        yield test(
+    ->tryToProve(function($prove) {
+        yield $prove->test(
             'Global functions can be disabled',
             static fn($assert) => $assert->true(
                 Application::new([])
@@ -54,6 +55,7 @@ Application::new($argv)
                     ->enableWhen(true),
             ),
         'extensive' => $app->scenariiPerProof(1000),
+        'lab_station' => $app->filterOnTags(Tag::local),
         default => $app,
     })
     ->tryToProve(Load::everythingIn(__DIR__.'/proofs/'))

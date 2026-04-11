@@ -16,6 +16,9 @@ use Innmind\BlackBox\{
  */
 final class WithShrinking
 {
+    /**
+     * @psalm-mutation-free
+     */
     private function __construct(
         private bool $exhaustive,
     ) {
@@ -50,6 +53,7 @@ final class WithShrinking
 
     /**
      * @internal
+     * @psalm-pure
      */
     public static function keepErrorType(): self
     {
@@ -58,6 +62,7 @@ final class WithShrinking
 
     /**
      * @internal
+     * @psalm-pure
      */
     public static function exhaustive(): self
     {

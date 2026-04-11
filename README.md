@@ -20,41 +20,41 @@ use Innmind\BlackBox\{
     Application,
     Set,
     Runner\Assert,
+    Prove,
 };
 
 Application::new([])
-    ->tryToProve(static function() {
-        yield proof(
-            'add is commutative',
-            given(
+    ->tryToProve(static function(Prove $prove) {
+        yield $prove
+            ->proof('add is commutative')
+            ->given(
                 Set::integers(),
                 Set::integers(),
-            ),
-            static fn(Assert $assert, int $a, int $b) => $assert->same(
+            )
+            ->test(static fn(Assert $assert, int $a, int $b) => $assert->same(
                 add($a, $b),
                 add($b, $a),
-            ),
-        );
-        yield proof(
-            'add is associative',
-            given(
+            ));
+
+        yield $prove
+            ->proof('add is associative')
+            ->given(
                 Set::integers(),
                 Set::integers(),
                 Set::integers(),
-            ),
-            static fn(Assert $assert, int $a, int $b, int $c) => $assert->same(
+            )
+            ->test(static fn(Assert $assert, int $a, int $b, int $c) => $assert->same(
                 add(add($a, $b), $c),
                 add($a, add($b, $c)),
-            ),
-        );
-        yield proof(
-            'add is an identity function',
-            given(Set::integers()),
-            static fn(Assert $assert, int $a) => $assert->same(
+            ));
+
+        yield $prove
+            ->proof('add is an identity function')
+            ->given(Set::integers())
+            ->test(static fn(Assert $assert, int $a) => $assert->same(
                 $a,
                 add($a, 0),
-            ),
-        );
+            ));
     })
     ->exit();
 ```

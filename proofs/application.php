@@ -48,12 +48,11 @@ return static function() {
                 ->scenariiPerProof($scenarii)
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
-                ->tryToProve(static function() {
-                    yield proof(
-                        'example',
-                        given(Set\Integers::any()),
-                        static fn($assert, $i) => $assert->true(true),
-                    );
+                ->tryToProve(static function($prove) {
+                    yield $prove
+                        ->proof('example')
+                        ->given(Set\Integers::any())
+                        ->test(static fn($assert, $i) => $assert->true(true));
                 });
 
             $assert->true($result->successful());
@@ -73,8 +72,8 @@ return static function() {
                 ->scenariiPerProof($scenarii)
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
-                ->tryToProve(static function() {
-                    yield property(
+                ->tryToProve(static function($prove) {
+                    yield $prove->property(
                         LowerBoundAtZero::class,
                         Set\Elements::of(new Counter),
                     );
@@ -98,8 +97,8 @@ return static function() {
                 ->displayOutputVia($io)
                 ->displayErrorVia($io)
                 ->allowProofsToNotMakeAnyAssertions()
-                ->tryToProve(static function() {
-                    yield properties(
+                ->tryToProve(static function($prove) {
+                    yield $prove->properties(
                         'Counter properties',
                         Set\Properties::any(
                             DownAndUpIsAnIdentityFunction::any(),
@@ -220,7 +219,7 @@ return static function() {
                 ->expected('-1')
                 ->same(\ini_get('memory_limit'));
         },
-    )->tag(Tag::ci, Tag::local);
+    )->tag(Tag::ci);
 
     yield test(
         'BlackBox can stop on first failure',
@@ -476,6 +475,35 @@ return static function() {
             $assert
                 ->string($io->toString())
                 ->contains('$i = 0');
+        },
+    )->tag(Tag::ci, Tag::local);
+
+    yield test(
+        'Application::filterOnTags()',
+        static function($assert) {
+            $io = Collect::new();
+
+            $result = Application::new([])
+                ->displayOutputVia($io)
+                ->displayErrorVia($io)
+                ->usePrinter(Standard::withoutColors())
+                ->filterOnTags(Tag::local)
+                ->tryToProve(static function() {
+                    yield test(
+                        'example',
+                        static fn($assert) => $assert->true(true),
+                    )->tag(Tag::local);
+
+                    yield test(
+                        'example',
+                        static fn($assert) => $assert->true(true),
+                    )->tag(Tag::ci);
+                });
+
+            $assert->true($result->successful());
+            $assert
+                ->string($io->toString())
+                ->contains('Proofs: 1, Scenarii: 1');
         },
     )->tag(Tag::ci, Tag::local);
 };

@@ -9,6 +9,7 @@ use SebastianBergmann\CodeCoverage\{
     Driver\Selector,
     CodeCoverage,
     Report\Clover,
+    Report\Facade,
 };
 
 /**
@@ -81,6 +82,15 @@ final class Report
 
     public function dump(): void
     {
-        (new Clover)->process($this->coverage, $this->reportPath);
+        if (\class_exists(Facade::class)) {
+            Facade::fromObject($this->coverage)->renderClover($this->reportPath);
+        } else {
+            /**
+             * @psalm-suppress InternalClass
+             * @psalm-suppress InternalMethod
+             * @psalm-suppress InvalidArgument Invalid since version 14, but in this case it uses the branch above
+             */
+            (new Clover)->process($this->coverage, $this->reportPath);
+        }
     }
 }

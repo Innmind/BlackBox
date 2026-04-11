@@ -14,10 +14,13 @@ declare(strict_types = 1);
 
 require 'path/to/vendor/autoload.php';
 
-use Innmind\BlackBox\Application;
+use Innmind\BlackBox\{
+    Application,
+    Prove,
+};
 
 Application::new([]) #(1)
-    ->tryToProve(static function(): \Generator {
+    ->tryToProve(static function(Prove $prove): \Generator {
         // tests and proofs go here
     })
     ->exit();
