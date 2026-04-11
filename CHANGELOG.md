@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Requires PHP `8.4`
+
+### Removed
+
+- Support for `symfony/var-dumper` `~6.0|~7.0`
+- Support for `phpunit/phpunit` `~10.0|~11.0|~12.0`
+- Support for `phpunit/php-timer` `~6.0|~7.0|~8.0`
+- Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
+
 ## 6.12.0 - 2026-04-11
 
 ### Added
