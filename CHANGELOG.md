@@ -12,6 +12,7 @@
 - Support for `phpunit/phpunit` `~10.0|~11.0|~12.0`
 - Support for `phpunit/php-timer` `~6.0|~7.0|~8.0`
 - Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
+- `Innmind\BlackBox\Application::disableGlobalFunctions()`
 
 ## 6.12.0 - 2026-04-11
 

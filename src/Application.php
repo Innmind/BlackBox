@@ -31,7 +31,6 @@ final class Application
     private array $args;
     /** @var int<1, max> */
     private int $scenariiPerProof;
-    private bool $useGlobalFunctions;
     private bool $disableMemoryLimit;
     private bool $stopOnFailure;
     private bool $failWhenNoAssertions;
@@ -54,7 +53,6 @@ final class Application
         ?CodeCoverage $codeCoverage,
         array $args,
         int $scenariiPerProof,
-        bool $useGlobalFunctions,
         bool $disableMemoryLimit,
         bool $stopOnFailure,
         bool $failWhenNoAssertions,
@@ -69,7 +67,6 @@ final class Application
         $this->codeCoverage = $codeCoverage;
         $this->args = $args;
         $this->scenariiPerProof = $scenariiPerProof;
-        $this->useGlobalFunctions = $useGlobalFunctions;
         $this->disableMemoryLimit = $disableMemoryLimit;
         $this->stopOnFailure = $stopOnFailure;
         $this->failWhenNoAssertions = $failWhenNoAssertions;
@@ -92,7 +89,6 @@ final class Application
             null,
             $args,
             100,
-            true,
             false,
             false,
             true,
@@ -116,7 +112,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -140,7 +135,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -164,7 +158,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -188,7 +181,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -212,7 +204,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -238,7 +229,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -264,7 +254,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -290,7 +279,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $count,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -314,32 +302,6 @@ final class Application
             $codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
-            $this->disableMemoryLimit,
-            $this->stopOnFailure,
-            $this->failWhenNoAssertions,
-            $this->tags,
-        );
-    }
-
-    /**
-     * @deprecated
-     * @psalm-mutation-free
-     */
-    #[\NoDiscard]
-    public function disableGlobalFunctions(): self
-    {
-        return new self(
-            $this->random,
-            $this->printer,
-            $this->output,
-            $this->error,
-            $this->runner,
-            $this->parseTag,
-            $this->codeCoverage,
-            $this->args,
-            $this->scenariiPerProof,
-            false,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -363,7 +325,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             true,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -387,7 +348,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             true,
             $this->failWhenNoAssertions,
@@ -411,7 +371,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             false,
@@ -436,7 +395,6 @@ final class Application
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,
-            $this->useGlobalFunctions,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
@@ -476,9 +434,7 @@ final class Application
     #[\NoDiscard]
     public function tryToProve(callable $proofs): Result
     {
-        if ($this->useGlobalFunctions) {
-            require_once __DIR__.'/Runner/global.php';
-        }
+        require_once __DIR__.'/Runner/global.php';
 
         if (\is_null($this->tags)) {
             $tags = \array_map($this->parseTag, $this->args);
