@@ -3,17 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit\Framework;
 
-use Innmind\BlackBox\{
-    Runner\Assert,
-    Runner\Proof\Scenario,
-};
+use Innmind\BlackBox\Runner\Assert;
 
 abstract class TestCase
 {
     private static Assert $assert;
-    private ?string $expectedException = null;
-    private null|int|string $expectedExceptionCode = null;
-    private ?string $expectedExceptionMessage = null;
 
     /**
      * @internal
@@ -40,38 +34,8 @@ abstract class TestCase
     final public function executeClosure(callable $test, array $args): void
     {
         $this->setUp();
-
-        try {
-            $test(...$args);
-            $this->tearDown();
-        } catch (Assert\Failure|Scenario\Failure $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            if (!$this->anExceptionIsExpected()) {
-                throw $e;
-            }
-
-            if (!\is_null($this->expectedException)) {
-                /** @psalm-suppress ArgumentTypeCoercion */
-                self::$assert
-                    ->object($e)
-                    ->instance($this->expectedException);
-            }
-
-            if (!\is_null($this->expectedExceptionCode)) {
-                self::$assert->same(
-                    $this->expectedExceptionCode,
-                    $e->getCode(),
-                );
-            }
-
-            if (!\is_null($this->expectedExceptionMessage)) {
-                self::$assert->same(
-                    $this->expectedExceptionMessage,
-                    $e->getMessage(),
-                );
-            }
-        }
+        $test(...$args);
+        $this->tearDown();
     }
 
     /**
@@ -394,34 +358,5 @@ abstract class TestCase
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         self::$assert->fail($message);
-    }
-
-    /**
-     * @deprecated Use a try/catch in your test instead
-     */
-    final public function expectException(string $exception): void
-    {
-        $this->expectedException = $exception;
-    }
-
-    /**
-     * @deprecated Use a try/catch in your test instead
-     */
-    final public function expectExceptionCode(int|string $code): void
-    {
-        $this->expectedExceptionCode = $code;
-    }
-
-    /**
-     * @deprecated Use a try/catch in your test instead
-     */
-    final public function expectExceptionMessage(string $message): void
-    {
-        $this->expectedExceptionMessage = $message;
-    }
-
-    private function anExceptionIsExpected(): bool
-    {
-        return !\is_null($this->expectedException) || !\is_null($this->expectedExceptionCode) || !\is_null($this->expectedExceptionMessage);
     }
 }

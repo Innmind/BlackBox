@@ -25,11 +25,11 @@ class FromGeneratorTest extends TestCase
 
     public function testThrowWhenTheCallableDoesntReturnAGenerator()
     {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 1 must be of type callable(): \Generator');
-
-        $_ = FromGenerator::of(static function() {
-        });
+        $this->assert()->throws(
+            static fn() => FromGenerator::of(static function() {
+            }),
+            \TypeError::class,
+        );
     }
 
     public function testTake()
@@ -127,8 +127,9 @@ class FromGeneratorTest extends TestCase
             }
         })->filter(static fn() => false);
 
-        $this->expectException(EmptySet::class);
-
-        $generated->values(Random::mersenneTwister)->current();
+        $this->assert()->throws(
+            static fn() => $generated->values(Random::mersenneTwister)->current(),
+            EmptySet::class,
+        );
     }
 }

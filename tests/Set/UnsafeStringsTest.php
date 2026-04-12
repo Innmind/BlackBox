@@ -184,11 +184,12 @@ class UnsafeStringsTest extends TestCase
 
     public function testThrowWhenCannotFindAValue()
     {
-        $this->expectException(EmptySet::class);
-
-        UnsafeStrings::any()
-            ->filter(static fn() => false)
-            ->values(Random::mersenneTwister)
-            ->current();
+        $this->assert()->throws(
+            static fn() => UnsafeStrings::any()
+                ->filter(static fn() => false)
+                ->values(Random::mersenneTwister)
+                ->current(),
+            EmptySet::class,
+        );
     }
 }

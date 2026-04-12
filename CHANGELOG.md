@@ -18,6 +18,9 @@
 - `given()`
 - `property()`
 - `properties()`
+- `Innmind\BlackBox\PHPUnit\Framework::expectException()`
+- `Innmind\BlackBox\PHPUnit\Framework::expectExceptionCode()`
+- `Innmind\BlackBox\PHPUnit\Framework::expectExceptionMessage()`
 
 ## 6.12.0 - 2026-04-11
 

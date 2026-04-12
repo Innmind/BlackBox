@@ -106,11 +106,12 @@ class ElementsTest extends TestCase
 
     public function testThrowWhenCannotFindAValue()
     {
-        $this->expectException(EmptySet::class);
-
-        Elements::of(1)
-            ->filter(static fn() => false)
-            ->values(Random::mersenneTwister)
-            ->current();
+        $this->assert()->throws(
+            static fn() => Elements::of(1)
+                ->filter(static fn() => false)
+                ->values(Random::mersenneTwister)
+                ->current(),
+            EmptySet::class,
+        );
     }
 }

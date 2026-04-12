@@ -7,35 +7,13 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     PHPUnit\Framework\TestCase,
     PHPUnit\Framework\Attributes\DataProvider,
-    PHPUnit\Framework\Attributes\Group,
     Set,
 };
-use PHPUnit\Framework\Attributes\{
-    DataProvider as PHPUnitDataProvider,
-    Group as PHPUnitGroup,
-};
+use PHPUnit\Framework\Attributes\DataProvider as PHPUnitDataProvider;
 
 class BlackBoxTest extends TestCase
 {
     use BlackBox;
-
-    #[PHPUnitGroup('local')]
-    #[Group('ci')]
-    public function testDoesntFailWhenTheExceptionIsExpected()
-    {
-        $this
-            ->forAll(Set\Strings::any(), Set\Integers::above(0))
-            ->then(function($message, $code) {
-                $exception = new class($message, $code) extends \Exception {
-                };
-
-                $this->expectException(\get_class($exception));
-                $this->expectExceptionMessage($message);
-                $this->expectExceptionCode($code);
-
-                throw $exception;
-            });
-    }
 
     #[DataProvider('ints')]
     public function testDataProviderCompatibility($a, $b)

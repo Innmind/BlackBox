@@ -122,11 +122,12 @@ class EitherTest extends TestCase
             Set\Elements::of(2),
         );
 
-        $this->expectException(EmptySet::class);
-
-        $set
-            ->filter(static fn() => false)
-            ->values(Random::mersenneTwister)
-            ->current();
+        $this->assert()->throws(
+            static fn() => $set
+                ->filter(static fn() => false)
+                ->values(Random::mersenneTwister)
+                ->current(),
+            EmptySet::class,
+        );
     }
 }
