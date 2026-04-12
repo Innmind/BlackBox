@@ -6,6 +6,7 @@ use Innmind\BlackBox\{
     Random,
     Tag,
 };
+use function Innmind\BlackBox\Runner\test;
 
 return static function() {
     yield test(

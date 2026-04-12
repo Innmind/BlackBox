@@ -434,8 +434,6 @@ final class Application
     #[\NoDiscard]
     public function tryToProve(callable $proofs): Result
     {
-        require_once __DIR__.'/Runner/global.php';
-
         if (\is_null($this->tags)) {
             $tags = \array_map($this->parseTag, $this->args);
             $tags = \array_filter($tags, static fn($tag) => $tag instanceof \UnitEnum);

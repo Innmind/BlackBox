@@ -10,6 +10,11 @@ use Innmind\BlackBox\{
     Runner\Printer\Standard,
     Tag,
 };
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+    test,
+};
 use Fixtures\Innmind\BlackBox\{
     Counter,
     DownAndUpIsAnIdentityFunction,

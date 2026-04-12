@@ -7,6 +7,10 @@ use Innmind\BlackBox\{
     Application,
     Runner\IO\Collect,
 };
+use function Innmind\BlackBox\Runner\{
+    property,
+    properties,
+};
 use Fixtures\Innmind\BlackBox\{
     Counter,
     DownAndUpIsAnIdentityFunction,

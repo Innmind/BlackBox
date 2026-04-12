@@ -4,10 +4,15 @@ declare(strict_types = 1);
 use Innmind\BlackBox\{
     Application,
     Runner\IO\Collect,
+    Runner\Printer\Standard,
     Set,
     Tag,
 };
-use Innmind\BlackBox\Runner\Printer\Standard;
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+    test,
+};
 
 return static function() {
     yield test(

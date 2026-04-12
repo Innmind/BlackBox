@@ -5,6 +5,10 @@ use Innmind\BlackBox\{
     Set,
     Tag,
 };
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+};
 
 return static function() {
     yield proof(

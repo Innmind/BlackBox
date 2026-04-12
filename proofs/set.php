@@ -6,6 +6,11 @@ use Innmind\BlackBox\{
     Random,
     Tag,
 };
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+    test,
+};
 
 return static function() {
     $anySet = Set::of(

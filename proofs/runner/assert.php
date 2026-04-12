@@ -9,6 +9,10 @@ use Innmind\BlackBox\{
     Set,
     Tag,
 };
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+};
 
 return static function($load) {
     yield proof(

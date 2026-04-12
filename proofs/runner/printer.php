@@ -17,6 +17,11 @@ use Innmind\BlackBox\{
     Properties,
     Tag,
 };
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+    test,
+};
 use Fixtures\Innmind\BlackBox\{
     Counter,
     LowerBoundAtZero,

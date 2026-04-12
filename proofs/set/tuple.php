@@ -6,6 +6,10 @@ use Innmind\BlackBox\{
     Random,
     Tag,
 };
+use function Innmind\BlackBox\Runner\{
+    proof,
+    given,
+};
 
 return static function() {
     yield proof(
