@@ -74,24 +74,4 @@ final class Elements implements Implementation
     {
         return new self($first, $elements);
     }
-
-    /**
-     * @deprecated Use Set::of() instead
-     * @psalm-pure
-     *
-     * @no-named-arguments
-     *
-     * @template A
-     * @template B
-     *
-     * @param A $first
-     * @param B $elements
-     *
-     * @return Set<A|B>
-     */
-    #[\NoDiscard]
-    public static function of($first, ...$elements): Set
-    {
-        return Set::of($first, ...$elements);
-    }
 }

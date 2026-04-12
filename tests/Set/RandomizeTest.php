@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Randomize,
     Set,
     Set\Value,
     Random,
@@ -16,24 +15,20 @@ class RandomizeTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            Randomize::of(Set\Elements::of('')),
+            Set::of('')->randomize(),
         );
     }
 
     public function testGenerate100ValuesByDefault()
     {
-        $set = Randomize::of(
-            Set\Elements::of(new \stdClass, 42),
-        );
+        $set = Set::of(new \stdClass, 42)->randomize();
 
         $this->assertCount(100, $this->unwrap($set->values(Random::mersenneTwister)));
     }
 
     public function testTake()
     {
-        $set1 = Randomize::of(
-            Set\Elements::of(new \stdClass, 42),
-        );
+        $set1 = Set::of(new \stdClass, 42)->randomize();
         $set2 = $set1->take(50);
 
         $this->assertInstanceOf(Set::class, $set2);
@@ -44,9 +39,7 @@ class RandomizeTest extends TestCase
 
     public function testFilter()
     {
-        $set1 = Randomize::of(
-            Set\Elements::of('foo', 42),
-        );
+        $set1 = Set::of('foo', 42)->randomize();
         $set2 = $set1->filter(static fn($v) => \is_int($v));
 
         $this->assertInstanceOf(Set::class, $set2);
@@ -66,9 +59,7 @@ class RandomizeTest extends TestCase
     public function testAlwaysTakeTheFirstValueGeneratedByTheUnderlyingSet()
     {
         $expected = new \stdClass;
-        $set = Randomize::of(
-            Set\FromGenerator::of(static fn() => yield $expected),
-        );
+        $set = Set::generator(static fn() => yield $expected)->randomize();
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertSame($expected, $value->unwrap());
@@ -77,11 +68,11 @@ class RandomizeTest extends TestCase
 
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
-        $set = Randomize::of(Set\FromGenerator::of(static function() {
+        $set = Set::generator(static function() {
             if (\mt_rand(0, 1) === 1) {
                 yield \mt_rand();
             }
-        }));
+        })->randomize();
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

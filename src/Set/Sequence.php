@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -76,22 +73,6 @@ final class Sequence implements Implementation
             $sizes,
             $sizes->min(),
         );
-    }
-
-    /**
-     * @deprecated Use Set::sequence() instead
-     * @psalm-pure
-     *
-     * @template U
-     *
-     * @param Set<U>|Provider<U> $set
-     *
-     * @return Provider\Sequence<U>
-     */
-    #[\NoDiscard]
-    public static function of(Set|Provider $set): Provider\Sequence
-    {
-        return Set::sequence($set);
     }
 
     /**

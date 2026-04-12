@@ -14,7 +14,7 @@ return static function() {
     yield proof(
         'Set\Slice',
         given(
-            Set\Sequence::of(Set\Type::any())->atLeast(11),
+            Set::sequence(Set\Type::any())->atLeast(11),
             Set\Slice::between(10, 20),
         ),
         static function($assert, $values, $slice) {
@@ -37,7 +37,7 @@ return static function() {
     yield proof(
         'Set\Slice min length',
         given(
-            Set\Sequence::of(Set\Type::any())->atLeast(2),
+            Set::sequence(Set\Type::any())->atLeast(2),
             Set\Slice::any()->atLeast(2),
         ),
         static function($assert, $values, $slice) {

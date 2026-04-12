@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Strings,
-    Set\Chars,
     Set\Collapse,
     Set,
     Set\Value,
@@ -14,14 +12,9 @@ use Innmind\BlackBox\{
 
 class StringsTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(Set::class, Strings::any());
-    }
-
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Strings::any()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::strings()->toSet()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -32,7 +25,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::any()->values(Random::mersenneTwister)),
+            $this->unwrap(Set::strings()->toSet()->values(Random::mersenneTwister)),
         );
 
         $this->assertLessThanOrEqual(128, \max($values));
@@ -44,7 +37,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(Strings::atMost(256)->values(Random::mersenneTwister)),
+            $this->unwrap(Set::strings()->atMost(256)->values(Random::mersenneTwister)),
         );
 
         $this->assertLessThanOrEqual(256, \max($values));
@@ -52,7 +45,7 @@ class StringsTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Strings::any();
+        $values = Set::strings()->toSet();
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -79,7 +72,7 @@ class StringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Strings::any();
+        $a = Set::strings()->toSet();
         $b = $a->take(50);
 
         $this->assertNotSame($a, $b);
@@ -89,7 +82,7 @@ class StringsTest extends TestCase
 
     public function testValues()
     {
-        $a = Strings::any();
+        $a = Set::strings()->toSet();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -102,7 +95,7 @@ class StringsTest extends TestCase
 
     public function testEmptyStringCannotBeShrinked()
     {
-        $strings = Strings::between(0, 1); // always generate string of length 1
+        $strings = Set::strings()->between(0, 1); // always generate string of length 1
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             if (!$value->shrink()) {
@@ -120,7 +113,7 @@ class StringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = Strings::any();
+        $strings = Set::strings()->toSet();
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             if ($value->unwrap() === '') {
@@ -133,7 +126,7 @@ class StringsTest extends TestCase
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = Strings::any();
+        $strings = Set::strings()->toSet();
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             if ($value->unwrap() === '') {
@@ -151,7 +144,7 @@ class StringsTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = Strings::any()->filter(static fn($string) => \strlen($string) > 20);
+        $strings = Set::strings()->filter(static fn($string) => \strlen($string) > 20);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -163,7 +156,7 @@ class StringsTest extends TestCase
 
     public function testBetween()
     {
-        $strings = Strings::between(100, 200);
+        $strings = Set::strings()->between(100, 200);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertGreaterThanOrEqual(100, \strlen($value->unwrap()));
@@ -173,7 +166,7 @@ class StringsTest extends TestCase
 
     public function testAtLeast()
     {
-        $strings = Strings::atLeast(100);
+        $strings = Set::strings()->atLeast(100);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertGreaterThanOrEqual(100, \strlen($value->unwrap()));
@@ -182,7 +175,7 @@ class StringsTest extends TestCase
 
     public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
     {
-        $integers = Strings::between(20, 80);
+        $integers = Set::strings()->between(20, 80);
 
         $assertInBounds = function(Value $value, string $strategy) {
             while ($shrunk = $value->shrink()) {
@@ -200,7 +193,7 @@ class StringsTest extends TestCase
 
     public function testMadeOf()
     {
-        $set = Strings::madeOf(Chars::lowercaseLetter());
+        $set = Set::strings()->madeOf(Set::strings()->chars()->lowercaseLetter());
         $allowed = \range('a', 'z');
 
         foreach (Collapse::of($set)->values(Random::mersenneTwister) as $value) {
@@ -215,7 +208,7 @@ class StringsTest extends TestCase
             }
         }
 
-        $set = Strings::madeOf(Chars::lowercaseLetter(), Chars::uppercaseLetter());
+        $set = Set::strings()->madeOf(Set::strings()->chars()->lowercaseLetter(), Set::strings()->chars()->uppercaseLetter());
         $allowed = [...\range('a', 'z'), ...\range('A', 'Z')];
 
         foreach (Collapse::of($set)->values(Random::mersenneTwister) as $value) {
@@ -233,7 +226,7 @@ class StringsTest extends TestCase
 
     public function testMadeOfBetween()
     {
-        $set = Strings::madeOf(Chars::any())->between(2, 42);
+        $set = Set::strings()->madeOf(Set::strings()->chars())->between(2, 42);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $string = $value->unwrap();
@@ -245,7 +238,7 @@ class StringsTest extends TestCase
 
     public function testMadeOfAtLeast()
     {
-        $set = Strings::madeOf(Chars::any())->atLeast(2);
+        $set = Set::strings()->madeOf(Set::strings()->chars())->atLeast(2);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $string = $value->unwrap();
@@ -257,7 +250,7 @@ class StringsTest extends TestCase
 
     public function testMadeOfAtMost()
     {
-        $set = Strings::madeOf(Chars::any())->atMost(42);
+        $set = Set::strings()->madeOf(Set::strings()->chars())->atMost(42);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $string = $value->unwrap();
@@ -269,7 +262,7 @@ class StringsTest extends TestCase
 
     public function testFilterMadeOf()
     {
-        $set = Strings::madeOf(Chars::any())->filter(static fn($string) => $string !== '');
+        $set = Set::strings()->madeOf(Set::strings()->chars())->filter(static fn($string) => $string !== '');
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertNotSame('', $value->unwrap());
@@ -278,7 +271,7 @@ class StringsTest extends TestCase
 
     public function testTakeMadeOf()
     {
-        $set = Strings::madeOf(Chars::any());
+        $set = Set::strings()->madeOf(Set::strings()->chars());
         $set2 = $set->take(50);
 
         $this->assertCount(100, \iterator_to_array(Collapse::of($set)->values(Random::mersenneTwister)));

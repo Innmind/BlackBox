@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Email,
     Set,
     Set\Value,
     PHPUnit\BlackBox,
@@ -17,7 +16,7 @@ class EmailTest extends TestCase
 
     public function testAny()
     {
-        $emails = Email::any();
+        $emails = Set::email();
 
         $this->assertInstanceOf(Set::class, $emails);
         $this->assertCount(100, \iterator_to_array($emails->values(Random::mersenneTwister)));
@@ -32,7 +31,7 @@ class EmailTest extends TestCase
     public function testEmailsAreValid()
     {
         $this
-            ->forAll(Email::any())
+            ->forAll(Set::email())
             ->then(function($email) {
                 $this->assertNotFalse(\filter_var($email, \FILTER_VALIDATE_EMAIL));
             });
@@ -40,7 +39,7 @@ class EmailTest extends TestCase
 
     public function testEmailsAreShrinkable()
     {
-        $emails = Email::any();
+        $emails = Set::email();
 
         foreach ($emails->values(Random::mersenneTwister) as $email) {
             $this->assertNotNull($email->shrink());

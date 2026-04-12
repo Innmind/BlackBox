@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -83,30 +80,5 @@ final class Either implements Implementation
         Implementation ...$rest,
     ): self {
         return new self($first, $second, $rest);
-    }
-
-    /**
-     * @deprecated Use Set::either() instead
-     * @psalm-pure
-     *
-     * @no-named-arguments
-     *
-     * @template A
-     * @template B
-     * @template C
-     *
-     * @param Set<A>|Provider<A> $first
-     * @param Set<B>|Provider<B> $second
-     * @param Set<C>|Provider<C> $rest
-     *
-     * @return Set<A|B|C>
-     */
-    #[\NoDiscard]
-    public static function any(
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$rest,
-    ): Set {
-        return Set::either($first, $second, ...$rest);
     }
 }

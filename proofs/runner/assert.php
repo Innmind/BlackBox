@@ -17,7 +17,7 @@ use function Innmind\BlackBox\Runner\{
 return static function($load) {
     yield proof(
         'Assert->fail()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -39,7 +39,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->that()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -66,8 +66,8 @@ return static function($load) {
     yield proof(
         'Assert->throws()',
         given(
-            Set\Elements::of(RuntimeException::class, LogicException::class, DomainException::class),
-            Set\Strings::any(),
+            Set::of(RuntimeException::class, LogicException::class, DomainException::class),
+            Set::strings(),
         ),
         static function($assert, $kind, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -93,8 +93,8 @@ return static function($load) {
     yield proof(
         'Assert->not()->throws()',
         given(
-            Set\Elements::of(RuntimeException::class, LogicException::class, DomainException::class),
-            Set\Strings::any(),
+            Set::of(RuntimeException::class, LogicException::class, DomainException::class),
+            Set::strings(),
         ),
         static function($assert, $kind, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -120,9 +120,9 @@ return static function($load) {
     yield proof(
         'Assert->count()',
         given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Integers::above(0),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::integers()->above(0),
+            Set::strings(),
         )->exclude(static fn($values, $count) => \count($values) === $count),
         static function($assert, $values, $count, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -151,9 +151,9 @@ return static function($load) {
     yield proof(
         'Assert->not()->count()',
         given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Integers::above(0),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::integers()->above(0),
+            Set::strings(),
         )->exclude(static fn($values, $count) => \count($values) === $count),
         static function($assert, $values, $count, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -183,7 +183,7 @@ return static function($load) {
         'Assert->true()',
         given(
             Set\Type::any()->filter(static fn($value) => $value !== true),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -212,7 +212,7 @@ return static function($load) {
         'Assert->not()->true()',
         given(
             Set\Type::any()->filter(static fn($value) => $value !== true),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -241,7 +241,7 @@ return static function($load) {
         'Assert->false()',
         given(
             Set\Type::any()->filter(static fn($value) => $value !== false),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -270,7 +270,7 @@ return static function($load) {
         'Assert->not()->false()',
         given(
             Set\Type::any()->filter(static fn($value) => $value !== false),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -299,7 +299,7 @@ return static function($load) {
         'Assert->bool()',
         given(
             Set\Type::any()->filter(static fn($value) => !\is_bool($value)),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -328,9 +328,9 @@ return static function($load) {
     yield proof(
         'Assert->not()->bool()',
         given(
-            Set\Elements::of(true, false),
+            Set::of(true, false),
             Set\Type::any()->filter(static fn($value) => !\is_bool($value)),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $bool, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -359,7 +359,7 @@ return static function($load) {
         'Assert->null()',
         given(
             Set\Type::any()->filter(static fn($value) => !\is_null($value)),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -388,7 +388,7 @@ return static function($load) {
         'Assert->not()->null()',
         given(
             Set\Type::any()->filter(static fn($value) => !\is_null($value)),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -417,7 +417,7 @@ return static function($load) {
         'Assert->resource()',
         given(
             Set\Type::any()->filter(static fn($value) => !\is_resource($value)),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -447,7 +447,7 @@ return static function($load) {
         given(
             Set\Type::any(),
             Set\Type::any(),
-            Set\Strings::any(),
+            Set::strings(),
         )->filter(static fn($a, $b) => $a !== $b),
         static function($assert, $a, $b, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -477,7 +477,7 @@ return static function($load) {
         given(
             Set\Type::any(),
             Set\Type::any(),
-            Set\Strings::any(),
+            Set::strings(),
         )->filter(static fn($a, $b) => $a !== $b),
         static function($assert, $a, $b, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -504,7 +504,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->equals()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -530,7 +530,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->expected()->not()->equals()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -557,10 +557,10 @@ return static function($load) {
     yield proof(
         'Assert->expected()->in()',
         given(
-            Set\Sequence::of(Set\Type::any()),
+            Set::sequence(Set\Type::any()),
             Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::strings(),
         )->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true)),
         static function($assert, $prefix, $value, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -588,10 +588,10 @@ return static function($load) {
     yield proof(
         'Assert->expected()->not()->in()',
         given(
-            Set\Sequence::of(Set\Type::any()),
+            Set::sequence(Set\Type::any()),
             Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::strings(),
         )->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true)),
         static function($assert, $prefix, $value, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -620,7 +620,7 @@ return static function($load) {
         'Assert->object()',
         given(
             Set\Type::any(),
-            Set\Strings::any(),
+            Set::strings(),
         )->filter(static fn($value) => !\is_object($value)),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -648,7 +648,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()->instance()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -675,7 +675,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->object()->not()->instance()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -702,12 +702,12 @@ return static function($load) {
     yield proof(
         'Assert->number()',
         given(
-            Set\Elements::of(new stdClass, null, true, false, \tmpfile(), []),
-            Set\Either::any(
-                Set\Integers::any(),
-                Set\RealNumbers::any(),
+            Set::of(new stdClass, null, true, false, \tmpfile(), []),
+            Set::either(
+                Set::integers(),
+                Set::realNumbers(),
             ),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $number, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -735,8 +735,8 @@ return static function($load) {
     yield proof(
         'Assert->number()->int()',
         given(
-            Set\Integers::any(),
-            Set\Strings::any(),
+            Set::integers(),
+            Set::strings(),
         ),
         static function($assert, $int, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -764,13 +764,13 @@ return static function($load) {
     yield proof(
         'Assert->number()->float()',
         given(
-            Set\Integers::any(),
-            Set\Composite::immutable(
+            Set::integers(),
+            Set::compose(
                 static fn($int, $fraction) => $int * $fraction,
-                Set\Integers::any(),
-                Set\Elements::of(0.1, 0.2, 0.01),
+                Set::integers(),
+                Set::of(0.1, 0.2, 0.01),
             ),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $int, $float, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -798,9 +798,9 @@ return static function($load) {
     yield proof(
         'Assert->number()->greaterThan()',
         given(
-            Set\Integers::any(),
-            Set\Integers::above(1),
-            Set\Strings::any(),
+            Set::integers(),
+            Set::integers()->above(1),
+            Set::strings(),
         ),
         static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -828,9 +828,9 @@ return static function($load) {
     yield proof(
         'Assert->number()->greaterThanOrEqual()',
         given(
-            Set\Integers::any(),
-            Set\Integers::above(0),
-            Set\Strings::any(),
+            Set::integers(),
+            Set::integers()->above(0),
+            Set::strings(),
         ),
         static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -858,9 +858,9 @@ return static function($load) {
     yield proof(
         'Assert->number()->lessThan()',
         given(
-            Set\Integers::any(),
-            Set\Integers::above(1),
-            Set\Strings::any(),
+            Set::integers(),
+            Set::integers()->above(1),
+            Set::strings(),
         ),
         static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -888,9 +888,9 @@ return static function($load) {
     yield proof(
         'Assert->number()->lessThanOrEqual()',
         given(
-            Set\Integers::any(),
-            Set\Integers::above(0),
-            Set\Strings::any(),
+            Set::integers(),
+            Set::integers()->above(0),
+            Set::strings(),
         ),
         static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -918,9 +918,9 @@ return static function($load) {
     yield proof(
         'Assert->string()',
         given(
-            Set\Strings::any(),
-            Set\Elements::of([], true, null, new ArrayObject),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::of([], true, null, new ArrayObject),
+            Set::strings(),
         ),
         static function($assert, $string, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -948,8 +948,8 @@ return static function($load) {
     yield proof(
         'Assert->string()->empty()',
         given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
         ),
         static function($assert, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -977,8 +977,8 @@ return static function($load) {
     yield proof(
         'Assert->string()->not()->empty()',
         given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
         ),
         static function($assert, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1006,10 +1006,10 @@ return static function($load) {
     yield proof(
         'Assert->string()->contains()',
         given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
         )->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string)),
         static function($assert, $prefix, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1037,10 +1037,10 @@ return static function($load) {
     yield proof(
         'Assert->string()->not()->contains()',
         given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
         )->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string)),
         static function($assert, $prefix, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1067,7 +1067,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->matches()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1093,7 +1093,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->string()->not()->matches()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1120,9 +1120,9 @@ return static function($load) {
     yield proof(
         'Assert->string()->startsWith()',
         given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
         )->filter(static fn($string, $suffix) => !\str_contains($suffix, $string)),
         static function($assert, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1150,9 +1150,9 @@ return static function($load) {
     yield proof(
         'Assert->string()->not()->startsWith()',
         given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
         )->filter(static fn($string, $suffix) => !\str_contains($suffix, $string)),
         static function($assert, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1180,9 +1180,9 @@ return static function($load) {
     yield proof(
         'Assert->string()->endsWith()',
         given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
         )->filter(static fn($prefix, $string) => !\str_contains($prefix, $string)),
         static function($assert, $prefix, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1210,9 +1210,9 @@ return static function($load) {
     yield proof(
         'Assert->string()->not()->endsWith()',
         given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
         )->filter(static fn($prefix, $string) => !\str_contains($prefix, $string)),
         static function($assert, $prefix, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1240,9 +1240,9 @@ return static function($load) {
     yield proof(
         'Assert->array()',
         given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Elements::of('', true, null, new ArrayObject),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::of('', true, null, new ArrayObject),
+            Set::strings(),
         ),
         static function($assert, $array, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1269,7 +1269,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()->hasKey',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1296,7 +1296,7 @@ return static function($load) {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'Assert->array()->not()->hasKey',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1326,9 +1326,9 @@ return static function($load) {
         'Assert->array()->contains()',
         given(
             Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::sequence(Set\Type::any()),
+            Set::strings(),
         )->filter(
             static fn($expected, $prefix, $suffix) => !\in_array($expected, $prefix, true) &&
                 !\in_array($expected, $suffix, true),
@@ -1364,9 +1364,9 @@ return static function($load) {
         'Assert->array()->not()->contains()',
         given(
             Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
+            Set::sequence(Set\Type::any()),
+            Set::sequence(Set\Type::any()),
+            Set::strings(),
         )->filter(
             static fn($expected, $prefix, $suffix) => !\in_array($expected, $prefix, true) &&
                 !\in_array($expected, $suffix, true),
@@ -1402,7 +1402,7 @@ return static function($load) {
         'Assert->matches()',
         given(
             Set\Type::any(),
-            Set\Strings::any(),
+            Set::strings(),
         ),
         static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1438,8 +1438,8 @@ return static function($load) {
     yield proof(
         'Assert->time()->inLessThan()->milliseconds()',
         given(
-            Set\Integers::between(0, 800),
-            Set\Strings::any(),
+            Set::integers()->between(0, 800),
+            Set::strings(),
         ),
         static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1475,8 +1475,8 @@ return static function($load) {
     yield proof(
         'Assert->time()->inLessThan()->seconds()',
         given(
-            Set\Integers::between(0, 800_000),
-            Set\Strings::any(),
+            Set::integers()->between(0, 800_000),
+            Set::strings(),
         ),
         static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1512,8 +1512,8 @@ return static function($load) {
     yield proof(
         'Assert->time()->inMoreThan()->milliseconds()',
         given(
-            Set\Integers::between(1, 800), // no need to go higher
-            Set\Strings::any(),
+            Set::integers()->between(1, 800), // no need to go higher
+            Set::strings(),
         ),
         static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1549,8 +1549,8 @@ return static function($load) {
     yield proof(
         'Assert->time()->inMoreThan()->seconds()',
         given(
-            Set\Integers::between(1, 800_000), // no need to go higher
-            Set\Strings::any(),
+            Set::integers()->between(1, 800_000), // no need to go higher
+            Set::strings(),
         ),
         static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
@@ -1585,7 +1585,7 @@ return static function($load) {
 
     yield proof(
         'Assert->memory()->inLessThan()->bytes()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1619,7 +1619,7 @@ return static function($load) {
 
     yield proof(
         'Assert->memory()->inLessThan()->kiloBytes()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1653,7 +1653,7 @@ return static function($load) {
 
     yield proof(
         'Assert->memory()->inLessThan()->megaBytes()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1687,7 +1687,7 @@ return static function($load) {
 
     yield proof(
         'Assert->memory()->inMoreThan()->bytes()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1721,7 +1721,7 @@ return static function($load) {
 
     yield proof(
         'Assert->memory()->inMoreThan()->kiloBytes()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
@@ -1755,7 +1755,7 @@ return static function($load) {
 
     yield proof(
         'Assert->memory()->inMoreThan()->megaBytes()',
-        given(Set\Strings::any()),
+        given(Set::strings()),
         static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 

@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -60,38 +57,6 @@ final class FromGenerator implements Implementation
             \Closure::fromCallable($generatorFactory),
             $immutable,
         );
-    }
-
-    /**
-     * @deprecated Use Set::generator()->immutable() instead
-     * @template V
-     *
-     * @param callable(Random): \Generator<V> $generatorFactory
-     *
-     * @return Set<V>
-     */
-    #[\NoDiscard]
-    public static function of(callable $generatorFactory): Set
-    {
-        return Set::generator(self::guard($generatorFactory))
-            ->immutable()
-            ->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::generator()->mutable() instead
-     * @template V
-     *
-     * @param callable(Random): \Generator<V> $generatorFactory
-     *
-     * @return Set<V>
-     */
-    #[\NoDiscard]
-    public static function mutable(callable $generatorFactory): Set
-    {
-        return Set::generator(self::guard($generatorFactory))
-            ->mutable()
-            ->toSet();
     }
 
     /**

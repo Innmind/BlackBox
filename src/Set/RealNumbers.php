@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -59,59 +56,5 @@ final class RealNumbers implements Implementation
             $min ?? \PHP_INT_MIN,
             $max ?? \PHP_INT_MAX,
         );
-    }
-
-    /**
-     * @deprecated Use Set::realNumbers() instead
-     * @psalm-pure
-     *
-     * @return Set<float>
-     */
-    #[\NoDiscard]
-    public static function any(): Set
-    {
-        return Set::realNumbers()->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::realNumbers() instead
-     * @psalm-pure
-     *
-     * @return Set<float>
-     */
-    #[\NoDiscard]
-    public static function between(int $min, int $max): Set
-    {
-        return Set::realNumbers()
-            ->between($min, $max)
-            ->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::realNumbers() instead
-     * @psalm-pure
-     *
-     * @return Set<float>
-     */
-    #[\NoDiscard]
-    public static function above(int $min): Set
-    {
-        return Set::realNumbers()
-            ->above($min)
-            ->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::realNumbers() instead
-     * @psalm-pure
-     *
-     * @return Set<float>
-     */
-    #[\NoDiscard]
-    public static function below(int $max): Set
-    {
-        return Set::realNumbers()
-            ->below($max)
-            ->toSet();
     }
 }

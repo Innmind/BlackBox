@@ -14,10 +14,10 @@ return static function() {
     yield proof(
         'Set\MutuallyExclusive',
         given(Set\MutuallyExclusive::of(
-            Set\Strings::madeOf(Set\Unicode::any(), Set\Chars::any()),
-            Set\Strings::madeOf(Set\Unicode::any(), Set\Chars::any()),
-            Set\Strings::madeOf(Set\Unicode::any(), Set\Chars::any()),
-            Set\Strings::madeOf(Set\Unicode::any(), Set\Chars::any()),
+            Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
+            Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
+            Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
+            Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
         )),
         static function($assert, $values) {
             [$a, $b, $c, $d] = \array_map(\strtolower(...), $values);

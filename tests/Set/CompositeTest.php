@@ -4,9 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Composite,
-    Set\FromGenerator,
-    Set\Decorate,
     Set,
     Set\Value,
     Random,
@@ -23,41 +20,13 @@ class CompositeTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = Composite::immutable(
+        $this->set = Set::compose(
             static function(string ...$args) {
                 return \implode('', $args);
             },
             Set::of('e', 'f'),
             Set::of('a', 'b'),
             Set::of('c', 'd'),
-        );
-    }
-
-    public function testInterface()
-    {
-        $this->assertInstanceOf(Set::class, $this->set);
-    }
-
-    public function testImmutable()
-    {
-        $this->assertInstanceOf(
-            Set::class,
-            Composite::immutable(
-                static function() {
-                },
-                FromGenerator::of(static function() {
-                    yield 'e';
-                    yield 'f';
-                }),
-                FromGenerator::of(static function() {
-                    yield 'a';
-                    yield 'b';
-                }),
-                FromGenerator::of(static function() {
-                    yield 'c';
-                    yield 'd';
-                }),
-            ),
         );
     }
 
@@ -99,7 +68,7 @@ class CompositeTest extends TestCase
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->toSet()->values(Random::mersenneTwister));
 
         $this
             ->assert()
@@ -116,10 +85,10 @@ class CompositeTest extends TestCase
 
     public function testValues()
     {
-        $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($this->set->values(Random::mersenneTwister)));
+        $this->assertInstanceOf(\Generator::class, $this->set->toSet()->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($this->set->toSet()->values(Random::mersenneTwister)));
 
-        foreach ($this->set->values(Random::mersenneTwister) as $value) {
+        foreach ($this->set->toSet()->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
             $this->assertTrue($value->immutable());
         }
@@ -127,26 +96,26 @@ class CompositeTest extends TestCase
 
     public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
     {
-        $set = Composite::mutable(
+        $set = Set::compose(
             static function(string ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'c';
                 yield 'd';
             }),
-        );
+        )->mutable()->toSet();
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->immutable());
@@ -157,7 +126,7 @@ class CompositeTest extends TestCase
 
     public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
     {
-        $set = Composite::immutable(
+        $set = Set::compose(
             static function(object $value, string $char) {
                 $std = new \stdClass;
                 $std->prop = $value;
@@ -165,21 +134,21 @@ class CompositeTest extends TestCase
 
                 return $std;
             },
-            Decorate::mutable(
+            Set::decorate(
                 static function(string $value) {
                     $std = new \stdClass;
                     $std->prop = $value;
 
                     return $std;
                 },
-                FromGenerator::of(static function() {
+                Set::generator(static function() {
                     yield 'ea';
                     yield 'fb';
                     yield 'gc';
                     yield 'eb';
                 }),
             ),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'c';
                 yield 'd';
             }),
@@ -198,113 +167,113 @@ class CompositeTest extends TestCase
 
     public function testConservesMutabilityFromUnderlyingSets()
     {
-        $mutable = Composite::mutable(
+        $mutable = Set::compose(
             static function(string ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'c';
                 yield 'd';
             }),
-        );
+        )->mutable()->toSet();
 
         foreach ($mutable->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->immutable());
         }
 
-        $immutable = Composite::immutable(
+        $immutable = Set::compose(
             static function(int ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            Set\Integers::any(),
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
+            Set::integers(),
         );
 
-        foreach ($immutable->values(Random::mersenneTwister) as $value) {
+        foreach ($immutable->toSet()->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->immutable());
         }
     }
 
     public function testShrinkableAsLongAsOneUnderlyingSetIs()
     {
-        $shrinkable = Composite::immutable(
+        $shrinkable = Set::compose(
             static function(...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            Set\Integers::any(),
-            FromGenerator::of(static function() {
+            Set::integers(),
+            Set::generator(static function() {
                 yield 'c';
                 yield 'd';
             }),
         );
 
-        foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
+        foreach ($shrinkable->toSet()->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
         }
 
-        $nonShrinkable = Composite::immutable(
+        $nonShrinkable = Set::compose(
             static function(string ...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'e';
                 yield 'f';
             }),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'a';
                 yield 'b';
             }),
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'c';
                 yield 'd';
             }),
         );
 
-        foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
+        foreach ($nonShrinkable->toSet()->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
         }
     }
 
     public function testShrinkedValuesUseTheDifferentStrategiesFromTheUnderlyingSets()
     {
-        $set = Composite::immutable(
+        $set = Set::compose(
             static function(...$args) {
                 $std = new \stdClass;
                 $std->prop = $args;
 
                 return $std;
             },
-            Set\Integers::any(),
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
+            Set::integers(),
         );
 
-        foreach ($set->values(Random::mersenneTwister) as $value) {
+        foreach ($set->toSet()->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $value = $value->unwrap();
             $a = $dichotomy->a()->unwrap();
@@ -321,15 +290,15 @@ class CompositeTest extends TestCase
 
     public function testShrinkAllValuesToTheirMinimumPossible()
     {
-        $set = Composite::immutable(
+        $set = Set::compose(
             static function(string ...$args) {
                 return \implode('', $args);
             },
-            Set\Strings::between(0, 5),
-            Set\Strings::between(0, 5),
+            Set::strings()->between(0, 5),
+            Set::strings()->between(0, 5),
         );
 
-        foreach ($set->values(Random::mersenneTwister) as $value) {
+        foreach ($set->toSet()->values(Random::mersenneTwister) as $value) {
             $a = $value;
 
             while ($shrunk = $a->shrink()) {
@@ -354,7 +323,7 @@ class CompositeTest extends TestCase
     {
         try {
             $this
-                ->forAll(Set\Integers::below(0), Set\Integers::above(0))
+                ->forAll(Set::integers()->below(0), Set::integers()->above(0))
                 ->filter(static fn($a, $b) => $a !== 0)
                 ->then(function($a, $b) {
                     $this->assertGreaterThanOrEqual(

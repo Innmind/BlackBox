@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\NaturalNumbers,
     Set,
     Set\Value,
     Random,
@@ -14,12 +13,12 @@ class NaturalNumbersTest extends TestCase
 {
     public function testInterface()
     {
-        $this->assertInstanceOf(Set::class, NaturalNumbers::any());
+        $this->assertInstanceOf(Set::class, Set::integers()->naturalNumbers());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(NaturalNumbers::any()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::integers()->naturalNumbers()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
 
@@ -30,7 +29,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = NaturalNumbers::any();
+        $integers = Set::integers()->naturalNumbers();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -58,7 +57,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = NaturalNumbers::any();
+        $a = Set::integers()->naturalNumbers();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -69,7 +68,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testValues()
     {
-        $a = NaturalNumbers::any();
+        $a = Set::integers()->naturalNumbers();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -82,7 +81,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testShrinkable()
     {
-        $integers = NaturalNumbers::any();
+        $integers = Set::integers()->naturalNumbers();
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Chars,
     Set,
     Set\Value,
     Random,
@@ -12,26 +11,16 @@ use Innmind\BlackBox\{
 
 class CharsTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(Set::class, Chars::any());
-    }
-
-    public function testAny()
-    {
-        $this->assertInstanceOf(Set::class, Chars::any());
-    }
-
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Chars::any()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::strings()->chars()->toSet()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Chars::any();
+        $values = Set::strings()->chars()->toSet();
         $even = $values->filter(static function(string $value): bool {
             return \ord($value) % 2 === 0;
         });
@@ -59,7 +48,7 @@ class CharsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Chars::any();
+        $a = Set::strings()->chars()->toSet();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -70,7 +59,7 @@ class CharsTest extends TestCase
 
     public function testValues()
     {
-        $a = Chars::any();
+        $a = Set::strings()->chars()->toSet();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -83,7 +72,7 @@ class CharsTest extends TestCase
 
     public function testCharsAreShrinkable()
     {
-        $chars = Chars::any();
+        $chars = Set::strings()->chars()->toSet();
 
         foreach ($chars->values(Random::mersenneTwister) as $value) {
             if ($value->unwrap() === \chr(0)) {
@@ -100,7 +89,7 @@ class CharsTest extends TestCase
     {
         $allowed = \range('a', 'z');
 
-        foreach (Chars::lowercaseLetter()->values(Random::mersenneTwister) as $value) {
+        foreach (Set::strings()->chars()->lowercaseLetter()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }
@@ -109,7 +98,7 @@ class CharsTest extends TestCase
     {
         $allowed = \range('A', 'Z');
 
-        foreach (Chars::uppercaseLetter()->values(Random::mersenneTwister) as $value) {
+        foreach (Set::strings()->chars()->uppercaseLetter()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }
@@ -118,7 +107,7 @@ class CharsTest extends TestCase
     {
         $allowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-        foreach (Chars::number()->values(Random::mersenneTwister) as $value) {
+        foreach (Set::strings()->chars()->number()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }
@@ -127,7 +116,7 @@ class CharsTest extends TestCase
     {
         $allowed = \range(' ', '~');
 
-        foreach (Chars::ascii()->values(Random::mersenneTwister) as $value) {
+        foreach (Set::strings()->chars()->ascii()->values(Random::mersenneTwister) as $value) {
             $this->assertContains($value->unwrap(), $allowed);
         }
     }

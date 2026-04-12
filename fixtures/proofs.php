@@ -25,52 +25,57 @@ use Fixtures\Innmind\BlackBox\{
 return static function() {
     yield property(
         DownAndUpIsAnIdentityFunction::class,
-        Set\Decorate::mutable(
-            static fn($initial) => new Counter($initial),
-            Set\Integers::between(1, 100),
-        ),
+        Set::integers()
+            ->between(1, 100)
+            ->flatMap(static fn($initial) => Set::call(
+                static fn() => new Counter($initial->unwrap()),
+            )),
     )->tag(Tag::ci, Tag::local);
 
     yield property(
         DownChangeState::class,
-        Set\Decorate::mutable(
-            static fn($initial) => new Counter($initial),
-            Set\Integers::between(1, 100),
-        ),
+        Set::integers()
+            ->between(1, 100)
+            ->flatMap(static fn($initial) => Set::call(
+                static fn() => new Counter($initial->unwrap()),
+            )),
     )->tag(Tag::ci, Tag::local);
 
     yield property(
         LowerBoundAtZero::class,
-        Set\Elements::of(new Counter),
+        Set::of(new Counter),
     )->tag(Tag::ci, Tag::local);
 
     yield property(
         RaiseBy::class,
-        Set\Decorate::mutable(
-            static fn($initial) => new Counter($initial),
-            Set\Integers::between(0, 99),
-        ),
+        Set::integers()
+            ->between(0, 99)
+            ->flatMap(static fn($initial) => Set::call(
+                static fn() => new Counter($initial->unwrap()),
+            )),
     )->tag(Tag::ci, Tag::local);
 
     yield property(
         UpAndDownIsAnIdentityFunction::class,
-        Set\Decorate::mutable(
-            static fn($initial) => new Counter($initial),
-            Set\Integers::between(0, 98),
-        ),
+        Set::integers()
+            ->between(0, 98)
+            ->flatMap(static fn($initial) => Set::call(
+                static fn() => new Counter($initial->unwrap()),
+            )),
     )->tag(Tag::ci, Tag::local);
 
     yield property(
         UpChangeState::class,
-        Set\Decorate::mutable(
-            static fn($initial) => new Counter($initial),
-            Set\Integers::between(0, 99),
-        ),
+        Set::integers()
+            ->between(0, 99)
+            ->flatMap(static fn($initial) => Set::call(
+                static fn() => new Counter($initial->unwrap()),
+            )),
     )->tag(Tag::ci, Tag::local);
 
     yield property(
         UpperBoundAtHundred::class,
-        Set\Elements::of(new Counter(99), new Counter(100)),
+        Set::of(new Counter(99), new Counter(100)),
     )->tag(Tag::ci, Tag::local);
 
     yield properties(
@@ -84,9 +89,10 @@ return static function() {
             UpChangeState::any(),
             UpperBoundAtHundred::any(),
         ),
-        Set\Decorate::mutable(
-            static fn($initial) => new Counter($initial),
-            Set\Integers::between(0, 100),
-        ),
+        Set::integers()
+            ->between(0, 100)
+            ->flatMap(static fn($initial) => Set::call(
+                static fn() => new Counter($initial->unwrap()),
+            )),
     )->tag(Tag::ci, Tag::local);
 };

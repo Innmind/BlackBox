@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -66,17 +63,5 @@ final class UnsafeStrings implements Implementation
     public static function implementation(): self
     {
         return new self;
-    }
-
-    /**
-     * @deprecated Use Set::strings()->unsafe() instead
-     * @psalm-pure
-     *
-     * @return Set<string>
-     */
-    #[\NoDiscard]
-    public static function any(): Set
-    {
-        return Set::strings()->unsafe();
     }
 }

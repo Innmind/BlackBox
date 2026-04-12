@@ -27,14 +27,14 @@ return static function() {
                 ->tryToProve(static function() {
                     yield proof(
                         'must not contain an "a"',
-                        given(Set\Composite::immutable(
+                        given(Set::compose(
                             static fn($a, $b, $c) => [$a, $b, $c],
-                            Set\Integers::any(),
-                            Set\Strings::atLeast(1)->filter(
+                            Set::integers(),
+                            Set::strings()->atLeast(1)->filter(
                                 static fn($value) => \str_contains($value, 'a'),
                             ),
-                            Set\Integers::any(),
-                            Set\Integers::any(),
+                            Set::integers(),
+                            Set::integers(),
                         )),
                         static function($assert, $composite) {
                             $assert->string($composite[1])->not()->contains('a');

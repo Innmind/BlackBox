@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Either,
     Set,
     Set\Value,
     Random,
@@ -17,18 +16,18 @@ class EitherTest extends TestCase
     {
         $this->assertInstanceOf(
             Set::class,
-            Either::any(
-                Set\Elements::of(''),
-                Set\Elements::of(''),
+            Set::either(
+                Set::of(''),
+                Set::of(''),
             ),
         );
     }
 
     public function testTake100ValuesByDefault()
     {
-        $either = Either::any(
-            Set\Elements::of(1),
-            Set\Elements::of(2),
+        $either = Set::either(
+            Set::of(1),
+            Set::of(2),
         );
 
         $this->assertInstanceOf(\Generator::class, $either->values(Random::mersenneTwister));
@@ -40,9 +39,9 @@ class EitherTest extends TestCase
 
     public function testTake()
     {
-        $either1 = Either::any(
-            Set\Elements::of(1),
-            Set\Elements::of(2),
+        $either1 = Set::either(
+            Set::of(1),
+            Set::of(2),
         );
         $either2 = $either1->take(50);
 
@@ -54,10 +53,10 @@ class EitherTest extends TestCase
 
     public function testFilter()
     {
-        $either = Either::any(
-            Set\Elements::of(1),
-            Set\Elements::of(null),
-            Set\Elements::of(2),
+        $either = Set::either(
+            Set::of(1),
+            Set::of(null),
+            Set::of(2),
         );
 
         $either2 = $either->filter(static function(?int $value): bool {
@@ -75,10 +74,10 @@ class EitherTest extends TestCase
 
     public function testValues()
     {
-        $set = Either::any(
-            Set\Elements::of(1),
-            Set\Elements::of(null),
-            Set\Elements::of(2),
+        $set = Set::either(
+            Set::of(1),
+            Set::of(null),
+            Set::of(2),
         );
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
@@ -89,13 +88,13 @@ class EitherTest extends TestCase
 
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
-        $set = Either::any(
-            Set\FromGenerator::of(static function() {
+        $set = Set::either(
+            Set::generator(static function() {
                 if (\mt_rand(0, 1) === 1) {
                     yield \mt_rand();
                 }
             }),
-            Set\Elements::of(2),
+            Set::of(2),
         );
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
@@ -105,9 +104,9 @@ class EitherTest extends TestCase
 
     public function testAlwaysUseAnotherSetWhenOneIsAnEmptySet()
     {
-        $set = Either::any(
-            Set\Elements::of(1)->filter(static fn() => false),
-            Set\Elements::of(2),
+        $set = Set::either(
+            Set::of(1)->filter(static fn() => false),
+            Set::of(2),
         );
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
@@ -117,9 +116,9 @@ class EitherTest extends TestCase
 
     public function testThrowWhenNoValueCanBeGenerated()
     {
-        $set = Either::any(
-            Set\Elements::of(1)->filter(static fn() => false),
-            Set\Elements::of(2),
+        $set = Set::either(
+            Set::of(1)->filter(static fn() => false),
+            Set::of(2),
         );
 
         $this->assert()->throws(

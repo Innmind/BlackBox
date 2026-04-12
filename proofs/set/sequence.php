@@ -28,7 +28,7 @@ return static function() {
                     yield proof(
                         'must not contain a "0"',
                         given(
-                            Set\Sequence::of(Set\Integers::above(0))->atLeast(1),
+                            Set::sequence(Set::integers()->above(0))->atLeast(1),
                         ),
                         static function($assert, $values) {
                             foreach ($values as $value) {

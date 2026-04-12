@@ -23,7 +23,9 @@ final class RaiseBy implements Property
      */
     public static function any(): Set
     {
-        return Set\Integers::between(1, 99)->map(static fn(int $raise) => new self($raise));
+        return Set::integers()
+            ->between(1, 99)
+            ->map(static fn(int $raise) => new self($raise));
     }
 
     public function applicableTo(object $counter): bool

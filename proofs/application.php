@@ -29,7 +29,7 @@ use Fixtures\Innmind\BlackBox\{
 return static function() {
     yield proof(
         'BlackBox can run with any of the random strategies',
-        given(Set\Elements::of(...Random::cases())),
+        given(Set::of(...Random::cases())),
         static function($assert, $random) {
             $io = Collect::new();
 
@@ -45,7 +45,7 @@ return static function() {
     )->tag(Tag::ci, Tag::local);
     yield proof(
         'BlackBox can run with a specified number of scenarii per proof',
-        given(Set\Integers::between(1, 10_000)), // limit to 10k so it doesn't take too mush time
+        given(Set::integers()->between(1, 10_000)), // limit to 10k so it doesn't take too mush time
         static function($assert, $scenarii) {
             $io = Collect::new();
 
@@ -56,7 +56,7 @@ return static function() {
                 ->tryToProve(static function($prove) {
                     yield $prove
                         ->proof('example')
-                        ->given(Set\Integers::any())
+                        ->given(Set::integers())
                         ->test(static fn($assert, $i) => $assert->true(true));
                 });
 
@@ -69,7 +69,7 @@ return static function() {
 
     yield proof(
         'BlackBox can run with a specified number of scenarii per property',
-        given(Set\Integers::between(1, 50)), // limit to 50 so it doesn't take too much time
+        given(Set::integers()->between(1, 50)), // limit to 50 so it doesn't take too much time
         static function($assert, $scenarii) {
             $io = Collect::new();
 
@@ -80,7 +80,7 @@ return static function() {
                 ->tryToProve(static function($prove) {
                     yield $prove->property(
                         LowerBoundAtZero::class,
-                        Set\Elements::of(new Counter),
+                        Set::of(new Counter),
                     );
                 });
 
@@ -93,7 +93,7 @@ return static function() {
 
     yield proof(
         'BlackBox can run with a specified number of scenarii per properties',
-        given(Set\Integers::between(1, 50)), // limit to 50 so it doesn't take too much time
+        given(Set::integers()->between(1, 50)), // limit to 50 so it doesn't take too much time
         static function($assert, $scenarii) {
             $io = Collect::new();
 
@@ -114,10 +114,11 @@ return static function() {
                             UpChangeState::any(),
                             UpperBoundAtHundred::any(),
                         ),
-                        Set\Decorate::mutable(
-                            static fn($initial) => new Counter($initial),
-                            Set\Integers::between(0, 100),
-                        ),
+                        Set::integers()
+                            ->between(0, 100)
+                            ->flatMap(static fn($initial) => Set::call(
+                                static fn() => new Counter($initial->unwrap()),
+                            )),
                     );
                 });
 
@@ -141,8 +142,8 @@ return static function() {
                     yield proof(
                         'example',
                         given(
-                            Set\Integers::any(),
-                            Set\Integers::any(),
+                            Set::integers(),
+                            Set::integers(),
                         ),
                         static fn($assert, $a, $b) => $assert->true(false),
                     );
@@ -171,7 +172,7 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static function($assert, $i) use (&$value) {
                             $value = $i;
 
@@ -239,17 +240,17 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->true(false),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                 });
@@ -277,17 +278,17 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->true(false),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                 });
@@ -316,17 +317,17 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->true(false),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                 });
@@ -355,17 +356,17 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->true(false),
                     );
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => $assert->number($i),
                     );
                 });
@@ -389,7 +390,7 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => null,
                     );
                 });
@@ -409,7 +410,7 @@ return static function() {
                 ->tryToProve(static function() use (&$value) {
                     yield proof(
                         'example',
-                        given(Set\Integers::any()),
+                        given(Set::integers()),
                         static fn($assert, $i) => null,
                     );
                 });

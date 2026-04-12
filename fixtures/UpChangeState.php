@@ -16,7 +16,7 @@ final class UpChangeState implements Property
      */
     public static function any(): Set
     {
-        return Set\Elements::of(new self);
+        return Set::of(new self);
     }
 
     public function applicableTo(object $counter): bool

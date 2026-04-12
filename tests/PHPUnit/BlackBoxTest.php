@@ -39,16 +39,16 @@ class BlackBoxTest extends TestCase
     public static function ints(): iterable
     {
         return self::forAll(
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
         )->asDataProvider();
     }
 
     public static function ints2(): iterable
     {
         return self::forAll(
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
         )
             ->take(10)
             ->asDataProvider();

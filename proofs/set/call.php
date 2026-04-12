@@ -10,9 +10,9 @@ use function Innmind\BlackBox\Runner\test;
 
 return static function() {
     yield test(
-        'Set\Call always return a new value',
+        'Set::call() always return a new value',
         static function($assert) {
-            $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
+            $set = Set::call(static fn() => new stdClass)->values(Random::default);
             $current = $set->current()->unwrap();
             $set->next();
 
@@ -23,9 +23,9 @@ return static function() {
         },
     )->tag(Tag::ci, Tag::local);
     yield test(
-        'Set\Call is not shrinkable',
+        'Set::call() is not shrinkable',
         static function($assert) {
-            $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
+            $set = Set::call(static fn() => new stdClass)->values(Random::default);
             $current = $set->current();
 
             $assert->null($current->shrink());
@@ -33,9 +33,9 @@ return static function() {
     )->tag(Tag::ci, Tag::local);
 
     yield test(
-        'Set\Call regenerate the value each time it is accessed',
+        'Set::call() regenerate the value each time it is accessed',
         static function($assert) {
-            $set = Set\Call::of(static fn() => new stdClass)->values(Random::default);
+            $set = Set::call(static fn() => new stdClass)->values(Random::default);
             $current = $set->current();
 
             $assert

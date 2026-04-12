@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\RealNumbers,
     Set,
     Set\Value,
     Random,
@@ -12,14 +11,9 @@ use Innmind\BlackBox\{
 
 class RealNumbersTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(Set::class, RealNumbers::any());
-    }
-
     public function testBetween()
     {
-        $numbers = RealNumbers::between(-100, 100);
+        $numbers = Set::realNumbers()->between(-100, 100)->toSet();
 
         $this->assertInstanceOf(Set::class, $numbers);
 
@@ -31,7 +25,7 @@ class RealNumbersTest extends TestCase
 
     public function testAbove()
     {
-        $numbers = RealNumbers::above(0);
+        $numbers = Set::realNumbers()->above(0)->toSet();
 
         $this->assertInstanceOf(Set::class, $numbers);
 
@@ -42,7 +36,7 @@ class RealNumbersTest extends TestCase
 
     public function testBelow()
     {
-        $numbers = RealNumbers::below(0);
+        $numbers = Set::realNumbers()->below(0)->toSet();
 
         $this->assertInstanceOf(Set::class, $numbers);
 
@@ -53,14 +47,14 @@ class RealNumbersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(RealNumbers::any()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::realNumbers()->toSet()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = RealNumbers::any();
+        $values = Set::realNumbers()->toSet();
         $positive = $values->filter(static function(float $float): bool {
             return $float > 0;
         });
@@ -88,7 +82,7 @@ class RealNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = RealNumbers::any();
+        $a = Set::realNumbers()->toSet();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -99,7 +93,7 @@ class RealNumbersTest extends TestCase
 
     public function testValues()
     {
-        $a = RealNumbers::any();
+        $a = Set::realNumbers()->toSet();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -112,7 +106,7 @@ class RealNumbersTest extends TestCase
 
     public function testZeroCannotBeShrinked()
     {
-        $numbers = RealNumbers::between(-1, 1)->filter(static fn($i) => $i === 0.0);
+        $numbers = Set::realNumbers()->between(-1, 1)->filter(static fn($i) => $i === 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -121,7 +115,7 @@ class RealNumbersTest extends TestCase
 
     public function testRealNumbersCanBeShrinked()
     {
-        $numbers = RealNumbers::any()->filter(static fn($i) => $i !== 0.0);
+        $numbers = Set::realNumbers()->filter(static fn($i) => $i !== 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
@@ -130,7 +124,7 @@ class RealNumbersTest extends TestCase
 
     public function testShrinkedRealNumbersAreImmutable()
     {
-        $numbers = RealNumbers::any()->filter(static fn($i) => $i !== 0.0);
+        $numbers = Set::realNumbers()->filter(static fn($i) => $i !== 0.0);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->immutable());
@@ -139,7 +133,7 @@ class RealNumbersTest extends TestCase
 
     public function testRealNumbersAreShrinkedTowardZero()
     {
-        $positive = RealNumbers::above(1);
+        $positive = Set::realNumbers()->above(1)->toSet();
 
         foreach ($positive->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -151,7 +145,7 @@ class RealNumbersTest extends TestCase
             $this->assertNotSame($a->unwrap(), $b->unwrap());
         }
 
-        $negative = RealNumbers::below(-1);
+        $negative = Set::realNumbers()->below(-1)->toSet();
 
         foreach ($negative->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -166,7 +160,7 @@ class RealNumbersTest extends TestCase
 
     public function testShrinkedValuesNeverChangeSign()
     {
-        $numbers = RealNumbers::any();
+        $numbers = Set::realNumbers()->toSet();
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             if (!$value->shrink()) {
@@ -187,7 +181,7 @@ class RealNumbersTest extends TestCase
 
     public function testShrinkedValuesAlwaysRespectThePredicate()
     {
-        $even = RealNumbers::any()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 0);
+        $even = Set::realNumbers()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 0);
 
         foreach ($even->values(Random::mersenneTwister) as $value) {
             if (!$value->shrink()) {
@@ -200,7 +194,7 @@ class RealNumbersTest extends TestCase
             $this->assertSame(0, ((int) \round($dichotomy->b()->unwrap())) % 2);
         }
 
-        $odd = RealNumbers::any()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 1);
+        $odd = Set::realNumbers()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 1);
 
         foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -216,7 +210,7 @@ class RealNumbersTest extends TestCase
 
     public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
     {
-        $integers = RealNumbers::between(1000, 2000);
+        $integers = Set::realNumbers()->between(1000, 2000)->toSet();
 
         $assertInBounds = function(Value $value, string $strategy) {
             while ($shrunk = $value->shrink()) {
@@ -234,7 +228,7 @@ class RealNumbersTest extends TestCase
 
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
-        $floats = RealNumbers::above(43);
+        $floats = Set::realNumbers()->above(43)->toSet();
 
         foreach ($floats->values(Random::mersenneTwister) as $float) {
             while ($shrunk = $float->shrink()) {

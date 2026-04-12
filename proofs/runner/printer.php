@@ -42,9 +42,9 @@ return static function() {
     yield proof(
         'Printer->end() on success',
         given(
-            Set\Integers::between(0, 10_000), // not above 10k to limit the time it takes
-            Set\Integers::between(0, 10_000), // not above 10k to limit the time it takes
-            Set\Integers::between(0, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
         ),
         static function($assert, $proofs, $scenarii, $assertions) {
             $printer = Standard::new();
@@ -87,10 +87,10 @@ return static function() {
     yield proof(
         'Printer->end() on failure',
         given(
-            Set\Integers::between(0, 10_000), // not above 10k to limit the time it takes
-            Set\Integers::between(0, 10_000), // not above 10k to limit the time it takes
-            Set\Integers::between(0, 10_000), // not above 10k to limit the time it takes
-            Set\Integers::between(1, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
+            Set::integers()->between(1, 10_000), // not above 10k to limit the time it takes
         ),
         static function($assert, $proofs, $scenarii, $assertions, $failures) {
             $printer = Standard::new();
@@ -137,8 +137,8 @@ return static function() {
     yield proof(
         'Printer->proof()',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new()->disableGitHubOutput();
@@ -163,8 +163,8 @@ return static function() {
     yield proof(
         'Printer->proof() in GitHub Action',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new();
@@ -190,8 +190,8 @@ return static function() {
     yield proof(
         'Printer->proof()->emptySet()',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new()->disableGitHubOutput();
@@ -212,8 +212,8 @@ return static function() {
     yield proof(
         'Printer->proof()->emptySet() in GitHub Action',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new();
@@ -234,8 +234,8 @@ return static function() {
     yield proof(
         'Printer->proof()->success()',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new();
@@ -255,8 +255,8 @@ return static function() {
     yield proof(
         'Printer->proof()->shrunk()',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new();
@@ -276,9 +276,9 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Failure\Truth',
         given(
-            Set\Strings::any(),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
         ),
         static function($assert, $name, $val, $truth) {
             $printer = Standard::new()->disableGitHubOutput();
@@ -308,9 +308,9 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Failure\Truth in GitHub Action',
         given(
-            Set\Strings::any(),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
         ),
         static function($assert, $name, $val, $truth) {
             $printer = Standard::new();
@@ -341,10 +341,10 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Failure\Property',
         given(
-            Set\Strings::any(),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
         ),
         static function($assert, $name, $property, $val, $message) {
             $printer = Standard::new()->disableGitHubOutput();
@@ -379,10 +379,10 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Failure\Property in GitHub Action',
         given(
-            Set\Strings::any(),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
         ),
         static function($assert, $name, $property, $val, $message) {
             $printer = Standard::new();
@@ -418,11 +418,11 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Failure\Comparison',
         given(
-            Set\Strings::any(),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
         ),
         static function($assert, $name, $expected, $actual, $val, $message) {
             $printer = Standard::new()->disableGitHubOutput();
@@ -460,11 +460,11 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Failure\Comparison in GitHub Action',
         given(
-            Set\Strings::any(),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::madeOf(Set\Chars::alphanumerical()),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
         ),
         static function($assert, $name, $expected, $actual, $val, $message) {
             $printer = Standard::new();
@@ -503,8 +503,8 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Scenario\Property',
         given(
-            Set\Strings::any(),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings(),
         ),
         static function($assert, $name, $message) {
             $printer = Standard::new();
@@ -535,8 +535,8 @@ return static function() {
     yield proof(
         'Printer->proof()->failure() for Scenario\Properties',
         given(
-            Set\Strings::any(),
-            Set\Strings::any(),
+            Set::strings(),
+            Set::strings(),
         ),
         static function($assert, $name, $message) {
             $printer = Standard::new();
@@ -567,8 +567,8 @@ return static function() {
     yield proof(
         'Printer->proof()->end()',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new()->disableGitHubOutput();
@@ -589,8 +589,8 @@ return static function() {
     yield proof(
         'Printer->proof()->end() in GitHub Action',
         given(
-            Set\Strings::any(),
-            Set\Sequence::of(Set\Elements::of(...Tag::cases())),
+            Set::strings(),
+            Set::sequence(Set::of(...Tag::cases())),
         ),
         static function($assert, $name, $tags) {
             $printer = Standard::new();
