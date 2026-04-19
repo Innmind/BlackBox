@@ -58,7 +58,6 @@ final class Runner
 
     public function __invoke(
         Stats $stats,
-        Assert $assert,
         ?CodeCoverage $codeCoverage,
     ): void {
         if ($this->disableMemoryLimit) {
@@ -89,6 +88,7 @@ final class Runner
                     ->values($this->random);
 
                 foreach ($scenarii as $scenario) {
+                    $assert = Assert::of($stats);
                     $stats->incrementScenarii();
                     $assertions = $stats->assertions();
 

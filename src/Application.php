@@ -12,7 +12,6 @@ use Innmind\BlackBox\Runner\{
     Runner\WithoutShrinking,
     Result,
     Stats,
-    Assert,
     Filter,
     CodeCoverage,
 };
@@ -456,9 +455,8 @@ final class Application
             $this->failWhenNoAssertions,
         );
         $stats = Stats::new();
-        $assert = Assert::of($stats);
 
-        $run($stats, $assert, $this->codeCoverage);
+        $run($stats, $this->codeCoverage);
 
         return Result::of($stats);
     }
