@@ -8,6 +8,7 @@ use Innmind\BlackBox\{
     Runner\Assert\Failure\Truth,
     Runner\Assert\Failure\Property,
     Runner\Assert\Failure\Comparison,
+    Runner\Assert\Debug,
     Runner\IO,
     Runner\Printer\Proof,
     Runner\Proof\Scenario,
@@ -75,11 +76,28 @@ final class Standard implements Proof
     }
 
     #[\Override]
-    public function failed(IO $output, IO $error, Failure $failure): void
-    {
+    public function failed(
+        IO $output,
+        IO $error,
+        Failure $failure,
+        Debug $debug,
+    ): void {
         $this->newLine($output);
         $output("F\n\n");
         $this->renderScenario($output, $failure->scenario()->unwrap());
+
+        if (!$debug->empty()) {
+            $output("\n");
+
+            /** @var mixed $variable */
+            foreach ($debug->all() as $name => $variable) {
+                $output(\sprintf(
+                    '$%s = %s',
+                    $name,
+                    $this->dump($variable),
+                ));
+            }
+        }
 
         $output("\n");
 

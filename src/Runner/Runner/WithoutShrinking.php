@@ -6,6 +6,7 @@ namespace Innmind\BlackBox\Runner\Runner;
 use Innmind\BlackBox\{
     Set\Value,
     Runner\Assert,
+    Runner\Assert\Debug,
     Runner\Proof\Scenario,
     Runner\Printer,
     Runner\IO,
@@ -27,6 +28,7 @@ final class WithoutShrinking
         IO $error,
         Assert $assert,
         Value $scenario,
+        Debug $debug,
     ): void {
         try {
             $scenario->unwrap()($assert);

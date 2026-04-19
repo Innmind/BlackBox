@@ -5,6 +5,7 @@ declare(ticks = 1);
 use Innmind\BlackBox\{
     Runner\Assert,
     Runner\Assert\Failure,
+    Runner\Assert\Debug,
     Runner\Stats,
     Set,
     Tag,
@@ -15,7 +16,10 @@ return static function($load, $prove) {
         ->proof('Assert->fail()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             try {
                 $sut->fail($message);
@@ -38,7 +42,10 @@ return static function($load, $prove) {
         ->proof('Assert->that()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             try {
                 $sut->that(static fn() => true);
@@ -68,7 +75,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $kind, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->throws(
                 static fn() => throw new $kind($message),
@@ -96,7 +106,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $kind, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->not()->throws(
                 static fn() => null,
@@ -126,7 +139,10 @@ return static function($load, $prove) {
         )
         ->exclude(static fn($values, $count) => \count($values) === $count)
         ->test(static function($assert, $values, $count, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->count(\count($values), $values);
             $sut->count(\count($values), new ArrayObject($values));
@@ -159,7 +175,10 @@ return static function($load, $prove) {
         )
         ->exclude(static fn($values, $count) => \count($values) === $count)
         ->test(static function($assert, $values, $count, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->not()->count($count, $values);
             $sut->not()->count($count, new ArrayObject($values));
@@ -190,7 +209,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->true(true);
 
@@ -220,7 +242,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->not()->true($value);
 
@@ -250,7 +275,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->false(false);
 
@@ -280,7 +308,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->not()->false($value);
 
@@ -310,7 +341,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->bool(true);
             $sut->bool(false);
@@ -342,7 +376,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $bool, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->not()->bool($value);
 
@@ -372,7 +409,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->null(null);
 
@@ -402,7 +442,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->not()->null($value);
 
@@ -432,7 +475,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->resource(\tmpfile());
 
@@ -464,7 +510,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($a, $b) => $a !== $b)
         ->test(static function($assert, $a, $b, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->expected($a)->same($a);
 
@@ -496,7 +545,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($a, $b) => $a !== $b)
         ->test(static function($assert, $a, $b, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->expected($a)->not()->same($b);
 
@@ -523,7 +575,10 @@ return static function($load, $prove) {
         ->proof('Assert->expected()->equals()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->expected(42)->equals('42');
 
@@ -550,7 +605,10 @@ return static function($load, $prove) {
         ->proof('Assert->expected()->not()->equals()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->expected(42)->not()->equals(41);
 
@@ -583,7 +641,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true))
         ->test(static function($assert, $prefix, $value, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->expected($value)->in([...$prefix, $value, ...$suffix]);
 
@@ -616,7 +677,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true))
         ->test(static function($assert, $prefix, $value, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->expected($value)->not()->in([...$prefix, ...$suffix]);
 
@@ -647,7 +711,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($value) => !\is_object($value))
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->object(new class {
             });
@@ -675,7 +742,10 @@ return static function($load, $prove) {
         ->proof('Assert->object()->instance()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->object(new stdClass)->instance(stdClass::class);
             $sut->object(new LogicException)->instance(LogicException::class);
@@ -703,7 +773,10 @@ return static function($load, $prove) {
         ->proof('Assert->object()->not()->instance()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->object(new stdClass)->not()->instance(LogicException::class);
 
@@ -737,7 +810,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $number, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($number);
 
@@ -767,7 +843,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $int, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($int)->int();
 
@@ -802,7 +881,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $int, $float, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($float)->float();
 
@@ -833,7 +915,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $int, $diff, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($int)->greaterThan($int - $diff);
 
@@ -864,7 +949,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $int, $diff, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($int)->greaterThanOrEqual($int - $diff);
 
@@ -895,7 +983,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $int, $diff, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($int)->lessThan($int + $diff);
 
@@ -926,7 +1017,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $int, $diff, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->number($int)->lessThanOrEqual($int + $diff);
 
@@ -957,7 +1051,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $string, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($string);
 
@@ -987,7 +1084,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $string, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string('')->empty();
 
@@ -1017,7 +1117,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $string, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($string)->not()->empty();
 
@@ -1050,7 +1153,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string))
         ->test(static function($assert, $prefix, $string, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($prefix.$string.$suffix)->contains($string);
 
@@ -1083,7 +1189,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string))
         ->test(static function($assert, $prefix, $string, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($prefix.$suffix)->not()->contains($string);
 
@@ -1110,7 +1219,10 @@ return static function($load, $prove) {
         ->proof('Assert->string()->matches()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string('2023-05-24')->matches('~^\d{4}-\d{2}-\d{2}$~');
 
@@ -1137,7 +1249,10 @@ return static function($load, $prove) {
         ->proof('Assert->string()->not()->matches()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string('2023-05-24')->not()->matches('~^\d{2}-\d{2}-\d{2}$~');
 
@@ -1169,7 +1284,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($string, $suffix) => !\str_contains($suffix, $string))
         ->test(static function($assert, $string, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($string.$suffix)->startsWith($string);
 
@@ -1201,7 +1319,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($string, $suffix) => !\str_contains($suffix, $string))
         ->test(static function($assert, $string, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($suffix)->not()->startsWith($string);
 
@@ -1233,7 +1354,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($prefix, $string) => !\str_contains($prefix, $string))
         ->test(static function($assert, $prefix, $string, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($prefix.$string)->endsWith($string);
 
@@ -1265,7 +1389,10 @@ return static function($load, $prove) {
         )
         ->filter(static fn($prefix, $string) => !\str_contains($prefix, $string))
         ->test(static function($assert, $prefix, $string, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->string($prefix)->not()->endsWith($string);
 
@@ -1296,7 +1423,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $array, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->array($array);
 
@@ -1323,7 +1453,10 @@ return static function($load, $prove) {
         ->proof('Assert->array()->hasKey')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->array([42])->hasKey(0);
             $sut->array(['foo' => 42])->hasKey('foo');
@@ -1351,7 +1484,10 @@ return static function($load, $prove) {
         ->proof('Assert->array()->not()->hasKey')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut->array([42])->not()->hasKey(1);
             $sut->array(['foo' => 42])->not()->hasKey('bar');
@@ -1388,7 +1524,10 @@ return static function($load, $prove) {
                 !\in_array($expected, $suffix, true),
         )
         ->test(static function($assert, $expected, $prefix, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $array = [...$prefix, ...[$expected], ...$suffix];
 
@@ -1427,7 +1566,10 @@ return static function($load, $prove) {
                 !\in_array($expected, $suffix, true),
         )
         ->test(static function($assert, $expected, $prefix, $suffix, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $array = [...$prefix, ...[$expected], ...$suffix];
 
@@ -1460,7 +1602,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $assert->same(
                 $value,
@@ -1497,7 +1642,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $microseconds, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->time(static fn() => \usleep($microseconds))
@@ -1533,7 +1681,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $microseconds, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->time(static fn() => \usleep($microseconds))
@@ -1569,7 +1720,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $microseconds, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->time(static fn() => \usleep($microseconds + 1_000))
@@ -1605,7 +1759,10 @@ return static function($load, $prove) {
             Set::strings(),
         )
         ->test(static function($assert, $microseconds, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->time(static fn() => \usleep($microseconds + 1_000_000))
@@ -1638,7 +1795,10 @@ return static function($load, $prove) {
         ->proof('Assert->memory()->inLessThan()->bytes()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->memory(static fn() => null)
@@ -1672,7 +1832,10 @@ return static function($load, $prove) {
         ->proof('Assert->memory()->inLessThan()->kiloBytes()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->memory(static fn() => null)
@@ -1706,7 +1869,10 @@ return static function($load, $prove) {
         ->proof('Assert->memory()->inLessThan()->megaBytes()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->memory(static fn() => null)
@@ -1740,7 +1906,10 @@ return static function($load, $prove) {
         ->proof('Assert->memory()->inMoreThan()->bytes()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->memory(static function() {
@@ -1774,7 +1943,10 @@ return static function($load, $prove) {
         ->proof('Assert->memory()->inMoreThan()->kiloBytes()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->memory(static function() {
@@ -1808,7 +1980,10 @@ return static function($load, $prove) {
         ->proof('Assert->memory()->inMoreThan()->megaBytes()')
         ->given(Set::strings())
         ->test(static function($assert, $message) {
-            $sut = Assert::of($stats = Stats::new());
+            $sut = Assert::of(
+                $stats = Stats::new(),
+                Debug::new(),
+            );
 
             $sut
                 ->memory(static function() {

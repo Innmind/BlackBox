@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- `Innmind\BlackBox\Runner\Assert::debug()`
+
 ### Changed
 
 - Requires PHP `8.4`

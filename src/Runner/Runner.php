@@ -58,7 +58,6 @@ final class Runner
 
     public function __invoke(
         Stats $stats,
-        Assert $assert,
         ?CodeCoverage $codeCoverage,
     ): void {
         if ($this->disableMemoryLimit) {
@@ -89,6 +88,8 @@ final class Runner
                     ->values($this->random);
 
                 foreach ($scenarii as $scenario) {
+                    $debug = Assert\Debug::new();
+                    $assert = Assert::of($stats, $debug);
                     $stats->incrementScenarii();
                     $assertions = $stats->assertions();
 
@@ -99,6 +100,7 @@ final class Runner
                             $this->error,
                             $assert,
                             $scenario,
+                            $debug,
                         );
 
                         if ($this->failWhenNoAssertions && $stats->assertions() === $assertions) {
@@ -122,6 +124,7 @@ final class Runner
                             $this->output,
                             $this->error,
                             $e,
+                            $debug,
                         );
 
                         break;

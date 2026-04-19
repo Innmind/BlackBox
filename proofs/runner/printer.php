@@ -12,6 +12,7 @@ use Innmind\BlackBox\{
     Runner\Assert\Failure\Truth,
     Runner\Assert\Failure\Property,
     Runner\Assert\Failure\Comparison,
+    Runner\Assert\Debug,
     Set,
     Set\Value,
     Properties,
@@ -288,13 +289,18 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Truth::of($truth)),
-                    Value::of(Scenario\Inline::of(
-                        [$val],
-                        static fn($assert, $foo) => null,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Truth::of($truth)),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -320,13 +326,18 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Truth::of($truth)),
-                    Value::of(Scenario\Inline::of(
-                        [$val],
-                        static fn($assert, $foo) => null,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Truth::of($truth)),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -354,16 +365,21 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Property::of(
-                        $property,
-                        $message,
-                    )),
-                    Value::of(Scenario\Inline::of(
-                        [$val],
-                        static fn($assert, $foo) => null,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Property::of(
+                            $property,
+                            $message,
+                        )),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -392,16 +408,21 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Property::of(
-                        $property,
-                        $message,
-                    )),
-                    Value::of(Scenario\Inline::of(
-                        [$val],
-                        static fn($assert, $foo) => null,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Property::of(
+                            $property,
+                            $message,
+                        )),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -432,17 +453,22 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Comparison::of(
-                        $expected,
-                        $actual,
-                        $message,
-                    )),
-                    Value::of(Scenario\Inline::of(
-                        [$val],
-                        static fn($assert, $foo) => null,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Comparison::of(
+                            $expected,
+                            $actual,
+                            $message,
+                        )),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -474,17 +500,22 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Comparison::of(
-                        $expected,
-                        $actual,
-                        $message,
-                    )),
-                    Value::of(Scenario\Inline::of(
-                        [$val],
-                        static fn($assert, $foo) => null,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Comparison::of(
+                            $expected,
+                            $actual,
+                            $message,
+                        )),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -514,13 +545,18 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Truth::of($message)),
-                    Value::of(Scenario\Property::of(
-                        new LowerBoundAtZero,
-                        new Counter,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Truth::of($message)),
+                        Value::of(Scenario\Property::of(
+                            new LowerBoundAtZero,
+                            new Counter,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -547,13 +583,18 @@ return static function($load, $prove) {
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
-                ->failed($io, $io, Failure::of(
-                    Assert\Failure::of(Truth::of($message)),
-                    Value::of(Scenario\Properties::of(
-                        Properties::of(new LowerBoundAtZero),
-                        new Counter,
-                    )),
-                ));
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Truth::of($message)),
+                        Value::of(Scenario\Properties::of(
+                            Properties::of(new LowerBoundAtZero),
+                            new Counter,
+                        )),
+                    ),
+                    Debug::new(),
+                );
 
             $written = $io->toString();
 
@@ -611,4 +652,57 @@ return static function($load, $prove) {
                 ->endsWith("\n\n::endgroup::\n");
         })
         ->tag(Tag::ci);
+
+    yield $prove
+        ->proof('Printer->proof()->failure() prints debug variables')
+        ->given(
+            Set::strings(),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
+        )
+        ->test(static function($assert, $name, $expected, $actual, $val, $message, $debugName, $debugVariable) {
+            $printer = Standard::new()->disableGitHubOutput();
+            $io = Collect::new();
+            $debug = Debug::new();
+            $debug->add($debugName, $debugVariable);
+
+            $printer
+                ->proof($io, $io, Name::of($name), [])
+                ->failed(
+                    $io,
+                    $io,
+                    Failure::of(
+                        Assert\Failure::of(Comparison::of(
+                            $expected,
+                            $actual,
+                            $message,
+                        )),
+                        Value::of(Scenario\Inline::of(
+                            [$val],
+                            static fn($assert, $foo) => null,
+                        )),
+                    ),
+                    $debug,
+                );
+
+            $written = $io->toString();
+
+            $assert
+                ->string($written)
+                ->contains("F\n\n")
+                ->contains('$expected = ')
+                ->contains($expected)
+                ->contains('$actual = ')
+                ->contains($actual)
+                ->contains('$foo = ')
+                ->contains($val)
+                ->contains($message)
+                ->contains($debugName)
+                ->contains($debugVariable);
+        })
+        ->tag(Tag::ci, Tag::local);
 };
