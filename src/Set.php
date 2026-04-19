@@ -226,27 +226,6 @@ final class Set
 
     /**
      * @psalm-pure
-     *
-     * @template A
-     *
-     * @param callable(): (A|Seed<A>) $call
-     *
-     * @return self<A>
-     */
-    #[\NoDiscard]
-    public static function call(callable $call): self
-    {
-        return self::generator(static function() use ($call) {
-            while (true) {
-                yield $call;
-            }
-        })
-            ->mutable()
-            ->map(static fn($call) => $call());
-    }
-
-    /**
-     * @psalm-pure
      */
     #[\NoDiscard]
     public static function strings(): Provider\Strings

@@ -62,6 +62,7 @@
 - `Innmind\BlackBox\Set\UnsafeStrings::any()`
 - `Innmind\BlackBox\Set\Uuid`
 - `Innmind\BlackBox\Set::decorate()`
+- `Innmind\BlackBox\Set::call()`
 
 ## 6.12.0 - 2026-04-11
 

@@ -504,16 +504,6 @@ This is a special case of `Composite`. Both examples does the same thing.
     )
     ```
 
-### Call
-
-```php
-Set::call(static function() {
-    return $someValue;
-})
-```
-
-This set is useful when building the Model to tests via [properties](getting-started/property.md). If BlackBox [shrinks](preface/terminology.md#shrinking) properties it will call the provided callable at each shrinking step. This allows to get rid of any state inside your Model between each run.
-
 ## Specific types
 
 ### Email
