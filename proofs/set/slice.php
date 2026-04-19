@@ -10,7 +10,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Set\Slice')
         ->given(
-            Set::sequence(Set\Type::any())->atLeast(11),
+            Set::sequence(Set::type())->atLeast(11),
             Set\Slice::between(10, 20),
         )
         ->test(static function($assert, $values, $slice) {
@@ -33,7 +33,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Set\Slice min length')
         ->given(
-            Set::sequence(Set\Type::any())->atLeast(2),
+            Set::sequence(Set::type())->atLeast(2),
             Set\Slice::any()->atLeast(2),
         )
         ->test(static function($assert, $values, $slice) {

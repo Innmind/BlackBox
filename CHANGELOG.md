@@ -52,6 +52,7 @@
 - `Innmind\BlackBox\Set\Sequence::of()`
 - `Innmind\BlackBox\Set\Strings`
 - `Innmind\BlackBox\Set\Tuple`
+- `Innmind\BlackBox\Set\Type`
 - `Innmind\BlackBox\Set\Unicode`
 - `Innmind\BlackBox\Set\UnsafeStrings::any()`
 - `Innmind\BlackBox\Set\Uuid`

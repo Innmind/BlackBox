@@ -120,7 +120,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->count()')
         ->given(
-            Set::sequence(Set\Type::any()),
+            Set::sequence(Set::type()),
             Set::integers()->above(0),
             Set::strings(),
         )
@@ -153,7 +153,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->not()->count()')
         ->given(
-            Set::sequence(Set\Type::any()),
+            Set::sequence(Set::type()),
             Set::integers()->above(0),
             Set::strings(),
         )
@@ -186,7 +186,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->true()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => $value !== true),
+            Set::type()->filter(static fn($value) => $value !== true),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -216,7 +216,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->not()->true()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => $value !== true),
+            Set::type()->filter(static fn($value) => $value !== true),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -246,7 +246,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->false()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => $value !== false),
+            Set::type()->filter(static fn($value) => $value !== false),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -276,7 +276,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->not()->false()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => $value !== false),
+            Set::type()->filter(static fn($value) => $value !== false),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -306,7 +306,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->bool()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => !\is_bool($value)),
+            Set::type()->filter(static fn($value) => !\is_bool($value)),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -338,7 +338,7 @@ return static function($load, $prove) {
         ->proof('Assert->not()->bool()')
         ->given(
             Set::of(true, false),
-            Set\Type::any()->filter(static fn($value) => !\is_bool($value)),
+            Set::type()->filter(static fn($value) => !\is_bool($value)),
             Set::strings(),
         )
         ->test(static function($assert, $bool, $value, $message) {
@@ -368,7 +368,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->null()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => !\is_null($value)),
+            Set::type()->filter(static fn($value) => !\is_null($value)),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -398,7 +398,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->not()->null()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => !\is_null($value)),
+            Set::type()->filter(static fn($value) => !\is_null($value)),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -428,7 +428,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->resource()')
         ->given(
-            Set\Type::any()->filter(static fn($value) => !\is_resource($value)),
+            Set::type()->filter(static fn($value) => !\is_resource($value)),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
@@ -458,8 +458,8 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->expected()->same()')
         ->given(
-            Set\Type::any(),
-            Set\Type::any(),
+            Set::type(),
+            Set::type(),
             Set::strings(),
         )
         ->filter(static fn($a, $b) => $a !== $b)
@@ -490,8 +490,8 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->expected()->not()->same()')
         ->given(
-            Set\Type::any(),
-            Set\Type::any(),
+            Set::type(),
+            Set::type(),
             Set::strings(),
         )
         ->filter(static fn($a, $b) => $a !== $b)
@@ -576,9 +576,9 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->expected()->in()')
         ->given(
-            Set::sequence(Set\Type::any()),
-            Set\Type::any(),
-            Set::sequence(Set\Type::any()),
+            Set::sequence(Set::type()),
+            Set::type(),
+            Set::sequence(Set::type()),
             Set::strings(),
         )
         ->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true))
@@ -609,9 +609,9 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->expected()->not()->in()')
         ->given(
-            Set::sequence(Set\Type::any()),
-            Set\Type::any(),
-            Set::sequence(Set\Type::any()),
+            Set::sequence(Set::type()),
+            Set::type(),
+            Set::sequence(Set::type()),
             Set::strings(),
         )
         ->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true))
@@ -642,7 +642,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->object()')
         ->given(
-            Set\Type::any(),
+            Set::type(),
             Set::strings(),
         )
         ->filter(static fn($value) => !\is_object($value))
@@ -1291,7 +1291,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->array()')
         ->given(
-            Set::sequence(Set\Type::any()),
+            Set::sequence(Set::type()),
             Set::of('', true, null, new ArrayObject),
             Set::strings(),
         )
@@ -1378,9 +1378,9 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->array()->contains()')
         ->given(
-            Set\Type::any(),
-            Set::sequence(Set\Type::any()),
-            Set::sequence(Set\Type::any()),
+            Set::type(),
+            Set::sequence(Set::type()),
+            Set::sequence(Set::type()),
             Set::strings(),
         )
         ->filter(
@@ -1417,9 +1417,9 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->array()->not()->contains()')
         ->given(
-            Set\Type::any(),
-            Set::sequence(Set\Type::any()),
-            Set::sequence(Set\Type::any()),
+            Set::type(),
+            Set::sequence(Set::type()),
+            Set::sequence(Set::type()),
             Set::strings(),
         )
         ->filter(
@@ -1456,7 +1456,7 @@ return static function($load, $prove) {
     yield $prove
         ->proof('Assert->matches()')
         ->given(
-            Set\Type::any(),
+            Set::type(),
             Set::strings(),
         )
         ->test(static function($assert, $value, $message) {
