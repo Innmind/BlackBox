@@ -18,7 +18,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
-        })->toSet();
+        });
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $b = $a->take(50);
@@ -63,7 +63,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
-        })->toSet();
+        });
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $this->assertCount(11, $aValues);
@@ -75,7 +75,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
-        })->toSet();
+        });
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertSame(\range(0, 10), $this->unwrap($a->values(Random::mersenneTwister)));
@@ -92,7 +92,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
-        })->toSet();
+        });
 
         foreach ($generated->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());

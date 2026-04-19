@@ -149,18 +149,17 @@ final class Set
      *
      * @param callable(Random): \Generator<(V|Seed<V>)> $factory
      *
-     * @return Provider\Generator<V>
+     * @return self<V>
      */
     #[\NoDiscard]
-    public static function generator(callable $factory): Provider\Generator
+    public static function generator(callable $factory): self
     {
-        /**
-         * @psalm-suppress InvalidArgument
-         * @var Provider\Generator<V> Don't know why it complains
-         */
-        return Provider\Generator::of(
-            self::build(...),
-            $factory,
+        return new self(
+            Set\FromGenerator::implementation(
+                $factory,
+                true,
+            ),
+            true,
         );
     }
 
