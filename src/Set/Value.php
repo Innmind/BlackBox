@@ -25,7 +25,6 @@ final class Value
      * @param T|Seed<T> $unwrapped
      */
     private function __construct(
-        private bool $immutable,
         private mixed $source,
         private Map $map,
         private ?Shrinker $shrink,
@@ -47,7 +46,6 @@ final class Value
     public static function of($value): self
     {
         return new self(
-            true,
             $value,
             Map::noop(),
             null,
@@ -58,40 +56,11 @@ final class Value
     }
 
     /**
-     * @psalm-mutation-free
-     *
-     * @return self<T>
-     */
-    public function mutable(bool $mutable): self
-    {
-        if (!$this->immutable) {
-            // Mutable values can't become immutable
-            return $this;
-        }
-
-        if (!$mutable) {
-            // Already immutable
-            return $this;
-        }
-
-        return new self(
-            !$mutable,
-            $this->source,
-            $this->map,
-            $this->shrink,
-            $this->predicate,
-            null, // no need to keep the pre-computed value when mutable
-            $this->unbounded,
-        );
-    }
-
-    /**
      * @return self<T>
      */
     public function shrinkWith(Shrinker $shrink): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->map,
             $shrink,
@@ -107,7 +76,6 @@ final class Value
     public function withoutShrinking(): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->map,
             null,
@@ -127,7 +95,6 @@ final class Value
     public function predicatedOn(callable $predicate): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->map,
             $this->shrink,
@@ -147,16 +114,11 @@ final class Value
      */
     public function map(callable $map): self
     {
-        $unwrapped = $this->unwrapped;
-
-        if ($this->immutable) {
-            // avoid recomputing the map operation on each unwrap
-            /** @psalm-suppress ImpureMethodCall Since everything is supposed immutable this should be fine */
-            $unwrapped = Map::noop()->with($map)($unwrapped);
-        }
+        // avoid recomputing the map operation on each unwrap
+        /** @psalm-suppress ImpureMethodCall Since everything is supposed immutable this should be fine */
+        $unwrapped = Map::noop()->with($map)($this->unwrapped);
 
         return new self(
-            $this->immutable,
             $this->source,
             $this->map->with($map),
             null,
@@ -180,15 +142,10 @@ final class Value
          * @psalm-suppress MixedArgument
          */
         $shrunk = $shrink($this->source);
-        $unwrapped = $this->unwrapped;
-
-        if ($this->immutable) {
-            /** @psalm-suppress ImpureMethodCall */
-            $unwrapped = ($this->map)($shrunk);
-        }
+        /** @psalm-suppress ImpureMethodCall */
+        $unwrapped = ($this->map)($shrunk);
 
         return new self(
-            $this->immutable,
             $shrunk,
             $this->map,
             $this->shrink,
@@ -221,15 +178,10 @@ final class Value
             return $shrunk;
         }
 
-        $unwrapped = $this->unwrapped;
-
-        if ($this->immutable) {
-            /** @psalm-suppress ImpureMethodCall */
-            $unwrapped = ($this->map)($shrunk);
-        }
+        /** @psalm-suppress ImpureMethodCall */
+        $unwrapped = ($this->map)($shrunk);
 
         return new self(
-            $this->immutable,
             $shrunk,
             $this->map,
             $this->shrink,
@@ -242,7 +194,6 @@ final class Value
     public function bounded(): self
     {
         return new self(
-            $this->immutable,
             $this->source,
             $this->map,
             $this->shrink,
@@ -263,14 +214,6 @@ final class Value
     }
 
     /**
-     * @psalm-mutation-free
-     */
-    public function immutable(): bool
-    {
-        return $this->immutable;
-    }
-
-    /**
      * @return ?Dichotomy<T>
      */
     public function shrink(): ?Dichotomy
@@ -285,11 +228,7 @@ final class Value
      */
     public function unwrap()
     {
-        if ($this->immutable) {
-            $value = $this->unwrapped;
-        } else {
-            $value = ($this->map)($this->source);
-        }
+        $value = $this->unwrapped;
 
         // This is not ideal to hide the seeded value this way and to hijack
         // the shrinking system in self::shrinkable() and self::shrink() as it

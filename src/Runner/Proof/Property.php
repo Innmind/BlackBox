@@ -111,7 +111,6 @@ final class Property implements Proof
             ([$this->property, 'any'])(),
             $this->systemUnderTest->map(\Closure::fromCallable(...)),
         )
-            ->immutable()
             ->randomize()
             ->take($count);
     }

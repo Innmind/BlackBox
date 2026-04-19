@@ -68,7 +68,7 @@ class CompositeTest extends TestCase
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->toSet()->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->values(Random::mersenneTwister));
 
         $this
             ->assert()
@@ -85,127 +85,11 @@ class CompositeTest extends TestCase
 
     public function testValues()
     {
-        $this->assertInstanceOf(\Generator::class, $this->set->toSet()->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($this->set->toSet()->values(Random::mersenneTwister)));
+        $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
+        $this->assertCount(100, $this->unwrap($this->set->values(Random::mersenneTwister)));
 
-        foreach ($this->set->toSet()->values(Random::mersenneTwister) as $value) {
+        foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
-        }
-    }
-
-    public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
-    {
-        $set = Set::compose(
-            static function(string ...$args) {
-                $std = new \stdClass;
-                $std->prop = $args;
-
-                return $std;
-            },
-            Set::generator(static function() {
-                yield 'e';
-                yield 'f';
-            }),
-            Set::generator(static function() {
-                yield 'a';
-                yield 'b';
-            }),
-            Set::generator(static function() {
-                yield 'c';
-                yield 'd';
-            }),
-        )->mutable()->toSet();
-
-        foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-            $this->assertNotSame($value->unwrap(), $value->unwrap());
-            $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
-        }
-    }
-
-    public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
-    {
-        $set = Set::compose(
-            static function(object $value, string $char) {
-                $std = new \stdClass;
-                $std->prop = $value;
-                $std->char = $char;
-
-                return $std;
-            },
-            Set::decorate(
-                static function(string $value) {
-                    $std = new \stdClass;
-                    $std->prop = $value;
-
-                    return $std;
-                },
-                Set::generator(static function() {
-                    yield 'ea';
-                    yield 'fb';
-                    yield 'gc';
-                    yield 'eb';
-                }),
-            ),
-            Set::generator(static function() {
-                yield 'c';
-                yield 'd';
-            }),
-        )->filter(static fn($object) => $object->prop->prop[0] === 'e');
-
-        $this->assertCount(100, \iterator_to_array($set->values(Random::mersenneTwister)));
-
-        foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-            $this->assertNotSame($value->unwrap(), $value->unwrap());
-            $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
-            $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
-            $this->assertSame($value->unwrap()->char, $value->unwrap()->char);
-        }
-    }
-
-    public function testConservesMutabilityFromUnderlyingSets()
-    {
-        $mutable = Set::compose(
-            static function(string ...$args) {
-                $std = new \stdClass;
-                $std->prop = $args;
-
-                return $std;
-            },
-            Set::generator(static function() {
-                yield 'e';
-                yield 'f';
-            }),
-            Set::generator(static function() {
-                yield 'a';
-                yield 'b';
-            }),
-            Set::generator(static function() {
-                yield 'c';
-                yield 'd';
-            }),
-        )->mutable()->toSet();
-
-        foreach ($mutable->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-        }
-
-        $immutable = Set::compose(
-            static function(int ...$args) {
-                $std = new \stdClass;
-                $std->prop = $args;
-
-                return $std;
-            },
-            Set::integers(),
-            Set::integers(),
-            Set::integers(),
-        );
-
-        foreach ($immutable->toSet()->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->immutable());
         }
     }
 
@@ -229,7 +113,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($shrinkable->toSet()->values(Random::mersenneTwister) as $value) {
+        foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
         }
 
@@ -254,7 +138,7 @@ class CompositeTest extends TestCase
             }),
         );
 
-        foreach ($nonShrinkable->toSet()->values(Random::mersenneTwister) as $value) {
+        foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
         }
     }
@@ -273,7 +157,7 @@ class CompositeTest extends TestCase
             Set::integers(),
         );
 
-        foreach ($set->toSet()->values(Random::mersenneTwister) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
             $value = $value->unwrap();
             $a = $dichotomy->a()->unwrap();
@@ -298,7 +182,7 @@ class CompositeTest extends TestCase
             Set::strings()->between(0, 5),
         );
 
-        foreach ($set->toSet()->values(Random::mersenneTwister) as $value) {
+        foreach ($set->values(Random::mersenneTwister) as $value) {
             $a = $value;
 
             while ($shrunk = $a->shrink()) {

@@ -82,7 +82,6 @@ class EitherTest extends TestCase
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
         }
     }
 

@@ -100,7 +100,6 @@ class RealNumbersTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
         }
     }
 
@@ -119,15 +118,6 @@ class RealNumbersTest extends TestCase
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
-        }
-    }
-
-    public function testShrinkedRealNumbersAreImmutable()
-    {
-        $numbers = Set::realNumbers()->filter(static fn($i) => $i !== 0.0);
-
-        foreach ($numbers->values(Random::mersenneTwister) as $value) {
-            $this->assertTrue($value->immutable());
         }
     }
 

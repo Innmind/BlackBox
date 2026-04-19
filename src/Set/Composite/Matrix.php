@@ -40,7 +40,6 @@ final class Matrix
                     yield Combination::startWith($value);
                 }
             },
-            immutable: true,
         );
 
         return new self($a, $combinations);
@@ -53,7 +52,6 @@ final class Matrix
             function(Random $rand): \Generator {
                 yield from $this->values($rand);
             },
-            immutable: true,
         );
 
         return new self($set, $combinations);

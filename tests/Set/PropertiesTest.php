@@ -47,17 +47,6 @@ class PropertiesTest extends TestCase
         }
     }
 
-    public function testValuesAreConsideredImmutable()
-    {
-        $properties = Properties::any(
-            Set::of(new LowerBoundAtZero),
-        );
-
-        foreach (Collapse::of($properties)->values(Random::mersenneTwister) as $scenario) {
-            $this->assertTrue($scenario->immutable());
-        }
-    }
-
     public function testScenariiAreOfDifferentSizes()
     {
         $properties = Properties::any(

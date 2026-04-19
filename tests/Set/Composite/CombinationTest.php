@@ -30,17 +30,6 @@ class CombinationTest extends TestCase
         $this->assertSame(['baz', 'foo'], $combination2->detonate(static fn(...$args) => $args));
     }
 
-    public function testIsImmutableIfAllValuesAreImmutable()
-    {
-        $immutable = Combination::startWith(Value::of(42));
-        $immutable = $immutable->add(Value::of(24));
-        $mutable = $immutable->add(Value::of(new \stdClass)->mutable(true));
-        $immutable = $immutable->add(Value::of(66));
-
-        $this->assertTrue($immutable->immutable());
-        $this->assertFalse($mutable->immutable());
-    }
-
     public function testCombinationIsShrinkableAsLongAsAtLeastOneValueIsShrinkable()
     {
         $nonShrinkable = Combination::startWith(Value::of(42));

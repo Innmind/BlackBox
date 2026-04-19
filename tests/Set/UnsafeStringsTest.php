@@ -67,7 +67,6 @@ class UnsafeStringsTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
         }
     }
 
@@ -91,29 +90,6 @@ class UnsafeStringsTest extends TestCase
 
             $this->assertNotNull($value->shrink());
         }
-    }
-
-    public function testShrinkedValuesAreImmutable()
-    {
-        $strings = Set::strings()->unsafe()->filter(static fn($string) => $string !== '');
-        $shrunk = false;
-
-        foreach ($strings->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-
-            if (\is_null($dichotomy)) {
-                continue;
-            }
-
-            $a = $dichotomy->a();
-            $b = $dichotomy->b();
-
-            $this->assertTrue($a->immutable());
-            $this->assertTrue($b->immutable());
-            $shrunk = true;
-        }
-
-        $this->assertTrue($shrunk, 'At least one string should have been shrunk');
     }
 
     public function testStringsAreShrinkedFromBothEnds()

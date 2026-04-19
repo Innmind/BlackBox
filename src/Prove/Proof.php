@@ -43,9 +43,7 @@ final class Proof
                 static fn(mixed ...$args) => $args,
                 $first,
                 ...$rest,
-            )
-                ->immutable()
-                ->toSet();
+            );
         }
 
         return Proof\Given::of(

@@ -96,65 +96,6 @@ class DecorateTest extends TestCase
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
-        }
-    }
-
-    public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
-    {
-        $set = Set::decorate(
-            static function(string $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            },
-            Set::generator(static function() {
-                yield 'ea';
-                yield 'fb';
-                yield 'gc';
-                yield 'eb';
-            }),
-        );
-
-        foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-            $this->assertNotSame($value->unwrap(), $value->unwrap());
-            $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
-        }
-    }
-
-    public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
-    {
-        $set = Set::decorate(
-            static function(string $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            },
-            Set::generator(static function() {
-                yield 'ea';
-                yield 'fb';
-                yield 'gc';
-                yield 'eb';
-            }),
-        )
-            ->map(static function(object $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            })
-            ->filter(static fn($object) => $object->prop->prop[0] === 'e');
-
-        $this->assertCount(2, \iterator_to_array($set->values(Random::mersenneTwister)));
-
-        foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-            $this->assertNotSame($value->unwrap(), $value->unwrap());
-            $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
-            $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
         }
     }
 
@@ -179,37 +120,6 @@ class DecorateTest extends TestCase
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
-        }
-    }
-
-    public function testShrinkedValuesConserveMutability()
-    {
-        $mutable = Set::decorate(
-            static function(int $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            },
-            Set::integers(),
-        );
-
-        foreach ($mutable->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-
-            $this->assertFalse($dichotomy->a()->immutable());
-            $this->assertFalse($dichotomy->b()->immutable());
-        }
-
-        $immutable = Set::integers()->map(static function(int $value) {
-            return [$value];
-        });
-
-        foreach ($immutable->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-
-            $this->assertTrue($dichotomy->a()->immutable());
-            $this->assertTrue($dichotomy->b()->immutable());
         }
     }
 

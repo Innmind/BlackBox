@@ -22,7 +22,6 @@ final class Map implements Implementation
     private function __construct(
         private Value\Map $map,
         private Implementation $set,
-        private bool $immutable,
     ) {
     }
 
@@ -45,10 +44,7 @@ final class Map implements Implementation
         };
 
         foreach (($this->set)($random, $mappedPredicate) as $value) {
-            $mutable = !($value->immutable() && $this->immutable);
-
             yield Value::of($value)
-                ->mutable($mutable)
                 ->map(static fn($value) => $value->unwrap())
                 ->map($this->map)
                 ->predicatedOn($predicate)
@@ -71,21 +67,18 @@ final class Map implements Implementation
     public static function implementation(
         callable $map,
         Implementation $set,
-        bool $immutable,
     ): self {
         if ($set instanceof self) {
             /** @psalm-suppress ImpurePropertyFetch */
             return new self(
                 $set->map->with($map),
                 $set->set,
-                $set->immutable && $immutable,
             );
         }
 
         return new self(
             Value\Map::noop()->with($map),
             $set,
-            $immutable,
         );
     }
 }
