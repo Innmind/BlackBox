@@ -1,7 +1,7 @@
 # BlackBox
 
+[![CI](https://github.com/Innmind/BlackBox/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Innmind/BlackBox/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Innmind/BlackBox/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/BlackBox)
-[![Build Status](https://github.com/Innmind/BlackBox/workflows/CI/badge.svg?branch=master)](https://github.com/Innmind/BlackBox/actions?query=workflow%3ACI)
 [![Type Coverage](https://shepherd.dev/github/Innmind/BlackBox/coverage.svg)](https://shepherd.dev/github/Innmind/BlackBox)
 
 BlackBox is a Property Based Testing framework and test runner.
