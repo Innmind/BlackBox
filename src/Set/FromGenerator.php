@@ -52,20 +52,4 @@ final class FromGenerator implements Implementation
             \Closure::fromCallable($generatorFactory),
         );
     }
-
-    /**
-     * @template A
-     *
-     * @param callable(Random): \Generator<A> $generatorFactory
-     *
-     * @return callable(Random): \Generator<A>
-     */
-    private static function guard(callable $generatorFactory): callable
-    {
-        if (!$generatorFactory(Random::mersenneTwister) instanceof \Generator) {
-            throw new \TypeError('Argument 1 must be of type callable(): \Generator');
-        }
-
-        return $generatorFactory;
-    }
 }
