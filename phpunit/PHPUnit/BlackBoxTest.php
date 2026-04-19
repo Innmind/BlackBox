@@ -25,7 +25,7 @@ class BlackBoxTest extends TestCase
             {
                 $called = 0;
                 $this
-                    ->forAll(Set\Integers::any())
+                    ->forAll(Set::integers())
                     ->then(static function() use (&$called) {
                         ++$called;
                     });
@@ -41,7 +41,7 @@ class BlackBoxTest extends TestCase
     public function testDoesntFailWhenTheExceptionIsExpected()
     {
         $this
-            ->forAll(Set\Strings::any(), Set\Integers::above(0))
+            ->forAll(Set::strings(), Set::integers()->above(0))
             ->then(function($message, $code) {
                 $exception = new class($message, $code) extends \Exception {
                 };
@@ -64,8 +64,8 @@ class BlackBoxTest extends TestCase
     public static function ints(): iterable
     {
         return self::forAll(
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
         )->asDataProvider();
     }
 }

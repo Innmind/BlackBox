@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\UnsafeStrings,
     Set,
     Set\Value,
     Random,
@@ -13,21 +12,16 @@ use Innmind\BlackBox\{
 
 class UnsafeStringsTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(Set::class, UnsafeStrings::any());
-    }
-
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(UnsafeStrings::any()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::strings()->unsafe()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = UnsafeStrings::any();
+        $values = Set::strings()->unsafe();
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -55,7 +49,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = UnsafeStrings::any();
+        $a = Set::strings()->unsafe();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -66,7 +60,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testValues()
     {
-        $a = UnsafeStrings::any();
+        $a = Set::strings()->unsafe();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -79,7 +73,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testEmptyStringCannotBeShrinked()
     {
-        $strings = UnsafeStrings::any()->filter(static fn($string) => $string === '');
+        $strings = Set::strings()->unsafe()->filter(static fn($string) => $string === '');
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -88,7 +82,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = UnsafeStrings::any();
+        $strings = Set::strings()->unsafe();
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             if ($value->unwrap() === '') {
@@ -101,7 +95,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testShrinkedValuesAreImmutable()
     {
-        $strings = UnsafeStrings::any()->filter(static fn($string) => $string !== '');
+        $strings = Set::strings()->unsafe()->filter(static fn($string) => $string !== '');
         $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
@@ -124,7 +118,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testStringsAreShrinkedFromBothEnds()
     {
-        $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 1);
+        $strings = Set::strings()->unsafe()->filter(static fn($string) => \strlen($string) > 1);
         $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
@@ -155,7 +149,7 @@ class UnsafeStringsTest extends TestCase
     public function testStringsOfOneCharacterCantBeShrunk()
     {
         // otherwise they won't match the given predicate
-        $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) === 1);
+        $strings = Set::strings()->unsafe()->filter(static fn($string) => \strlen($string) === 1);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -164,7 +158,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = UnsafeStrings::any()->filter(static fn($string) => \strlen($string) > 20);
+        $strings = Set::strings()->unsafe()->filter(static fn($string) => \strlen($string) > 20);
         $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
@@ -184,11 +178,13 @@ class UnsafeStringsTest extends TestCase
 
     public function testThrowWhenCannotFindAValue()
     {
-        $this->expectException(EmptySet::class);
-
-        UnsafeStrings::any()
-            ->filter(static fn() => false)
-            ->values(Random::mersenneTwister)
-            ->current();
+        $this->assert()->throws(
+            static fn() => Set::strings()
+                ->unsafe()
+                ->filter(static fn() => false)
+                ->values(Random::mersenneTwister)
+                ->current(),
+            EmptySet::class,
+        );
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Decorate,
-    Set\FromGenerator,
     Set,
     Set\Value,
     Random,
@@ -17,37 +15,17 @@ class DecorateTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = Decorate::immutable(
-            static function(string $value) {
-                return [$value];
-            },
-            FromGenerator::of(static function() {
-                yield 'ea';
-                yield 'fb';
-                yield 'gc';
-                yield 'eb';
-            }),
-        );
+        $this->set = Set::generator(static function() {
+            yield 'ea';
+            yield 'fb';
+            yield 'gc';
+            yield 'eb';
+        })->map(static fn($value) => [$value]);
     }
 
     public function testInterface()
     {
         $this->assertInstanceOf(Set::class, $this->set);
-    }
-
-    public function testImmutable()
-    {
-        $this->assertInstanceOf(
-            Set::class,
-            Decorate::immutable(
-                static function() {
-                },
-                FromGenerator::of(static function() {
-                    yield 'e';
-                    yield 'f';
-                }),
-            ),
-        );
     }
 
     public function testTake()
@@ -82,10 +60,10 @@ class DecorateTest extends TestCase
 
     public function testFilteringDecoratedDecoratorIsAppliedCorrectly()
     {
-        $values = Decorate::immutable(
-            static fn($value) => [$value],
-            $this->set,
-        )->filter(static fn($value) => $value[0][0][0] === 'e');
+        $values = $this
+            ->set
+            ->map(static fn($value) => [$value])
+            ->filter(static fn($value) => $value[0][0][0] === 'e');
 
         $this->assertSame(
             [
@@ -124,14 +102,14 @@ class DecorateTest extends TestCase
 
     public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
     {
-        $set = Decorate::mutable(
+        $set = Set::decorate(
             static function(string $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
             },
-            FromGenerator::of(static function() {
+            Set::generator(static function() {
                 yield 'ea';
                 yield 'fb';
                 yield 'gc';
@@ -148,28 +126,27 @@ class DecorateTest extends TestCase
 
     public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
     {
-        $set = Decorate::immutable(
-            static function(object $value) {
+        $set = Set::decorate(
+            static function(string $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
             },
-            Decorate::mutable(
-                static function(string $value) {
-                    $std = new \stdClass;
-                    $std->prop = $value;
+            Set::generator(static function() {
+                yield 'ea';
+                yield 'fb';
+                yield 'gc';
+                yield 'eb';
+            }),
+        )
+            ->map(static function(object $value) {
+                $std = new \stdClass;
+                $std->prop = $value;
 
-                    return $std;
-                },
-                FromGenerator::of(static function() {
-                    yield 'ea';
-                    yield 'fb';
-                    yield 'gc';
-                    yield 'eb';
-                }),
-            ),
-        )->filter(static fn($object) => $object->prop->prop[0] === 'e');
+                return $std;
+            })
+            ->filter(static fn($object) => $object->prop->prop[0] === 'e');
 
         $this->assertCount(2, \iterator_to_array($set->values(Random::mersenneTwister)));
 
@@ -183,28 +160,22 @@ class DecorateTest extends TestCase
 
     public function testConserveUnderlyingSetShrinkability()
     {
-        $nonShrinkable = Decorate::immutable(
-            static function(string $value) {
-                return [$value];
-            },
-            FromGenerator::of(static function() {
-                yield 'ea';
-                yield 'fb';
-                yield 'gc';
-                yield 'eb';
-            }),
-        );
+        $nonShrinkable = Set::generator(static function() {
+            yield 'ea';
+            yield 'fb';
+            yield 'gc';
+            yield 'eb';
+        })->map(static function(string $value) {
+            return [$value];
+        });
 
         foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
         }
 
-        $shrinkable = Decorate::immutable(
-            static function(int $value) {
-                return [$value];
-            },
-            Set\Integers::any(),
-        );
+        $shrinkable = Set::integers()->map(static function(int $value) {
+            return [$value];
+        });
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
@@ -213,14 +184,14 @@ class DecorateTest extends TestCase
 
     public function testShrinkedValuesConserveMutability()
     {
-        $mutable = Decorate::mutable(
+        $mutable = Set::decorate(
             static function(int $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
             },
-            Set\Integers::any(),
+            Set::integers(),
         );
 
         foreach ($mutable->values(Random::mersenneTwister) as $value) {
@@ -230,12 +201,9 @@ class DecorateTest extends TestCase
             $this->assertFalse($dichotomy->b()->immutable());
         }
 
-        $immutable = Decorate::immutable(
-            static function(int $value) {
-                return [$value];
-            },
-            Set\Integers::any(),
-        );
+        $immutable = Set::integers()->map(static function(int $value) {
+            return [$value];
+        });
 
         foreach ($immutable->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -247,12 +215,11 @@ class DecorateTest extends TestCase
 
     public function testShrinkedValuesAlwaysRespectTheSetPredicate()
     {
-        $set = Decorate::immutable(
-            static function(int $value) {
+        $set = Set::integers()
+            ->map(static function(int $value) {
                 return [$value];
-            },
-            Set\Integers::any(),
-        )->filter(static fn($v) => $v[0] % 2 === 0);
+            })
+            ->filter(static fn($v) => $v[0] % 2 === 0);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();

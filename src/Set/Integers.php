@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set;
 
-use Innmind\BlackBox\{
-    Set,
-    Random,
-};
+use Innmind\BlackBox\Random;
 
 /**
  * @internal
@@ -52,60 +49,6 @@ final class Integers implements Implementation
             $min ?? \PHP_INT_MIN,
             $max ?? \PHP_INT_MAX,
         );
-    }
-
-    /**
-     * @deprecated Use Set::integers() instead
-     * @psalm-pure
-     *
-     * @return Set<int>
-     */
-    #[\NoDiscard]
-    public static function any(): Set
-    {
-        return Set::integers()->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::integers()->between() instead
-     * @psalm-pure
-     *
-     * @return Set<int>
-     */
-    #[\NoDiscard]
-    public static function between(int $min, int $max): Set
-    {
-        return Set::integers()
-            ->between($min, $max)
-            ->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::integers()->above() instead
-     * @psalm-pure
-     *
-     * @return Set<int>
-     */
-    #[\NoDiscard]
-    public static function above(int $min): Set
-    {
-        return Set::integers()
-            ->above($min)
-            ->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::integers()->below() instead
-     * @psalm-pure
-     *
-     * @return Set<int>
-     */
-    #[\NoDiscard]
-    public static function below(int $max): Set
-    {
-        return Set::integers()
-            ->below($max)
-            ->toSet();
     }
 
     /**

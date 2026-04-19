@@ -6,14 +6,14 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function() {
-    yield proof(
-        'Set\Slice',
-        given(
-            Set\Sequence::of(Set\Type::any())->atLeast(11),
+return static function($load, $prove) {
+    yield $prove
+        ->proof('Set\Slice')
+        ->given(
+            Set::sequence(Set::type())->atLeast(11),
             Set\Slice::between(10, 20),
-        ),
-        static function($assert, $values, $slice) {
+        )
+        ->test(static function($assert, $values, $slice) {
             $subset = $slice($values);
             $prefix = \array_slice($values, 0, 10);
 
@@ -27,21 +27,21 @@ return static function() {
                     ->expected($value)
                     ->in($values);
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set\Slice min length',
-        given(
-            Set\Sequence::of(Set\Type::any())->atLeast(2),
+    yield $prove
+        ->proof('Set\Slice min length')
+        ->given(
+            Set::sequence(Set::type())->atLeast(2),
             Set\Slice::any()->atLeast(2),
-        ),
-        static function($assert, $values, $slice) {
+        )
+        ->test(static function($assert, $values, $slice) {
             $subset = $slice($values);
 
             $assert
                 ->number(\count($subset))
                 ->greaterThanOrEqual(2);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 };

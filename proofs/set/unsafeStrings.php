@@ -7,17 +7,19 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function() {
-    yield test(
-        'Set::strings()->unsafe() shrink to an empty string',
-        static function($assert) {
-            foreach (Set::strings()->unsafe()->values(Random::default) as $value) {
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
-                }
+return static function($load, $prove) {
+    yield $prove
+        ->test(
+            'Set::strings()->unsafe() shrink to an empty string',
+            static function($assert) {
+                foreach (Set::strings()->unsafe()->values(Random::default) as $value) {
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                    }
 
-                $assert->same('', $value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
+                    $assert->same('', $value->unwrap());
+                }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 };

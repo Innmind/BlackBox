@@ -35,14 +35,14 @@ trait BlackBox
         $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
 
         if (\count($rest) > 0) {
-            $given = Set\Composite::immutable(
+            $given = Set::compose(
                 static fn(mixed ...$args) => $args,
                 $first,
                 ...$rest,
-            );
+            )->toSet();
         }
 
-        $given = Given::of(Set\Randomize::of($given));
+        $given = Given::of($given->randomize());
 
         if (\is_a(self::class, TestCase::class, true)) {
             return Compatibility::blackbox($app, $given);

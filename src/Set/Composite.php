@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set,
     Set\Composite\Matrix,
     Random,
 };
@@ -76,52 +75,6 @@ final class Composite implements Implementation
             $sets,
             $immutable,
         );
-    }
-
-    /**
-     * @deprecated Use Set::compose()->immutable() instead
-     * @psalm-pure
-     *
-     * @template T
-     * @no-named-arguments
-     *
-     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
-     *
-     * @return Set<T>
-     */
-    #[\NoDiscard]
-    public static function immutable(
-        callable $aggregate,
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$sets,
-    ): Set {
-        return Set::compose($aggregate, $first, $second, ...$sets)
-            ->immutable()
-            ->toSet();
-    }
-
-    /**
-     * @deprecated Use Set::compose()->mutable() instead
-     * @psalm-pure
-     *
-     * @template T
-     * @no-named-arguments
-     *
-     * @param callable(mixed...): T $aggregate It must be a pure function (no randomness, no side effects)
-     *
-     * @return Set<T>
-     */
-    #[\NoDiscard]
-    public static function mutable(
-        callable $aggregate,
-        Set|Provider $first,
-        Set|Provider $second,
-        Set|Provider ...$sets,
-    ): Set {
-        return Set::compose($aggregate, $first, $second, ...$sets)
-            ->mutable()
-            ->toSet();
     }
 
     private function matrix(): Matrix

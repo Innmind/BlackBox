@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function() {
+return static function($load, $prove) {
     $anySet = Set::of(
         Set::integers()->toSet(),
         // real numbers not used as it may return the type integer
@@ -20,10 +20,10 @@ return static function() {
         Set::of(true, false),
     );
 
-    yield proof(
-        'Set::flatMap() input is of the type of the parent',
-        given($anySet, $anySet),
-        static function($assert, $input, $output) {
+    yield $prove
+        ->proof('Set::flatMap() input is of the type of the parent')
+        ->given($anySet, $anySet)
+        ->test(static function($assert, $input, $output) {
             $compose = $input->flatMap(static function($value) use ($assert, $input, $output) {
                 $assert->same(
                     \gettype($value->unwrap()),
@@ -36,13 +36,13 @@ return static function() {
             foreach ($compose->values(Random::default) as $_) {
                 // triggers the assert in the flatMap lambda
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set::flatMap() values is of the type of the child set',
-        given($anySet, $anySet),
-        static function($assert, $input, $output) {
+    yield $prove
+        ->proof('Set::flatMap() values is of the type of the child set')
+        ->given($anySet, $anySet)
+        ->test(static function($assert, $input, $output) {
             $compose = $input->flatMap(static fn() => $output);
 
             foreach ($compose->values(Random::default) as $value) {
@@ -51,13 +51,13 @@ return static function() {
                     \gettype($output->values(Random::default)->current()->unwrap()),
                 );
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set::flatMap()->take()',
-        given($anySet, $anySet, Set::integers()->between(1, 100)),
-        static function($assert, $input, $output, $size) {
+    yield $prove
+        ->proof('Set::flatMap()->take()')
+        ->given($anySet, $anySet, Set::integers()->between(1, 100))
+        ->test(static function($assert, $input, $output, $size) {
             $compose = $input
                 ->flatMap(static fn() => $output)
                 ->take($size);
@@ -68,13 +68,13 @@ return static function() {
             }
 
             $assert->same($size, $count);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set::flatMap()->filter() is applied on the child values',
-        given($anySet, $anySet),
-        static function($assert, $input, $output) {
+    yield $prove
+        ->proof('Set::flatMap()->filter() is applied on the child values')
+        ->given($anySet, $anySet)
+        ->test(static function($assert, $input, $output) {
             $expected = \gettype($output->values(Random::default)->current()->unwrap());
             $compose = $input
                 ->flatMap(static fn() => $output)
@@ -90,13 +90,13 @@ return static function() {
             foreach ($compose->values(Random::default) as $_) {
                 // triggers the assert in the filter lambda
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set::flatMap()->map()',
-        given($anySet, Set::of(Set::integers()->between(-1_000_000, 1_000_000))),
-        static function($assert, $input, $output) {
+    yield $prove
+        ->proof('Set::flatMap()->map()')
+        ->given($anySet, Set::of(Set::integers()->between(-1_000_000, 1_000_000)))
+        ->test(static function($assert, $input, $output) {
             $compose = $input
                 ->flatMap(static fn() => $output)
                 ->map(static fn($i) => $i*2);
@@ -107,12 +107,12 @@ return static function() {
                     $value->unwrap() % 2,
                 );
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set::flatMap() input value is always the same',
-        given(
+    yield $prove
+        ->proof('Set::flatMap() input value is always the same')
+        ->given(
             Set::of(
                 Set::integers(),
                 Set::realNumbers(),
@@ -124,8 +124,8 @@ return static function() {
                 ))->between(0, 10),
             ),
             $anySet,
-        ),
-        static function($assert, $input, $output) {
+        )
+        ->test(static function($assert, $input, $output) {
             $compose = $input->flatMap(static fn($value) => $output->map(
                 static fn() => $value->unwrap(),
             ));
@@ -139,277 +139,291 @@ return static function() {
                 1,
                 \array_unique($values, \SORT_REGULAR),
             );
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield test(
-        'Set::flatMap() input value is shrinkable',
-        static function($assert) {
-            $compose = Set::integers()->flatMap(
-                static fn($seed) => Set::strings()->map(
-                    static fn($string) => $seed->map(
-                        static fn($i) => $i.$string,
+    yield $prove
+        ->test(
+            'Set::flatMap() input value is shrinkable',
+            static function($assert) {
+                $compose = Set::integers()->flatMap(
+                    static fn($seed) => Set::strings()->map(
+                        static fn($string) => $seed->map(
+                            static fn($i) => $i.$string,
+                        ),
                     ),
-                ),
-            );
+                );
 
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            foreach ($compose->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                foreach ($compose->values(Random::default) as $value) {
                     $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert->same('0', $value->unwrap());
                 }
 
-                $assert->same('0', $value->unwrap());
-            }
-
-            $compose = Set::strings()->flatMap(
-                static fn($seed) => Set::compose(
-                    static fn($a, $b) => $seed->map(
-                        static fn($string) => $a.$string.$b,
-                    ),
-                    Set::integers(),
-                    Set::integers(),
-                ),
-            );
-
-            foreach ($compose->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
-                    $value->unwrap();
-                }
-
-                $assert->same('00', $value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Set::flatMap() input value is composable and shrinkable',
-        static function($assert) {
-            $compose = Set::strings()->flatMap(
-                static fn($stringSeed) => Set::integers()->flatMap(
-                    static fn($aSeed) => Set::integers()->map(
-                        static fn($b) => $stringSeed
-                            ->flatMap(
-                                static fn($string) => $aSeed->map(
-                                    static fn($a) => $a.'|'.$string.'|'.$b,
-                                ),
-                            )
-                            ->map(static fn($string) => "($string)"),
-                    ),
-                ),
-            );
-
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            foreach ($compose->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
-                    $value->unwrap();
-                }
-
-                $assert->same('(0||0)', $value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Set::compose() can collapse seeds from flatMaps',
-        static function($assert) {
-            $compose = Set::strings()->flatMap(
-                static fn($stringSeed) => Set::integers()->flatMap(
-                    static fn($aSeed) => Set::compose(
-                        static fn($b, $stringB) => $stringSeed->flatMap(
-                            static fn($string) => $aSeed->map(
-                                static fn($a) => $a.'|'.$string.'|'.$stringB.'|'.$b,
-                            ),
+                $compose = Set::strings()->flatMap(
+                    static fn($seed) => Set::compose(
+                        static fn($a, $b) => $seed->map(
+                            static fn($string) => $a.$string.$b,
                         ),
                         Set::integers(),
-                        Set::strings(),
+                        Set::integers(),
                     ),
-                ),
-            );
+                );
 
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            foreach ($compose->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
+                foreach ($compose->values(Random::default) as $value) {
                     $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert->same('00', $value->unwrap());
                 }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-                $assert->same('0|||0', $value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->test(
+            'Set::flatMap() input value is composable and shrinkable',
+            static function($assert) {
+                $compose = Set::strings()->flatMap(
+                    static fn($stringSeed) => Set::integers()->flatMap(
+                        static fn($aSeed) => Set::integers()->map(
+                            static fn($b) => $stringSeed
+                                ->flatMap(
+                                    static fn($string) => $aSeed->map(
+                                        static fn($a) => $a.'|'.$string.'|'.$b,
+                                    ),
+                                )
+                                ->map(static fn($string) => "($string)"),
+                        ),
+                    ),
+                );
 
-    yield test(
-        'Set::generator() can collapse seeds from flatMaps',
-        static function($assert) {
-            $compose = Set::strings()->flatMap(
-                static fn($stringSeed) => Set::generator(static function() use ($stringSeed) {
-                    yield $stringSeed;
-                }),
-            );
-
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            foreach ($compose->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                foreach ($compose->values(Random::default) as $value) {
                     $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert->same('(0||0)', $value->unwrap());
                 }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-                $assert->same('', $value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Set::flatMap()->map()->filter()',
-        static function($assert) {
-            $compose = Set::integers()->flatMap(
-                static fn($seed) => Set::strings()
-                    ->map(static fn($string) => $seed->map(
-                        static fn($i) => $i.$string,
-                    ))
-                    ->filter(static fn($string) => $string !== '0'),
-            );
-
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            foreach ($compose->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
-                    $value->unwrap();
-                }
-
-                $assert
-                    ->array(['-1', '1'])
-                    ->contains($value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Set::flatMap()->map()->filter() on composed seeds',
-        static function($assert) {
-            $compose = Set::integers()->flatMap(
-                static fn($seedA) => Set::integers()->flatMap(
-                    static fn($seedB) => Set::strings()
-                        ->map(static fn($string) => $seedA->flatMap(
-                            static fn($a) => $seedB->map(
-                                static fn($b) => $a.$string.$b,
+    yield $prove
+        ->test(
+            'Set::compose() can collapse seeds from flatMaps',
+            static function($assert) {
+                $compose = Set::strings()->flatMap(
+                    static fn($stringSeed) => Set::integers()->flatMap(
+                        static fn($aSeed) => Set::compose(
+                            static fn($b, $stringB) => $stringSeed->flatMap(
+                                static fn($string) => $aSeed->map(
+                                    static fn($a) => $a.'|'.$string.'|'.$stringB.'|'.$b,
+                                ),
                             ),
-                        ))
-                        ->filter(static fn($string) => $string !== '00'),
-                ),
-            );
-
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            // The take(10) is here to speed things up as the default would need
-            // to shrink 300 values (both ints and the string) to their minimum
-            // values. It would take almost a minute.
-            foreach ($compose->take(10)->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
-                    $value->unwrap();
-                }
-
-                $assert
-                    ->array(['0-1', '-10', '01', '10'])
-                    ->contains($value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Set::compose() should shrink seeded values and apply filters',
-        static function($assert) {
-            $compose = Set::strings()->madeOf(Set::of('a'))->flatMap(
-                static fn($seed) => Set::compose(
-                    static fn($a, $b) => $seed->map(
-                        static fn($string) => $a.'|'.$string.'|'.$b,
+                            Set::integers(),
+                            Set::strings(),
+                        ),
                     ),
-                    Set::integers()->above(0), // to simplify the assertion
-                    Set::integers()->above(0),
-                )->filter(static fn($string) => $string !== '0||0'),
-            );
+                );
 
-            // The calls to unwrap below are here to simulate the fact that a
-            // value is first unwrapped to be tested before eventually being
-            // shrunk in case of a test failure.
-            // The take(10) is here to speed things up as the default would need
-            // to shrink 300 values (both ints and the string) to their minimum
-            // values. It would take almost a minute.
-            foreach ($compose->take(10)->values(Random::default) as $value) {
-                $value->unwrap();
-
-                while ($shrunk = $value->shrink()) {
-                    $value = $shrunk->a();
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                foreach ($compose->values(Random::default) as $value) {
                     $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert->same('0|||0', $value->unwrap());
                 }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-                $assert
-                    ->array(['0|a|0', '0||1', '1||0'])
-                    ->contains($value->unwrap());
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->test(
+            'Set::generator() can collapse seeds from flatMaps',
+            static function($assert) {
+                $compose = Set::strings()->flatMap(
+                    static fn($stringSeed) => Set::generator(static function() use ($stringSeed) {
+                        yield $stringSeed;
+                    }),
+                );
 
-    yield proof(
-        'Set->enumerate() returns 100 elements by default',
-        given($anySet),
-        static function($assert, $set) {
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                foreach ($compose->values(Random::default) as $value) {
+                    $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert->same('', $value->unwrap());
+                }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Set::flatMap()->map()->filter()',
+            static function($assert) {
+                $compose = Set::integers()->flatMap(
+                    static fn($seed) => Set::strings()
+                        ->map(static fn($string) => $seed->map(
+                            static fn($i) => $i.$string,
+                        ))
+                        ->filter(static fn($string) => $string !== '0'),
+                );
+
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                foreach ($compose->values(Random::default) as $value) {
+                    $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert
+                        ->array(['-1', '1'])
+                        ->contains($value->unwrap());
+                }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Set::flatMap()->map()->filter() on composed seeds',
+            static function($assert) {
+                $compose = Set::integers()->flatMap(
+                    static fn($seedA) => Set::integers()->flatMap(
+                        static fn($seedB) => Set::strings()
+                            ->map(static fn($string) => $seedA->flatMap(
+                                static fn($a) => $seedB->map(
+                                    static fn($b) => $a.$string.$b,
+                                ),
+                            ))
+                            ->filter(static fn($string) => $string !== '00'),
+                    ),
+                );
+
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                // The take(10) is here to speed things up as the default would need
+                // to shrink 300 values (both ints and the string) to their minimum
+                // values. It would take almost a minute.
+                foreach ($compose->take(10)->values(Random::default) as $value) {
+                    $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert
+                        ->array(['0-1', '-10', '01', '10'])
+                        ->contains($value->unwrap());
+                }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Set::compose() should shrink seeded values and apply filters',
+            static function($assert) {
+                $compose = Set::strings()->madeOf(Set::of('a'))->flatMap(
+                    static fn($seed) => Set::compose(
+                        static fn($a, $b) => $seed->map(
+                            static fn($string) => $a.'|'.$string.'|'.$b,
+                        ),
+                        Set::integers()->above(0), // to simplify the assertion
+                        Set::integers()->above(0),
+                    )->filter(static fn($string) => $string !== '0||0'),
+                );
+
+                // The calls to unwrap below are here to simulate the fact that a
+                // value is first unwrapped to be tested before eventually being
+                // shrunk in case of a test failure.
+                // The take(10) is here to speed things up as the default would need
+                // to shrink 300 values (both ints and the string) to their minimum
+                // values. It would take almost a minute.
+                foreach ($compose->take(10)->values(Random::default) as $value) {
+                    $value->unwrap();
+
+                    while ($shrunk = $value->shrink()) {
+                        $value = $shrunk->a();
+                        $value->unwrap();
+                    }
+
+                    $assert
+                        ->array(['0|a|0', '0||1', '1||0'])
+                        ->contains($value->unwrap());
+                }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Set->enumerate() returns 100 elements by default')
+        ->given($anySet)
+        ->test(static function($assert, $set) {
             $values = \iterator_to_array($set->enumerate());
 
             $assert->count(100, $values);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set->take()->enumerate() returns 100 elements by default',
-        given(
+    yield $prove
+        ->proof('Set->take()->enumerate() returns 100 elements by default')
+        ->given(
             $anySet,
             Set::integers()->between(1, 1_000),
-        ),
-        static function($assert, $set, $size) {
+        )
+        ->test(static function($assert, $set, $size) {
             $values = \iterator_to_array($set->take($size)->enumerate());
 
             $assert->count($size, $values);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set->enumerate() contains the expressed type',
-        given(Set::of(
+    yield $prove
+        ->proof('Set->enumerate() contains the expressed type')
+        ->given(Set::of(
             [[true, false], Set::of(true, false)],
             [\range(0, 101), Set::integers()->between(0, 100)->toSet()],
-        )),
-        static function($assert, $pair) {
+        ))
+        ->test(static function($assert, $pair) {
             [$accepted, $set] = $pair;
             $values = \iterator_to_array($set->enumerate());
 
@@ -418,36 +432,37 @@ return static function() {
                     ->array($accepted)
                     ->contains($value);
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield test(
-        'Set->exclude()',
-        static function($assert) {
-            $odds = Set::integers()
-                ->above(0)
-                ->exclude(static fn($i) => $i % 2 === 0)
-                ->enumerate();
+    yield $prove
+        ->test(
+            'Set->exclude()',
+            static function($assert) {
+                $odds = Set::integers()
+                    ->above(0)
+                    ->exclude(static fn($i) => $i % 2 === 0)
+                    ->enumerate();
 
-            foreach ($odds as $i) {
-                $assert->same(1, $i % 2);
-            }
-        },
-    )->tag(Tag::ci, Tag::local);
+                foreach ($odds as $i) {
+                    $assert->same(1, $i % 2);
+                }
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Set::via()',
-        given(
+    yield $prove
+        ->proof('Set::via()')
+        ->given(
             $anySet,
             $anySet,
-        ),
-        static fn($assert, $in, $out) => $assert->same(
+        )
+        ->test(static fn($assert, $in, $out) => $assert->same(
             $out,
             $in->via(static function($set) use ($assert, $in, $out) {
                 $assert->same($in, $test);
 
                 return $out;
             }),
-        ),
-    );
+        ));
 };

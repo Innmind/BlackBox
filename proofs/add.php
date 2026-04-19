@@ -15,8 +15,8 @@ return static function($_, $prove) {
     yield $prove
         ->proof('add is commutative')
         ->given(
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
         )
         ->test(static fn($assert, $a, $b) => $assert->same(add($a, $b), add($b, $a)))
         ->tag(Tag::ci, Tag::local);
@@ -24,9 +24,9 @@ return static function($_, $prove) {
     yield $prove
         ->proof('add is associative')
         ->given(
-            Set\Integers::any(),
-            Set\Integers::any(),
-            Set\Integers::any(),
+            Set::integers(),
+            Set::integers(),
+            Set::integers(),
         )
         ->test(static fn($assert, $a, $b, $c) => $assert->same(
             add(add($a, $b), $c),
@@ -36,7 +36,7 @@ return static function($_, $prove) {
 
     yield $prove
         ->proof('add is an identity function')
-        ->given(Set\Integers::any())
+        ->given(Set::integers())
         ->test(static fn($assert, $a) => $assert->same((string) $a, add($a, 0)))
         ->tag(Tag::ci, Tag::local);
 };

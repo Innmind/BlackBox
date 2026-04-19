@@ -10,11 +10,11 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function($load) {
-    yield proof(
-        'Assert->fail()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+return static function($load, $prove) {
+    yield $prove
+        ->proof('Assert->fail()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             try {
@@ -31,12 +31,13 @@ return static function($load) {
             $assert
                 ->expected(0)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->that()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->that()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             try {
@@ -57,15 +58,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->throws()',
-        given(
-            Set\Elements::of(RuntimeException::class, LogicException::class, DomainException::class),
-            Set\Strings::any(),
-        ),
-        static function($assert, $kind, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->throws()')
+        ->given(
+            Set::of(RuntimeException::class, LogicException::class, DomainException::class),
+            Set::strings(),
+        )
+        ->test(static function($assert, $kind, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->throws(
@@ -84,15 +86,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->not()->throws()',
-        given(
-            Set\Elements::of(RuntimeException::class, LogicException::class, DomainException::class),
-            Set\Strings::any(),
-        ),
-        static function($assert, $kind, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->not()->throws()')
+        ->given(
+            Set::of(RuntimeException::class, LogicException::class, DomainException::class),
+            Set::strings(),
+        )
+        ->test(static function($assert, $kind, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->throws(
@@ -111,16 +114,18 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->count()',
-        given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Integers::above(0),
-            Set\Strings::any(),
-        )->exclude(static fn($values, $count) => \count($values) === $count),
-        static function($assert, $values, $count, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->count()')
+        ->given(
+            Set::sequence(Set::type()),
+            Set::integers()->above(0),
+            Set::strings(),
+        )
+        ->exclude(static fn($values, $count) => \count($values) === $count)
+        ->test(static function($assert, $values, $count, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->count(\count($values), $values);
@@ -142,16 +147,18 @@ return static function($load) {
             $assert
                 ->expected(3)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->not()->count()',
-        given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Integers::above(0),
-            Set\Strings::any(),
-        )->exclude(static fn($values, $count) => \count($values) === $count),
-        static function($assert, $values, $count, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->not()->count()')
+        ->given(
+            Set::sequence(Set::type()),
+            Set::integers()->above(0),
+            Set::strings(),
+        )
+        ->exclude(static fn($values, $count) => \count($values) === $count)
+        ->test(static function($assert, $values, $count, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->count($count, $values);
@@ -173,15 +180,16 @@ return static function($load) {
             $assert
                 ->expected(3)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->true()',
-        given(
-            Set\Type::any()->filter(static fn($value) => $value !== true),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->true()')
+        ->given(
+            Set::type()->filter(static fn($value) => $value !== true),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->true(true);
@@ -202,15 +210,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->not()->true()',
-        given(
-            Set\Type::any()->filter(static fn($value) => $value !== true),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->not()->true()')
+        ->given(
+            Set::type()->filter(static fn($value) => $value !== true),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->true($value);
@@ -231,15 +240,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->false()',
-        given(
-            Set\Type::any()->filter(static fn($value) => $value !== false),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->false()')
+        ->given(
+            Set::type()->filter(static fn($value) => $value !== false),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->false(false);
@@ -260,15 +270,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->not()->false()',
-        given(
-            Set\Type::any()->filter(static fn($value) => $value !== false),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->not()->false()')
+        ->given(
+            Set::type()->filter(static fn($value) => $value !== false),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->false($value);
@@ -289,15 +300,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->bool()',
-        given(
-            Set\Type::any()->filter(static fn($value) => !\is_bool($value)),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->bool()')
+        ->given(
+            Set::type()->filter(static fn($value) => !\is_bool($value)),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->bool(true);
@@ -319,16 +331,17 @@ return static function($load) {
             $assert
                 ->expected(3)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->not()->bool()',
-        given(
-            Set\Elements::of(true, false),
-            Set\Type::any()->filter(static fn($value) => !\is_bool($value)),
-            Set\Strings::any(),
-        ),
-        static function($assert, $bool, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->not()->bool()')
+        ->given(
+            Set::of(true, false),
+            Set::type()->filter(static fn($value) => !\is_bool($value)),
+            Set::strings(),
+        )
+        ->test(static function($assert, $bool, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->bool($value);
@@ -349,15 +362,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->null()',
-        given(
-            Set\Type::any()->filter(static fn($value) => !\is_null($value)),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->null()')
+        ->given(
+            Set::type()->filter(static fn($value) => !\is_null($value)),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->null(null);
@@ -378,15 +392,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->not()->null()',
-        given(
-            Set\Type::any()->filter(static fn($value) => !\is_null($value)),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->not()->null()')
+        ->given(
+            Set::type()->filter(static fn($value) => !\is_null($value)),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->not()->null($value);
@@ -407,15 +422,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->resource()',
-        given(
-            Set\Type::any()->filter(static fn($value) => !\is_resource($value)),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->resource()')
+        ->given(
+            Set::type()->filter(static fn($value) => !\is_resource($value)),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->resource(\tmpfile());
@@ -436,16 +452,18 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->expected()->same()',
-        given(
-            Set\Type::any(),
-            Set\Type::any(),
-            Set\Strings::any(),
-        )->filter(static fn($a, $b) => $a !== $b),
-        static function($assert, $a, $b, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->expected()->same()')
+        ->given(
+            Set::type(),
+            Set::type(),
+            Set::strings(),
+        )
+        ->filter(static fn($a, $b) => $a !== $b)
+        ->test(static function($assert, $a, $b, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->expected($a)->same($a);
@@ -466,16 +484,18 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->expected()->not()->same()',
-        given(
-            Set\Type::any(),
-            Set\Type::any(),
-            Set\Strings::any(),
-        )->filter(static fn($a, $b) => $a !== $b),
-        static function($assert, $a, $b, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->expected()->not()->same()')
+        ->given(
+            Set::type(),
+            Set::type(),
+            Set::strings(),
+        )
+        ->filter(static fn($a, $b) => $a !== $b)
+        ->test(static function($assert, $a, $b, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->expected($a)->not()->same($b);
@@ -496,12 +516,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->expected()->equals()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->expected()->equals()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->expected(42)->equals('42');
@@ -522,12 +543,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->expected()->not()->equals()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->expected()->not()->equals()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->expected(42)->not()->equals(41);
@@ -548,17 +570,19 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->expected()->in()',
-        given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
-        )->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true)),
-        static function($assert, $prefix, $value, $suffix, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->expected()->in()')
+        ->given(
+            Set::sequence(Set::type()),
+            Set::type(),
+            Set::sequence(Set::type()),
+            Set::strings(),
+        )
+        ->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true))
+        ->test(static function($assert, $prefix, $value, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->expected($value)->in([...$prefix, $value, ...$suffix]);
@@ -579,17 +603,19 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->expected()->not()->in()',
-        given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
-        )->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true)),
-        static function($assert, $prefix, $value, $suffix, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->expected()->not()->in()')
+        ->given(
+            Set::sequence(Set::type()),
+            Set::type(),
+            Set::sequence(Set::type()),
+            Set::strings(),
+        )
+        ->filter(static fn($prefix, $value, $suffix) => !\in_array($value, $prefix, true) && !\in_array($value, $suffix, true))
+        ->test(static function($assert, $prefix, $value, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->expected($value)->not()->in([...$prefix, ...$suffix]);
@@ -610,15 +636,17 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->object()',
-        given(
-            Set\Type::any(),
-            Set\Strings::any(),
-        )->filter(static fn($value) => !\is_object($value)),
-        static function($assert, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->object()')
+        ->given(
+            Set::type(),
+            Set::strings(),
+        )
+        ->filter(static fn($value) => !\is_object($value))
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->object(new class {
@@ -640,12 +668,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->object()->instance()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->object()->instance()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->object(new stdClass)->instance(stdClass::class);
@@ -667,12 +696,13 @@ return static function($load) {
             $assert
                 ->expected(6)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->object()->not()->instance()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->object()->not()->instance()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->object(new stdClass)->not()->instance(LogicException::class);
@@ -693,19 +723,20 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()',
-        given(
-            Set\Elements::of(new stdClass, null, true, false, \tmpfile(), []),
-            Set\Either::any(
-                Set\Integers::any(),
-                Set\RealNumbers::any(),
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()')
+        ->given(
+            Set::of(new stdClass, null, true, false, \tmpfile(), []),
+            Set::either(
+                Set::integers(),
+                Set::realNumbers(),
             ),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $number, $message) {
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $number, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($number);
@@ -726,15 +757,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()->int()',
-        given(
-            Set\Integers::any(),
-            Set\Strings::any(),
-        ),
-        static function($assert, $int, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()->int()')
+        ->given(
+            Set::integers(),
+            Set::strings(),
+        )
+        ->test(static function($assert, $int, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($int)->int();
@@ -755,20 +787,21 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()->float()',
-        given(
-            Set\Integers::any(),
-            Set\Composite::immutable(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()->float()')
+        ->given(
+            Set::integers(),
+            Set::compose(
                 static fn($int, $fraction) => $int * $fraction,
-                Set\Integers::any(),
-                Set\Elements::of(0.1, 0.2, 0.01),
+                Set::integers(),
+                Set::of(0.1, 0.2, 0.01),
             ),
-            Set\Strings::any(),
-        ),
-        static function($assert, $int, $float, $message) {
+            Set::strings(),
+        )
+        ->test(static function($assert, $int, $float, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($float)->float();
@@ -789,16 +822,17 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()->greaterThan()',
-        given(
-            Set\Integers::any(),
-            Set\Integers::above(1),
-            Set\Strings::any(),
-        ),
-        static function($assert, $int, $diff, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()->greaterThan()')
+        ->given(
+            Set::integers(),
+            Set::integers()->above(1),
+            Set::strings(),
+        )
+        ->test(static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($int)->greaterThan($int - $diff);
@@ -819,16 +853,17 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()->greaterThanOrEqual()',
-        given(
-            Set\Integers::any(),
-            Set\Integers::above(0),
-            Set\Strings::any(),
-        ),
-        static function($assert, $int, $diff, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()->greaterThanOrEqual()')
+        ->given(
+            Set::integers(),
+            Set::integers()->above(0),
+            Set::strings(),
+        )
+        ->test(static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($int)->greaterThanOrEqual($int - $diff);
@@ -849,16 +884,17 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()->lessThan()',
-        given(
-            Set\Integers::any(),
-            Set\Integers::above(1),
-            Set\Strings::any(),
-        ),
-        static function($assert, $int, $diff, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()->lessThan()')
+        ->given(
+            Set::integers(),
+            Set::integers()->above(1),
+            Set::strings(),
+        )
+        ->test(static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($int)->lessThan($int + $diff);
@@ -879,16 +915,17 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->number()->lessThanOrEqual()',
-        given(
-            Set\Integers::any(),
-            Set\Integers::above(0),
-            Set\Strings::any(),
-        ),
-        static function($assert, $int, $diff, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->number()->lessThanOrEqual()')
+        ->given(
+            Set::integers(),
+            Set::integers()->above(0),
+            Set::strings(),
+        )
+        ->test(static function($assert, $int, $diff, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->number($int)->lessThanOrEqual($int + $diff);
@@ -909,16 +946,17 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()',
-        given(
-            Set\Strings::any(),
-            Set\Elements::of([], true, null, new ArrayObject),
-            Set\Strings::any(),
-        ),
-        static function($assert, $string, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()')
+        ->given(
+            Set::strings(),
+            Set::of([], true, null, new ArrayObject),
+            Set::strings(),
+        )
+        ->test(static function($assert, $string, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($string);
@@ -939,15 +977,16 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->empty()',
-        given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-        ),
-        static function($assert, $string, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->empty()')
+        ->given(
+            Set::strings()->atLeast(1),
+            Set::strings(),
+        )
+        ->test(static function($assert, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string('')->empty();
@@ -968,15 +1007,16 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->not()->empty()',
-        given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-        ),
-        static function($assert, $string, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->not()->empty()')
+        ->given(
+            Set::strings()->atLeast(1),
+            Set::strings(),
+        )
+        ->test(static function($assert, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($string)->not()->empty();
@@ -997,17 +1037,19 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->contains()',
-        given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
-        )->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string)),
-        static function($assert, $prefix, $string, $suffix, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->contains()')
+        ->given(
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
+        )
+        ->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string))
+        ->test(static function($assert, $prefix, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($prefix.$string.$suffix)->contains($string);
@@ -1028,17 +1070,19 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->not()->contains()',
-        given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
-        )->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string)),
-        static function($assert, $prefix, $string, $suffix, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->not()->contains()')
+        ->given(
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
+        )
+        ->filter(static fn($prefix, $string, $suffix) => !\str_contains($prefix, $string) && !\str_contains($suffix, $string))
+        ->test(static function($assert, $prefix, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($prefix.$suffix)->not()->contains($string);
@@ -1059,12 +1103,13 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->matches()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->matches()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string('2023-05-24')->matches('~^\d{4}-\d{2}-\d{2}$~');
@@ -1085,12 +1130,13 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->not()->matches()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->not()->matches()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string('2023-05-24')->not()->matches('~^\d{2}-\d{2}-\d{2}$~');
@@ -1111,16 +1157,18 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->startsWith()',
-        given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
-        )->filter(static fn($string, $suffix) => !\str_contains($suffix, $string)),
-        static function($assert, $string, $suffix, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->startsWith()')
+        ->given(
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
+        )
+        ->filter(static fn($string, $suffix) => !\str_contains($suffix, $string))
+        ->test(static function($assert, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($string.$suffix)->startsWith($string);
@@ -1141,16 +1189,18 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->not()->startsWith()',
-        given(
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-            Set\Strings::any(),
-        )->filter(static fn($string, $suffix) => !\str_contains($suffix, $string)),
-        static function($assert, $string, $suffix, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->not()->startsWith()')
+        ->given(
+            Set::strings()->atLeast(1),
+            Set::strings(),
+            Set::strings(),
+        )
+        ->filter(static fn($string, $suffix) => !\str_contains($suffix, $string))
+        ->test(static function($assert, $string, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($suffix)->not()->startsWith($string);
@@ -1171,16 +1221,18 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->endsWith()',
-        given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-        )->filter(static fn($prefix, $string) => !\str_contains($prefix, $string)),
-        static function($assert, $prefix, $string, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->endsWith()')
+        ->given(
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+        )
+        ->filter(static fn($prefix, $string) => !\str_contains($prefix, $string))
+        ->test(static function($assert, $prefix, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($prefix.$string)->endsWith($string);
@@ -1201,16 +1253,18 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->string()->not()->endsWith()',
-        given(
-            Set\Strings::any(),
-            Set\Strings::atLeast(1),
-            Set\Strings::any(),
-        )->filter(static fn($prefix, $string) => !\str_contains($prefix, $string)),
-        static function($assert, $prefix, $string, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->string()->not()->endsWith()')
+        ->given(
+            Set::strings(),
+            Set::strings()->atLeast(1),
+            Set::strings(),
+        )
+        ->filter(static fn($prefix, $string) => !\str_contains($prefix, $string))
+        ->test(static function($assert, $prefix, $string, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->string($prefix)->not()->endsWith($string);
@@ -1231,16 +1285,17 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->array()',
-        given(
-            Set\Sequence::of(Set\Type::any()),
-            Set\Elements::of('', true, null, new ArrayObject),
-            Set\Strings::any(),
-        ),
-        static function($assert, $array, $value, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->array()')
+        ->given(
+            Set::sequence(Set::type()),
+            Set::of('', true, null, new ArrayObject),
+            Set::strings(),
+        )
+        ->test(static function($assert, $array, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->array($array);
@@ -1261,12 +1316,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->array()->hasKey',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->array()->hasKey')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->array([42])->hasKey(0);
@@ -1288,12 +1344,13 @@ return static function($load) {
             $assert
                 ->expected(6)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Assert->array()->not()->hasKey',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Assert->array()->not()->hasKey')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut->array([42])->not()->hasKey(1);
@@ -1315,21 +1372,22 @@ return static function($load) {
             $assert
                 ->expected(6)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->array()->contains()',
-        given(
-            Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
-        )->filter(
+    yield $prove
+        ->proof('Assert->array()->contains()')
+        ->given(
+            Set::type(),
+            Set::sequence(Set::type()),
+            Set::sequence(Set::type()),
+            Set::strings(),
+        )
+        ->filter(
             static fn($expected, $prefix, $suffix) => !\in_array($expected, $prefix, true) &&
                 !\in_array($expected, $suffix, true),
-        ),
-        static function($assert, $expected, $prefix, $suffix, $message) {
+        )
+        ->test(static function($assert, $expected, $prefix, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $array = [...$prefix, ...[$expected], ...$suffix];
@@ -1353,21 +1411,22 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->array()->not()->contains()',
-        given(
-            Set\Type::any(),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Sequence::of(Set\Type::any()),
-            Set\Strings::any(),
-        )->filter(
+    yield $prove
+        ->proof('Assert->array()->not()->contains()')
+        ->given(
+            Set::type(),
+            Set::sequence(Set::type()),
+            Set::sequence(Set::type()),
+            Set::strings(),
+        )
+        ->filter(
             static fn($expected, $prefix, $suffix) => !\in_array($expected, $prefix, true) &&
                 !\in_array($expected, $suffix, true),
-        ),
-        static function($assert, $expected, $prefix, $suffix, $message) {
+        )
+        ->test(static function($assert, $expected, $prefix, $suffix, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $array = [...$prefix, ...[$expected], ...$suffix];
@@ -1391,16 +1450,16 @@ return static function($load) {
             $assert
                 ->expected(4)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->matches()',
-        given(
-            Set\Type::any(),
-            Set\Strings::any(),
-        ),
-        static function($assert, $value, $message) {
+    yield $prove
+        ->proof('Assert->matches()')
+        ->given(
+            Set::type(),
+            Set::strings(),
+        )
+        ->test(static function($assert, $value, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $assert->same(
@@ -1426,18 +1485,18 @@ return static function($load) {
             $assert
                 ->expected(1)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
     // For now time assertions are not verified inside the CI because it doesn't
     // seem to respect the usleep
-    yield proof(
-        'Assert->time()->inLessThan()->milliseconds()',
-        given(
-            Set\Integers::between(0, 800),
-            Set\Strings::any(),
-        ),
-        static function($assert, $microseconds, $message) {
+    yield $prove
+        ->proof('Assert->time()->inLessThan()->milliseconds()')
+        ->given(
+            Set::integers()->between(0, 800),
+            Set::strings(),
+        )
+        ->test(static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1463,18 +1522,17 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )
+        })
         ->take(10)
         ->tag(Tag::local);
 
-    yield proof(
-        'Assert->time()->inLessThan()->seconds()',
-        given(
-            Set\Integers::between(0, 800_000),
-            Set\Strings::any(),
-        ),
-        static function($assert, $microseconds, $message) {
+    yield $prove
+        ->proof('Assert->time()->inLessThan()->seconds()')
+        ->given(
+            Set::integers()->between(0, 800_000),
+            Set::strings(),
+        )
+        ->test(static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1500,18 +1558,17 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )
+        })
         ->take(10)
         ->tag(Tag::local);
 
-    yield proof(
-        'Assert->time()->inMoreThan()->milliseconds()',
-        given(
-            Set\Integers::between(1, 800), // no need to go higher
-            Set\Strings::any(),
-        ),
-        static function($assert, $microseconds, $message) {
+    yield $prove
+        ->proof('Assert->time()->inMoreThan()->milliseconds()')
+        ->given(
+            Set::integers()->between(1, 800), // no need to go higher
+            Set::strings(),
+        )
+        ->test(static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1537,18 +1594,17 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )
+        })
         ->take(10)
         ->tag(Tag::local);
 
-    yield proof(
-        'Assert->time()->inMoreThan()->seconds()',
-        given(
-            Set\Integers::between(1, 800_000), // no need to go higher
-            Set\Strings::any(),
-        ),
-        static function($assert, $microseconds, $message) {
+    yield $prove
+        ->proof('Assert->time()->inMoreThan()->seconds()')
+        ->given(
+            Set::integers()->between(1, 800_000), // no need to go higher
+            Set::strings(),
+        )
+        ->test(static function($assert, $microseconds, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1574,15 +1630,14 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )
+        })
         ->take(10)
         ->tag(Tag::local);
 
-    yield proof(
-        'Assert->memory()->inLessThan()->bytes()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+    yield $prove
+        ->proof('Assert->memory()->inLessThan()->bytes()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1610,13 +1665,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->memory()->inLessThan()->kiloBytes()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+    yield $prove
+        ->proof('Assert->memory()->inLessThan()->kiloBytes()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1644,13 +1699,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->memory()->inLessThan()->megaBytes()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+    yield $prove
+        ->proof('Assert->memory()->inLessThan()->megaBytes()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1678,13 +1733,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->memory()->inMoreThan()->bytes()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+    yield $prove
+        ->proof('Assert->memory()->inMoreThan()->bytes()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1712,13 +1767,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->memory()->inMoreThan()->kiloBytes()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+    yield $prove
+        ->proof('Assert->memory()->inMoreThan()->kiloBytes()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1746,13 +1801,13 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Assert->memory()->inMoreThan()->megaBytes()',
-        given(Set\Strings::any()),
-        static function($assert, $message) {
+    yield $prove
+        ->proof('Assert->memory()->inMoreThan()->megaBytes()')
+        ->given(Set::strings())
+        ->test(static function($assert, $message) {
             $sut = Assert::of($stats = Stats::new());
 
             $sut
@@ -1780,6 +1835,6 @@ return static function($load) {
             $assert
                 ->expected(2)
                 ->same($stats->assertions());
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 };

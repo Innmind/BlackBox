@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Sequence,
     Set,
     Random,
     PHPUnit\Framework\TestCase,
@@ -16,13 +15,13 @@ class SequenceTest extends TestCase
     {
         $this->assertInstanceOf(
             Set\Provider::class,
-            Sequence::of(Set\Chars::any()),
+            Set::sequence(Set::strings()->chars()),
         );
     }
 
     public function testGenerates100ValuesByDefault()
     {
-        $sequences = Sequence::of(Set\Chars::any())->toSet();
+        $sequences = Set::sequence(Set::strings()->chars())->toSet();
 
         $this->assertInstanceOf(\Generator::class, $sequences->values(Random::mersenneTwister));
         $this->assertCount(100, \iterator_to_array($sequences->values(Random::mersenneTwister)));
@@ -35,7 +34,7 @@ class SequenceTest extends TestCase
 
     public function testGeneratesSequencesOfDifferentSizes()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(0, 50)
             ->toSet();
         $sizes = [];
@@ -49,7 +48,7 @@ class SequenceTest extends TestCase
 
     public function testTake()
     {
-        $sequences1 = Sequence::of(Set\Chars::any())->toSet();
+        $sequences1 = Set::sequence(Set::strings()->chars())->toSet();
         $sequences2 = $sequences1->take(50);
 
         $this->assertNotSame($sequences1, $sequences2);
@@ -60,7 +59,7 @@ class SequenceTest extends TestCase
 
     public function testFilter()
     {
-        $sequences = Sequence::of(Set\Chars::any())->toSet();
+        $sequences = Set::sequence(Set::strings()->chars())->toSet();
         $sequences2 = $sequences->filter(static fn($sequence) => \count($sequence) % 2 === 0);
 
         $this->assertInstanceOf(Set::class, $sequences2);
@@ -88,10 +87,10 @@ class SequenceTest extends TestCase
 
     public function testFlagStructureAsMutableWhenUnderlyingSetValuesAreMutable()
     {
-        $sequences = Sequence::of(
-            Set\Decorate::mutable(
+        $sequences = Set::sequence(
+            Set::decorate(
                 static fn() => new \stdClass,
-                Set\Chars::any(),
+                Set::strings()->chars(),
             ),
         )->toSet();
 
@@ -114,7 +113,7 @@ class SequenceTest extends TestCase
 
     public function testNonEmptySequenceCanBeShrunk()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(1, 100)
             ->toSet();
 
@@ -130,7 +129,7 @@ class SequenceTest extends TestCase
 
     public function testEmptySequenceCanNotBeShrunk()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(0, 1)
             ->toSet();
 
@@ -146,7 +145,7 @@ class SequenceTest extends TestCase
 
     public function testNonEmptySequenceAreShrunkWithDifferentStrategies()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(3, 100)
             ->toSet();
 
@@ -169,7 +168,7 @@ class SequenceTest extends TestCase
 
     public function testShrunkSequencesDoContainsLessThanTheInitialValue()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(2, 100)
             ->toSet();
 
@@ -190,7 +189,7 @@ class SequenceTest extends TestCase
 
     public function testShrinkingStrategyAReduceTheSequenceFasterThanStrategyB()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(3, 100)
             ->toSet();
 
@@ -213,7 +212,7 @@ class SequenceTest extends TestCase
 
     public function testShrunkValuesConserveMutabilityProperty()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(1, 100)
             ->toSet();
 
@@ -228,10 +227,10 @@ class SequenceTest extends TestCase
             $this->assertTrue($dichotomy->b()->immutable());
         }
 
-        $sequences = Sequence::of(
-            Set\Decorate::mutable(
+        $sequences = Set::sequence(
+            Set::decorate(
                 static fn() => new \stdClass,
-                Set\Chars::any(),
+                Set::strings()->chars(),
             ),
         )
             ->between(1, 100)
@@ -252,7 +251,7 @@ class SequenceTest extends TestCase
 
     public function testSequenceIsNeverShrunkBelowTheSpecifiedLowerBound()
     {
-        $sequences = Sequence::of(Set\Chars::any())
+        $sequences = Set::sequence(Set::strings()->chars())
             ->between(10, 50)
             ->toSet();
 
@@ -267,15 +266,15 @@ class SequenceTest extends TestCase
 
     public function testShrunkMutableDataIsRebuiltEverytime()
     {
-        $sequences = Sequence::of(
-            Set\Decorate::mutable(
+        $sequences = Set::sequence(
+            Set::decorate(
                 static function() {
                     $s = new \stdClass;
                     $s->mutated = false;
 
                     return $s;
                 },
-                Set\Integers::any(),
+                Set::integers(),
             ),
         )
             ->between(1, 20)
@@ -298,7 +297,7 @@ class SequenceTest extends TestCase
 
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
-        $sequences = Sequence::of(Set\Integers::any())
+        $sequences = Set::sequence(Set::integers())
             ->between(1, 100)
             ->toSet();
 

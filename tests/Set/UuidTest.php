@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Uuid,
     Set,
     Set\Value,
     Random,
@@ -13,12 +12,9 @@ use Ramsey\Uuid\Uuid as U;
 
 class UuidTest extends TestCase
 {
-    /**
-     * @group only-latest
-     */
     public function testAny()
     {
-        $uuids = Uuid::any();
+        $uuids = Set::uuid();
 
         $this->assertInstanceOf(Set::class, $uuids);
         $this->assertCount(100, \iterator_to_array($uuids->values(Random::mersenneTwister)));
@@ -36,7 +32,7 @@ class UuidTest extends TestCase
 
     public function testUuidsAreNotShrinkable()
     {
-        $uuids = Uuid::any();
+        $uuids = Set::uuid();
 
         $min = static function($value, $type) use (&$min) {
             $shrunk = $value->shrink();

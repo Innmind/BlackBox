@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\FromGenerator,
     Set,
     Set\Value,
     Random,
@@ -13,32 +12,13 @@ use Innmind\BlackBox\{
 
 class FromGeneratorTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(
-            Set::class,
-            FromGenerator::of(static function() {
-                yield 42;
-            }),
-        );
-    }
-
-    public function testThrowWhenTheCallableDoesntReturnAGenerator()
-    {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 1 must be of type callable(): \Generator');
-
-        $_ = FromGenerator::of(static function() {
-        });
-    }
-
     public function testTake()
     {
-        $a = FromGenerator::of(static function() {
+        $a = Set::generator(static function() {
             foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
-        });
+        })->toSet();
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $b = $a->take(50);
@@ -52,7 +32,7 @@ class FromGeneratorTest extends TestCase
 
     public function testFilter()
     {
-        $a = FromGenerator::of(static function() {
+        $a = Set::generator(static function() {
             foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
@@ -79,11 +59,11 @@ class FromGeneratorTest extends TestCase
 
     public function testStopsGeneratingValueWhenGeneratorRunsOut()
     {
-        $a = FromGenerator::of(static function() {
+        $a = Set::generator(static function() {
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
-        });
+        })->toSet();
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $this->assertCount(11, $aValues);
@@ -91,11 +71,11 @@ class FromGeneratorTest extends TestCase
 
     public function testValues()
     {
-        $a = FromGenerator::of(static function() {
+        $a = Set::generator(static function() {
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
-        });
+        })->toSet();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertSame(\range(0, 10), $this->unwrap($a->values(Random::mersenneTwister)));
@@ -108,11 +88,11 @@ class FromGeneratorTest extends TestCase
 
     public function testGeneratedValuesAreNotShrinkable()
     {
-        $generated = FromGenerator::of(static function() {
+        $generated = Set::generator(static function() {
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
-        });
+        })->toSet();
 
         foreach ($generated->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -121,14 +101,15 @@ class FromGeneratorTest extends TestCase
 
     public function testThrowWhenCannotFindAValue()
     {
-        $generated = FromGenerator::of(static function() {
+        $generated = Set::generator(static function() {
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
         })->filter(static fn() => false);
 
-        $this->expectException(EmptySet::class);
-
-        $generated->values(Random::mersenneTwister)->current();
+        $this->assert()->throws(
+            static fn() => $generated->values(Random::mersenneTwister)->current(),
+            EmptySet::class,
+        );
     }
 }

@@ -7,19 +7,19 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function() {
-    yield proof(
-        'Set\Tuple values always contain the same number of elements as sets',
-        given(
+return static function($load, $prove) {
+    yield $prove
+        ->proof('Set::tuple() values always contain the same number of elements as sets')
+        ->given(
             Set::sequence(Set::integers())
                 ->between(2, 10)
                 ->map(static fn($values) => \array_map(
                     static fn() => Set::type(),
                     $values,
                 )),
-        ),
-        static function($assert, $sets) {
-            $set = Set\Tuple::of(...$sets)
+        )
+        ->test(static function($assert, $sets) {
+            $set = Set::tuple(...$sets)
                 ->take(10) // to speed things up
                 ->values(Random::default);
 
@@ -29,6 +29,6 @@ return static function() {
                     $value->unwrap(),
                 );
             }
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 };

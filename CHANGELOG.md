@@ -12,6 +12,50 @@
 - Support for `phpunit/phpunit` `~10.0|~11.0|~12.0`
 - Support for `phpunit/php-timer` `~6.0|~7.0|~8.0`
 - Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
+- `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Runner\proof()`
+- `Innmind\BlackBox\Runner\test()`
+- `Innmind\BlackBox\Runner\given()`
+- `Innmind\BlackBox\Runner\property()`
+- `Innmind\BlackBox\Runner\properties()`
+- `proof()`
+- `test()`
+- `given()`
+- `property()`
+- `properties()`
+- `Innmind\BlackBox\PHPUnit\Framework::expectException()`
+- `Innmind\BlackBox\PHPUnit\Framework::expectExceptionCode()`
+- `Innmind\BlackBox\PHPUnit\Framework::expectExceptionMessage()`
+- `Innmind\BlackBox\Set\Call`
+- `Innmind\BlackBox\Set\Chars`
+- `Innmind\BlackBox\Set\Compose::immutable()`
+- `Innmind\BlackBox\Set\Compose::mutable()`
+- `Innmind\BlackBox\Set\Decorate`
+- `Innmind\BlackBox\Set\Either::any()`
+- `Innmind\BlackBox\Set\Elements::of()`
+- `Innmind\BlackBox\Set\Email`
+- `Innmind\BlackBox\Set\FromGenerator::of()`
+- `Innmind\BlackBox\Set\FromGenerator::mutable()`
+- `Innmind\BlackBox\Set\Integers::any()`
+- `Innmind\BlackBox\Set\Integers::between()`
+- `Innmind\BlackBox\Set\Integers::above()`
+- `Innmind\BlackBox\Set\Integers::below()`
+- `Innmind\BlackBox\Set\IntegersExceptZero`
+- `Innmind\BlackBox\Set\NaturalNumbers`
+- `Innmind\BlackBox\Set\NaturalNumbersExceptZero`
+- `Innmind\BlackBox\Set\Nullable`
+- `Innmind\BlackBox\Set\Randomize::of()`
+- `Innmind\BlackBox\Set\RealNumbers::any()`
+- `Innmind\BlackBox\Set\RealNumbers::between()`
+- `Innmind\BlackBox\Set\RealNumbers::above()`
+- `Innmind\BlackBox\Set\RealNumbers::below()`
+- `Innmind\BlackBox\Set\Sequence::of()`
+- `Innmind\BlackBox\Set\Strings`
+- `Innmind\BlackBox\Set\Tuple`
+- `Innmind\BlackBox\Set\Type`
+- `Innmind\BlackBox\Set\Unicode`
+- `Innmind\BlackBox\Set\UnsafeStrings::any()`
+- `Innmind\BlackBox\Set\Uuid`
 
 ## 6.12.0 - 2026-04-11
 

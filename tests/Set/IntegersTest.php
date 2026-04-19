@@ -12,27 +12,21 @@ use Innmind\BlackBox\{
 
 class IntegersTest extends TestCase
 {
-    public function testInterface()
-    {
-        $this->assertInstanceOf(Set::class, Integers::any());
-    }
-
     public function testAny()
     {
-        $this->assertInstanceOf(Set::class, Integers::any());
         $this->assertSame(\PHP_INT_MIN, Integers::implementation(null, null)->min());
     }
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(Integers::any()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::integers()->toSet()->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
 
     public function testBoundsAreApplied()
     {
-        $values = Integers::between(-10, 10);
+        $values = Set::integers()->between(-10, 10)->toSet();
 
         $hasOutsideBounds = \array_reduce(
             $this->unwrap($values->values(Random::mersenneTwister)),
@@ -47,7 +41,7 @@ class IntegersTest extends TestCase
 
     public function testAbove()
     {
-        $values = Integers::above(10);
+        $values = Set::integers()->above(10)->toSet();
 
         $this->assertInstanceOf(Set::class, $values);
         $this->assertCount(100, $this->unwrap($values->values(Random::mersenneTwister)));
@@ -59,7 +53,7 @@ class IntegersTest extends TestCase
 
     public function testBelow()
     {
-        $values = Integers::below(10);
+        $values = Set::integers()->below(10)->toSet();
 
         $this->assertInstanceOf(Set::class, $values);
         $this->assertCount(100, $this->unwrap($values->values(Random::mersenneTwister)));
@@ -71,7 +65,7 @@ class IntegersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = Integers::any();
+        $integers = Set::integers()->toSet();
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -99,7 +93,7 @@ class IntegersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Integers::any();
+        $a = Set::integers()->toSet();
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -110,7 +104,7 @@ class IntegersTest extends TestCase
 
     public function testValues()
     {
-        $a = Integers::any();
+        $a = Set::integers()->toSet();
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -123,7 +117,7 @@ class IntegersTest extends TestCase
 
     public function testZeroCannotBeShrinked()
     {
-        $ints = Integers::between(-1, 1)->filter(static fn($i) => $i === 0);
+        $ints = Set::integers()->between(-1, 1)->filter(static fn($i) => $i === 0);
 
         foreach ($ints->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -132,7 +126,7 @@ class IntegersTest extends TestCase
 
     public function testIntegersCanBeShrinked()
     {
-        $ints = Integers::any()->filter(static fn($i) => $i !== 0);
+        $ints = Set::integers()->filter(static fn($i) => $i !== 0);
 
         foreach ($ints->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
@@ -141,7 +135,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkedIntegersAreImmutable()
     {
-        $ints = Integers::any()->filter(static fn($i) => $i !== 0);
+        $ints = Set::integers()->filter(static fn($i) => $i !== 0);
 
         foreach ($ints->values(Random::mersenneTwister) as $value) {
             $this->assertTrue($value->immutable());
@@ -150,7 +144,7 @@ class IntegersTest extends TestCase
 
     public function testIntegersAreShrinkedTowardZero()
     {
-        $positive = Integers::above(1);
+        $positive = Set::integers()->above(1)->toSet();
 
         foreach ($positive->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -162,7 +156,7 @@ class IntegersTest extends TestCase
             $this->assertNotSame($a->unwrap(), $b->unwrap());
         }
 
-        $negative = Integers::below(-1);
+        $negative = Set::integers()->below(-1)->toSet();
 
         foreach ($negative->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -177,7 +171,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkedValuesNeverChangeSign()
     {
-        $integers = Integers::any();
+        $integers = Set::integers()->toSet();
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
             $this->assertSame(
@@ -193,7 +187,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkedValuesAlwaysRespectThePredicate()
     {
-        $even = Integers::any()->filter(static fn($i) => $i !== 0 && ($i % 2) === 0);
+        $even = Set::integers()->filter(static fn($i) => $i !== 0 && ($i % 2) === 0);
 
         foreach ($even->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -206,7 +200,7 @@ class IntegersTest extends TestCase
             $this->assertSame(0, $dichotomy->b()->unwrap() % 2);
         }
 
-        $odd = Integers::any()->filter(static fn($i) => $i !== 0 && ($i % 2) === 1);
+        $odd = Set::integers()->filter(static fn($i) => $i !== 0 && ($i % 2) === 1);
 
         foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -222,7 +216,7 @@ class IntegersTest extends TestCase
 
     public function testShrinkingStrategiesNeverProduceTheSameResultTwice()
     {
-        foreach (Integers::between(-1000, 1000)->values(Random::mersenneTwister) as $integer) {
+        foreach (Set::integers()->between(-1000, 1000)->toSet()->values(Random::mersenneTwister) as $integer) {
             if ($integer->shrink()) {
                 break;
             }
@@ -237,7 +231,7 @@ class IntegersTest extends TestCase
             $integer = $shrunk->a();
         }
 
-        foreach (Integers::between(-1000, 1000)->values(Random::mersenneTwister) as $integer) {
+        foreach (Set::integers()->between(-1000, 1000)->toSet()->values(Random::mersenneTwister) as $integer) {
             if ($integer->shrink()) {
                 break;
             }
@@ -260,7 +254,7 @@ class IntegersTest extends TestCase
 
     public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
     {
-        $integers = Integers::between(1000, 2000);
+        $integers = Set::integers()->between(1000, 2000)->toSet();
 
         $assertInBounds = function(Value $value, string $strategy) {
             while ($shrunk = $value->shrink()) {
@@ -278,7 +272,7 @@ class IntegersTest extends TestCase
 
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
-        $ints = Integers::above(43);
+        $ints = Set::integers()->above(43)->toSet();
 
         foreach ($ints->values(Random::mersenneTwister) as $int) {
             while ($shrunk = $int->shrink()) {

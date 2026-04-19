@@ -19,13 +19,13 @@ class DichotomyTest extends TestCase
     {
         return $this
             ->forAll(
-                Set\Either::any(
-                    Set\Integers::any(),
-                    Set\Strings::any(),
+                Set::either(
+                    Set::integers(),
+                    Set::strings(),
                 ),
-                Set\Either::any(
-                    Set\Integers::any(),
-                    Set\Strings::any(),
+                Set::either(
+                    Set::integers(),
+                    Set::strings(),
                 ),
             )
             ->prove(function($a, $b) {
