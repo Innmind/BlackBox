@@ -524,4 +524,70 @@ return static function($load, $prove) {
             },
         )
         ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Debug variables are resetted between proofs',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->tryToProve(static function($prove) {
+                        yield $prove->test(
+                            'example',
+                            static fn($assert) => $assert
+                                ->debug('foo', true)
+                                ->true(false),
+                        );
+
+                        yield $prove->test(
+                            'example',
+                            static fn($assert) => $assert
+                                ->debug('foo', false)
+                                ->true(false),
+                        );
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('$foo = true')
+                    ->contains('$foo = false');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Debug variables are resetted when shrinking',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->tryToProve(static function($prove) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers()->between(0, 100))
+                            ->test(
+                                static fn($assert, $i) => $assert
+                                    ->debug('i'.$i, $i)
+                                    ->true(false),
+                            );
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('$i0 = 0')
+                    ->not()
+                    ->contains('$i1 = 1');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 };

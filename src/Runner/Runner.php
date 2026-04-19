@@ -88,7 +88,8 @@ final class Runner
                     ->values($this->random);
 
                 foreach ($scenarii as $scenario) {
-                    $assert = Assert::of($stats);
+                    $debug = Assert\Debug::new();
+                    $assert = Assert::of($stats, $debug);
                     $stats->incrementScenarii();
                     $assertions = $stats->assertions();
 
@@ -99,6 +100,7 @@ final class Runner
                             $this->error,
                             $assert,
                             $scenario,
+                            $debug,
                         );
 
                         if ($this->failWhenNoAssertions && $stats->assertions() === $assertions) {
@@ -122,6 +124,7 @@ final class Runner
                             $this->output,
                             $this->error,
                             $e,
+                            $debug,
                         );
 
                         break;

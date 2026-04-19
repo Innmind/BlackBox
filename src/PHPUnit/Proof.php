@@ -111,7 +111,10 @@ final class Proof implements ProofInterface
 
         if ($return === BlackBox\Proof::class) {
             // The true Assert instance is injected in Proof\Bridge
-            $test = new ($this->class)(Assert::of(Stats::new()));
+            $test = new ($this->class)(Assert::of(
+                Stats::new(),
+                Assert\Debug::new(),
+            ));
             /** @var BlackBox\Proof */
             $proof = $test->{$this->method}(...$this->args);
 

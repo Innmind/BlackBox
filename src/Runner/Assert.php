@@ -9,23 +9,36 @@ use Innmind\BlackBox\Runner\Assert\{
     Failure\Property,
     Failure\Comparison,
     Expected,
+    Debug,
 };
 
 final class Assert
 {
     private Stats $stats;
+    private Debug $debug;
 
-    private function __construct(Stats $stats)
+    private function __construct(Stats $stats, Debug $debug)
     {
         $this->stats = $stats;
+        $this->debug = $debug;
     }
 
     /**
      * @internal
      */
-    public static function of(Stats $stats): self
+    public static function of(Stats $stats, Debug $debug): self
     {
-        return new self($stats);
+        return new self($stats, $debug);
+    }
+
+    /**
+     * @param non-empty-string $name
+     */
+    public function debug(string $name, mixed $variable): self
+    {
+        $this->debug->add($name, $variable);
+
+        return $this;
     }
 
     /**
