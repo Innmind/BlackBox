@@ -35,9 +35,6 @@ final class Sequence implements Implementation
         $min = $this->min;
         $bounds = static fn(array $sequence): bool => \count($sequence) >= $min;
         $predicate = static fn(array $sequence): bool => /** @var list<I> $sequence */ $bounds($sequence) && $predicate($sequence);
-        $immutable = ($this->set)($random, static fn() => true)
-            ->current()
-            ?->immutable() ?? false;
 
         do {
             foreach (($this->sizes)($random, static fn() => true) as $nextSize) {
@@ -45,7 +42,6 @@ final class Sequence implements Implementation
                 $values = $this->generate($nextSize->unwrap(), $random);
 
                 yield Value::of($values)
-                    ->mutable(!$immutable)
                     ->predicatedOn($predicate)
                     ->map($detonate)
                     ->shrinkWith($shrinker);

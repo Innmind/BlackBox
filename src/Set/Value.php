@@ -58,34 +58,6 @@ final class Value
     }
 
     /**
-     * @psalm-mutation-free
-     *
-     * @return self<T>
-     */
-    public function mutable(bool $mutable): self
-    {
-        if (!$this->immutable) {
-            // Mutable values can't become immutable
-            return $this;
-        }
-
-        if (!$mutable) {
-            // Already immutable
-            return $this;
-        }
-
-        return new self(
-            !$mutable,
-            $this->source,
-            $this->map,
-            $this->shrink,
-            $this->predicate,
-            null, // no need to keep the pre-computed value when mutable
-            $this->unbounded,
-        );
-    }
-
-    /**
      * @return self<T>
      */
     public function shrinkWith(Shrinker $shrink): self

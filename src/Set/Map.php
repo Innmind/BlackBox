@@ -44,10 +44,7 @@ final class Map implements Implementation
         };
 
         foreach (($this->set)($random, $mappedPredicate) as $value) {
-            $mutable = !$value->immutable();
-
             yield Value::of($value)
-                ->mutable($mutable)
                 ->map(static fn($value) => $value->unwrap())
                 ->map($this->map)
                 ->predicatedOn($predicate)
