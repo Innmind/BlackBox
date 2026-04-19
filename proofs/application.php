@@ -76,7 +76,7 @@ return static function($load, $prove) {
                 ->tryToProve(static function($prove) {
                     yield $prove->property(
                         LowerBoundAtZero::class,
-                        Set::of(new Counter),
+                        Set::of(static fn() => new Counter),
                     );
                 });
 
@@ -111,9 +111,7 @@ return static function($load, $prove) {
                         ),
                         Set::integers()
                             ->between(0, 100)
-                            ->flatMap(static fn($initial) => Set::call(
-                                static fn() => new Counter($initial->unwrap()),
-                            )),
+                            ->map(static fn($initial) => static fn() => new Counter($initial)),
                     );
                 });
 

@@ -13,11 +13,15 @@ use Innmind\BlackBox\{
 final class Properties implements Scenario
 {
     private Concrete $properties;
-    private object $systemUnderTest;
+    /** @var \Closure(): object */
+    private \Closure $systemUnderTest;
 
+    /**
+     * @param \Closure(): object $systemUnderTest
+     */
     private function __construct(
         Concrete $properties,
-        object $systemUnderTest,
+        \Closure $systemUnderTest,
     ) {
         $this->properties = $properties;
         $this->systemUnderTest = $systemUnderTest;
@@ -26,11 +30,11 @@ final class Properties implements Scenario
     #[\Override]
     public function __invoke(Assert $assert): mixed
     {
+        $sut = ($this->systemUnderTest)();
+        $assert->debug('systemUnderTest', $sut);
+
         try {
-            $this->properties->ensureHeldBy(
-                $assert,
-                $this->systemUnderTest,
-            );
+            $this->properties->ensureHeldBy($assert, $sut);
         } catch (Assert\Failure $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -42,10 +46,12 @@ final class Properties implements Scenario
 
     /**
      * @internal
+     *
+     * @param \Closure(): object $systemUnderTest
      */
     public static function of(
         Concrete $properties,
-        object $systemUnderTest,
+        \Closure $systemUnderTest,
     ): self {
         return new self($properties, $systemUnderTest);
     }
@@ -56,10 +62,5 @@ final class Properties implements Scenario
     public function properties(): array
     {
         return $this->properties->properties();
-    }
-
-    public function systemUnderTest(): object
-    {
-        return $this->systemUnderTest;
     }
 }

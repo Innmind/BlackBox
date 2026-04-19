@@ -12,11 +12,15 @@ use Innmind\BlackBox\{
 final class Property implements Scenario
 {
     private Concrete $property;
-    private object $systemUnderTest;
+    /** @var \Closure(): object */
+    private \Closure $systemUnderTest;
 
+    /**
+     * @param \Closure(): object $systemUnderTest
+     */
     private function __construct(
         Concrete $property,
-        object $systemUnderTest,
+        \Closure $systemUnderTest,
     ) {
         $this->property = $property;
         $this->systemUnderTest = $systemUnderTest;
@@ -25,12 +29,15 @@ final class Property implements Scenario
     #[\Override]
     public function __invoke(Assert $assert): mixed
     {
-        if (!$this->property->applicableTo($this->systemUnderTest)) {
+        $sut = ($this->systemUnderTest)();
+        $assert->debug('systemUnderTest', $sut);
+
+        if (!$this->property->applicableTo($sut)) {
             $assert->fail('The property is not applicable to the system under test.');
         }
 
         try {
-            $this->property->ensureHeldBy($assert, $this->systemUnderTest);
+            $this->property->ensureHeldBy($assert, $sut);
         } catch (Assert\Failure $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -42,10 +49,12 @@ final class Property implements Scenario
 
     /**
      * @internal
+     *
+     * @param \Closure(): object $systemUnderTest
      */
     public static function of(
         Concrete $property,
-        object $systemUnderTest,
+        \Closure $systemUnderTest,
     ): self {
         return new self($property, $systemUnderTest);
     }
@@ -53,10 +62,5 @@ final class Property implements Scenario
     public function property(): Concrete
     {
         return $this->property;
-    }
-
-    public function systemUnderTest(): object
-    {
-        return $this->systemUnderTest;
     }
 }

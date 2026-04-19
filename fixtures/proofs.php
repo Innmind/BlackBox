@@ -28,9 +28,7 @@ return static function($load, $prove) {
             DownAndUpIsAnIdentityFunction::class,
             Set::integers()
                 ->between(1, 100)
-                ->flatMap(static fn($initial) => Set::call(
-                    static fn() => new Counter($initial->unwrap()),
-                )),
+                ->map(static fn($initial) => static fn() => new Counter($initial)),
         )
         ->tag(Tag::ci, Tag::local);
 
@@ -39,16 +37,14 @@ return static function($load, $prove) {
             DownChangeState::class,
             Set::integers()
                 ->between(1, 100)
-                ->flatMap(static fn($initial) => Set::call(
-                    static fn() => new Counter($initial->unwrap()),
-                )),
+                ->map(static fn($initial) => static fn() => new Counter($initial)),
         )
         ->tag(Tag::ci, Tag::local);
 
     yield $prove
         ->property(
             LowerBoundAtZero::class,
-            Set::of(new Counter),
+            Set::of(static fn() => new Counter),
         )
         ->tag(Tag::ci, Tag::local);
 
@@ -57,9 +53,7 @@ return static function($load, $prove) {
             RaiseBy::class,
             Set::integers()
                 ->between(0, 99)
-                ->flatMap(static fn($initial) => Set::call(
-                    static fn() => new Counter($initial->unwrap()),
-                )),
+                ->map(static fn($initial) => static fn() => new Counter($initial)),
         )
         ->tag(Tag::ci, Tag::local);
 
@@ -68,9 +62,7 @@ return static function($load, $prove) {
             UpAndDownIsAnIdentityFunction::class,
             Set::integers()
                 ->between(0, 98)
-                ->flatMap(static fn($initial) => Set::call(
-                    static fn() => new Counter($initial->unwrap()),
-                )),
+                ->map(static fn($initial) => static fn() => new Counter($initial)),
         )
         ->tag(Tag::ci, Tag::local);
 
@@ -79,16 +71,17 @@ return static function($load, $prove) {
             UpChangeState::class,
             Set::integers()
                 ->between(0, 99)
-                ->flatMap(static fn($initial) => Set::call(
-                    static fn() => new Counter($initial->unwrap()),
-                )),
+                ->map(static fn($initial) => static fn() => new Counter($initial)),
         )
         ->tag(Tag::ci, Tag::local);
 
     yield $prove
         ->property(
             UpperBoundAtHundred::class,
-            Set::of(new Counter(99), new Counter(100)),
+            Set::of(
+                static fn() => new Counter(99),
+                static fn() => new Counter(100),
+            ),
         )
         ->tag(Tag::ci, Tag::local);
 
@@ -106,9 +99,7 @@ return static function($load, $prove) {
             ),
             Set::integers()
                 ->between(0, 100)
-                ->flatMap(static fn($initial) => Set::call(
-                    static fn() => new Counter($initial->unwrap()),
-                )),
+                ->map(static fn($initial) => static fn() => new Counter($initial)),
         )
         ->tag(Tag::ci, Tag::local);
 };

@@ -542,6 +542,9 @@ return static function($load, $prove) {
         ->test(static function($assert, $name, $message) {
             $printer = Standard::new();
             $io = Collect::new();
+            $debug = Debug::new();
+            $counter = new Counter;
+            $debug->add('systemUnderTest', $counter);
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
@@ -552,10 +555,10 @@ return static function($load, $prove) {
                         Assert\Failure::of(Truth::of($message)),
                         Value::of(Scenario\Property::of(
                             new LowerBoundAtZero,
-                            new Counter,
+                            static fn() => $counter,
                         )),
                     ),
-                    Debug::new(),
+                    $debug,
                 );
 
             $written = $io->toString();
@@ -580,6 +583,9 @@ return static function($load, $prove) {
         ->test(static function($assert, $name, $message) {
             $printer = Standard::new();
             $io = Collect::new();
+            $debug = Debug::new();
+            $counter = new Counter;
+            $debug->add('systemUnderTest', $counter);
 
             $printer
                 ->proof($io, $io, Name::of($name), [])
@@ -590,10 +596,10 @@ return static function($load, $prove) {
                         Assert\Failure::of(Truth::of($message)),
                         Value::of(Scenario\Properties::of(
                             Properties::of(new LowerBoundAtZero),
-                            new Counter,
+                            static fn() => $counter,
                         )),
                     ),
-                    Debug::new(),
+                    $debug,
                 );
 
             $written = $io->toString();

@@ -252,15 +252,11 @@ final class Standard implements Proof
     {
         $output('$property = ');
         $output($this->dump($scenario->property()));
-        $output('$systemUnderTest = ');
-        $output($this->dump($scenario->systemUnderTest()));
     }
 
     private function renderPropertiesScenario(IO $output, Scenario\Properties $scenario): void
     {
         $output('$properties = ');
         $output($this->dump($scenario->properties()));
-        $output('$systemUnderTest = ');
-        $output($this->dump($scenario->systemUnderTest()));
     }
 }
