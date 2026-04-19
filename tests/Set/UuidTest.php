@@ -21,7 +21,6 @@ class UuidTest extends TestCase
 
         foreach ($uuids->values(Random::mersenneTwister) as $uuid) {
             $this->assertInstanceOf(Value::class, $uuid);
-            $this->assertTrue($uuid->immutable());
             $this->assertMatchesRegularExpression(
                 '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
                 $uuid->unwrap(),

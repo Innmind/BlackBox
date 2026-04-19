@@ -37,15 +37,6 @@ final class Combination
         return $self;
     }
 
-    public function immutable(): bool
-    {
-        return \array_reduce(
-            $this->values,
-            static fn(bool $immutable, Value $value): bool => $immutable && $value->immutable(),
-            true,
-        );
-    }
-
     /**
      * @template T
      *

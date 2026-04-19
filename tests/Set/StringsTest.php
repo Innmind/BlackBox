@@ -89,7 +89,6 @@ class StringsTest extends TestCase
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
         }
     }
 
@@ -121,24 +120,6 @@ class StringsTest extends TestCase
             }
 
             $this->assertNotNull($value->shrink());
-        }
-    }
-
-    public function testShrinkedValuesAreImmutable()
-    {
-        $strings = Set::strings()->toSet();
-
-        foreach ($strings->values(Random::mersenneTwister) as $value) {
-            if ($value->unwrap() === '') {
-                continue;
-            }
-
-            $dichotomy = $value->shrink();
-            $a = $dichotomy->a();
-            $b = $dichotomy->b();
-
-            $this->assertTrue($a->immutable());
-            $this->assertTrue($b->immutable());
         }
     }
 

@@ -214,14 +214,6 @@ final class Value
     }
 
     /**
-     * @psalm-mutation-free
-     */
-    public function immutable(): bool
-    {
-        return true;
-    }
-
-    /**
      * @return ?Dichotomy<T>
      */
     public function shrink(): ?Dichotomy

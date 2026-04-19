@@ -96,7 +96,6 @@ class DecorateTest extends TestCase
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
         }
     }
 

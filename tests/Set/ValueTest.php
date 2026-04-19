@@ -19,7 +19,6 @@ class ValueTest extends TestCase
         $this->assertInstanceOf(Value::class, $value);
         $this->assertSame($object, $value->unwrap());
         $this->assertSame($object, $value->unwrap());
-        $this->assertTrue($value->immutable());
     }
 
     public function testValueNotShinkrableWhenNoDichotomyGiven()

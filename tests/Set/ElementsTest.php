@@ -75,7 +75,6 @@ class ElementsTest extends TestCase
 
         foreach ($elements->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
-            $this->assertTrue($value->immutable());
         }
     }
 
