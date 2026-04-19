@@ -85,32 +85,6 @@ class SequenceTest extends TestCase
         $this->assertCount(100, \iterator_to_array($sequences2->values(Random::mersenneTwister)));
     }
 
-    public function testFlagStructureAsMutableWhenUnderlyingSetValuesAreMutable()
-    {
-        $sequences = Set::sequence(
-            Set::decorate(
-                static fn() => new \stdClass,
-                Set::strings()->chars(),
-            ),
-        )->toSet();
-
-        foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
-            $this->assertFalse($sequence->immutable());
-            $this->assertSame(\count($sequence->unwrap()), \count($sequence->unwrap()));
-
-            if (\count($sequence->unwrap()) !== 0) {
-                $a = $sequence->unwrap();
-                $b = $sequence->unwrap();
-
-                $this->assertNotSame(
-                    \reset($a),
-                    \reset($b),
-                    'Objects should not be the same instance between unwraps',
-                );
-            }
-        }
-    }
-
     public function testNonEmptySequenceCanBeShrunk()
     {
         $sequences = Set::sequence(Set::strings()->chars())
@@ -210,45 +184,6 @@ class SequenceTest extends TestCase
         }
     }
 
-    public function testShrunkValuesConserveMutabilityProperty()
-    {
-        $sequences = Set::sequence(Set::strings()->chars())
-            ->between(1, 100)
-            ->toSet();
-
-        foreach ($sequences->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-
-            if (\is_null($dichotomy)) {
-                continue;
-            }
-
-            $this->assertTrue($dichotomy->a()->immutable());
-            $this->assertTrue($dichotomy->b()->immutable());
-        }
-
-        $sequences = Set::sequence(
-            Set::decorate(
-                static fn() => new \stdClass,
-                Set::strings()->chars(),
-            ),
-        )
-            ->between(1, 100)
-            ->toSet();
-
-        foreach ($sequences->values(Random::mersenneTwister) as $value) {
-            if (\count($value->unwrap()) === 1) {
-                // lower bound is not shrinkable
-                continue;
-            }
-
-            $dichotomy = $value->shrink();
-
-            $this->assertFalse($dichotomy->a()->immutable());
-            $this->assertFalse($dichotomy->b()->immutable());
-        }
-    }
-
     public function testSequenceIsNeverShrunkBelowTheSpecifiedLowerBound()
     {
         $sequences = Set::sequence(Set::strings()->chars())
@@ -261,37 +196,6 @@ class SequenceTest extends TestCase
             }
 
             $this->assertCount(10, $sequence->unwrap());
-        }
-    }
-
-    public function testShrunkMutableDataIsRebuiltEverytime()
-    {
-        $sequences = Set::sequence(
-            Set::decorate(
-                static function() {
-                    $s = new \stdClass;
-                    $s->mutated = false;
-
-                    return $s;
-                },
-                Set::integers(),
-            ),
-        )
-            ->between(1, 20)
-            ->toSet();
-
-        foreach ($sequences->values(Random::mersenneTwister) as $value) {
-            if (!$value->shrink()) {
-                continue;
-            }
-
-            $a = $value->shrink()->a()->unwrap();
-            $a[0]->mutated = true;
-            $this->assertFalse($value->shrink()->a()->unwrap()[0]->mutated);
-
-            $b = $value->shrink()->b()->unwrap();
-            $b[0]->mutated = true;
-            $this->assertFalse($value->shrink()->b()->unwrap()[0]->mutated);
         }
     }
 

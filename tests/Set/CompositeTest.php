@@ -134,20 +134,19 @@ class CompositeTest extends TestCase
 
                 return $std;
             },
-            Set::decorate(
-                static function(string $value) {
+            Set::generator(static function() {
+                yield 'ea';
+                yield 'fb';
+                yield 'gc';
+                yield 'eb';
+            })
+                ->mutable()
+                ->map(static function(string $value) {
                     $std = new \stdClass;
                     $std->prop = $value;
 
                     return $std;
-                },
-                Set::generator(static function() {
-                    yield 'ea';
-                    yield 'fb';
-                    yield 'gc';
-                    yield 'eb';
                 }),
-            ),
             Set::generator(static function() {
                 yield 'c';
                 yield 'd';

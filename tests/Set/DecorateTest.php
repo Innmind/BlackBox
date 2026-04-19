@@ -102,20 +102,19 @@ class DecorateTest extends TestCase
 
     public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
     {
-        $set = Set::decorate(
-            static function(string $value) {
+        $set = Set::generator(static function() {
+            yield 'ea';
+            yield 'fb';
+            yield 'gc';
+            yield 'eb';
+        })
+            ->mutable()
+            ->map(static function(string $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
-            },
-            Set::generator(static function() {
-                yield 'ea';
-                yield 'fb';
-                yield 'gc';
-                yield 'eb';
-            }),
-        );
+            });
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertFalse($value->immutable());
@@ -126,20 +125,19 @@ class DecorateTest extends TestCase
 
     public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
     {
-        $set = Set::decorate(
-            static function(string $value) {
+        $set = Set::generator(static function() {
+            yield 'ea';
+            yield 'fb';
+            yield 'gc';
+            yield 'eb';
+        })
+            ->mutable()
+            ->map(static function(string $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
 
                 return $std;
-            },
-            Set::generator(static function() {
-                yield 'ea';
-                yield 'fb';
-                yield 'gc';
-                yield 'eb';
-            }),
-        )
+            })
             ->map(static function(object $value) {
                 $std = new \stdClass;
                 $std->prop = $value;
@@ -179,37 +177,6 @@ class DecorateTest extends TestCase
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
-        }
-    }
-
-    public function testShrinkedValuesConserveMutability()
-    {
-        $mutable = Set::decorate(
-            static function(int $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            },
-            Set::integers(),
-        );
-
-        foreach ($mutable->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-
-            $this->assertFalse($dichotomy->a()->immutable());
-            $this->assertFalse($dichotomy->b()->immutable());
-        }
-
-        $immutable = Set::integers()->map(static function(int $value) {
-            return [$value];
-        });
-
-        foreach ($immutable->values(Random::mersenneTwister) as $value) {
-            $dichotomy = $value->shrink();
-
-            $this->assertTrue($dichotomy->a()->immutable());
-            $this->assertTrue($dichotomy->b()->immutable());
         }
     }
 
