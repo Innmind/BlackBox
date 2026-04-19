@@ -80,7 +80,7 @@ final class Set
      *
      * @param callable(mixed...): (A|Seed<A>) $aggregate It must be a pure function (no randomness, no side effects)
      *
-     * @return Provider\Composite<A>
+     * @return self<A>
      */
     #[\NoDiscard]
     public static function compose(
@@ -88,21 +88,23 @@ final class Set
         self|Provider $first,
         self|Provider $second,
         self|Provider ...$rest,
-    ): Provider\Composite {
+    ): self {
         /**
-         * @psalm-suppress InvalidArgument
          * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
          * @psalm-suppress ImpureFunctionCall
          */
-        return Provider\Composite::of(
-            self::build(...),
-            $aggregate,
-            Collapse::of($first)->implementation,
-            Collapse::of($second)->implementation,
-            ...\array_map(
-                static fn($set) => Collapse::of($set)->implementation,
-                $rest,
+        return new self(
+            Set\Composite::implementation(
+                true,
+                $aggregate,
+                Collapse::of($first)->implementation,
+                Collapse::of($second)->implementation,
+                ...\array_map(
+                    static fn($set) => Collapse::of($set)->implementation,
+                    $rest,
+                ),
             ),
+            true,
         );
     }
 
@@ -132,9 +134,7 @@ final class Set
             $first,
             $second,
             ...$rest,
-        )
-            ->immutable()
-            ->toSet();
+        );
     }
 
     /**
@@ -269,7 +269,6 @@ final class Set
                     ->map(static fn(array $chars): string => \implode('', $chars)),
                 $letter(),
             )
-                ->immutable()
                 ->filter(static function(string $string): bool {
                     return !\preg_match('~\.\.~', $string);
                 }),
@@ -286,7 +285,6 @@ final class Set
             $domain,
             $tld,
         )
-            ->immutable()
             ->filter(static function(string $email): bool {
                 return !\preg_match('~(\-.|\.\-)~', $email);
             });
@@ -358,9 +356,7 @@ final class Set
             $part(4),
             $part(4),
             $part(12),
-        )
-            ->immutable()
-            ->toSet();
+        );
     }
 
     /**

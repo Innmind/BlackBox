@@ -188,8 +188,6 @@ final class Slice implements Provider
             Set::integers()->between($this->atLeast, $this->max - $this->min),
             Set::of($this->atLeast),
             Set::of(true, false),
-        )
-            ->immutable()
-            ->toSet();
+        );
     }
 }

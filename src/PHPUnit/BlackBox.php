@@ -39,7 +39,7 @@ trait BlackBox
                 static fn(mixed ...$args) => $args,
                 $first,
                 ...$rest,
-            )->toSet();
+            );
         }
 
         $given = Given::of($given->randomize());

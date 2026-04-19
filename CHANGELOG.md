@@ -10,6 +10,7 @@
 
 - Requires PHP `8.4`
 - Properties now expect a `Set<callable(): object>` instead of a `Set<object>`
+- `Innmind\BlackBox\Set::compose()` now returns a `Set`
 
 ### Removed
 
@@ -63,6 +64,7 @@
 - `Innmind\BlackBox\Set\Uuid`
 - `Innmind\BlackBox\Set::decorate()`
 - `Innmind\BlackBox\Set::call()`
+- `Innmind\BlackBox\Set\Provider\Composite`
 
 ## 6.12.0 - 2026-04-11
 

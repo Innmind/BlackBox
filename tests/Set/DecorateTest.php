@@ -100,62 +100,6 @@ class DecorateTest extends TestCase
         }
     }
 
-    public function testGeneratedValueIsDeclaredMutableWhenSaidByTheSet()
-    {
-        $set = Set::generator(static function() {
-            yield 'ea';
-            yield 'fb';
-            yield 'gc';
-            yield 'eb';
-        })
-            ->mutable()
-            ->map(static function(string $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            });
-
-        foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-            $this->assertNotSame($value->unwrap(), $value->unwrap());
-            $this->assertSame($value->unwrap()->prop, $value->unwrap()->prop);
-        }
-    }
-
-    public function testGeneratedValueIsDeclaredMutableWhenUnderlyingSetIsMutableEvenThoughOurSetIsDeclaredImmutable()
-    {
-        $set = Set::generator(static function() {
-            yield 'ea';
-            yield 'fb';
-            yield 'gc';
-            yield 'eb';
-        })
-            ->mutable()
-            ->map(static function(string $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            })
-            ->map(static function(object $value) {
-                $std = new \stdClass;
-                $std->prop = $value;
-
-                return $std;
-            })
-            ->filter(static fn($object) => $object->prop->prop[0] === 'e');
-
-        $this->assertCount(2, \iterator_to_array($set->values(Random::mersenneTwister)));
-
-        foreach ($set->values(Random::mersenneTwister) as $value) {
-            $this->assertFalse($value->immutable());
-            $this->assertNotSame($value->unwrap(), $value->unwrap());
-            $this->assertNotSame($value->unwrap()->prop, $value->unwrap()->prop);
-            $this->assertSame($value->unwrap()->prop->prop, $value->unwrap()->prop->prop);
-        }
-    }
-
     public function testConserveUnderlyingSetShrinkability()
     {
         $nonShrinkable = Set::generator(static function() {

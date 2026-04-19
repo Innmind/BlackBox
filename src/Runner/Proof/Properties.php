@@ -87,7 +87,6 @@ final class Properties implements Proof
             $this->properties,
             $this->systemUnderTest->map(\Closure::fromCallable(...)),
         )
-            ->immutable()
             ->randomize()
             ->take($count);
     }
