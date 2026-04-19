@@ -15,7 +15,7 @@ final class Property implements Proof
     private string $property;
     /** @var ?non-empty-string */
     private ?string $name;
-    /** @var Set<object> */
+    /** @var Set<callable(): object> */
     private Set $systemUnderTest;
     /** @var list<\UnitEnum> */
     private array $tags;
@@ -25,7 +25,7 @@ final class Property implements Proof
      *
      * @param class-string<Concrete> $property
      * @param ?non-empty-string $name
-     * @param Set<object> $systemUnderTest
+     * @param Set<callable(): object> $systemUnderTest
      * @param list<\UnitEnum> $tags
      */
     private function __construct(
@@ -44,7 +44,7 @@ final class Property implements Proof
      * @psalm-pure
      *
      * @param class-string<Concrete> $property
-     * @param Set<object> $systemUnderTest
+     * @param Set<callable(): object> $systemUnderTest
      */
     public static function of(
         string $property,
@@ -109,7 +109,7 @@ final class Property implements Proof
         return Set::compose(
             Scenario\Property::of(...),
             ([$this->property, 'any'])(),
-            $this->systemUnderTest,
+            $this->systemUnderTest->map(\Closure::fromCallable(...)),
         )
             ->immutable()
             ->randomize()

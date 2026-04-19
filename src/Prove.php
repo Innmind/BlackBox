@@ -52,7 +52,7 @@ final class Prove
      * @psalm-pure
      *
      * @param class-string<Property> $property
-     * @param Set<object>|Provider<object> $systemUnderTest
+     * @param Set<callable(): object>|Provider<callable(): object> $systemUnderTest
      */
     public function property(
         string $property,
@@ -66,7 +66,7 @@ final class Prove
      *
      * @param non-empty-string $name
      * @param Set<Properties>|Provider<Properties> $properties
-     * @param Set<object>|Provider<object> $systemUnderTest
+     * @param Set<callable(): object>|Provider<callable(): object> $systemUnderTest
      */
     public function properties(
         string $name,

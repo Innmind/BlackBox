@@ -9,6 +9,7 @@
 ### Changed
 
 - Requires PHP `8.4`
+- Properties now expect a `Set<callable(): object>` instead of a `Set<object>`
 
 ### Removed
 
