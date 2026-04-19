@@ -13,6 +13,11 @@
 - Support for `phpunit/php-timer` `~6.0|~7.0|~8.0`
 - Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
 - `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Runner\proof()`
+- `Innmind\BlackBox\Runner\test()`
+- `Innmind\BlackBox\Runner\given()`
+- `Innmind\BlackBox\Runner\property()`
+- `Innmind\BlackBox\Runner\properties()`
 - `proof()`
 - `test()`
 - `given()`
