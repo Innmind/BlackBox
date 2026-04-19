@@ -95,7 +95,6 @@ final class Set
          */
         return new self(
             Set\Composite::implementation(
-                true,
                 $aggregate,
                 Collapse::of($first)->implementation,
                 Collapse::of($second)->implementation,
@@ -157,7 +156,6 @@ final class Set
         return new self(
             Set\FromGenerator::implementation(
                 $factory,
-                true,
             ),
             true,
         );

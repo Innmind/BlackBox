@@ -19,7 +19,6 @@ final class FromGenerator implements Implementation
      */
     private function __construct(
         private \Closure $generatorFactory,
-        private bool $immutable,
     ) {
     }
 
@@ -31,9 +30,7 @@ final class FromGenerator implements Implementation
         $generator = ($this->generatorFactory)($random);
 
         foreach ($generator as $value) {
-            $value = Value::of($value)
-                ->mutable(!$this->immutable)
-                ->predicatedOn($predicate);
+            $value = Value::of($value)->predicatedOn($predicate);
 
             yield $value;
         }
@@ -49,13 +46,10 @@ final class FromGenerator implements Implementation
      *
      * @return self<V>
      */
-    public static function implementation(
-        callable $generatorFactory,
-        bool $immutable,
-    ): self {
+    public static function implementation(callable $generatorFactory): self
+    {
         return new self(
             \Closure::fromCallable($generatorFactory),
-            $immutable,
         );
     }
 

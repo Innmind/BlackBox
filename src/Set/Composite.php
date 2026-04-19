@@ -26,7 +26,6 @@ final class Composite implements Implementation
         private Implementation $first,
         private Implementation $second,
         private array $sets,
-        private bool $immutable,
     ) {
     }
 
@@ -40,7 +39,7 @@ final class Composite implements Implementation
         $aggregate = $this->aggregate;
 
         foreach ($matrix as $combination) {
-            $immutable = $combination->immutable() && $this->immutable;
+            $immutable = $combination->immutable();
 
             yield Value::of($combination)
                 ->mutable(!$immutable)
@@ -62,7 +61,6 @@ final class Composite implements Implementation
      * @return self<T>
      */
     public static function implementation(
-        bool $immutable,
         callable $aggregate,
         Implementation $first,
         Implementation $second,
@@ -73,7 +71,6 @@ final class Composite implements Implementation
             $first,
             $second,
             $sets,
-            $immutable,
         );
     }
 
