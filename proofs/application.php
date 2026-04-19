@@ -10,11 +10,6 @@ use Innmind\BlackBox\{
     Runner\Printer\Standard,
     Tag,
 };
-use function Innmind\BlackBox\Runner\{
-    proof,
-    given,
-    test,
-};
 use Fixtures\Innmind\BlackBox\{
     Counter,
     DownAndUpIsAnIdentityFunction,
@@ -26,11 +21,11 @@ use Fixtures\Innmind\BlackBox\{
     UpperBoundAtHundred,
 };
 
-return static function() {
-    yield proof(
-        'BlackBox can run with any of the random strategies',
-        given(Set::of(...Random::cases())),
-        static function($assert, $random) {
+return static function($load, $prove) {
+    yield $prove
+        ->proof('BlackBox can run with any of the random strategies')
+        ->given(Set::of(...Random::cases()))
+        ->test(static function($assert, $random) {
             $io = Collect::new();
 
             $result = Application::new([])
@@ -41,12 +36,13 @@ return static function() {
                 ->tryToProve(Load::file(__DIR__.'/../fixtures/proofs.php'));
 
             $assert->true($result->successful());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'BlackBox can run with a specified number of scenarii per proof',
-        given(Set::integers()->between(1, 10_000)), // limit to 10k so it doesn't take too mush time
-        static function($assert, $scenarii) {
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('BlackBox can run with a specified number of scenarii per proof')
+        ->given(Set::integers()->between(1, 10_000)) // limit to 10k so it doesn't take too mush time
+        ->test(static function($assert, $scenarii) {
             $io = Collect::new();
 
             $result = Application::new([])
@@ -64,13 +60,13 @@ return static function() {
             $assert
                 ->string($io->toString())
                 ->contains("Scenarii: $scenarii");
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'BlackBox can run with a specified number of scenarii per property',
-        given(Set::integers()->between(1, 50)), // limit to 50 so it doesn't take too much time
-        static function($assert, $scenarii) {
+    yield $prove
+        ->proof('BlackBox can run with a specified number of scenarii per property')
+        ->given(Set::integers()->between(1, 50)) // limit to 50 so it doesn't take too much time
+        ->test(static function($assert, $scenarii) {
             $io = Collect::new();
 
             $result = Application::new([])
@@ -88,13 +84,12 @@ return static function() {
             $assert
                 ->string($io->toString())
                 ->contains("Scenarii: $scenarii");
-        },
-    )->tag(Tag::ci, Tag::local);
+        })->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'BlackBox can run with a specified number of scenarii per properties',
-        given(Set::integers()->between(1, 50)), // limit to 50 so it doesn't take too much time
-        static function($assert, $scenarii) {
+    yield $prove
+        ->proof('BlackBox can run with a specified number of scenarii per properties')
+        ->given(Set::integers()->between(1, 50)) // limit to 50 so it doesn't take too much time
+        ->test(static function($assert, $scenarii) {
             $io = Collect::new();
 
             $result = Application::new([])
@@ -126,390 +121,407 @@ return static function() {
             $assert
                 ->string($io->toString())
                 ->contains("Scenarii: $scenarii");
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield test(
-        'BlackBox can shrink the values of the proofs by default',
-        static function($assert) {
-            $io = Collect::new();
+    yield $prove
+        ->test(
+            'BlackBox can shrink the values of the proofs by default',
+            static function($assert) {
+                $io = Collect::new();
 
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->tryToProve(static function() {
-                    yield proof(
-                        'example',
-                        given(
-                            Set::integers(),
-                            Set::integers(),
-                        ),
-                        static fn($assert, $a, $b) => $assert->true(false),
-                    );
-                });
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->tryToProve(static function($prove) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(
+                                Set::integers(),
+                                Set::integers(),
+                            )
+                            ->test(static fn($assert, $a, $b) => $assert->true(false));
+                    });
 
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('Failures: 1')
-                ->contains('SF') // at least one shrinking
-                ->contains('$a = 0') // as it is always the smallest value
-                ->contains('$b = 0'); // as it is always the smallest value
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield test(
-        'BlackBox can disable the shrinking mechanism',
-        static function($assert) {
-            $io = Collect::new();
-            $value = null;
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('Failures: 1')
+                    ->contains('SF') // at least one shrinking
+                    ->contains('$a = 0') // as it is always the smallest value
+                    ->contains('$b = 0'); // as it is always the smallest value
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->disableShrinking()
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static function($assert, $i) use (&$value) {
-                            $value = $i;
+    yield $prove
+        ->test(
+            'BlackBox can disable the shrinking mechanism',
+            static function($assert) {
+                $io = Collect::new();
+                $value = null;
 
-                            $assert->true(false);
-                        },
-                    );
-                });
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->disableShrinking()
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static function($assert, $i) use (&$value) {
+                                $value = $i;
 
-            $assert->false($result->successful());
-            $assert->number($value); // to make sure run at least once
-            $assert
-                ->string($io->toString())
-                ->contains('Failures: 1')
-                ->contains('F')
-                ->contains("\$i = $value")
-                ->not()
-                ->contains('SF', 'The shrinking has not been disabled');
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'BlackBox can disable the memory limit',
-        static function($assert) {
-            $io = Collect::new();
-
-            $assert
-                ->expected('-1')
-                ->not()
-                ->same(\ini_get('memory_limit'));
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->disableMemoryLimit()
-                ->tryToProve(static function() {
-                    yield test(
-                        'example',
-                        static fn($assert) => $assert->same(
-                            '-1',
-                            \ini_get('memory_limit'),
-                        ),
-                    );
-                });
-
-            $assert->true($result->successful());
-            // It seems PHP prevents setting the limit lower to the peak memory
-            // usage so we can't reset the limit to the previous value
-            $assert
-                ->expected('-1')
-                ->same(\ini_get('memory_limit'));
-        },
-    )->tag(Tag::ci);
-
-    yield test(
-        'BlackBox can stop on first failure',
-        static function($assert) {
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->stopOnFailure()
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->true(false),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                });
-
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('Proofs: 2,');
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Application::map()',
-        static function($assert) {
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->map(
-                    static fn($app) => $app
-                        ->displayOutputVia($io)
-                        ->displayErrorVia($io)
-                        ->usePrinter(Standard::withoutColors())
-                        ->stopOnFailure(),
-                )
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->true(false),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                });
-
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('Proofs: 2,');
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Application::when() enabled',
-        static function($assert) {
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->when(
-                    true,
-                    static fn($app) => $app
-                        ->stopOnFailure(),
-                )
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->true(false),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                });
-
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('Proofs: 2,');
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Application::when() disabled',
-        static function($assert) {
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->when(
-                    false,
-                    static fn($app) => $app
-                        ->stopOnFailure(),
-                )
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->true(false),
-                    );
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => $assert->number($i),
-                    );
-                });
-
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('Proofs: 3,');
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'Application::allowProofsToNotMakeAnyAssertions()',
-        static function($assert) {
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => null,
-                    );
-                });
-
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('The proof did not make any assertion');
-
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->allowProofsToNotMakeAnyAssertions()
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()),
-                        static fn($assert, $i) => null,
-                    );
-                });
-
-            $assert->true($result->successful());
-            $assert
-                ->string($io->toString())
-                ->not()
-                ->contains('The proof did not make any assertion');
-        },
-    )->tag(Tag::ci, Tag::local);
-
-    yield test(
-        'The application stops shrinking when the type of error changes',
-        static function($assert) {
-            $io = Collect::new();
-
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()->above(0)),
-                        static function($assert, $i) {
-                            if ($i > 42) {
                                 $assert->true(false);
-                            }
+                            });
+                    });
 
-                            $assert->true(false);
-                        },
-                    );
-                });
+                $assert->false($result->successful());
+                $assert->number($value); // to make sure run at least once
+                $assert
+                    ->string($io->toString())
+                    ->contains('Failures: 1')
+                    ->contains('F')
+                    ->contains("\$i = $value")
+                    ->not()
+                    ->contains('SF', 'The shrinking has not been disabled');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('$i = 43');
-        },
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->test(
+            'BlackBox can disable the memory limit',
+            static function($assert) {
+                $io = Collect::new();
 
-    yield test(
-        'Application::useExhaustiveShrinking()',
-        static function($assert) {
-            $io = Collect::new();
+                $assert
+                    ->expected('-1')
+                    ->not()
+                    ->same(\ini_get('memory_limit'));
 
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->useExhaustiveShrinking()
-                ->tryToProve(static function() use (&$value) {
-                    yield proof(
-                        'example',
-                        given(Set::integers()->above(0)),
-                        static function($assert, $i) {
-                            if ($i > 42) {
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->disableMemoryLimit()
+                    ->tryToProve(static function($prove) {
+                        yield $prove->test(
+                            'example',
+                            static fn($assert) => $assert->same(
+                                '-1',
+                                \ini_get('memory_limit'),
+                            ),
+                        );
+                    });
+
+                $assert->true($result->successful());
+                // It seems PHP prevents setting the limit lower to the peak memory
+                // usage so we can't reset the limit to the previous value
+                $assert
+                    ->expected('-1')
+                    ->same(\ini_get('memory_limit'));
+            },
+        )
+        ->tag(Tag::ci);
+
+    yield $prove
+        ->test(
+            'BlackBox can stop on first failure',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->stopOnFailure()
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->true(false));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('Proofs: 2,');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Application::map()',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->map(
+                        static fn($app) => $app
+                            ->displayOutputVia($io)
+                            ->displayErrorVia($io)
+                            ->usePrinter(Standard::withoutColors())
+                            ->stopOnFailure(),
+                    )
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->true(false));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('Proofs: 2,');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Application::when() enabled',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->when(
+                        true,
+                        static fn($app) => $app
+                            ->stopOnFailure(),
+                    )
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->true(false));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('Proofs: 2,');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Application::when() disabled',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->when(
+                        false,
+                        static fn($app) => $app
+                            ->stopOnFailure(),
+                    )
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->true(false));
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => $assert->number($i));
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('Proofs: 3,');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Application::allowProofsToNotMakeAnyAssertions()',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => null);
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('The proof did not make any assertion');
+
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->allowProofsToNotMakeAnyAssertions()
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers())
+                            ->test(static fn($assert, $i) => null);
+                    });
+
+                $assert->true($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->not()
+                    ->contains('The proof did not make any assertion');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'The application stops shrinking when the type of error changes',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers()->above(0))
+                            ->test(static function($assert, $i) {
+                                if ($i > 42) {
+                                    $assert->true(false);
+                                }
+
                                 $assert->true(false);
-                            }
+                            });
+                    });
 
-                            $assert->true(false);
-                        },
-                    );
-                });
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('$i = 43');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-            $assert->false($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('$i = 0');
-        },
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->test(
+            'Application::useExhaustiveShrinking()',
+            static function($assert) {
+                $io = Collect::new();
 
-    yield test(
-        'Application::filterOnTags()',
-        static function($assert) {
-            $io = Collect::new();
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->useExhaustiveShrinking()
+                    ->tryToProve(static function($prove) use (&$value) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers()->above(0))
+                            ->test(static function($assert, $i) {
+                                if ($i > 42) {
+                                    $assert->true(false);
+                                }
 
-            $result = Application::new([])
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
-                ->usePrinter(Standard::withoutColors())
-                ->filterOnTags(Tag::local)
-                ->tryToProve(static function() {
-                    yield test(
-                        'example',
-                        static fn($assert) => $assert->true(true),
-                    )->tag(Tag::local);
+                                $assert->true(false);
+                            });
+                    });
 
-                    yield test(
-                        'example',
-                        static fn($assert) => $assert->true(true),
-                    )->tag(Tag::ci);
-                });
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('$i = 0');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 
-            $assert->true($result->successful());
-            $assert
-                ->string($io->toString())
-                ->contains('Proofs: 1, Scenarii: 1');
-        },
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->test(
+            'Application::filterOnTags()',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->filterOnTags(Tag::local)
+                    ->tryToProve(static function($prove) {
+                        yield $prove
+                            ->test(
+                                'example',
+                                static fn($assert) => $assert->true(true),
+                            )
+                            ->tag(Tag::local);
+
+                        yield $prove
+                            ->test(
+                                'example',
+                                static fn($assert) => $assert->true(true),
+                            )
+                            ->tag(Tag::ci);
+                    });
+
+                $assert->true($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('Proofs: 1, Scenarii: 1');
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 };

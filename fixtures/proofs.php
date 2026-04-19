@@ -22,77 +22,93 @@ use Fixtures\Innmind\BlackBox\{
     UpperBoundAtHundred,
 };
 
-return static function() {
-    yield property(
-        DownAndUpIsAnIdentityFunction::class,
-        Set::integers()
-            ->between(1, 100)
-            ->flatMap(static fn($initial) => Set::call(
-                static fn() => new Counter($initial->unwrap()),
-            )),
-    )->tag(Tag::ci, Tag::local);
+return static function($load, $prove) {
+    yield $prove
+        ->property(
+            DownAndUpIsAnIdentityFunction::class,
+            Set::integers()
+                ->between(1, 100)
+                ->flatMap(static fn($initial) => Set::call(
+                    static fn() => new Counter($initial->unwrap()),
+                )),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield property(
-        DownChangeState::class,
-        Set::integers()
-            ->between(1, 100)
-            ->flatMap(static fn($initial) => Set::call(
-                static fn() => new Counter($initial->unwrap()),
-            )),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->property(
+            DownChangeState::class,
+            Set::integers()
+                ->between(1, 100)
+                ->flatMap(static fn($initial) => Set::call(
+                    static fn() => new Counter($initial->unwrap()),
+                )),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield property(
-        LowerBoundAtZero::class,
-        Set::of(new Counter),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->property(
+            LowerBoundAtZero::class,
+            Set::of(new Counter),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield property(
-        RaiseBy::class,
-        Set::integers()
-            ->between(0, 99)
-            ->flatMap(static fn($initial) => Set::call(
-                static fn() => new Counter($initial->unwrap()),
-            )),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->property(
+            RaiseBy::class,
+            Set::integers()
+                ->between(0, 99)
+                ->flatMap(static fn($initial) => Set::call(
+                    static fn() => new Counter($initial->unwrap()),
+                )),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield property(
-        UpAndDownIsAnIdentityFunction::class,
-        Set::integers()
-            ->between(0, 98)
-            ->flatMap(static fn($initial) => Set::call(
-                static fn() => new Counter($initial->unwrap()),
-            )),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->property(
+            UpAndDownIsAnIdentityFunction::class,
+            Set::integers()
+                ->between(0, 98)
+                ->flatMap(static fn($initial) => Set::call(
+                    static fn() => new Counter($initial->unwrap()),
+                )),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield property(
-        UpChangeState::class,
-        Set::integers()
-            ->between(0, 99)
-            ->flatMap(static fn($initial) => Set::call(
-                static fn() => new Counter($initial->unwrap()),
-            )),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->property(
+            UpChangeState::class,
+            Set::integers()
+                ->between(0, 99)
+                ->flatMap(static fn($initial) => Set::call(
+                    static fn() => new Counter($initial->unwrap()),
+                )),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield property(
-        UpperBoundAtHundred::class,
-        Set::of(new Counter(99), new Counter(100)),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->property(
+            UpperBoundAtHundred::class,
+            Set::of(new Counter(99), new Counter(100)),
+        )
+        ->tag(Tag::ci, Tag::local);
 
-    yield properties(
-        'Counter properties',
-        Set\Properties::any(
-            DownAndUpIsAnIdentityFunction::any(),
-            DownChangeState::any(),
-            LowerBoundAtZero::any(),
-            RaiseBy::any(),
-            UpAndDownIsAnIdentityFunction::any(),
-            UpChangeState::any(),
-            UpperBoundAtHundred::any(),
-        ),
-        Set::integers()
-            ->between(0, 100)
-            ->flatMap(static fn($initial) => Set::call(
-                static fn() => new Counter($initial->unwrap()),
-            )),
-    )->tag(Tag::ci, Tag::local);
+    yield $prove
+        ->properties(
+            'Counter properties',
+            Set\Properties::any(
+                DownAndUpIsAnIdentityFunction::any(),
+                DownChangeState::any(),
+                LowerBoundAtZero::any(),
+                RaiseBy::any(),
+                UpAndDownIsAnIdentityFunction::any(),
+                UpChangeState::any(),
+                UpperBoundAtHundred::any(),
+            ),
+            Set::integers()
+                ->between(0, 100)
+                ->flatMap(static fn($initial) => Set::call(
+                    static fn() => new Counter($initial->unwrap()),
+                )),
+        )
+        ->tag(Tag::ci, Tag::local);
 };

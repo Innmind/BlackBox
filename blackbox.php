@@ -10,7 +10,6 @@ use Innmind\BlackBox\{
     Runner\IO\Collect,
     Tag,
 };
-use function Innmind\BlackBox\Runner\test;
 
 Application::new($argv)
     ->map(static fn($app) => match (\getenv('BLACKBOX_ENV')) {

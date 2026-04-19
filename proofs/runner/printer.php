@@ -17,36 +17,34 @@ use Innmind\BlackBox\{
     Properties,
     Tag,
 };
-use function Innmind\BlackBox\Runner\{
-    proof,
-    given,
-    test,
-};
 use Fixtures\Innmind\BlackBox\{
     Counter,
     LowerBoundAtZero,
 };
 
-return static function() {
-    yield test(
-        'Printer->start()',
-        static function($assert) {
-            $printer = Standard::new();
-            $io = Collect::new();
+return static function($load, $prove) {
+    yield $prove
+        ->test(
+            'Printer->start()',
+            static function($assert) {
+                $printer = Standard::new();
+                $io = Collect::new();
 
-            $printer->start($io, $io);
+                $printer->start($io, $io);
 
-            $assert->same(["BlackBox\n"], $io->written());
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->end() on success',
-        given(
+                $assert->same(["BlackBox\n"], $io->written());
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->end() on success')
+        ->given(
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
-        ),
-        static function($assert, $proofs, $scenarii, $assertions) {
+        )
+        ->test(static function($assert, $proofs, $scenarii, $assertions) {
             $printer = Standard::new();
             $io = Collect::new();
             $stats = Stats::new();
@@ -82,17 +80,18 @@ return static function() {
                 "OK\nProofs: $proofs, Scenarii: $scenarii, Assertions: $assertions\n",
                 $written[3],
             );
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->end() on failure',
-        given(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->end() on failure')
+        ->given(
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
             Set::integers()->between(1, 10_000), // not above 10k to limit the time it takes
-        ),
-        static function($assert, $proofs, $scenarii, $assertions, $failures) {
+        )
+        ->test(static function($assert, $proofs, $scenarii, $assertions, $failures) {
             $printer = Standard::new();
             $io = Collect::new();
             $stats = Stats::new();
@@ -132,15 +131,16 @@ return static function() {
                 "Failed\nProofs: $proofs, Scenarii: $scenarii, Assertions: $assertions, Failures: $failures\n",
                 $written[3],
             );
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->proof()',
-        given(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->proof()')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
@@ -157,16 +157,16 @@ return static function() {
             $assert
                 ->string($written)
                 ->contains($name);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Printer->proof() in GitHub Action',
-        given(
+    yield $prove
+        ->proof('Printer->proof() in GitHub Action')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -184,16 +184,16 @@ return static function() {
                 ->string($written)
                 ->startsWith('::group::')
                 ->contains($name);
-        },
-    )->tag(Tag::ci);
+        })
+        ->tag(Tag::ci);
 
-    yield proof(
-        'Printer->proof()->emptySet()',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->emptySet()')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
@@ -206,16 +206,16 @@ return static function() {
             $assert
                 ->expected("No scenario found\n")
                 ->same(\end($written));
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Printer->proof()->emptySet() in GitHub Action',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->emptySet() in GitHub Action')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -228,16 +228,16 @@ return static function() {
             $assert
                 ->string($written)
                 ->endsWith("No scenario found\n::endgroup::\n");
-        },
-    )->tag(Tag::ci);
+        })
+        ->tag(Tag::ci);
 
-    yield proof(
-        'Printer->proof()->success()',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->success()')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -250,15 +250,16 @@ return static function() {
             $assert
                 ->expected('.')
                 ->same(\end($written));
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->proof()->shrunk()',
-        given(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->proof()->shrunk()')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -271,16 +272,17 @@ return static function() {
             $assert
                 ->expected('S')
                 ->same(\end($written));
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->proof()->failure() for Failure\Truth',
-        given(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->proof()->failure() for Failure\Truth')
+        ->given(
             Set::strings(),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings(),
-        ),
-        static function($assert, $name, $val, $truth) {
+        )
+        ->test(static function($assert, $name, $val, $truth) {
             $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
@@ -302,17 +304,17 @@ return static function() {
                 ->contains('$foo = ')
                 ->contains($val)
                 ->contains($truth);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Printer->proof()->failure() for Failure\Truth in GitHub Action',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->failure() for Failure\Truth in GitHub Action')
+        ->given(
             Set::strings(),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings(),
-        ),
-        static function($assert, $name, $val, $truth) {
+        )
+        ->test(static function($assert, $name, $val, $truth) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -335,18 +337,18 @@ return static function() {
                 ->contains($val)
                 ->contains('::error ::')
                 ->contains($truth);
-        },
-    )->tag(Tag::ci);
+        })
+        ->tag(Tag::ci);
 
-    yield proof(
-        'Printer->proof()->failure() for Failure\Property',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->failure() for Failure\Property')
+        ->given(
             Set::strings(),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings(),
-        ),
-        static function($assert, $name, $property, $val, $message) {
+        )
+        ->test(static function($assert, $name, $property, $val, $message) {
             $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
@@ -373,18 +375,18 @@ return static function() {
                 ->contains('$foo = ')
                 ->contains($val)
                 ->contains($message);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Printer->proof()->failure() for Failure\Property in GitHub Action',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->failure() for Failure\Property in GitHub Action')
+        ->given(
             Set::strings(),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings(),
-        ),
-        static function($assert, $name, $property, $val, $message) {
+        )
+        ->test(static function($assert, $name, $property, $val, $message) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -412,19 +414,19 @@ return static function() {
                 ->contains($val)
                 ->contains('::error ::')
                 ->contains($message);
-        },
-    )->tag(Tag::ci);
+        })
+        ->tag(Tag::ci);
 
-    yield proof(
-        'Printer->proof()->failure() for Failure\Comparison',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->failure() for Failure\Comparison')
+        ->given(
             Set::strings(),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings(),
-        ),
-        static function($assert, $name, $expected, $actual, $val, $message) {
+        )
+        ->test(static function($assert, $name, $expected, $actual, $val, $message) {
             $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
@@ -454,19 +456,19 @@ return static function() {
                 ->contains('$foo = ')
                 ->contains($val)
                 ->contains($message);
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Printer->proof()->failure() for Failure\Comparison in GitHub Action',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->failure() for Failure\Comparison in GitHub Action')
+        ->given(
             Set::strings(),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
             Set::strings(),
-        ),
-        static function($assert, $name, $expected, $actual, $val, $message) {
+        )
+        ->test(static function($assert, $name, $expected, $actual, $val, $message) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -497,16 +499,16 @@ return static function() {
                 ->contains($val)
                 ->contains('::error ::')
                 ->contains($message);
-        },
-    )->tag(Tag::ci);
+        })
+        ->tag(Tag::ci);
 
-    yield proof(
-        'Printer->proof()->failure() for Scenario\Property',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->failure() for Scenario\Property')
+        ->given(
             Set::strings(),
             Set::strings(),
-        ),
-        static function($assert, $name, $message) {
+        )
+        ->test(static function($assert, $name, $message) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -530,15 +532,16 @@ return static function() {
                 ->contains('$systemUnderTest = ')
                 ->contains('Fixtures\Innmind\BlackBox\Counter')
                 ->contains($message);
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->proof()->failure() for Scenario\Properties',
-        given(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->proof()->failure() for Scenario\Properties')
+        ->given(
             Set::strings(),
             Set::strings(),
-        ),
-        static function($assert, $name, $message) {
+        )
+        ->test(static function($assert, $name, $message) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -562,15 +565,16 @@ return static function() {
                 ->contains('$systemUnderTest = ')
                 ->contains('Fixtures\Innmind\BlackBox\Counter')
                 ->contains($message);
-        },
-    )->tag(Tag::ci, Tag::local);
-    yield proof(
-        'Printer->proof()->end()',
-        given(
+        })
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Printer->proof()->end()')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new()->disableGitHubOutput();
             $io = Collect::new();
 
@@ -583,16 +587,16 @@ return static function() {
             $assert
                 ->expected("\n\n")
                 ->same(\end($written));
-        },
-    )->tag(Tag::ci, Tag::local);
+        })
+        ->tag(Tag::ci, Tag::local);
 
-    yield proof(
-        'Printer->proof()->end() in GitHub Action',
-        given(
+    yield $prove
+        ->proof('Printer->proof()->end() in GitHub Action')
+        ->given(
             Set::strings(),
             Set::sequence(Set::of(...Tag::cases())),
-        ),
-        static function($assert, $name, $tags) {
+        )
+        ->test(static function($assert, $name, $tags) {
             $printer = Standard::new();
             $io = Collect::new();
 
@@ -605,6 +609,6 @@ return static function() {
             $assert
                 ->string($written)
                 ->endsWith("\n\n::endgroup::\n");
-        },
-    )->tag(Tag::ci);
+        })
+        ->tag(Tag::ci);
 };
