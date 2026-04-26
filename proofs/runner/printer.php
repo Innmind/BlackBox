@@ -553,9 +553,15 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
-                        Value::of(Scenario\Property::of(
-                            new LowerBoundAtZero,
-                            static fn() => $counter,
+                        Value::of(Scenario\Inline::of(
+                            [
+                                new LowerBoundAtZero,
+                                static fn() => $counter,
+                            ],
+                            static fn($assert, $property, $factory) => $assert->debug(
+                                'systemUnderTest',
+                                $factory(),
+                            ),
                         )),
                         $debug,
                     ),

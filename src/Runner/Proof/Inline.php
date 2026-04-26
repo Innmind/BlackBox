@@ -20,6 +20,7 @@ final class Inline implements Proof
     private array $tags;
     /** @var ?int<1, max> */
     private ?int $scenarii;
+    private ?string $extraName;
 
     /**
      * @psalm-mutation-free
@@ -34,12 +35,14 @@ final class Inline implements Proof
         \Closure $test,
         array $tags,
         ?int $scenarii,
+        ?string $extraName,
     ) {
         $this->name = $name;
         $this->values = $values;
         $this->test = $test;
         $this->tags = $tags;
         $this->scenarii = $scenarii;
+        $this->extraName = $extraName;
     }
 
     /**
@@ -52,7 +55,7 @@ final class Inline implements Proof
         Given $values,
         \Closure $test,
     ): self {
-        return new self($name, $values, $test, [], null);
+        return new self($name, $values, $test, [], null, null);
     }
 
     /**
@@ -70,13 +73,21 @@ final class Inline implements Proof
             $test,
             [],
             1,
+            null,
         );
     }
 
     #[\Override]
     public function name(): Name
     {
-        return $this->name;
+        return match ($this->extraName) {
+            null => $this->name,
+            default => Name::of(\sprintf(
+                '%s(%s)',
+                $this->name->toString(),
+                $this->extraName,
+            )),
+        };
     }
 
     /**
@@ -85,7 +96,14 @@ final class Inline implements Proof
     #[\Override]
     public function named(string $name): self
     {
-        return $this;
+        return new self(
+            $this->name,
+            $this->values,
+            $this->test,
+            $this->tags,
+            $this->scenarii,
+            $name,
+        );
     }
 
     /**
@@ -101,6 +119,7 @@ final class Inline implements Proof
             $this->test,
             [...$this->tags, ...$tags],
             $this->scenarii,
+            $this->extraName,
         );
     }
 
@@ -115,6 +134,7 @@ final class Inline implements Proof
             $this->test,
             $this->tags,
             $take,
+            $this->extraName,
         );
     }
 

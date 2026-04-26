@@ -6,38 +6,13 @@ namespace Innmind\BlackBox\Runner\Proof;
 use Innmind\BlackBox\{
     Set,
     Runner\Proof,
+    Runner\Given,
+    Runner\Assert,
     Property as Concrete,
 };
 
-final class Property implements Proof
+final class Property
 {
-    /** @var class-string<Concrete> */
-    private string $property;
-    private ?string $name;
-    /** @var Set<callable(): object> */
-    private Set $systemUnderTest;
-    /** @var list<\UnitEnum> */
-    private array $tags;
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param class-string<Concrete> $property
-     * @param Set<callable(): object> $systemUnderTest
-     * @param list<\UnitEnum> $tags
-     */
-    private function __construct(
-        string $property,
-        ?string $name,
-        Set $systemUnderTest,
-        array $tags,
-    ) {
-        $this->property = $property;
-        $this->name = $name;
-        $this->systemUnderTest = $systemUnderTest;
-        $this->tags = $tags;
-    }
-
     /**
      * @psalm-pure
      *
@@ -47,68 +22,33 @@ final class Property implements Proof
     public static function of(
         string $property,
         Set $systemUnderTest,
-    ): self {
-        return new self($property, null, $systemUnderTest, []);
-    }
+    ): Proof {
+        /** @var Set<Concrete> */
+        $propertySet = ([$property, 'any'])();
 
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function named(string $name): self
-    {
-        return new self(
-            $this->property,
-            $name,
-            $this->systemUnderTest,
-            $this->tags,
+        return Inline::of(
+            Name::of($property),
+            Given::of(Set::tuple(
+                $propertySet,
+                $systemUnderTest,
+            )),
+            static function($assert, Concrete $property, callable $factory) {
+                /** @var object */
+                $sut = $factory();
+                $assert->debug('systemUnderTest', $sut);
+
+                if (!$property->applicableTo($sut)) {
+                    $assert->fail('The property is not applicable to the system under test.');
+                }
+
+                try {
+                    $property->ensureHeldBy($assert, $sut);
+                } catch (Assert\Failure $e) {
+                    throw $e;
+                } catch (\Throwable $e) {
+                    $assert->not()->throws(static fn() => throw $e);
+                }
+            },
         );
-    }
-
-    #[\Override]
-    public function name(): Name
-    {
-        return Name::of(match ($this->name) {
-            null => $this->property,
-            default => \sprintf(
-                '%s(%s)',
-                $this->property,
-                $this->name,
-            ),
-        });
-    }
-
-    /**
-     * @psalm-mutation-free
-     * @no-named-arguments
-     */
-    #[\Override]
-    public function tag(\UnitEnum ...$tags): self
-    {
-        return new self(
-            $this->property,
-            $this->name,
-            $this->systemUnderTest,
-            [...$this->tags, ...$tags],
-        );
-    }
-
-    #[\Override]
-    public function tags(): array
-    {
-        return $this->tags;
-    }
-
-    #[\Override]
-    public function scenarii(int $count): Set
-    {
-        /** @psalm-suppress MixedArgument */
-        return Set::compose(
-            Scenario\Property::of(...),
-            ([$this->property, 'any'])(),
-            $this->systemUnderTest->map(\Closure::fromCallable(...)),
-        )
-            ->randomize()
-            ->take($count);
     }
 }

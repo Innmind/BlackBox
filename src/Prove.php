@@ -57,7 +57,7 @@ final class Prove
     public function property(
         string $property,
         Set|Provider $systemUnderTest,
-    ): Proof\Property {
+    ): Proof {
         return Proof\Property::of($property, Collapse::of($systemUnderTest));
     }
 
