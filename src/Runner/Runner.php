@@ -56,10 +56,13 @@ final class Runner
         $this->failWhenNoAssertions = $failWhenNoAssertions;
     }
 
+    /**
+     * @return \Generator<Proof\Scenario\Failure>
+     */
     public function __invoke(
         Stats $stats,
         ?CodeCoverage $codeCoverage,
-    ): void {
+    ): \Generator {
         if ($this->disableMemoryLimit) {
             \ini_set('memory_limit', '-1');
         }
@@ -126,6 +129,8 @@ final class Runner
                             $this->error,
                             $e,
                         );
+
+                        yield $e;
 
                         break;
                     }
