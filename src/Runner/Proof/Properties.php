@@ -6,38 +6,13 @@ namespace Innmind\BlackBox\Runner\Proof;
 use Innmind\BlackBox\{
     Set,
     Runner\Proof,
+    Runner\Given,
+    Runner\Assert,
     Properties as Concrete,
 };
 
-final class Properties implements Proof
+final class Properties
 {
-    private Name $name;
-    /** @var Set<Concrete> */
-    private Set $properties;
-    /** @var Set<callable(): object> */
-    private Set $systemUnderTest;
-    /** @var list<\UnitEnum> */
-    private array $tags;
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param Set<Concrete> $properties
-     * @param Set<callable(): object> $systemUnderTest
-     * @param list<\UnitEnum> $tags
-     */
-    private function __construct(
-        Name $name,
-        Set $properties,
-        Set $systemUnderTest,
-        array $tags,
-    ) {
-        $this->name = $name;
-        $this->properties = $properties;
-        $this->systemUnderTest = $systemUnderTest;
-        $this->tags = $tags;
-    }
-
     /**
      * @psalm-pure
      *
@@ -48,55 +23,26 @@ final class Properties implements Proof
         Name $name,
         Set $properties,
         Set $systemUnderTest,
-    ): self {
-        return new self($name, $properties, $systemUnderTest, []);
-    }
+    ): Proof {
+        return Inline::of(
+            $name,
+            Given::of(Set::tuple(
+                $properties,
+                $systemUnderTest,
+            )),
+            static function($assert, Concrete $properties, callable $factory) {
+                /** @var object */
+                $sut = $factory();
+                $assert->debug('systemUnderTest', $sut);
 
-    #[\Override]
-    public function name(): Name
-    {
-        return $this->name;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function named(string $name): self
-    {
-        return $this;
-    }
-
-    /**
-     * @psalm-mutation-free
-     * @no-named-arguments
-     */
-    #[\Override]
-    public function tag(\UnitEnum ...$tags): self
-    {
-        return new self(
-            $this->name,
-            $this->properties,
-            $this->systemUnderTest,
-            [...$this->tags, ...$tags],
+                try {
+                    $properties->ensureHeldBy($assert, $sut);
+                } catch (Assert\Failure $e) {
+                    throw $e;
+                } catch (\Throwable $e) {
+                    $assert->not()->throws(static fn() => throw $e);
+                }
+            },
         );
-    }
-
-    #[\Override]
-    public function tags(): array
-    {
-        return $this->tags;
-    }
-
-    #[\Override]
-    public function scenarii(int $count): Set
-    {
-        return Set::compose(
-            Scenario\Properties::of(...),
-            $this->properties,
-            $this->systemUnderTest->map(\Closure::fromCallable(...)),
-        )
-            ->randomize()
-            ->take($count);
     }
 }

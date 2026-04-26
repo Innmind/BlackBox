@@ -600,9 +600,15 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
-                        Value::of(Scenario\Properties::of(
-                            Properties::of(new LowerBoundAtZero),
-                            static fn() => $counter,
+                        Value::of(Scenario\Inline::of(
+                            [
+                                Properties::of(new LowerBoundAtZero),
+                                static fn() => $counter,
+                            ],
+                            static fn($assert, $properties, $factory) => $assert->debug(
+                                'systemUnderTest',
+                                $factory(),
+                            ),
                         )),
                         $debug,
                     ),
