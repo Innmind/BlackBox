@@ -16,17 +16,9 @@ class IntegersExceptZeroTest extends TestCase
         $this->assertInstanceOf(Set::class, Set::integers()->exceptZero());
     }
 
-    public function testByDefault100IntegersAreGenerated()
-    {
-        $values = $this->unwrap(Set::integers()->exceptZero()->values(Random::mersenneTwister));
-
-        $this->assertCount(100, $values);
-        $this->assertNotContains(0, $values);
-    }
-
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = Set::integers()->exceptZero();
+        $integers = Set::integers()->exceptZero()->take(100);
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -54,7 +46,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Set::integers()->exceptZero();
+        $a = Set::integers()->exceptZero()->take(100);
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -65,7 +57,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testValues()
     {
-        $a = Set::integers()->exceptZero();
+        $a = Set::integers()->exceptZero()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -77,7 +69,7 @@ class IntegersExceptZeroTest extends TestCase
 
     public function testShrinkable()
     {
-        $integers = Set::integers()->exceptZero();
+        $integers = Set::integers()->exceptZero()->take(100);
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());

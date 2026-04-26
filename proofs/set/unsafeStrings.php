@@ -12,7 +12,7 @@ return static function($load, $prove) {
         ->test(
             'Set::strings()->unsafe() shrink to an empty string',
             static function($assert) {
-                foreach (Set::strings()->unsafe()->values(Random::default) as $value) {
+                foreach (Set::strings()->unsafe()->take(100)->values(Random::default) as $value) {
                     while ($shrunk = $value->shrink()) {
                         $value = $shrunk->a();
                     }

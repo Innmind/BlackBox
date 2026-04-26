@@ -21,7 +21,7 @@ class SequenceTest extends TestCase
 
     public function testGenerates100ValuesByDefault()
     {
-        $sequences = Set::sequence(Set::strings()->chars())->toSet();
+        $sequences = Set::sequence(Set::strings()->chars())->take(100);
 
         $this->assertInstanceOf(\Generator::class, $sequences->values(Random::mersenneTwister));
         $this->assertCount(100, \iterator_to_array($sequences->values(Random::mersenneTwister)));
@@ -36,7 +36,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(0, 50)
-            ->toSet();
+            ->take(100);
         $sizes = [];
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
@@ -48,7 +48,7 @@ class SequenceTest extends TestCase
 
     public function testTake()
     {
-        $sequences1 = Set::sequence(Set::strings()->chars())->toSet();
+        $sequences1 = Set::sequence(Set::strings()->chars())->take(100);
         $sequences2 = $sequences1->take(50);
 
         $this->assertNotSame($sequences1, $sequences2);
@@ -59,7 +59,7 @@ class SequenceTest extends TestCase
 
     public function testFilter()
     {
-        $sequences = Set::sequence(Set::strings()->chars())->toSet();
+        $sequences = Set::sequence(Set::strings()->chars());
         $sequences2 = $sequences->filter(static fn($sequence) => \count($sequence) % 2 === 0);
 
         $this->assertInstanceOf(Set::class, $sequences2);
@@ -69,27 +69,27 @@ class SequenceTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                \iterator_to_array($sequences->values(Random::mersenneTwister)),
+                \iterator_to_array($sequences->take(100)->values(Random::mersenneTwister)),
                 $hasOddSequence,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                \iterator_to_array($sequences2->values(Random::mersenneTwister)),
+                \iterator_to_array($sequences2->take(100)->values(Random::mersenneTwister)),
                 $hasOddSequence,
                 false,
             ),
         );
-        $this->assertCount(100, \iterator_to_array($sequences->values(Random::mersenneTwister)));
-        $this->assertCount(100, \iterator_to_array($sequences2->values(Random::mersenneTwister)));
+        $this->assertCount(100, \iterator_to_array($sequences->take(100)->values(Random::mersenneTwister)));
+        $this->assertCount(100, \iterator_to_array($sequences2->take(100)->values(Random::mersenneTwister)));
     }
 
     public function testNonEmptySequenceCanBeShrunk()
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(1, 100)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
@@ -105,7 +105,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(0, 1)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) === 1) {
@@ -121,7 +121,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(3, 100)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 6) {
@@ -144,7 +144,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(2, 100)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 4) {
@@ -165,7 +165,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(3, 100)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $value) {
             if (\count($value->unwrap()) < 6) {
@@ -188,7 +188,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::strings()->chars())
             ->between(10, 50)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             while ($shrunk = $sequence->shrink()) {
@@ -203,7 +203,7 @@ class SequenceTest extends TestCase
     {
         $sequences = Set::sequence(Set::integers())
             ->between(1, 100)
-            ->toSet();
+            ->take(100);
 
         foreach ($sequences->values(Random::mersenneTwister) as $sequence) {
             while ($shrunk = $sequence->shrink()) {

@@ -12,16 +12,9 @@ use Innmind\BlackBox\{
 
 class UnsafeStringsTest extends TestCase
 {
-    public function testByDefault100ValuesAreGenerated()
-    {
-        $values = $this->unwrap(Set::strings()->unsafe()->values(Random::mersenneTwister));
-
-        $this->assertCount(100, $values);
-    }
-
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Set::strings()->unsafe();
+        $values = Set::strings()->unsafe()->take(100);
         $others = $values->filter(static function(string $value): bool {
             return \strlen($value) < 10;
         });
@@ -49,7 +42,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Set::strings()->unsafe();
+        $a = Set::strings()->unsafe()->take(100);
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -60,7 +53,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testValues()
     {
-        $a = Set::strings()->unsafe();
+        $a = Set::strings()->unsafe()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -72,7 +65,10 @@ class UnsafeStringsTest extends TestCase
 
     public function testEmptyStringCannotBeShrinked()
     {
-        $strings = Set::strings()->unsafe()->filter(static fn($string) => $string === '');
+        $strings = Set::strings()
+            ->unsafe()
+            ->filter(static fn($string) => $string === '')
+            ->take(100);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -81,7 +77,7 @@ class UnsafeStringsTest extends TestCase
 
     public function testNonEmptyStringsAreShrinkable()
     {
-        $strings = Set::strings()->unsafe();
+        $strings = Set::strings()->unsafe()->take(100);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             if ($value->unwrap() === '') {
@@ -94,7 +90,10 @@ class UnsafeStringsTest extends TestCase
 
     public function testStringsAreShrinkedFromBothEnds()
     {
-        $strings = Set::strings()->unsafe()->filter(static fn($string) => \strlen($string) > 1);
+        $strings = Set::strings()
+            ->unsafe()
+            ->filter(static fn($string) => \strlen($string) > 1)
+            ->take(100);
         $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
@@ -125,7 +124,10 @@ class UnsafeStringsTest extends TestCase
     public function testStringsOfOneCharacterCantBeShrunk()
     {
         // otherwise they won't match the given predicate
-        $strings = Set::strings()->unsafe()->filter(static fn($string) => \strlen($string) === 1);
+        $strings = Set::strings()
+            ->unsafe()
+            ->filter(static fn($string) => \strlen($string) === 1)
+            ->take(100);
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -134,7 +136,10 @@ class UnsafeStringsTest extends TestCase
 
     public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
     {
-        $strings = Set::strings()->unsafe()->filter(static fn($string) => \strlen($string) > 20);
+        $strings = Set::strings()
+            ->unsafe()
+            ->filter(static fn($string) => \strlen($string) > 20)
+            ->take(100);
         $shrunk = false;
 
         foreach ($strings->values(Random::mersenneTwister) as $value) {
@@ -158,6 +163,7 @@ class UnsafeStringsTest extends TestCase
             static fn() => Set::strings()
                 ->unsafe()
                 ->filter(static fn() => false)
+                ->take(100)
                 ->values(Random::mersenneTwister)
                 ->current(),
             EmptySet::class,

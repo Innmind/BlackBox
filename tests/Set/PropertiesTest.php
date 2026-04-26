@@ -33,7 +33,14 @@ class PropertiesTest extends TestCase
             Set::of(new LowerBoundAtZero),
         );
 
-        $this->assertCount(100, \iterator_to_array(Collapse::of($properties)->values(Random::mersenneTwister)));
+        $this->assertCount(
+            100,
+            \iterator_to_array(
+                Collapse::of($properties)
+                    ->take(100)
+                    ->values(Random::mersenneTwister),
+            ),
+        );
     }
 
     public function testGeneratePropertiesModel()
@@ -42,7 +49,7 @@ class PropertiesTest extends TestCase
             Set::of(new LowerBoundAtZero),
         );
 
-        foreach (Collapse::of($properties)->values(Random::mersenneTwister) as $scenario) {
+        foreach (Collapse::of($properties)->take(100)->values(Random::mersenneTwister) as $scenario) {
             $this->assertInstanceOf(PropertiesModel::class, $scenario->unwrap());
         }
     }
@@ -54,7 +61,7 @@ class PropertiesTest extends TestCase
         );
         $sizes = [];
 
-        foreach (Collapse::of($properties)->values(Random::mersenneTwister) as $scenario) {
+        foreach (Collapse::of($properties)->take(100)->values(Random::mersenneTwister) as $scenario) {
             $sizes[] = \count($scenario->unwrap()->properties());
         }
 
@@ -65,7 +72,7 @@ class PropertiesTest extends TestCase
     {
         $properties = Properties::any(
             Set::of(new LowerBoundAtZero),
-        );
+        )->take(100);
         $properties2 = $properties->take(50);
 
         $this->assertInstanceOf(Set::class, $properties2);
@@ -88,14 +95,14 @@ class PropertiesTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap(Collapse::of($properties)->values(Random::mersenneTwister)),
+                $this->unwrap(Collapse::of($properties)->take(100)->values(Random::mersenneTwister)),
                 $hasUnder50Properties,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap(Collapse::of($properties2)->values(Random::mersenneTwister)),
+                $this->unwrap(Collapse::of($properties2)->take(100)->values(Random::mersenneTwister)),
                 $hasUnder50Properties,
                 false,
             ),
@@ -109,7 +116,7 @@ class PropertiesTest extends TestCase
         )->atMost(50);
         $sizes = [];
 
-        foreach (Collapse::of($properties)->values(Random::mersenneTwister) as $scenario) {
+        foreach (Collapse::of($properties)->take(100)->values(Random::mersenneTwister) as $scenario) {
             $sizes[] = \count($scenario->unwrap()->properties());
         }
 
