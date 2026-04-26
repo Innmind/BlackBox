@@ -3,15 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Printer\Proof;
 
-use Innmind\BlackBox\{
-    Runner\Proof\Scenario\Failure,
-    Runner\Assert\Failure\Truth,
-    Runner\Assert\Failure\Property,
-    Runner\Assert\Failure\Comparison,
-    Runner\Assert\Debug,
-    Runner\IO,
-    Runner\Printer\Proof,
-    Runner\Proof\Scenario,
+use Innmind\BlackBox\Runner\{
+    Proof\Scenario\Failure,
+    Assert\Failure\Truth,
+    Assert\Failure\Property,
+    Assert\Failure\Comparison,
+    Assert\Debug,
+    IO,
+    Printer\Proof,
 };
 use Symfony\Component\VarDumper\{
     Dumper\CliDumper,
@@ -83,7 +82,7 @@ final class Standard implements Proof
     ): void {
         $this->newLine($output);
         $output("F\n\n");
-        $this->renderScenario($output, $failure->scenario()->unwrap());
+        $this->renderScenario($output, $failure);
 
         if (!$debug->empty()) {
             $output("\n");
@@ -217,10 +216,10 @@ final class Standard implements Proof
         ) ?? '';
     }
 
-    private function renderScenario(IO $output, Scenario $scenario): void
+    private function renderScenario(IO $output, Failure $failure): void
     {
         /** @var mixed $value */
-        foreach ($scenario->parameters() as [$name, $value]) {
+        foreach ($failure->parameters() as [$name, $value]) {
             $output(\sprintf(
                 '$%s = ',
                 $name,

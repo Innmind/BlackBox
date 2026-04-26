@@ -46,6 +46,14 @@ final class Failure extends \Exception
         return $this->scenario;
     }
 
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function parameters(): array
+    {
+        return $this->scenario->unwrap()->parameters();
+    }
+
     public function assertion(): Assert\Failure
     {
         return $this->failure;
