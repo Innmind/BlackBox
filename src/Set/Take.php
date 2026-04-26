@@ -36,7 +36,7 @@ final class Take implements Implementation
         $remaining = $this->size;
 
         foreach ($values as $value) {
-            yield $value->bounded();
+            yield $value;
             --$remaining;
 
             if ($remaining === 0) {

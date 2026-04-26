@@ -24,7 +24,6 @@ final class Set
      */
     private function __construct(
         private Implementation $implementation,
-        private bool $unbounded,
     ) {
     }
 
@@ -46,7 +45,6 @@ final class Set
     {
         return new self(
             Set\Elements::implementation($first, ...$rest),
-            true,
         );
     }
 
@@ -103,7 +101,6 @@ final class Set
                     $rest,
                 ),
             ),
-            true,
         );
     }
 
@@ -157,7 +154,6 @@ final class Set
             Set\FromGenerator::implementation(
                 $factory,
             ),
-            true,
         );
     }
 
@@ -217,7 +213,6 @@ final class Set
                     $rest,
                 ),
             ),
-            true,
         );
     }
 
@@ -369,7 +364,6 @@ final class Set
                 $this->implementation,
                 Set\Elements::implementation(null),
             ),
-            $this->unbounded,
         );
     }
 
@@ -387,7 +381,6 @@ final class Set
     {
         return new self(
             Set\Randomize::implementation($this->implementation),
-            $this->unbounded,
         );
     }
 
@@ -406,7 +399,6 @@ final class Set
                 $this->implementation,
                 $size,
             ),
-            false,
         );
     }
 
@@ -425,7 +417,6 @@ final class Set
                 $this->implementation,
                 $predicate,
             ),
-            $this->unbounded,
         );
     }
 
@@ -460,7 +451,6 @@ final class Set
                 $map,
                 $this->implementation,
             ),
-            $this->unbounded,
         );
     }
 
@@ -485,7 +475,6 @@ final class Set
                 static fn($input) => Collapse::of($map($input))->implementation,
                 $this->implementation,
             ),
-            $this->unbounded,
         );
     }
 
@@ -524,13 +513,10 @@ final class Set
     #[\NoDiscard]
     public function values(Random $random): \Generator
     {
-        $values = match ($this->unbounded) {
-            true => $this->bound()->values($random),
-            false => ($this->implementation)(
-                $random,
-                static fn() => true,
-            ),
-        };
+        $values = ($this->implementation)(
+            $random,
+            static fn() => true,
+        );
         $empty = true;
 
         foreach ($values as $value) {
@@ -544,17 +530,6 @@ final class Set
     }
 
     /**
-     * @return self<T>
-     */
-    private function bound(): self
-    {
-        return new self(
-            Set\Bounded::implementation($this->implementation),
-            false,
-        );
-    }
-
-    /**
      * @template A
      * @psalm-pure
      *
@@ -564,6 +539,6 @@ final class Set
      */
     private static function build(Implementation $implementation): self
     {
-        return new self($implementation, true);
+        return new self($implementation);
     }
 }
