@@ -9,6 +9,7 @@ use Innmind\BlackBox\{
     Runner\Given,
     Runner\Proof,
     Runner\Proof\Scenario,
+    Runner\IO\Collect,
     Random,
     PHPUnit\Framework\TestCase,
 };
@@ -107,47 +108,68 @@ final class Compatibility
      */
     public function then(callable $test): void
     {
-        /** @var \SplQueue<array{mixed, list<array{string, mixed}>}> */
-        $failures = new \SplQueue;
-        $printer = new ExtractFailure($failures);
-
-        $_ = $this
+        $io = Collect::new();
+        $failures = $this
             ->app
-            ->usePrinter($printer)
-            ->tryToProve(function() use ($test) {
+            ->displayOutputVia($io)
+            ->displayErrorVia($io)
+            ->failures(function() use ($test) {
                 yield Proof\Inline::of(
-                    Proof\Name::of('name does not matter here'),
+                    Proof\Name::of('name does not matter'),
                     $this->given,
-                    function($assert, ...$args) use ($test) {
-                        $assert->not()->throws(
-                            static fn() => $test(...$args),
-                        );
-                        // This is here to force capturing the $this context and
-                        // for the cs fixer to not enforce a static callable.
-                        // The capturing is used in Proof\Scenario\Inline to
-                        // determine the correct list of arguments
-                        $_ = $this;
-                    },
+                    static fn($assert, ...$args) => $assert->not()->throws(
+                        static fn() => $test(...$args),
+                    ),
                 );
             });
 
-        if (!$failures->isEmpty()) {
-            /** @var mixed $failure */
-            [$failure, $scenario] = $failures->dequeue();
+        if (!$this->blackbox) {
+            // BlackBox here can only return a failure if the user test has
+            // thrown an exception.
+            foreach ($failures as $failure) {
+                $kind = $failure->assertion()->kind();
 
-            if ($failure instanceof Assert\Failure && $this->blackbox) {
+                if (!($kind instanceof Assert\Failure\Property)) {
+                    continue;
+                }
+
+                /** @var mixed */
+                $error = $kind->value();
+
+                if ($error instanceof \Throwable) {
+                    $scenario = self::testArgs($test, $failure->scenario());
+
+                    Extension::record(
+                        $test,
+                        [...$scenario, ...$failure->debug()],
+                    );
+
+                    throw $error;
+                }
+            }
+
+            return;
+        }
+
+        foreach ($failures as $failure) {
+            $kind = $failure->assertion()->kind();
+
+            if (
+                $kind instanceof Assert\Failure\Property &&
+                $kind->value() instanceof Assert\Failure
+            ) {
                 throw Scenario\Failure::from(
-                    $failure,
-                    $scenario,
-                    Assert\Debug::new(),
+                    $kind->value(),
+                    self::testArgs($test, $failure->scenario()),
+                    $failure->debug(),
                 );
             }
 
-            if ($failure instanceof \Throwable) {
-                Extension::record($test, $scenario);
-
-                throw $failure;
-            }
+            throw Scenario\Failure::from(
+                $failure->assertion(),
+                self::testArgs($test, $failure->scenario()),
+                $failure->debug(),
+            );
         }
     }
 
@@ -173,5 +195,31 @@ final class Compatibility
             $this->given,
             $wrapped,
         );
+    }
+
+    /**
+     * @param list<array{string, mixed}> $scenario
+     *
+     * @return list<array{string, mixed}>
+     */
+    private static function testArgs(callable $test, array $scenario): array
+    {
+        $reflection = new \ReflectionFunction(\Closure::fromCallable($test));
+        $names = \array_map(
+            static fn($parameter) => $parameter->getName(),
+            $reflection->getParameters(),
+        );
+        /** @var list<array{string, mixed}> */
+        $parameters = [];
+
+        /** @var mixed $value */
+        foreach ($scenario as $index => [$_, $value]) {
+            $parameters[] = [
+                $names[$index] ?? 'undefined',
+                $value,
+            ];
+        }
+
+        return $parameters;
     }
 }

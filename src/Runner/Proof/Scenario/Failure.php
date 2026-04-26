@@ -14,15 +14,17 @@ final class Failure extends \Exception
     private Assert\Failure $failure;
     /** @var list<array{string, mixed}> */
     private array $scenario;
-    private Assert\Debug $debug;
+    /** @var list<array{string, mixed}> */
+    private array $debug;
 
     /**
      * @param list<array{string, mixed}> $scenario
+     * @param list<array{string, mixed}> $debug
      */
     private function __construct(
         Assert\Failure $failure,
         array $scenario,
-        Assert\Debug $debug,
+        array $debug,
     ) {
         $this->failure = $failure;
         $this->scenario = $scenario;
@@ -39,18 +41,23 @@ final class Failure extends \Exception
         Value $scenario,
         Assert\Debug $debug,
     ): self {
-        return new self($failure, $scenario->unwrap()->parameters(), $debug);
+        return new self(
+            $failure,
+            $scenario->unwrap()->parameters(),
+            $debug->parameters(),
+        );
     }
 
     /**
      * @internal
      *
      * @param list<array{string, mixed}> $scenario
+     * @param list<array{string, mixed}> $debug
      */
     public static function from(
         Assert\Failure $failure,
         array $scenario,
-        Assert\Debug $debug,
+        array $debug,
     ): self {
         return new self($failure, $scenario, $debug);
     }
@@ -62,8 +69,24 @@ final class Failure extends \Exception
     {
         return [
             ...$this->scenario,
-            ...$this->debug->parameters(),
+            ...$this->debug,
         ];
+    }
+
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function scenario(): array
+    {
+        return $this->scenario;
+    }
+
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function debug(): array
+    {
+        return $this->debug;
     }
 
     public function assertion(): Assert\Failure

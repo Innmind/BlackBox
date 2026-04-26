@@ -58,29 +58,10 @@ final class PrintFailures implements FinishedSubscriber
                 $printed = true;
             }
 
-            // We need to re-analyse the parameters name because the ones
-            // provided by the scenarion are the ones from the callable wrapper
-            // to make the PHPUnit test work with BlackBox
-            $reflection = new \ReflectionObject(\Closure::fromCallable($callable));
-            $method = $reflection->getMethod('__invoke');
-            $names = \array_map(
-                static fn($parameter) => $parameter->getName(),
-                $method->getParameters(),
-            );
             $output("{$test->className()}::{$test->methodName()}\n");
-            /** @var list<array{string, mixed}> */
-            $parameters = [];
 
             /** @var mixed $value */
-            foreach ($scenario as $index => [$name, $value]) {
-                $parameters[] = [
-                    $names[$index] ?? 'undefined',
-                    $value,
-                ];
-            }
-
-            /** @var mixed $value */
-            foreach ($parameters as [$name, $value]) {
+            foreach ($scenario as [$name, $value]) {
                 $output(\sprintf(
                     '$%s = %s',
                     $name,
