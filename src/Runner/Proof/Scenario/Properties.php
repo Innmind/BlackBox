@@ -27,7 +27,7 @@ final class Properties implements Scenario
     }
 
     #[\Override]
-    public function __invoke(Assert $assert): mixed
+    public function __invoke(Assert $assert): void
     {
         $sut = ($this->systemUnderTest)();
         $assert->debug('systemUnderTest', $sut);
@@ -39,8 +39,6 @@ final class Properties implements Scenario
         } catch (\Throwable $e) {
             $assert->not()->throws(static fn() => throw $e);
         }
-
-        return null;
     }
 
     /**

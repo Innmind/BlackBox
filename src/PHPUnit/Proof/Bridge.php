@@ -26,7 +26,7 @@ final class Bridge implements ScenarioInterface
     }
 
     #[\Override]
-    public function __invoke(Assert $assert): mixed
+    public function __invoke(Assert $assert): void
     {
         $refl = new \ReflectionProperty(TestCase::class, 'assert');
         $refl->setValue(null, $assert);
@@ -40,8 +40,6 @@ final class Bridge implements ScenarioInterface
                 throw $e;
             });
         }
-
-        return null;
     }
 
     /**

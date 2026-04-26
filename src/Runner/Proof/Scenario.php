@@ -10,7 +10,7 @@ use Innmind\BlackBox\Runner\Assert;
  */
 interface Scenario
 {
-    public function __invoke(Assert $assert): mixed;
+    public function __invoke(Assert $assert): void;
 
     /**
      * @return list<array{string, mixed}>

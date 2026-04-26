@@ -35,7 +35,7 @@ final class Scenario implements ScenarioInterface
     }
 
     #[\Override]
-    public function __invoke(Assert $assert): mixed
+    public function __invoke(Assert $assert): void
     {
         try {
             $test = new ($this->class)($assert);
@@ -47,8 +47,6 @@ final class Scenario implements ScenarioInterface
                 throw $e;
             });
         }
-
-        return null;
     }
 
     /**
