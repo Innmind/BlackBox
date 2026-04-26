@@ -3,13 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit;
 
-use Innmind\BlackBox\{
-    Runner\Printer,
-    Runner\Proof,
-    Runner\Proof\Scenario,
-    Runner\IO,
-    Runner\Stats,
-    Set\Value,
+use Innmind\BlackBox\Runner\{
+    Printer,
+    Proof,
+    IO,
+    Stats,
 };
 
 /**
@@ -17,11 +15,11 @@ use Innmind\BlackBox\{
  */
 final class ExtractFailure implements Printer
 {
-    /** @var \SplQueue<array{mixed, Value<Scenario>}> */
+    /** @var \SplQueue<array{mixed, list<array{string, mixed}>}> */
     private \SplQueue $failures;
 
     /**
-     * @param \SplQueue<array{mixed, Value<Scenario>}> $failures
+     * @param \SplQueue<array{mixed, list<array{string, mixed}>}> $failures
      */
     public function __construct(\SplQueue $failures)
     {

@@ -9,7 +9,6 @@ use Innmind\BlackBox\{
     Runner\Given,
     Runner\Proof,
     Runner\Proof\Scenario,
-    Set\Value,
     Random,
     PHPUnit\Framework\TestCase,
 };
@@ -108,7 +107,7 @@ final class Compatibility
      */
     public function then(callable $test): void
     {
-        /** @var \SplQueue<array{mixed, Value<Scenario>}> */
+        /** @var \SplQueue<array{mixed, list<array{string, mixed}>}> */
         $failures = new \SplQueue;
         $printer = new ExtractFailure($failures);
 
@@ -137,7 +136,7 @@ final class Compatibility
             [$failure, $scenario] = $failures->dequeue();
 
             if ($failure instanceof Assert\Failure && $this->blackbox) {
-                throw Scenario\Failure::of(
+                throw Scenario\Failure::from(
                     $failure,
                     $scenario,
                     Assert\Debug::new(),
