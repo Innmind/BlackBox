@@ -59,8 +59,9 @@ final class Property implements Scenario
         return new self($property, $systemUnderTest);
     }
 
-    public function property(): Concrete
+    #[\Override]
+    public function parameters(): array
     {
-        return $this->property;
+        return [['property', $this->property]];
     }
 }

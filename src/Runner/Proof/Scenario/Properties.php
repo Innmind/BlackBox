@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     Runner\Assert,
     Runner\Proof\Scenario,
     Properties as Concrete,
-    Property,
 };
 
 final class Properties implements Scenario
@@ -56,11 +55,9 @@ final class Properties implements Scenario
         return new self($properties, $systemUnderTest);
     }
 
-    /**
-     * @return list<Property>
-     */
-    public function properties(): array
+    #[\Override]
+    public function parameters(): array
     {
-        return $this->properties->properties();
+        return [['properties', $this->properties->properties()]];
     }
 }

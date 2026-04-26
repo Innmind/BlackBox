@@ -12,7 +12,6 @@ use Innmind\BlackBox\{
     Runner\IO,
     Runner\Printer\Proof,
     Runner\Proof\Scenario,
-    PHPUnit\Proof\Bridge,
 };
 use Symfony\Component\VarDumper\{
     Dumper\CliDumper,
@@ -220,24 +219,6 @@ final class Standard implements Proof
 
     private function renderScenario(IO $output, Scenario $scenario): void
     {
-        if (
-            $scenario instanceof Scenario\Inline ||
-            $scenario instanceof Bridge
-        ) {
-            $this->renderInlineScenario($output, $scenario);
-        }
-
-        if ($scenario instanceof Scenario\Property) {
-            $this->renderPropertyScenario($output, $scenario);
-        }
-
-        if ($scenario instanceof Scenario\Properties) {
-            $this->renderPropertiesScenario($output, $scenario);
-        }
-    }
-
-    private function renderInlineScenario(IO $output, Scenario\Inline|Bridge $scenario): void
-    {
         /** @var mixed $value */
         foreach ($scenario->parameters() as [$name, $value]) {
             $output(\sprintf(
@@ -246,17 +227,5 @@ final class Standard implements Proof
             ));
             $output($this->dump($value));
         }
-    }
-
-    private function renderPropertyScenario(IO $output, Scenario\Property $scenario): void
-    {
-        $output('$property = ');
-        $output($this->dump($scenario->property()));
-    }
-
-    private function renderPropertiesScenario(IO $output, Scenario\Properties $scenario): void
-    {
-        $output('$properties = ');
-        $output($this->dump($scenario->properties()));
     }
 }

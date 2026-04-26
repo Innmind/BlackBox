@@ -11,4 +11,9 @@ use Innmind\BlackBox\Runner\Assert;
 interface Scenario
 {
     public function __invoke(Assert $assert): mixed;
+
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function parameters(): array;
 }

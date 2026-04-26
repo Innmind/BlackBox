@@ -49,9 +49,7 @@ final class Inline implements Scenario
         return new self($args, $test);
     }
 
-    /**
-     * @return list<array{string, mixed}>
-     */
+    #[\Override]
     public function parameters(): array
     {
         $reflection = new \ReflectionFunction($this->test);

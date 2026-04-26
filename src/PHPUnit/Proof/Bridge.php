@@ -58,6 +58,7 @@ final class Bridge implements ScenarioInterface
     /**
      * @return list<array{string, mixed}>
      */
+    #[\Override]
     public function parameters(): array
     {
         $reflection = new \ReflectionFunction($this->test);

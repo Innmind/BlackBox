@@ -62,4 +62,10 @@ final class Scenario implements ScenarioInterface
     {
         return new self($class, $method, $args);
     }
+
+    #[\Override]
+    public function parameters(): array
+    {
+        return [];
+    }
 }
