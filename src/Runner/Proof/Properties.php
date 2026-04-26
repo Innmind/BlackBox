@@ -60,6 +60,15 @@ final class Properties implements Proof
 
     /**
      * @psalm-mutation-free
+     */
+    #[\Override]
+    public function named(string $name): self
+    {
+        return $this;
+    }
+
+    /**
+     * @psalm-mutation-free
      * @no-named-arguments
      */
     #[\Override]

@@ -70,6 +70,10 @@ final class Proof implements ProofInterface
         ));
     }
 
+    /**
+     * @psalm-mutation-free
+     */
+    #[\Override]
     public function named(string $name): self
     {
         return new self(

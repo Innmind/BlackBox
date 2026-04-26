@@ -15,6 +15,12 @@ interface Proof
 
     /**
      * @psalm-mutation-free
+     */
+    #[\NoDiscard]
+    public function named(string $name): self;
+
+    /**
+     * @psalm-mutation-free
      * @no-named-arguments
      */
     #[\NoDiscard]

@@ -13,7 +13,6 @@ final class Property implements Proof
 {
     /** @var class-string<Concrete> */
     private string $property;
-    /** @var ?non-empty-string */
     private ?string $name;
     /** @var Set<callable(): object> */
     private Set $systemUnderTest;
@@ -24,7 +23,6 @@ final class Property implements Proof
      * @psalm-mutation-free
      *
      * @param class-string<Concrete> $property
-     * @param ?non-empty-string $name
      * @param Set<callable(): object> $systemUnderTest
      * @param list<\UnitEnum> $tags
      */
@@ -55,9 +53,8 @@ final class Property implements Proof
 
     /**
      * @psalm-mutation-free
-     *
-     * @param non-empty-string $name
      */
+    #[\Override]
     public function named(string $name): self
     {
         return new self(
