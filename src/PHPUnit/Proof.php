@@ -7,6 +7,8 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Proof as ProofInterface,
     Runner\Proof\Name,
+    Runner\Proof\Inline,
+    Runner\Proof\Scenario\Failure,
     Runner\Assert,
     Runner\Stats,
     Set,
@@ -51,8 +53,33 @@ final class Proof implements ProofInterface
      * @param non-empty-string $method
      * @param list<mixed> $args
      */
-    public static function of(string $class, string $method, array $args = []): self
+    public static function of(string $class, string $method, array $args = []): ProofInterface
     {
+        $refl = new \ReflectionMethod($class, $method);
+        $return = (string) $refl->getReturnType();
+
+        if ($return !== BlackBox\Proof::class) {
+            return Inline::test(
+                Name::of(\sprintf(
+                    '%s::%s',
+                    $class,
+                    $method,
+                )),
+                static function($assert) use ($class, $method, $args) {
+                    try {
+                        $test = new ($class)($assert);
+                        $test->executeTest($method, $args);
+                    } catch (Failure|Assert\Failure $e) {
+                        throw $e;
+                    } catch (\Throwable $e) {
+                        $assert->not()->throws(static function() use ($e) {
+                            throw $e;
+                        });
+                    }
+                },
+            );
+        }
+
         return new self($class, $method, null, $args, []);
     }
 
@@ -110,33 +137,22 @@ final class Proof implements ProofInterface
     #[\Override]
     public function scenarii(int $count): Set
     {
-        $refl = new \ReflectionMethod($this->class, $this->method);
-        $return = (string) $refl->getReturnType();
+        // The true Assert instance is injected in Proof\Bridge
+        $test = new ($this->class)(Assert::of(
+            Stats::new(),
+            Assert\Debug::new(),
+        ));
+        /** @var BlackBox\Proof */
+        $proof = $test->{$this->method}(...$this->args);
 
-        if ($return === BlackBox\Proof::class) {
-            // The true Assert instance is injected in Proof\Bridge
-            $test = new ($this->class)(Assert::of(
-                Stats::new(),
-                Assert\Debug::new(),
-            ));
-            /** @var BlackBox\Proof */
-            $proof = $test->{$this->method}(...$this->args);
-
-            return $proof
-                ->given()
-                ->set()
-                ->map(static fn($args) => Proof\Bridge::of(
-                    $proof->test(),
-                    $args,
-                ))
-                ->randomize()
-                ->take($count);
-        }
-
-        return Set::of(Proof\Scenario::of(
-            $this->class,
-            $this->method,
-            $this->args,
-        ))->take(1);
+        return $proof
+            ->given()
+            ->set()
+            ->map(static fn($args) => Proof\Bridge::of(
+                $proof->test(),
+                $args,
+            ))
+            ->randomize()
+            ->take($count);
     }
 }
