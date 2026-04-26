@@ -12,7 +12,7 @@ class NullableTest extends TestCase
 {
     public function testByDefault100ValuesAreGenerated()
     {
-        $values = $this->unwrap(Set::integers()->nullable()->values(Random::mersenneTwister));
+        $values = $this->unwrap(Set::integers()->nullable()->take(100)->values(Random::mersenneTwister));
 
         $this->assertContains(null, $values);
     }

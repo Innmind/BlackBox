@@ -20,7 +20,7 @@ class ElementsTest extends TestCase
     public function testTake100ValuesByDefault()
     {
         $elements = Set::of(...\range(0, 1000));
-        $values = $this->unwrap($elements->values(Random::mersenneTwister));
+        $values = $this->unwrap($elements->take(100)->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);
     }
@@ -29,7 +29,7 @@ class ElementsTest extends TestCase
     {
         $elements = Set::of(...\range(0, 1000));
         $elements2 = $elements->take(10);
-        $aValues = $this->unwrap($elements->values(Random::mersenneTwister));
+        $aValues = $this->unwrap($elements->take(100)->values(Random::mersenneTwister));
         $bValues = $this->unwrap($elements2->values(Random::mersenneTwister));
 
         $this->assertInstanceOf(Set::class, $elements2);
@@ -40,7 +40,7 @@ class ElementsTest extends TestCase
 
     public function testFilter()
     {
-        $elements = Set::of(...\range(0, 1000));
+        $elements = Set::of(...\range(0, 1000))->take(100);
         $elements2 = $elements->filter(static function(int $value): bool {
             return $value % 2 === 0;
         });
@@ -68,7 +68,7 @@ class ElementsTest extends TestCase
 
     public function testValues()
     {
-        $elements = Set::of(...\range(0, 1000));
+        $elements = Set::of(...\range(0, 1000))->take(100);
 
         $this->assertInstanceOf(\Generator::class, $elements->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($elements->values(Random::mersenneTwister)));
@@ -80,7 +80,7 @@ class ElementsTest extends TestCase
 
     public function testElementsAreNotShrinkable()
     {
-        $elements = Set::of(...\range(0, 1000));
+        $elements = Set::of(...\range(0, 1000))->take(100);
 
         foreach ($elements->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -89,7 +89,7 @@ class ElementsTest extends TestCase
 
     public function testThereIsAlwaysTheSpecifiedNumberOfElementsReturnedEvenThoughLessInjected()
     {
-        $elements = Set::of('foo', 'bar', 'baz');
+        $elements = Set::of('foo', 'bar', 'baz')->take(100);
         $values = \iterator_to_array($elements->values(Random::mersenneTwister));
 
         $this->assertCount(100, $values);

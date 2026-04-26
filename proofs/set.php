@@ -33,7 +33,7 @@ return static function($load, $prove) {
                 return $output;
             });
 
-            foreach ($compose->values(Random::default) as $_) {
+            foreach ($compose->take(100)->values(Random::default) as $_) {
                 // triggers the assert in the flatMap lambda
             }
         })
@@ -45,7 +45,7 @@ return static function($load, $prove) {
         ->test(static function($assert, $input, $output) {
             $compose = $input->flatMap(static fn() => $output);
 
-            foreach ($compose->values(Random::default) as $value) {
+            foreach ($compose->take(100)->values(Random::default) as $value) {
                 $assert->same(
                     \gettype($value->unwrap()),
                     \gettype($output->values(Random::default)->current()->unwrap()),
@@ -87,7 +87,7 @@ return static function($load, $prove) {
                     return true;
                 });
 
-            foreach ($compose->values(Random::default) as $_) {
+            foreach ($compose->take(100)->values(Random::default) as $_) {
                 // triggers the assert in the filter lambda
             }
         })
@@ -101,7 +101,7 @@ return static function($load, $prove) {
                 ->flatMap(static fn() => $output)
                 ->map(static fn($i) => $i*2);
 
-            foreach ($compose->values(Random::default) as $value) {
+            foreach ($compose->take(100)->values(Random::default) as $value) {
                 $assert->same(
                     0,
                     $value->unwrap() % 2,
@@ -131,7 +131,7 @@ return static function($load, $prove) {
             ));
             $values = [];
 
-            foreach ($compose->values(Random::default) as $value) {
+            foreach ($compose->take(100)->values(Random::default) as $value) {
                 $values[] = $value->unwrap();
             }
 
@@ -157,7 +157,7 @@ return static function($load, $prove) {
                 // The calls to unwrap below are here to simulate the fact that a
                 // value is first unwrapped to be tested before eventually being
                 // shrunk in case of a test failure.
-                foreach ($compose->values(Random::default) as $value) {
+                foreach ($compose->take(100)->values(Random::default) as $value) {
                     $value->unwrap();
 
                     while ($shrunk = $value->shrink()) {
@@ -178,7 +178,7 @@ return static function($load, $prove) {
                     ),
                 );
 
-                foreach ($compose->values(Random::default) as $value) {
+                foreach ($compose->take(100)->values(Random::default) as $value) {
                     $value->unwrap();
 
                     while ($shrunk = $value->shrink()) {
@@ -213,7 +213,7 @@ return static function($load, $prove) {
                 // The calls to unwrap below are here to simulate the fact that a
                 // value is first unwrapped to be tested before eventually being
                 // shrunk in case of a test failure.
-                foreach ($compose->values(Random::default) as $value) {
+                foreach ($compose->take(100)->values(Random::default) as $value) {
                     $value->unwrap();
 
                     while ($shrunk = $value->shrink()) {
@@ -248,7 +248,7 @@ return static function($load, $prove) {
                 // The calls to unwrap below are here to simulate the fact that a
                 // value is first unwrapped to be tested before eventually being
                 // shrunk in case of a test failure.
-                foreach ($compose->values(Random::default) as $value) {
+                foreach ($compose->take(100)->values(Random::default) as $value) {
                     $value->unwrap();
 
                     while ($shrunk = $value->shrink()) {
@@ -275,7 +275,7 @@ return static function($load, $prove) {
                 // The calls to unwrap below are here to simulate the fact that a
                 // value is first unwrapped to be tested before eventually being
                 // shrunk in case of a test failure.
-                foreach ($compose->values(Random::default) as $value) {
+                foreach ($compose->take(100)->values(Random::default) as $value) {
                     $value->unwrap();
 
                     while ($shrunk = $value->shrink()) {
@@ -304,7 +304,7 @@ return static function($load, $prove) {
                 // The calls to unwrap below are here to simulate the fact that a
                 // value is first unwrapped to be tested before eventually being
                 // shrunk in case of a test failure.
-                foreach ($compose->values(Random::default) as $value) {
+                foreach ($compose->take(100)->values(Random::default) as $value) {
                     $value->unwrap();
 
                     while ($shrunk = $value->shrink()) {
@@ -395,17 +395,7 @@ return static function($load, $prove) {
         ->tag(Tag::ci, Tag::local);
 
     yield $prove
-        ->proof('Set->enumerate() returns 100 elements by default')
-        ->given($anySet)
-        ->test(static function($assert, $set) {
-            $values = \iterator_to_array($set->enumerate());
-
-            $assert->count(100, $values);
-        })
-        ->tag(Tag::ci, Tag::local);
-
-    yield $prove
-        ->proof('Set->take()->enumerate() returns 100 elements by default')
+        ->proof('Set->take()->enumerate()')
         ->given(
             $anySet,
             Set::integers()->between(1, 1_000),
@@ -425,7 +415,7 @@ return static function($load, $prove) {
         ))
         ->test(static function($assert, $pair) {
             [$accepted, $set] = $pair;
-            $values = \iterator_to_array($set->enumerate());
+            $values = \iterator_to_array($set->take(100)->enumerate());
 
             foreach ($values as $value) {
                 $assert
@@ -442,6 +432,7 @@ return static function($load, $prove) {
                 $odds = Set::integers()
                     ->above(0)
                     ->exclude(static fn($i) => $i % 2 === 0)
+                    ->take(100)
                     ->enumerate();
 
                 foreach ($odds as $i) {

@@ -16,7 +16,7 @@ class EmailTest extends TestCase
 
     public function testAny()
     {
-        $emails = Set::email();
+        $emails = Set::email()->take(100);
 
         $this->assertInstanceOf(Set::class, $emails);
         $this->assertCount(100, \iterator_to_array($emails->values(Random::mersenneTwister)));
@@ -38,7 +38,7 @@ class EmailTest extends TestCase
 
     public function testEmailsAreShrinkable()
     {
-        $emails = Set::email();
+        $emails = Set::email()->take(100);
 
         foreach ($emails->values(Random::mersenneTwister) as $email) {
             $this->assertNotNull($email->shrink());

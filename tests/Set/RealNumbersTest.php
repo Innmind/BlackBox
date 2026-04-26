@@ -13,7 +13,7 @@ class RealNumbersTest extends TestCase
 {
     public function testBetween()
     {
-        $numbers = Set::realNumbers()->between(-100, 100)->toSet();
+        $numbers = Set::realNumbers()->between(-100, 100)->take(100);
 
         $this->assertInstanceOf(Set::class, $numbers);
 
@@ -25,7 +25,7 @@ class RealNumbersTest extends TestCase
 
     public function testAbove()
     {
-        $numbers = Set::realNumbers()->above(0)->toSet();
+        $numbers = Set::realNumbers()->above(0)->take(100);
 
         $this->assertInstanceOf(Set::class, $numbers);
 
@@ -36,7 +36,7 @@ class RealNumbersTest extends TestCase
 
     public function testBelow()
     {
-        $numbers = Set::realNumbers()->below(0)->toSet();
+        $numbers = Set::realNumbers()->below(0)->take(100);
 
         $this->assertInstanceOf(Set::class, $numbers);
 
@@ -45,16 +45,9 @@ class RealNumbersTest extends TestCase
         }
     }
 
-    public function testByDefault100IntegersAreGenerated()
-    {
-        $values = $this->unwrap(Set::realNumbers()->toSet()->values(Random::mersenneTwister));
-
-        $this->assertCount(100, $values);
-    }
-
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $values = Set::realNumbers()->toSet();
+        $values = Set::realNumbers()->take(100);
         $positive = $values->filter(static function(float $float): bool {
             return $float > 0;
         });
@@ -82,7 +75,7 @@ class RealNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Set::realNumbers()->toSet();
+        $a = Set::realNumbers()->take(100);
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -93,7 +86,7 @@ class RealNumbersTest extends TestCase
 
     public function testValues()
     {
-        $a = Set::realNumbers()->toSet();
+        $a = Set::realNumbers()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -105,7 +98,10 @@ class RealNumbersTest extends TestCase
 
     public function testZeroCannotBeShrinked()
     {
-        $numbers = Set::realNumbers()->between(-1, 1)->filter(static fn($i) => $i === 0.0);
+        $numbers = Set::realNumbers()
+            ->between(-1, 1)
+            ->filter(static fn($i) => $i === 0.0)
+            ->take(100);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -114,7 +110,9 @@ class RealNumbersTest extends TestCase
 
     public function testRealNumbersCanBeShrinked()
     {
-        $numbers = Set::realNumbers()->filter(static fn($i) => $i !== 0.0);
+        $numbers = Set::realNumbers()
+            ->filter(static fn($i) => $i !== 0.0)
+            ->take(100);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
@@ -123,7 +121,9 @@ class RealNumbersTest extends TestCase
 
     public function testRealNumbersAreShrinkedTowardZero()
     {
-        $positive = Set::realNumbers()->above(1)->toSet();
+        $positive = Set::realNumbers()
+            ->above(1)
+            ->take(100);
 
         foreach ($positive->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -135,7 +135,9 @@ class RealNumbersTest extends TestCase
             $this->assertNotSame($a->unwrap(), $b->unwrap());
         }
 
-        $negative = Set::realNumbers()->below(-1)->toSet();
+        $negative = Set::realNumbers()
+            ->below(-1)
+            ->take(100);
 
         foreach ($negative->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -150,7 +152,7 @@ class RealNumbersTest extends TestCase
 
     public function testShrinkedValuesNeverChangeSign()
     {
-        $numbers = Set::realNumbers()->toSet();
+        $numbers = Set::realNumbers()->take(100);
 
         foreach ($numbers->values(Random::mersenneTwister) as $value) {
             if (!$value->shrink()) {
@@ -171,7 +173,9 @@ class RealNumbersTest extends TestCase
 
     public function testShrinkedValuesAlwaysRespectThePredicate()
     {
-        $even = Set::realNumbers()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 0);
+        $even = Set::realNumbers()
+            ->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 0)
+            ->take(100);
 
         foreach ($even->values(Random::mersenneTwister) as $value) {
             if (!$value->shrink()) {
@@ -184,7 +188,9 @@ class RealNumbersTest extends TestCase
             $this->assertSame(0, ((int) \round($dichotomy->b()->unwrap())) % 2);
         }
 
-        $odd = Set::realNumbers()->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 1);
+        $odd = Set::realNumbers()
+            ->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 1)
+            ->take(100);
 
         foreach ($odd->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -200,7 +206,9 @@ class RealNumbersTest extends TestCase
 
     public function testInitialBoundsAreAlwaysRespectedWhenShrinking()
     {
-        $integers = Set::realNumbers()->between(1000, 2000)->toSet();
+        $integers = Set::realNumbers()
+            ->between(1000, 2000)
+            ->take(100);
 
         $assertInBounds = function(Value $value, string $strategy) {
             while ($shrunk = $value->shrink()) {
@@ -218,7 +226,9 @@ class RealNumbersTest extends TestCase
 
     public function testStrategyAAlwaysLeadToSmallestValuePossible()
     {
-        $floats = Set::realNumbers()->above(43)->toSet();
+        $floats = Set::realNumbers()
+            ->above(43)
+            ->take(100);
 
         foreach ($floats->values(Random::mersenneTwister) as $float) {
             while ($shrunk = $float->shrink()) {

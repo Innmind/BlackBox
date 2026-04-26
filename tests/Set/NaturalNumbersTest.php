@@ -18,7 +18,12 @@ class NaturalNumbersTest extends TestCase
 
     public function testByDefault100IntegersAreGenerated()
     {
-        $values = $this->unwrap(Set::integers()->naturalNumbers()->values(Random::mersenneTwister));
+        $values = $this->unwrap(
+            Set::integers()
+                ->naturalNumbers()
+                ->take(100)
+                ->values(Random::mersenneTwister),
+        );
 
         $this->assertCount(100, $values);
 
@@ -29,7 +34,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testPredicateIsAppliedOnReturnedSetOnly()
     {
-        $integers = Set::integers()->naturalNumbers();
+        $integers = Set::integers()->naturalNumbers()->take(100);
         $even = $integers->filter(static function(int $int): bool {
             return $int % 2 === 0;
         });
@@ -57,7 +62,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testSizeAppliedOnReturnedSetOnly()
     {
-        $a = Set::integers()->naturalNumbers();
+        $a = Set::integers()->naturalNumbers()->take(100);
         $b = $a->take(50);
 
         $this->assertInstanceOf(Set::class, $b);
@@ -68,7 +73,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testValues()
     {
-        $a = Set::integers()->naturalNumbers();
+        $a = Set::integers()->naturalNumbers()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
@@ -80,7 +85,7 @@ class NaturalNumbersTest extends TestCase
 
     public function testShrinkable()
     {
-        $integers = Set::integers()->naturalNumbers();
+        $integers = Set::integers()->naturalNumbers()->take(100);
 
         foreach ($integers->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());

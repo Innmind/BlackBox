@@ -14,7 +14,7 @@ class UuidTest extends TestCase
 {
     public function testAny()
     {
-        $uuids = Set::uuid();
+        $uuids = Set::uuid()->take(100);
 
         $this->assertInstanceOf(Set::class, $uuids);
         $this->assertCount(100, \iterator_to_array($uuids->values(Random::mersenneTwister)));
@@ -31,7 +31,7 @@ class UuidTest extends TestCase
 
     public function testUuidsAreNotShrinkable()
     {
-        $uuids = Set::uuid();
+        $uuids = Set::uuid()->take(100);
 
         $min = static function($value, $type) use (&$min) {
             $shrunk = $value->shrink();

@@ -21,14 +21,18 @@ class RandomizeTest extends TestCase
 
     public function testGenerate100ValuesByDefault()
     {
-        $set = Set::of(new \stdClass, 42)->randomize();
+        $set = Set::of(new \stdClass, 42)
+            ->randomize()
+            ->take(100);
 
         $this->assertCount(100, $this->unwrap($set->values(Random::mersenneTwister)));
     }
 
     public function testTake()
     {
-        $set1 = Set::of(new \stdClass, 42)->randomize();
+        $set1 = Set::of(new \stdClass, 42)
+            ->randomize()
+            ->take(100);
         $set2 = $set1->take(50);
 
         $this->assertInstanceOf(Set::class, $set2);
@@ -39,7 +43,9 @@ class RandomizeTest extends TestCase
 
     public function testFilter()
     {
-        $set1 = Set::of('foo', 42)->randomize();
+        $set1 = Set::of('foo', 42)
+            ->randomize()
+            ->take(100);
         $set2 = $set1->filter(static fn($v) => \is_int($v));
 
         $this->assertInstanceOf(Set::class, $set2);
@@ -59,7 +65,9 @@ class RandomizeTest extends TestCase
     public function testAlwaysTakeTheFirstValueGeneratedByTheUnderlyingSet()
     {
         $expected = new \stdClass;
-        $set = Set::generator(static fn() => yield $expected)->randomize();
+        $set = Set::generator(static fn() => yield $expected)
+            ->randomize()
+            ->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertSame($expected, $value->unwrap());
@@ -72,7 +80,9 @@ class RandomizeTest extends TestCase
             if (\mt_rand(0, 1) === 1) {
                 yield \mt_rand();
             }
-        })->randomize();
+        })
+            ->randomize()
+            ->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

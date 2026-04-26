@@ -50,7 +50,8 @@ class CompositeTest extends TestCase
             ->set
             ->filter(static function(string $value): bool {
                 return $value[0] === 'e';
-            });
+            })
+            ->take(100);
 
         $this
             ->assert()
@@ -68,7 +69,7 @@ class CompositeTest extends TestCase
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->take(100)->values(Random::mersenneTwister));
 
         $this
             ->assert()
@@ -86,9 +87,9 @@ class CompositeTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($this->set->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($this->set->take(100)->values(Random::mersenneTwister)));
 
-        foreach ($this->set->values(Random::mersenneTwister) as $value) {
+        foreach ($this->set->take(100)->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
         }
     }
@@ -111,7 +112,7 @@ class CompositeTest extends TestCase
                 yield 'c';
                 yield 'd';
             }),
-        );
+        )->take(100);
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNotNull($value->shrink());
@@ -136,7 +137,7 @@ class CompositeTest extends TestCase
                 yield 'c';
                 yield 'd';
             }),
-        );
+        )->take(100);
 
         foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -155,7 +156,7 @@ class CompositeTest extends TestCase
             Set::integers(),
             Set::integers(),
             Set::integers(),
-        );
+        )->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $dichotomy = $value->shrink();
@@ -180,7 +181,7 @@ class CompositeTest extends TestCase
             },
             Set::strings()->between(0, 5),
             Set::strings()->between(0, 5),
-        );
+        )->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $a = $value;

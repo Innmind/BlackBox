@@ -12,7 +12,7 @@ class TypeTest extends TestCase
 {
     public function testAny()
     {
-        $types = Set::type();
+        $types = Set::type()->take(100);
 
         $this->assertCount(100, \iterator_to_array($types->values(Random::mersenneTwister)));
     }

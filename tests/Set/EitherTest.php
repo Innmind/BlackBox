@@ -23,26 +23,12 @@ class EitherTest extends TestCase
         );
     }
 
-    public function testTake100ValuesByDefault()
-    {
-        $either = Set::either(
-            Set::of(1),
-            Set::of(2),
-        );
-
-        $this->assertInstanceOf(\Generator::class, $either->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($either->values(Random::mersenneTwister)));
-        $values = \array_values(\array_unique($this->unwrap($either->values(Random::mersenneTwister))));
-        \sort($values);
-        $this->assertSame([1, 2], $values);
-    }
-
     public function testTake()
     {
         $either1 = Set::either(
             Set::of(1),
             Set::of(2),
-        );
+        )->take(100);
         $either2 = $either1->take(50);
 
         $this->assertNotSame($either1, $either2);
@@ -57,7 +43,7 @@ class EitherTest extends TestCase
             Set::of(1),
             Set::of(null),
             Set::of(2),
-        );
+        )->take(100);
 
         $either2 = $either->filter(static function(?int $value): bool {
             return $value === 1;
@@ -78,7 +64,7 @@ class EitherTest extends TestCase
             Set::of(1),
             Set::of(null),
             Set::of(2),
-        );
+        )->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
@@ -94,7 +80,7 @@ class EitherTest extends TestCase
                 }
             }),
             Set::of(2),
-        );
+        )->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
@@ -106,7 +92,7 @@ class EitherTest extends TestCase
         $set = Set::either(
             Set::of(1)->filter(static fn() => false),
             Set::of(2),
-        );
+        )->take(100);
 
         foreach ($set->values(Random::mersenneTwister) as $value) {
             $this->assertSame(2, $value->unwrap());
@@ -118,7 +104,7 @@ class EitherTest extends TestCase
         $set = Set::either(
             Set::of(1)->filter(static fn() => false),
             Set::of(2),
-        );
+        )->take(100);
 
         $this->assert()->throws(
             static fn() => $set

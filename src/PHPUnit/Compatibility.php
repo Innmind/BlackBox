@@ -96,7 +96,7 @@ final class Compatibility
     #[\NoDiscard]
     public function asDataProvider(): iterable
     {
-        $values = $this->given->set()->values(Random::default);
+        $values = $this->given->set()->take(100)->values(Random::default);
 
         foreach ($values as $value) {
             yield $value->unwrap();

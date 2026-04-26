@@ -18,7 +18,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
-        });
+        })->take(100);
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $b = $a->take(50);
@@ -36,9 +36,11 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 1000) as $i) {
                 yield $i;
             }
-        })->filter(static function(int $value): bool {
-            return $value > 50;
-        });
+        })
+            ->filter(static function(int $value): bool {
+                return $value > 50;
+            })
+            ->take(100);
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $b = $a->filter(static function(int $value): bool {
@@ -63,7 +65,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
-        });
+        })->take(100);
         $aValues = $this->unwrap($a->values(Random::mersenneTwister));
 
         $this->assertCount(11, $aValues);
@@ -75,7 +77,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 10) as $i) {
                 yield $i;
             }
-        });
+        })->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
         $this->assertSame(\range(0, 10), $this->unwrap($a->values(Random::mersenneTwister)));
@@ -91,7 +93,7 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
-        });
+        })->take(100);
 
         foreach ($generated->values(Random::mersenneTwister) as $value) {
             $this->assertNull($value->shrink());
@@ -104,7 +106,9 @@ class FromGeneratorTest extends TestCase
             foreach (\range(0, 100) as $i) {
                 yield $i;
             }
-        })->filter(static fn() => false);
+        })
+            ->take(100)
+            ->filter(static fn() => false);
 
         $this->assert()->throws(
             static fn() => $generated->values(Random::mersenneTwister)->current(),
