@@ -456,4 +456,18 @@ return static function($load, $prove) {
                 return $out;
             }),
         ));
+
+    yield $prove
+        ->proof('Set->disableShrinking()')
+        ->given($anySet)
+        ->test(static function($assert, $set) {
+            $set = $set
+                ->disableShrinking()
+                ->take(100);
+
+            foreach ($set->values(Random::default) as $value) {
+                $assert->null($value->shrink());
+            }
+        })
+        ->tag(Tag::ci, Tag::local);
 };

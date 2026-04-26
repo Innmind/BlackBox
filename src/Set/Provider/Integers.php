@@ -199,6 +199,17 @@ final class Integers implements Provider
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @return Set<int>
+     */
+    #[\NoDiscard]
+    public function disableShrinking(): Set
+    {
+        return $this->toSet()->disableShrinking();
+    }
+
+    /**
      * @throws EmptySet When no value can be generated
      *
      * @return iterable<int>

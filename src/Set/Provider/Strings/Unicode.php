@@ -60,6 +60,7 @@ final class Unicode implements Provider
                     'flatMap',
                     'randomize',
                     'nullable',
+                    'disableShrinking',
                     'enumerate',
                     'toSet',
                     'block',
@@ -3235,6 +3236,17 @@ final class Unicode implements Provider
     public function nullable(): Set
     {
         return $this->toSet()->nullable();
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<string>
+     */
+    #[\NoDiscard]
+    public function disableShrinking(): Set
+    {
+        return $this->toSet()->disableShrinking();
     }
 
     /**

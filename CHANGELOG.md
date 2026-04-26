@@ -5,6 +5,7 @@
 ### Added
 
 - `Innmind\BlackBox\Runner\Assert::debug()`
+- `Innmind\BlackBox\Set::disableShrinking()`
 
 ### Changed
 
