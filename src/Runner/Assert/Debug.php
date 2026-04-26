@@ -51,4 +51,19 @@ final class Debug
     {
         return $this->data;
     }
+
+    /**
+     * @return list<array{non-empty-string, mixed}>
+     */
+    public function parameters(): array
+    {
+        $all = [];
+
+        /** @var mixed $value */
+        foreach ($this->data as $name => $value) {
+            $all[] = [$name, $value];
+        }
+
+        return $all;
+    }
 }

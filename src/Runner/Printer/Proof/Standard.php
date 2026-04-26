@@ -8,7 +8,6 @@ use Innmind\BlackBox\Runner\{
     Assert\Failure\Truth,
     Assert\Failure\Property,
     Assert\Failure\Comparison,
-    Assert\Debug,
     IO,
     Printer\Proof,
 };
@@ -78,24 +77,10 @@ final class Standard implements Proof
         IO $output,
         IO $error,
         Failure $failure,
-        Debug $debug,
     ): void {
         $this->newLine($output);
         $output("F\n\n");
         $this->renderScenario($output, $failure);
-
-        if (!$debug->empty()) {
-            $output("\n");
-
-            /** @var mixed $variable */
-            foreach ($debug->all() as $name => $variable) {
-                $output(\sprintf(
-                    '$%s = %s',
-                    $name,
-                    $this->dump($variable),
-                ));
-            }
-        }
 
         $output("\n");
 

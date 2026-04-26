@@ -137,7 +137,11 @@ final class Compatibility
             [$failure, $scenario] = $failures->dequeue();
 
             if ($failure instanceof Assert\Failure && $this->blackbox) {
-                throw Scenario\Failure::of($failure, $scenario);
+                throw Scenario\Failure::of(
+                    $failure,
+                    $scenario,
+                    Assert\Debug::new(),
+                );
             }
 
             if ($failure instanceof \Throwable) {

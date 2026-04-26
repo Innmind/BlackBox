@@ -298,8 +298,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -335,8 +335,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -377,8 +377,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -420,8 +420,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -466,8 +466,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -513,8 +513,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -557,8 +557,8 @@ return static function($load, $prove) {
                             new LowerBoundAtZero,
                             static fn() => $counter,
                         )),
+                        $debug,
                     ),
-                    $debug,
                 );
 
             $written = $io->toString();
@@ -598,8 +598,8 @@ return static function($load, $prove) {
                             Properties::of(new LowerBoundAtZero),
                             static fn() => $counter,
                         )),
+                        $debug,
                     ),
-                    $debug,
                 );
 
             $written = $io->toString();
@@ -691,8 +691,8 @@ return static function($load, $prove) {
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        $debug,
                     ),
-                    $debug,
                 );
 
             $written = $io->toString();

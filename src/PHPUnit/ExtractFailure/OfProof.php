@@ -9,7 +9,6 @@ use Innmind\BlackBox\{
     Runner\Proof\Scenario\Failure,
     Runner\IO,
     Runner\Assert\Failure\Property,
-    Runner\Assert\Debug,
     Set\Value,
 };
 
@@ -52,7 +51,6 @@ final class OfProof implements Proof
         IO $output,
         IO $error,
         Failure $failure,
-        Debug $debug,
     ): void {
         if (!($failure->assertion()->kind() instanceof Property)) {
             return;

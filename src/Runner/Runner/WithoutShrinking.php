@@ -34,7 +34,7 @@ final class WithoutShrinking
             $scenario->unwrap()($assert);
             $print->success($output, $error);
         } catch (Assert\Failure $e) {
-            throw Scenario\Failure::of($e, $scenario);
+            throw Scenario\Failure::of($e, $scenario, $debug);
         }
     }
 }

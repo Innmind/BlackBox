@@ -109,6 +109,7 @@ final class Runner
                                     'The proof did not make any assertion',
                                 )),
                                 $scenario,
+                                $debug,
                             );
                         }
                     } catch (Proof\Scenario\Failure $e) {
@@ -124,7 +125,6 @@ final class Runner
                             $this->output,
                             $this->error,
                             $e,
-                            $debug,
                         );
 
                         break;

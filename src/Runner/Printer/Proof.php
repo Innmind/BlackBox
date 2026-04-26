@@ -5,7 +5,6 @@ namespace Innmind\BlackBox\Runner\Printer;
 
 use Innmind\BlackBox\Runner\{
     Proof\Scenario\Failure,
-    Assert\Debug,
     IO,
 };
 
@@ -18,7 +17,6 @@ interface Proof
         IO $output,
         IO $error,
         Failure $failure,
-        Debug $debug,
     ): void;
     public function end(IO $output, IO $error): void;
 }

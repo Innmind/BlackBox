@@ -14,6 +14,7 @@ final class Failure extends \Exception
     private Assert\Failure $failure;
     /** @var Value<Scenario> */
     private Value $scenario;
+    private Assert\Debug $debug;
 
     /**
      * @param Value<Scenario> $scenario
@@ -21,9 +22,11 @@ final class Failure extends \Exception
     private function __construct(
         Assert\Failure $failure,
         Value $scenario,
+        Assert\Debug $debug,
     ) {
         $this->failure = $failure;
         $this->scenario = $scenario;
+        $this->debug = $debug;
     }
 
     /**
@@ -34,8 +37,9 @@ final class Failure extends \Exception
     public static function of(
         Assert\Failure $failure,
         Value $scenario,
+        Assert\Debug $debug,
     ): self {
-        return new self($failure, $scenario);
+        return new self($failure, $scenario, $debug);
     }
 
     /**
@@ -51,7 +55,10 @@ final class Failure extends \Exception
      */
     public function parameters(): array
     {
-        return $this->scenario->unwrap()->parameters();
+        return [
+            ...$this->scenario->unwrap()->parameters(),
+            ...$this->debug->parameters(),
+        ];
     }
 
     public function assertion(): Assert\Failure
