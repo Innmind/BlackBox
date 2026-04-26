@@ -24,6 +24,7 @@ final class Set
      */
     private function __construct(
         private Implementation $implementation,
+        private bool $disableShrinking,
     ) {
     }
 
@@ -45,6 +46,7 @@ final class Set
     {
         return new self(
             Set\Elements::implementation($first, ...$rest),
+            false,
         );
     }
 
@@ -101,6 +103,7 @@ final class Set
                     $rest,
                 ),
             ),
+            false,
         );
     }
 
@@ -154,6 +157,7 @@ final class Set
             Set\FromGenerator::implementation(
                 $factory,
             ),
+            false,
         );
     }
 
@@ -213,6 +217,7 @@ final class Set
                     $rest,
                 ),
             ),
+            false,
         );
     }
 
@@ -364,6 +369,7 @@ final class Set
                 $this->implementation,
                 Set\Elements::implementation(null),
             ),
+            $this->disableShrinking,
         );
     }
 
@@ -381,6 +387,7 @@ final class Set
     {
         return new self(
             Set\Randomize::implementation($this->implementation),
+            $this->disableShrinking,
         );
     }
 
@@ -399,6 +406,7 @@ final class Set
                 $this->implementation,
                 $size,
             ),
+            $this->disableShrinking,
         );
     }
 
@@ -417,6 +425,7 @@ final class Set
                 $this->implementation,
                 $predicate,
             ),
+            $this->disableShrinking,
         );
     }
 
@@ -451,6 +460,7 @@ final class Set
                 $map,
                 $this->implementation,
             ),
+            $this->disableShrinking,
         );
     }
 
@@ -475,6 +485,20 @@ final class Set
                 static fn($input) => Collapse::of($map($input))->implementation,
                 $this->implementation,
             ),
+            $this->disableShrinking,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @return Set<T>
+     */
+    public function disableShrinking(): self
+    {
+        return new self(
+            $this->implementation,
+            true,
         );
     }
 
@@ -520,6 +544,10 @@ final class Set
         $empty = true;
 
         foreach ($values as $value) {
+            if ($this->disableShrinking) {
+                $value = $value->withoutShrinking();
+            }
+
             yield $value;
             $empty = false;
         }
@@ -539,6 +567,6 @@ final class Set
      */
     private static function build(Implementation $implementation): self
     {
-        return new self($implementation);
+        return new self($implementation, false);
     }
 }
