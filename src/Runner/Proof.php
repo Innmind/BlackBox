@@ -166,6 +166,8 @@ final class Proof
     }
 
     /**
+     * @internal
+     *
      * @param int<1, max> $count
      *
      * @return Set<Scenario>
