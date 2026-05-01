@@ -103,11 +103,9 @@ final class Compatibility
      */
     public function then(callable $test): void
     {
-        $io = Collect::new();
         $failures = $this
             ->app
-            ->displayOutputVia($io)
-            ->displayErrorVia($io)
+            ->displayVia(Collect::new())
             ->allowProofsToNotMakeAnyAssertions() // because it doesn't use the same assert object
             ->failures(function() use ($test) {
                 yield Proof::of(

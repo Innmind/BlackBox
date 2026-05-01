@@ -22,7 +22,6 @@ final class Runner
         private Random $random,
         private Printer $print,
         private IO $output,
-        private IO $error,
         private Strategy $run,
         private \Generator $proofs,
         private int $scenariiPerProof,
@@ -44,7 +43,7 @@ final class Runner
         }
 
         $coverage = $codeCoverage?->build();
-        $this->print->start($this->output, $this->error);
+        $this->print->start($this->output);
         $coverage?->loadProof();
 
         while ($this->proofs->valid()) {
@@ -55,7 +54,6 @@ final class Runner
             $stats->incrementProofs();
             $print = $this->print->proof(
                 $this->output,
-                $this->error,
                 $proof->name(),
                 $proof->tags(),
             );
@@ -77,7 +75,6 @@ final class Runner
                         ($this->run)(
                             $print,
                             $this->output,
-                            $this->error,
                             $assert,
                             $scenario,
                             $debug,
@@ -103,7 +100,6 @@ final class Runner
                         $stats->incrementFailures();
                         $print->failed(
                             $this->output,
-                            $this->error,
                             $e,
                         );
 
@@ -113,12 +109,12 @@ final class Runner
                     }
                 }
             } catch (EmptySet $e) {
-                $print->emptySet($this->output, $this->error);
+                $print->emptySet($this->output);
 
                 break;
             }
 
-            $print->end($this->output, $this->error);
+            $print->end($this->output);
             $coverage?->stop();
 
             if ($this->stopOnFailure && !$stats->successful()) {
@@ -129,7 +125,7 @@ final class Runner
             $this->proofs->next();
         }
 
-        $this->print->end($this->output, $this->error, $stats);
+        $this->print->end($this->output, $stats);
         $coverage?->dump();
     }
 
@@ -141,7 +137,6 @@ final class Runner
         Random $random,
         Printer $print,
         IO $output,
-        IO $error,
         Strategy $run,
         \Generator $proofs,
         int $scenariiPerProof,
@@ -153,7 +148,6 @@ final class Runner
             $random,
             $print,
             $output,
-            $error,
             $run,
             $proofs,
             $scenariiPerProof,

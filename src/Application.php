@@ -28,7 +28,6 @@ final class Application
         private Random $random,
         private Printer $printer,
         private IO $output,
-        private IO $error,
         private Strategy $runner,
         private \Closure $parseTag,
         private ?CodeCoverage $codeCoverage,
@@ -52,7 +51,6 @@ final class Application
             Random::default,
             Printer::new(),
             IO\Standard::output,
-            IO\Standard::error,
             Strategy::keepErrorType,
             Tag::of(...),
             null,
@@ -76,7 +74,6 @@ final class Application
             $random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -103,7 +100,6 @@ final class Application
             $this->random,
             $map($this->printer),
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -121,37 +117,12 @@ final class Application
      * @psalm-mutation-free
      */
     #[\NoDiscard]
-    public function displayOutputVia(IO $output): self
+    public function displayVia(IO $output): self
     {
         return new self(
             $this->random,
             $this->printer,
             $output,
-            $this->error,
-            $this->runner,
-            $this->parseTag,
-            $this->codeCoverage,
-            $this->args,
-            $this->scenariiPerProof,
-            $this->disableMemoryLimit,
-            $this->stopOnFailure,
-            $this->failWhenNoAssertions,
-            $this->tags,
-            $this->mapProof,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\NoDiscard]
-    public function displayErrorVia(IO $error): self
-    {
-        return new self(
-            $this->random,
-            $this->printer,
-            $this->output,
-            $error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -177,7 +148,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -203,7 +173,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             Strategy::exhaustive,
             $this->parseTag,
             $this->codeCoverage,
@@ -231,7 +200,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             static fn(string $name) => $parser($name) ?? $previous($name),
             $this->codeCoverage,
@@ -257,7 +225,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -281,7 +248,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $codeCoverage,
@@ -305,7 +271,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -329,7 +294,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -353,7 +317,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -378,7 +341,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -406,7 +368,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $this->parseTag,
             $this->codeCoverage,
@@ -492,7 +453,6 @@ final class Application
             $this->random,
             $this->printer,
             $this->output,
-            $this->error,
             $this->runner,
             $proofs,
             $this->scenariiPerProof,

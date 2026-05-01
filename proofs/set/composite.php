@@ -16,8 +16,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove

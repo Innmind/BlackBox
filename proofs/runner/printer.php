@@ -31,7 +31,7 @@ return static function($prove) {
                 $printer = Printer::new();
                 $io = Collect::new();
 
-                $printer->start($io, $io);
+                $printer->start($io);
 
                 $assert->same(["BlackBox\n"], $io->written());
             },
@@ -62,8 +62,8 @@ return static function($prove) {
                 $stats->incrementAssertions();
             }
 
-            $printer->start($io, $io);
-            $printer->end($io, $io, $stats);
+            $printer->start($io);
+            $printer->end($io, $stats);
 
             $written = $io->written();
             $assert->count(4, $written);
@@ -113,8 +113,8 @@ return static function($prove) {
                 $stats->incrementFailures();
             }
 
-            $printer->start($io, $io);
-            $printer->end($io, $io, $stats);
+            $printer->start($io);
+            $printer->end($io, $stats);
 
             $written = $io->written();
             $assert->count(4, $written);
@@ -145,7 +145,7 @@ return static function($prove) {
             $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
-            $_ = $printer->proof($io, $io, Name::of($name), $tags);
+            $_ = $printer->proof($io, Name::of($name), $tags);
 
             $written = $io->toString();
 
@@ -171,7 +171,7 @@ return static function($prove) {
             $printer = Printer::new();
             $io = Collect::new();
 
-            $_ = $printer->proof($io, $io, Name::of($name), $tags);
+            $_ = $printer->proof($io, Name::of($name), $tags);
 
             $written = $io->toString();
 
@@ -199,8 +199,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), $tags)
-                ->emptySet($io, $io);
+                ->proof($io, Name::of($name), $tags)
+                ->emptySet($io);
 
             $written = $io->written();
 
@@ -221,8 +221,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), $tags)
-                ->emptySet($io, $io);
+                ->proof($io, Name::of($name), $tags)
+                ->emptySet($io);
 
             $written = \implode('', $io->written());
 
@@ -243,8 +243,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), $tags)
-                ->success($io, $io);
+                ->proof($io, Name::of($name), $tags)
+                ->success($io);
 
             $written = $io->written();
 
@@ -265,8 +265,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), $tags)
-                ->shrunk($io, $io);
+                ->proof($io, Name::of($name), $tags)
+                ->shrunk($io);
 
             $written = $io->written();
 
@@ -288,9 +288,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($truth)),
@@ -325,9 +324,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($truth)),
@@ -364,9 +362,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Property::of(
@@ -407,9 +404,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Property::of(
@@ -452,9 +448,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Comparison::of(
@@ -499,9 +494,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Comparison::of(
@@ -547,9 +541,8 @@ return static function($prove) {
             $debug->add('systemUnderTest', $counter);
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
@@ -594,9 +587,8 @@ return static function($prove) {
             $debug->add('systemUnderTest', $counter);
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
@@ -638,8 +630,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), $tags)
-                ->end($io, $io);
+                ->proof($io, Name::of($name), $tags)
+                ->end($io);
 
             $written = $io->written();
 
@@ -660,8 +652,8 @@ return static function($prove) {
             $io = Collect::new();
 
             $printer
-                ->proof($io, $io, Name::of($name), $tags)
-                ->end($io, $io);
+                ->proof($io, Name::of($name), $tags)
+                ->end($io);
 
             $written = \implode('', $io->written());
 
@@ -689,9 +681,8 @@ return static function($prove) {
             $debug->add($debugName, $debugVariable);
 
             $printer
-                ->proof($io, $io, Name::of($name), [])
+                ->proof($io, Name::of($name), [])
                 ->failed(
-                    $io,
                     $io,
                     Failure::of(
                         Assert\Failure::of(Comparison::of(
