@@ -7,6 +7,7 @@
 - `Innmind\BlackBox\Runner\Assert::debug()`
 - `Innmind\BlackBox\Set::disableShrinking()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
+- `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 
 ### Changed
 
