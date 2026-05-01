@@ -28,7 +28,6 @@ return static function($prove) {
                                     static fn($value) => \str_contains($value, 'a'),
                                 ),
                                 Set::integers(),
-                                Set::integers(),
                             ))
                             ->test(static function($assert, $composite) {
                                 $assert->string($composite[1])->not()->contains('a');
