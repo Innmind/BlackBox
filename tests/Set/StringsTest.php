@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Collapse,
     Set,
     Set\Value,
     Random,
@@ -191,7 +190,7 @@ class StringsTest extends TestCase
             ->take(100);
         $allowed = \range('a', 'z');
 
-        foreach (Collapse::of($set)->values(Random::mersenneTwister) as $value) {
+        foreach ($set->toSet()->values(Random::mersenneTwister) as $value) {
             if (\strlen($value->unwrap()) === 0) {
                 continue;
             }
@@ -211,7 +210,7 @@ class StringsTest extends TestCase
             ->take(100);
         $allowed = [...\range('a', 'z'), ...\range('A', 'Z')];
 
-        foreach (Collapse::of($set)->values(Random::mersenneTwister) as $value) {
+        foreach ($set->toSet()->values(Random::mersenneTwister) as $value) {
             if (\strlen($value->unwrap()) === 0) {
                 continue;
             }
@@ -288,7 +287,7 @@ class StringsTest extends TestCase
             ->take(100);
         $set2 = $set->take(50);
 
-        $this->assertCount(100, \iterator_to_array(Collapse::of($set)->values(Random::mersenneTwister)));
-        $this->assertCount(50, \iterator_to_array(Collapse::of($set2)->values(Random::mersenneTwister)));
+        $this->assertCount(100, \iterator_to_array($set->toSet()->values(Random::mersenneTwister)));
+        $this->assertCount(50, \iterator_to_array($set2->toSet()->values(Random::mersenneTwister)));
     }
 }

@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\PHPUnit;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
-    Set\Collapse,
     Application,
     Runner\Given,
     PHPUnit\Framework\TestCase,
@@ -32,7 +31,9 @@ trait BlackBox
             $app = $app->disableShrinking();
         }
 
-        $given = Collapse::of($first)->map(static fn(mixed $value) => [$value]);
+        $given = $first
+            ->toSet()
+            ->map(static fn(mixed $value) => [$value]);
 
         if (\count($rest) > 0) {
             $given = Set::compose(
