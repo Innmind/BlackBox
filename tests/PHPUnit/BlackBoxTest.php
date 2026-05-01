@@ -9,7 +9,6 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\Attributes\DataProvider,
     Set,
 };
-use PHPUnit\Framework\Attributes\DataProvider as PHPUnitDataProvider;
 
 class BlackBoxTest extends TestCase
 {
@@ -26,7 +25,6 @@ class BlackBoxTest extends TestCase
     }
 
     #[DataProvider('ints2')]
-    #[PHPUnitDataProvider('ints2')]
     public function testMultipleDataProviders($a, $b)
     {
         $this->assertIsInt($a);
