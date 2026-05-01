@@ -50,6 +50,7 @@ final class Proof
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @param \Closure(Assert, ...mixed): void $test
@@ -73,6 +74,7 @@ final class Proof
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @param \Closure(Assert): void $test
