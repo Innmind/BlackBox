@@ -13,19 +13,6 @@ use Innmind\BlackBox\{
 
 final class Proof
 {
-    private Name $name;
-    private Given $values;
-    /** @var \Closure(Assert, ...mixed): void */
-    private \Closure $test;
-    /** @var list<\UnitEnum> */
-    private array $tags;
-    /** @var ?int<1, max> */
-    private ?int $scenarii;
-    private ?string $extraName;
-    /** @var ?\Closure(): list<string> */
-    private ?\Closure $nameParameters;
-    private bool $disableShrinking;
-
     /**
      * @psalm-mutation-free
      *
@@ -35,23 +22,15 @@ final class Proof
      * @param ?\Closure(): list<string> $nameParameters
      */
     private function __construct(
-        Name $name,
-        Given $values,
-        \Closure $test,
-        array $tags,
-        ?int $scenarii,
-        ?string $extraName,
-        ?\Closure $nameParameters,
-        bool $disableShrinking,
+        private Name $name,
+        private Given $values,
+        private \Closure $test,
+        private array $tags,
+        private ?int $scenarii,
+        private ?string $extraName,
+        private ?\Closure $nameParameters,
+        private bool $disableShrinking,
     ) {
-        $this->name = $name;
-        $this->values = $values;
-        $this->test = $test;
-        $this->tags = $tags;
-        $this->scenarii = $scenarii;
-        $this->extraName = $extraName;
-        $this->nameParameters = $nameParameters;
-        $this->disableShrinking = $disableShrinking;
     }
 
     /**

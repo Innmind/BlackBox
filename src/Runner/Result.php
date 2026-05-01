@@ -5,16 +5,8 @@ namespace Innmind\BlackBox\Runner;
 
 final class Result
 {
-    private bool $successful;
-    private int $exit;
-
-    private function __construct(bool $successful)
+    private function __construct(private bool $successful)
     {
-        $this->successful = $successful;
-        $this->exit = match ($successful) {
-            true => 0,
-            false => 1,
-        };
     }
 
     /**
@@ -33,6 +25,9 @@ final class Result
 
     public function exit(): never
     {
-        exit($this->exit);
+        exit(match ($this->successful) {
+            true => 0,
+            false => 1,
+        });
     }
 }

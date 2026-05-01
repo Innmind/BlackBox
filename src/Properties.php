@@ -10,18 +10,12 @@ use Innmind\BlackBox\Runner\Assert;
  */
 final class Properties
 {
-    /** @var list<Property<T>> */
-    private array $properties;
-
     /**
-     * @no-named-arguments
-     *
-     * @param Property<T> $first
-     * @param Property<T> $properties
+     * @param list<Property<T>> $properties
      */
-    private function __construct(Property $first, Property ...$properties)
-    {
-        $this->properties = [$first, ...$properties];
+    private function __construct(
+        private array $properties,
+    ) {
     }
 
     /**
@@ -36,7 +30,7 @@ final class Properties
      */
     public static function of(Property $first, Property ...$properties): self
     {
-        return new self($first, ...$properties);
+        return new self([$first, ...$properties]);
     }
 
     /**

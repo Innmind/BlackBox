@@ -13,11 +13,8 @@ use PHPUnit\Event\Test\{
  */
 final class EraseCurrentTest implements FinishedSubscriber
 {
-    private CurrentTest $currentTest;
-
-    public function __construct(CurrentTest $currentTest)
+    public function __construct(private CurrentTest $currentTest)
     {
-        $this->currentTest = $currentTest;
     }
 
     #[\Override]

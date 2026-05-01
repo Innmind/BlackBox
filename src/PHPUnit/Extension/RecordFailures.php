@@ -14,15 +14,11 @@ use PHPUnit\Event\{
  */
 final class RecordFailures implements FailedSubscriber
 {
-    /** @var \SplQueue<TestMethod> */
-    private \SplQueue $tests;
-
     /**
      * @param \SplQueue<TestMethod> $tests
      */
-    public function __construct(\SplQueue $tests)
+    public function __construct(private \SplQueue $tests)
     {
-        $this->tests = $tests;
     }
 
     #[\Override]

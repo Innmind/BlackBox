@@ -8,15 +8,11 @@ namespace Innmind\BlackBox\Runner;
  */
 final class Filter
 {
-    /** @var list<\UnitEnum> */
-    private array $tags;
-
     /**
      * @param list<\UnitEnum> $tags
      */
-    private function __construct(array $tags)
+    private function __construct(private array $tags)
     {
-        $this->tags = $tags;
     }
 
     /**

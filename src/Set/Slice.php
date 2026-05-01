@@ -14,13 +14,6 @@ use Innmind\BlackBox\{
  */
 final class Slice implements Provider
 {
-    /** @var int<0, max> */
-    private int $min;
-    /** @var int<0, max> */
-    private int $max;
-    /** @var int<0, max> */
-    private int $atLeast;
-
     /**
      * @psalm-mutation-free
      *
@@ -28,11 +21,11 @@ final class Slice implements Provider
      * @param int<0, max> $max
      * @param int<0, max> $atLeast
      */
-    private function __construct(int $min, int $max, int $atLeast)
-    {
-        $this->min = $min;
-        $this->max = $max;
-        $this->atLeast = $atLeast;
+    private function __construct(
+        private int $min,
+        private int $max,
+        private int $atLeast,
+    ) {
     }
 
     /**

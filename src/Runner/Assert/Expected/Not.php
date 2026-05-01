@@ -11,13 +11,10 @@ use Innmind\BlackBox\Runner\{
 
 final class Not
 {
-    private Stats $stats;
-    private mixed $value;
-
-    private function __construct(Stats $stats, mixed $value)
-    {
-        $this->stats = $stats;
-        $this->value = $value;
+    private function __construct(
+        private Stats $stats,
+        private mixed $value,
+    ) {
     }
 
     /**

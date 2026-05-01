@@ -15,15 +15,11 @@ use Innmind\BlackBox\{
 
 final class Compatibility
 {
-    private Application $app;
-    private Given $given;
-    private bool $blackbox;
-
-    private function __construct(Application $app, Given $given, bool $blackbox)
-    {
-        $this->app = $app;
-        $this->given = $given;
-        $this->blackbox = $blackbox;
+    private function __construct(
+        private Application $app,
+        private Given $given,
+        private bool $blackbox,
+    ) {
     }
 
     /**

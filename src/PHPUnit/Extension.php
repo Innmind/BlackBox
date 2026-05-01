@@ -17,9 +17,7 @@ use PHPUnit\Runner\Extension\{
     ParameterCollection,
 };
 use PHPUnit\TextUI\Configuration\Configuration;
-use PHPUnit\Event\{
-    Code\TestMethod,
-};
+use PHPUnit\Event\Code\TestMethod;
 
 final class Extension implements ExtensionInterface
 {

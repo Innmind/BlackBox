@@ -13,15 +13,11 @@ use Innmind\BlackBox\{
  */
 final class Given
 {
-    /** @var Set<list<mixed>> */
-    private Set $args;
-
     /**
      * @param Set<list<mixed>> $args
      */
-    private function __construct(Set $args)
+    private function __construct(private Set $args)
     {
-        $this->args = $args;
     }
 
     /**

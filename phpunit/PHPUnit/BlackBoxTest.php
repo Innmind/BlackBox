@@ -7,9 +7,9 @@ use Innmind\BlackBox\{
     PHPUnit\BlackBox,
     Set,
 };
-use PHPUnit\{
-    Framework\TestCase,
-    Framework\Attributes\DataProvider,
+use PHPUnit\Framework\{
+    TestCase,
+    Attributes\DataProvider,
 };
 
 class BlackBoxTest extends TestCase

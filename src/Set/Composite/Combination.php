@@ -10,15 +10,11 @@ use Innmind\BlackBox\Set\Value;
  */
 final class Combination
 {
-    /** @var non-empty-list<Value<mixed>> */
-    private array $values;
-
     /**
      * @param non-empty-list<Value<mixed>> $values
      */
-    private function __construct(array $values)
+    private function __construct(private array $values)
     {
-        $this->values = $values;
     }
 
     /**

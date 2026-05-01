@@ -7,17 +7,13 @@ use Innmind\BlackBox\Runner\Stats;
 
 final class Resource
 {
-    private Stats $stats;
-    /** @var resource */
-    private $resource;
-
     /**
      * @param resource $resource
      */
-    private function __construct(Stats $stats, $resource)
-    {
-        $this->stats = $stats;
-        $this->resource = $resource;
+    private function __construct(
+        private Stats $stats,
+        private $resource,
+    ) {
     }
 
     /**

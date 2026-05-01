@@ -12,19 +12,15 @@ use Innmind\BlackBox\{
 
 final class Load
 {
-    private string $path;
-    /** @var callable(string): ?\UnitEnum */
-    private $parseTag;
-
     /**
      * @psalm-mutation-free
      *
-     * @param callable(string): ?\UnitEnum $parseTag
+     * @param \Closure(string): ?\UnitEnum $parseTag
      */
-    private function __construct(string $path, callable $parseTag)
-    {
-        $this->path = $path;
-        $this->parseTag = $parseTag;
+    private function __construct(
+        private string $path,
+        private \Closure $parseTag,
+    ) {
     }
 
     #[\NoDiscard]
@@ -105,9 +101,11 @@ final class Load
     #[\NoDiscard]
     public function parseTagWith(callable $parser): self
     {
+        $previous = $this->parseTag;
+
         return new self(
             $this->path,
-            fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
+            static fn(string $name) => $parser($name) ?? $previous($name),
         );
     }
 

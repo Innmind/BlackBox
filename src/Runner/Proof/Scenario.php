@@ -7,26 +7,16 @@ use Innmind\BlackBox\Runner\Assert;
 
 final class Scenario
 {
-    /** @var list<mixed> */
-    private array $args;
-    /** @var \Closure(Assert, ...mixed): void */
-    private \Closure $test;
-    /** @var ?\Closure(): list<string> */
-    private ?\Closure $nameParameters;
-
     /**
      * @param list<mixed> $args
      * @param \Closure(Assert, ...mixed): void $test
      * @param ?\Closure(): list<string> $nameParameters
      */
     private function __construct(
-        array $args,
-        \Closure $test,
-        ?\Closure $nameParameters,
+        private array $args,
+        private \Closure $test,
+        private ?\Closure $nameParameters,
     ) {
-        $this->args = $args;
-        $this->test = $test;
-        $this->nameParameters = $nameParameters;
     }
 
     public function __invoke(Assert $assert): void

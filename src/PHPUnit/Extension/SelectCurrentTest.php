@@ -14,11 +14,8 @@ use PHPUnit\Event\Test\{
  */
 final class SelectCurrentTest implements PreparedSubscriber
 {
-    private CurrentTest $currentTest;
-
-    public function __construct(CurrentTest $currentTest)
+    public function __construct(private CurrentTest $currentTest)
     {
-        $this->currentTest = $currentTest;
     }
 
     #[\Override]

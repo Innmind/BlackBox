@@ -5,11 +5,6 @@ namespace Innmind\BlackBox\Runner;
 
 final class CodeCoverage
 {
-    /** @var non-empty-list<non-empty-string> */
-    private array $directories;
-    /** @var ?non-empty-string */
-    private ?string $reportPath;
-
     /**
      * @psalm-mutation-free
      *
@@ -17,11 +12,9 @@ final class CodeCoverage
      * @param ?non-empty-string $reportPath
      */
     private function __construct(
-        array $directories,
-        ?string $reportPath,
+        private array $directories,
+        private ?string $reportPath,
     ) {
-        $this->directories = $directories;
-        $this->reportPath = $reportPath;
     }
 
     /**

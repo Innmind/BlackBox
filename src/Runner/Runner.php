@@ -15,45 +15,22 @@ use Innmind\BlackBox\{
  */
 final class Runner
 {
-    private Random $random;
-    private Printer $print;
-    private IO $output;
-    private IO $error;
-    private WithShrinking|WithoutShrinking $run;
-    /** @var \Generator<Proof> */
-    private \Generator $proofs;
-    /** @var int<1, max> */
-    private int $scenariiPerProof;
-    private bool $disableMemoryLimit;
-    private bool $stopOnFailure;
-    private bool $failWhenNoAssertions;
-
     /**
      * @param \Generator<Proof> $proofs
      * @param int<1, max> $scenariiPerProof
      */
     private function __construct(
-        Random $random,
-        Printer $print,
-        IO $output,
-        IO $error,
-        WithShrinking|WithoutShrinking $run,
-        \Generator $proofs,
-        int $scenariiPerProof,
-        bool $disableMemoryLimit,
-        bool $stopOnFailure,
-        bool $failWhenNoAssertions,
+        private Random $random,
+        private Printer $print,
+        private IO $output,
+        private IO $error,
+        private WithShrinking|WithoutShrinking $run,
+        private \Generator $proofs,
+        private int $scenariiPerProof,
+        private bool $disableMemoryLimit,
+        private bool $stopOnFailure,
+        private bool $failWhenNoAssertions,
     ) {
-        $this->random = $random;
-        $this->print = $print;
-        $this->output = $output;
-        $this->error = $error;
-        $this->run = $run;
-        $this->proofs = $proofs;
-        $this->scenariiPerProof = $scenariiPerProof;
-        $this->disableMemoryLimit = $disableMemoryLimit;
-        $this->stopOnFailure = $stopOnFailure;
-        $this->failWhenNoAssertions = $failWhenNoAssertions;
     }
 
     /**

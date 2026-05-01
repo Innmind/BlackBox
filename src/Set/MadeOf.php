@@ -13,17 +13,13 @@ use Innmind\BlackBox\{
  */
 final class MadeOf implements Provider
 {
-    /** @var Set<string>|Provider<string> */
-    private Set|Provider $chars;
-
     /**
      * @psalm-mutation-free
      *
      * @param Set<string>|Provider<string> $chars
      */
-    private function __construct(Set|Provider $chars)
+    private function __construct(private Set|Provider $chars)
     {
-        $this->chars = $chars;
     }
 
     /**
