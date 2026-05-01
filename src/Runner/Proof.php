@@ -24,6 +24,7 @@ final class Proof
     private ?string $extraName;
     /** @var ?\Closure(): list<string> */
     private ?\Closure $nameParameters;
+    private bool $disableShrinking;
 
     /**
      * @psalm-mutation-free
@@ -41,6 +42,7 @@ final class Proof
         ?int $scenarii,
         ?string $extraName,
         ?\Closure $nameParameters,
+        bool $disableShrinking,
     ) {
         $this->name = $name;
         $this->values = $values;
@@ -49,6 +51,7 @@ final class Proof
         $this->scenarii = $scenarii;
         $this->extraName = $extraName;
         $this->nameParameters = $nameParameters;
+        $this->disableShrinking = $disableShrinking;
     }
 
     /**
@@ -72,6 +75,7 @@ final class Proof
             null,
             null,
             $nameParameters,
+            false,
         );
     }
 
@@ -93,6 +97,7 @@ final class Proof
             1,
             null,
             static fn() => [],
+            false,
         );
     }
 
@@ -184,6 +189,7 @@ final class Proof
             $this->scenarii,
             $name,
             $this->nameParameters,
+            $this->disableShrinking,
         );
     }
 
@@ -202,6 +208,7 @@ final class Proof
             $this->scenarii,
             $this->extraName,
             $this->nameParameters,
+            $this->disableShrinking,
         );
     }
 
@@ -219,6 +226,7 @@ final class Proof
             $take,
             $this->extraName,
             $this->nameParameters,
+            $this->disableShrinking,
         );
     }
 
@@ -228,6 +236,26 @@ final class Proof
     public function tags(): array
     {
         return $this->tags;
+    }
+
+    public function tagged(\UnitEnum $tag): bool
+    {
+        return \in_array($tag, $this->tags, true);
+    }
+
+    #[\NoDiscard]
+    public function disableShrinking(): self
+    {
+        return new self(
+            $this->name,
+            $this->values,
+            $this->test,
+            $this->tags,
+            $this->scenarii,
+            $this->extraName,
+            $this->nameParameters,
+            true,
+        );
     }
 
     /**
@@ -242,6 +270,10 @@ final class Proof
         return $this
             ->values
             ->set()
+            ->via(fn($set) => match ($this->disableShrinking) {
+                true => $set->disableShrinking(),
+                false => $set,
+            })
             ->randomize()
             ->map(fn(array $args) => Scenario::of(
                 $args,

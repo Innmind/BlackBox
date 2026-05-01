@@ -35,12 +35,15 @@ final class Application
     private bool $failWhenNoAssertions;
     /** @var ?list<\UnitEnum> */
     private ?array $tags;
+    /** @var \Closure(Proof): Proof */
+    private \Closure $mapProof;
 
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
      * @param list<string> $args
      * @param int<1, max> $scenariiPerProof
      * @param ?list<\UnitEnum> $tags
+     * @param \Closure(Proof): Proof $mapProof
      */
     private function __construct(
         Random $random,
@@ -56,6 +59,7 @@ final class Application
         bool $stopOnFailure,
         bool $failWhenNoAssertions,
         ?array $tags,
+        \Closure $mapProof,
     ) {
         $this->random = $random;
         $this->printer = $printer;
@@ -70,6 +74,7 @@ final class Application
         $this->stopOnFailure = $stopOnFailure;
         $this->failWhenNoAssertions = $failWhenNoAssertions;
         $this->tags = $tags;
+        $this->mapProof = $mapProof;
     }
 
     /**
@@ -92,6 +97,7 @@ final class Application
             false,
             true,
             null,
+            static fn(Proof $proof) => $proof,
         );
     }
 
@@ -115,6 +121,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -138,6 +145,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -161,6 +169,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -184,6 +193,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -207,6 +217,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -232,6 +243,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -257,6 +269,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -282,6 +295,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -305,6 +319,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -328,6 +343,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -351,6 +367,7 @@ final class Application
             true,
             $this->failWhenNoAssertions,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -374,6 +391,7 @@ final class Application
             $this->stopOnFailure,
             false,
             $this->tags,
+            $this->mapProof,
         );
     }
 
@@ -398,6 +416,35 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $tags,
+            $this->mapProof,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param callable(Proof): Proof $map
+     */
+    #[\NoDiscard]
+    public function mapProof(callable $map): self
+    {
+        $previous = $this->mapProof;
+
+        return new self(
+            $this->random,
+            $this->printer,
+            $this->output,
+            $this->error,
+            $this->runner,
+            $this->parseTag,
+            $this->codeCoverage,
+            $this->args,
+            $this->scenariiPerProof,
+            $this->disableMemoryLimit,
+            $this->stopOnFailure,
+            $this->failWhenNoAssertions,
+            $this->tags,
+            static fn($proof) => $map($previous($proof)),
         );
     }
 
@@ -460,6 +507,14 @@ final class Application
         }
 
         $filter = Filter::new()->onTags(...$tags);
+        $proofs = $filter($proofs(Prove::new()));
+
+        $map = $this->mapProof;
+        $proofs = (static function() use ($proofs, $map) {
+            foreach ($proofs as $proof) {
+                yield $map($proof);
+            }
+        })();
 
         $run = Runner::of(
             $this->random,
@@ -467,7 +522,7 @@ final class Application
             $this->output,
             $this->error,
             $this->runner,
-            $filter($proofs(Prove::new())),
+            $proofs,
             $this->scenariiPerProof,
             $this->disableMemoryLimit,
             $this->stopOnFailure,
