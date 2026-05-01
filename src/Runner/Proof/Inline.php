@@ -170,7 +170,7 @@ final class Inline implements Proof
             ->values
             ->set()
             ->randomize()
-            ->map(fn(array $args) => Scenario\Inline::of(
+            ->map(fn(array $args) => Scenario::of(
                 $args,
                 $this->test,
                 $this->nameParameters,

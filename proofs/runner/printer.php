@@ -294,7 +294,7 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($truth)),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
@@ -331,7 +331,7 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($truth)),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
@@ -373,7 +373,7 @@ return static function($load, $prove) {
                             $property,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
@@ -416,7 +416,7 @@ return static function($load, $prove) {
                             $property,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
@@ -462,7 +462,7 @@ return static function($load, $prove) {
                             $actual,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
@@ -509,7 +509,7 @@ return static function($load, $prove) {
                             $actual,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
@@ -553,7 +553,7 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [
                                 new LowerBoundAtZero,
                                 static fn() => $counter,
@@ -600,7 +600,7 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [
                                 Properties::of(new LowerBoundAtZero),
                                 static fn() => $counter,
@@ -699,7 +699,7 @@ return static function($load, $prove) {
                             $actual,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),

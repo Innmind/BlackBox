@@ -5,15 +5,78 @@ namespace Innmind\BlackBox\Runner\Proof;
 
 use Innmind\BlackBox\Runner\Assert;
 
-/**
- * @internal
- */
-interface Scenario
+final class Scenario
 {
-    public function __invoke(Assert $assert): void;
+    /** @var list<mixed> */
+    private array $args;
+    /** @var \Closure(Assert, ...mixed): void */
+    private \Closure $test;
+    /** @var ?\Closure(): list<string> */
+    private ?\Closure $nameParameters;
+
+    /**
+     * @param list<mixed> $args
+     * @param \Closure(Assert, ...mixed): void $test
+     * @param ?\Closure(): list<string> $nameParameters
+     */
+    private function __construct(
+        array $args,
+        \Closure $test,
+        ?\Closure $nameParameters,
+    ) {
+        $this->args = $args;
+        $this->test = $test;
+        $this->nameParameters = $nameParameters;
+    }
+
+    public function __invoke(Assert $assert): void
+    {
+        ($this->test)($assert, ...$this->args);
+    }
+
+    /**
+     * @internal
+     *
+     * @param list<mixed> $args
+     * @param \Closure(Assert, ...mixed): void $test
+     * @param ?\Closure(): list<string> $nameParameters
+     */
+    public static function of(
+        array $args,
+        \Closure $test,
+        ?\Closure $nameParameters = null,
+    ): self {
+        return new self($args, $test, $nameParameters);
+    }
 
     /**
      * @return list<array{string, mixed}>
      */
-    public function parameters(): array;
+    public function parameters(): array
+    {
+        if (\is_null($this->nameParameters)) {
+            $reflection = new \ReflectionFunction($this->test);
+            $parameters = $reflection->getParameters();
+            \array_shift($parameters); // to remove the Assert parameter
+
+            $parameters = \array_map(
+                static fn($parameter) => $parameter->getName(),
+                $parameters,
+            );
+        } else {
+            $parameters = ($this->nameParameters)();
+        }
+
+        $args = [];
+
+        /** @var mixed $arg */
+        foreach ($this->args as $index => $arg) {
+            $args[] = [
+                $parameters[$index] ?? 'undefined',
+                $arg,
+            ];
+        }
+
+        return $args;
+    }
 }
