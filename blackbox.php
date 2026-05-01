@@ -21,9 +21,7 @@ Application::new($argv)
                     __DIR__.'/proofs/',
                     __DIR__.'/fixtures/',
                     __DIR__.'/tests/',
-                )
-                    ->dumpTo('coverage.clover')
-                    ->enableWhen(true),
+                )->dumpTo('coverage.clover'),
             ),
         'extensive' => $app->scenariiPerProof(1000),
         'lab_station' => $app->filterOnTags(Tag::local),
