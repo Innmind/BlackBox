@@ -220,6 +220,7 @@ final class Proof
     /**
      * @param int<1, max> $take
      */
+    #[\NoDiscard]
     public function take(int $take): self
     {
         return new self(
