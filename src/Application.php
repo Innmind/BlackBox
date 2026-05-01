@@ -224,13 +224,15 @@ final class Application
     #[\NoDiscard]
     public function parseTagWith(callable $parser): self
     {
+        $previous = $this->parseTag;
+
         return new self(
             $this->random,
             $this->printer,
             $this->output,
             $this->error,
             $this->runner,
-            fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
+            static fn(string $name) => $parser($name) ?? $previous($name),
             $this->codeCoverage,
             $this->args,
             $this->scenariiPerProof,

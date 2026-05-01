@@ -101,9 +101,11 @@ final class Load
     #[\NoDiscard]
     public function parseTagWith(callable $parser): self
     {
+        $previous = $this->parseTag;
+
         return new self(
             $this->path,
-            fn(string $name) => $parser($name) ?? ($this->parseTag)($name),
+            static fn(string $name) => $parser($name) ?? $previous($name),
         );
     }
 
