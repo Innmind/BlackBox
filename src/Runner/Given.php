@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Runner;
 use Innmind\BlackBox\{
     Set,
     Set\Provider,
-    Set\Collapse,
 };
 
 /**
@@ -32,7 +31,7 @@ final class Given
      */
     public static function of(Set|Provider $args): self
     {
-        return new self(Collapse::of($args));
+        return new self($args->toSet());
     }
 
     /**
