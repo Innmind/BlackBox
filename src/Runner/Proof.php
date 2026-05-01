@@ -90,7 +90,7 @@ final class Proof
             [],
             1,
             null,
-            null,
+            static fn() => [],
         );
     }
 
