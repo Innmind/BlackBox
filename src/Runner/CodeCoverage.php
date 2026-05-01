@@ -7,7 +7,6 @@ final class CodeCoverage
 {
     /** @var non-empty-list<non-empty-string> */
     private array $directories;
-    private bool $enabled;
     /** @var ?non-empty-string */
     private ?string $reportPath;
 
@@ -19,11 +18,9 @@ final class CodeCoverage
      */
     private function __construct(
         array $directories,
-        bool $enabled,
         ?string $reportPath,
     ) {
         $this->directories = $directories;
-        $this->enabled = $enabled;
         $this->reportPath = $reportPath;
     }
 
@@ -37,7 +34,7 @@ final class CodeCoverage
     #[\NoDiscard]
     public static function of(string $directory, string ...$directories): self
     {
-        return new self([$directory, ...$directories], false, null);
+        return new self([$directory, ...$directories], null);
     }
 
     /**
@@ -48,16 +45,7 @@ final class CodeCoverage
     #[\NoDiscard]
     public function dumpTo(string $path): self
     {
-        return new self($this->directories, $this->enabled, $path);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\NoDiscard]
-    public function enableWhen(bool $enabled): self
-    {
-        return new self($this->directories, $enabled, $this->reportPath);
+        return new self($this->directories, $path);
     }
 
     /**
@@ -65,10 +53,6 @@ final class CodeCoverage
      */
     public function build(): ?CodeCoverage\Report
     {
-        if (!$this->enabled) {
-            return null;
-        }
-
         if (\is_null($this->reportPath)) {
             return null;
         }

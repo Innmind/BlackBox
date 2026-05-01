@@ -81,6 +81,7 @@
 - `Innmind\BlackBox\Set::call()`
 - `Innmind\BlackBox\Set\Provider\Composite`
 - `Innmind\BlackBox\Set\Provider\Generator`
+- `Innmind\BlackBox\Runner\CodeCoverage::enableWhen()`
 
 ## 6.12.0 - 2026-04-11
 
