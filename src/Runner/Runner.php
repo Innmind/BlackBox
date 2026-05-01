@@ -6,7 +6,6 @@ namespace Innmind\BlackBox\Runner;
 use Innmind\BlackBox\{
     Random,
     Runner\Runner\WithShrinking,
-    Runner\Runner\WithoutShrinking,
     Exception\EmptySet,
 };
 
@@ -24,7 +23,7 @@ final class Runner
         private Printer $print,
         private IO $output,
         private IO $error,
-        private WithShrinking|WithoutShrinking $run,
+        private WithShrinking $run,
         private \Generator $proofs,
         private int $scenariiPerProof,
         private bool $disableMemoryLimit,
@@ -142,7 +141,7 @@ final class Runner
         Printer $print,
         IO $output,
         IO $error,
-        WithShrinking|WithoutShrinking $run,
+        WithShrinking $run,
         \Generator $proofs,
         int $scenariiPerProof,
         bool $disableMemoryLimit,
