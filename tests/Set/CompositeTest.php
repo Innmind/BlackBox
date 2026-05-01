@@ -8,9 +8,7 @@ use Innmind\BlackBox\{
     Set\Value,
     Random,
     PHPUnit\BlackBox,
-    Runner\Proof\Scenario\Failure,
 };
-use PHPUnit\Framework\Attributes\Group;
 
 class CompositeTest extends TestCase
 {
@@ -197,32 +195,23 @@ class CompositeTest extends TestCase
     /**
      * This test is here to help fix the problem described in the issue linked below
      *
-     * Do not run this test in the CI as it fails regularly when coverage is
-     * enabled. This is obviously not the correct solution but it will do until
-     * the shrinking mechanism is improved and better tested.
-     *
      * @see https://github.com/Innmind/BlackBox/issues/6
      */
-    #[Group('local')]
     public function testShrinksAsFastAsPossible()
     {
-        try {
-            $this
-                ->forAll(Set::integers()->below(0), Set::integers()->above(0))
-                ->filter(static fn($a, $b) => $a !== 0)
-                ->then(function($a, $b) {
-                    $this->assertGreaterThanOrEqual(
-                        0,
-                        $a + $b,
-                        "[$a,$b]",
-                    );
-                });
-            $this->fail('The assertion should fail');
-        } catch (Failure $e) {
-            $this->assertStringContainsString(
-                '[-1,0]',
-                $e->assertion()->kind()->message(),
-            );
+        $tuple = Set::compose(
+            static fn($a, $b) => [$a, $b],
+            Set::integers()->below(0),
+            Set::integers()->above(0),
+        )
+            ->filter(static fn($pair) => $pair[0] !== 0)
+            ->values(Random::default)
+            ->current();
+
+        while ($shrunk = $tuple->shrink()) {
+            $tuple = $shrunk->a();
         }
+
+        $this->assertSame([-1, 0], $tuple->unwrap());
     }
 }
