@@ -92,7 +92,7 @@ final class Proof
             static fn() => $parameters = \array_map(
                 static fn($parameter) => $parameter->getName(),
                 new \ReflectionFunction($test)->getParameters(),
-            ), // todo Proof->nameParameters() once the Scenario is no longer an interface
+            ),
         );
     }
 }
