@@ -4,7 +4,6 @@ declare(strict_types = 1);
 use Innmind\BlackBox\{
     Application,
     Runner\IO\Collect,
-    Runner\Printer,
     Set,
     Tag,
 };
@@ -19,7 +18,7 @@ return static function($prove) {
                 $result = Application::new([])
                     ->displayOutputVia($io)
                     ->displayErrorVia($io)
-                    ->mapPrinter(static fn() => Printer::withoutColors())
+                    ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove
                             ->proof('must not contain an "a"')

@@ -35,9 +35,14 @@ final class Printer
         return new self(true);
     }
 
-    public static function withoutColors(): self
+    public function withoutColors(): self
     {
-        return new self(false);
+        return new self(
+            false,
+            $this->timer,
+            $this->addMarks,
+            $this->addGroups,
+        );
     }
 
     public function disableGitHubOutput(): self
