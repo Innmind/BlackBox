@@ -5,47 +5,15 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
-    Runner\Proof as ProofInterface,
     Runner\Proof\Name,
     Runner\Proof\Inline,
     Runner\Proof\Scenario\Failure,
     Runner\Assert,
     Runner\Stats,
-    Set,
 };
 
-final class Proof implements ProofInterface
+final class Proof
 {
-    /** @var class-string<TestCase> */
-    private string $class;
-    /** @var non-empty-string */
-    private string $method;
-    private ?string $name;
-    /** @var list<mixed> */
-    private array $args;
-    /** @var list<\UnitEnum> */
-    private array $tags;
-
-    /**
-     * @param class-string<TestCase> $class
-     * @param non-empty-string $method
-     * @param list<mixed> $args
-     * @param list<\UnitEnum> $tags
-     */
-    private function __construct(
-        string $class,
-        string $method,
-        ?string $name,
-        array $args,
-        array $tags,
-    ) {
-        $this->class = $class;
-        $this->method = $method;
-        $this->name = $name;
-        $this->args = $args;
-        $this->tags = $tags;
-    }
-
     /**
      * @internal
      *
@@ -53,7 +21,7 @@ final class Proof implements ProofInterface
      * @param non-empty-string $method
      * @param list<mixed> $args
      */
-    public static function of(string $class, string $method, array $args = []): ProofInterface
+    public static function of(string $class, string $method, array $args = []): Inline
     {
         $name = Name::of(\sprintf(
             '%s::%s',
@@ -126,78 +94,5 @@ final class Proof implements ProofInterface
                 new \ReflectionFunction($test)->getParameters(),
             ), // todo Proof->nameParameters() once the Scenario is no longer an interface
         );
-    }
-
-    #[\Override]
-    public function name(): Name
-    {
-        return Name::of(\sprintf(
-            '%s::%s%s',
-            $this->class,
-            $this->method,
-            match ($this->name) {
-                null => '',
-                default => "({$this->name})",
-            },
-        ));
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    #[\Override]
-    public function named(string $name): self
-    {
-        return new self(
-            $this->class,
-            $this->method,
-            $name,
-            $this->args,
-            $this->tags,
-        );
-    }
-
-    /**
-     * @psalm-mutation-free
-     * @no-named-arguments
-     */
-    #[\Override]
-    public function tag(\UnitEnum ...$tags): self
-    {
-        return new self(
-            $this->class,
-            $this->method,
-            $this->name,
-            $this->args,
-            [...$this->tags, ...$tags],
-        );
-    }
-
-    #[\Override]
-    public function tags(): array
-    {
-        return $this->tags;
-    }
-
-    #[\Override]
-    public function scenarii(int $count): Set
-    {
-        // The true Assert instance is injected in Proof\Bridge
-        $test = new ($this->class)(Assert::of(
-            Stats::new(),
-            Assert\Debug::new(),
-        ));
-        /** @var BlackBox\Proof */
-        $proof = $test->{$this->method}(...$this->args);
-
-        return $proof
-            ->given()
-            ->set()
-            ->map(static fn($args) => Proof\Bridge::of(
-                $proof->test(),
-                $args,
-            ))
-            ->randomize()
-            ->take($count);
     }
 }
