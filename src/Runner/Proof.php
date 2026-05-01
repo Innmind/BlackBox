@@ -125,13 +125,7 @@ final class Proof
                     $assert->fail('The property is not applicable to the system under test.');
                 }
 
-                try {
-                    $property->ensureHeldBy($assert, $sut);
-                } catch (Assert\Failure $e) {
-                    throw $e;
-                } catch (\Throwable $e) {
-                    $assert->not()->throws(static fn() => throw $e);
-                }
+                $property->ensureHeldBy($assert, $sut);
             },
         );
     }
@@ -159,13 +153,7 @@ final class Proof
                 $sut = $factory();
                 $assert->debug('systemUnderTest', $sut);
 
-                try {
-                    $properties->ensureHeldBy($assert, $sut);
-                } catch (Assert\Failure $e) {
-                    throw $e;
-                } catch (\Throwable $e) {
-                    $assert->not()->throws(static fn() => throw $e);
-                }
+                $properties->ensureHeldBy($assert, $sut);
             },
         );
     }

@@ -31,7 +31,13 @@ final class Scenario
 
     public function __invoke(Assert $assert): void
     {
-        ($this->test)($assert, ...$this->args);
+        try {
+            ($this->test)($assert, ...$this->args);
+        } catch (Assert\Failure|Scenario\Failure $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            $assert->not()->throws(static fn() => throw $e);
+        }
     }
 
     /**

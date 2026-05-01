@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
     Runner\Proof as Concrete,
     Runner\Proof\Name,
-    Runner\Proof\Scenario\Failure,
     Runner\Assert,
     Runner\Stats,
 };
@@ -35,18 +34,10 @@ final class Proof
         if ($return !== BlackBox\Proof::class) {
             return Concrete::test(
                 $name,
-                static function($assert) use ($class, $method, $args) {
-                    try {
-                        $test = new ($class)($assert);
-                        $test->executeTest($method, $args);
-                    } catch (Failure|Assert\Failure $e) {
-                        throw $e;
-                    } catch (\Throwable $e) {
-                        $assert->not()->throws(static function() use ($e) {
-                            throw $e;
-                        });
-                    }
-                },
+                static fn($assert) => new ($class)($assert)->executeTest(
+                    $method,
+                    $args,
+                ),
             );
         }
 
@@ -81,13 +72,7 @@ final class Proof
                 /** @var \Closure(...mixed): void */
                 $wrapped = $wrapped->bindTo($refl->getClosureThis());
 
-                try {
-                    ($wrapped)(...$args);
-                } catch (Failure|Assert\Failure $e) {
-                    throw $e;
-                } catch (\Throwable $e) {
-                    $assert->not()->throws(static fn() => throw $e);
-                }
+                ($wrapped)(...$args);
             },
             static fn() => $parameters = \array_map(
                 static fn($parameter) => $parameter->getName(),

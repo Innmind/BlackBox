@@ -112,13 +112,12 @@ final class Compatibility
             ->app
             ->displayOutputVia($io)
             ->displayErrorVia($io)
+            ->allowProofsToNotMakeAnyAssertions() // because it doesn't use the same assert object
             ->failures(function() use ($test) {
                 yield Proof::of(
                     Proof\Name::of('name does not matter'),
                     $this->given,
-                    static fn($assert, ...$args) => $assert->not()->throws(
-                        static fn() => $test(...$args),
-                    ),
+                    static fn($assert, ...$args) => $test(...$args),
                     static fn() => \array_map(
                         static fn($parameter) => $parameter->getName(),
                         new \ReflectionFunction(\Closure::fromCallable($test))->getParameters(),
