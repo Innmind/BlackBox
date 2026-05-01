@@ -493,6 +493,7 @@ final class Set
      *
      * @return Set<T>
      */
+    #[\NoDiscard]
     public function disableShrinking(): self
     {
         return new self(
@@ -502,14 +503,17 @@ final class Set
     }
 
     /**
+     * @psalm-mutation-free
      * @template V
      *
      * @param callable(self<T>): self<V> $via
      *
      * @return self<V>
      */
+    #[\NoDiscard]
     public function via(callable $via): self
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return $via($this);
     }
 
