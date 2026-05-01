@@ -26,7 +26,7 @@ final class Property
         /** @var Set<Concrete> */
         $propertySet = ([$property, 'any'])();
 
-        return Inline::of(
+        return Proof::of(
             Name::of($property),
             Given::of(Set::tuple(
                 $propertySet,

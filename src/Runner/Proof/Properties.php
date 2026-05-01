@@ -24,7 +24,7 @@ final class Properties
         Set $properties,
         Set $systemUnderTest,
     ): Proof {
-        return Inline::of(
+        return Proof::of(
             $name,
             Given::of(Set::tuple(
                 $properties,

@@ -5,8 +5,8 @@ namespace Innmind\BlackBox\PHPUnit;
 
 use Innmind\BlackBox\{
     PHPUnit\Framework\TestCase,
+    Runner\Proof as Concrete,
     Runner\Proof\Name,
-    Runner\Proof\Inline,
     Runner\Proof\Scenario\Failure,
     Runner\Assert,
     Runner\Stats,
@@ -21,7 +21,7 @@ final class Proof
      * @param non-empty-string $method
      * @param list<mixed> $args
      */
-    public static function of(string $class, string $method, array $args = []): Inline
+    public static function of(string $class, string $method, array $args = []): Concrete
     {
         $name = Name::of(\sprintf(
             '%s::%s',
@@ -33,7 +33,7 @@ final class Proof
         $return = (string) $refl->getReturnType();
 
         if ($return !== BlackBox\Proof::class) {
-            return Inline::test(
+            return Concrete::test(
                 $name,
                 static function($assert) use ($class, $method, $args) {
                     try {
@@ -59,7 +59,7 @@ final class Proof
         $proof = $test->{$method}(...$args);
         $test = $proof->test();
 
-        return Inline::of(
+        return Concrete::of(
             $name,
             $proof->given(),
             static function($assert, ...$args) use ($test) {

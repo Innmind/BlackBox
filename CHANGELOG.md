@@ -14,6 +14,7 @@
 - `Innmind\BlackBox\Set::compose()` now returns a `Set`
 - `Innmind\BlackBox\Set::generator()` now returns a `Set`
 - `Set`s are now unbounded (instead of limited to 100 elements by default)
+- `Innmind\BlackBox\Runner\Proof` is now a final class
 
 ### Removed
 

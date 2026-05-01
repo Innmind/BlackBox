@@ -55,9 +55,9 @@ final class Given
     /**
      * @param callable(Assert, ...mixed): void $test
      */
-    public function test(callable $test): Proof\Inline
+    public function test(callable $test): Proof
     {
-        return Proof\Inline::of(
+        return Proof::of(
             $this->name,
             $this->given,
             \Closure::fromCallable($test),

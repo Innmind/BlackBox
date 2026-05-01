@@ -113,7 +113,7 @@ final class Compatibility
             ->displayOutputVia($io)
             ->displayErrorVia($io)
             ->failures(function() use ($test) {
-                yield Proof\Inline::of(
+                yield Proof::of(
                     Proof\Name::of('name does not matter'),
                     $this->given,
                     static fn($assert, ...$args) => $assert->not()->throws(

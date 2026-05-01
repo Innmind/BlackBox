@@ -42,7 +42,7 @@ final class Prove
      */
     public function test(string $name, callable $test): Proof
     {
-        return Proof\Inline::test(
+        return Proof::test(
             Proof\Name::of($name),
             \Closure::fromCallable($test),
         );
