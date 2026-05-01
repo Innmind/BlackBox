@@ -20,34 +20,56 @@ use Symfony\Component\VarDumper\{
  */
 final class Proof
 {
-    private CliDumper $dumper;
-    private VarCloner $cloner;
-    private bool $addMarks;
-    private bool $addGroups;
-    private int $scenarii = 0;
-
     private function __construct(
-        bool $withColors,
-        bool $addMarks,
-        bool $addGroups,
+        private CliDumper $dumper,
+        private VarCloner $cloner,
+        private bool $addMarks,
+        private bool $addGroups,
+        private int $scenarii = 0,
     ) {
-        $this->dumper = new CliDumper;
-        $this->cloner = new VarCloner;
-        $this->addMarks = $addMarks;
-        $this->addGroups = $addGroups;
-        $this->dumper->setColors($withColors);
-        $this->cloner->setMinDepth(100);
     }
 
     /**
      * @internal
      */
     public static function new(
-        bool $withColors,
         bool $addMarks,
         bool $addGroups,
     ): self {
-        return new self($withColors, $addMarks, $addGroups);
+        $dumper = new CliDumper;
+        $dumper->setColors(true);
+        $cloner = new VarCloner;
+        $cloner->setMinDepth(100);
+
+        return new self(
+            $dumper,
+            $cloner,
+            $addMarks,
+            $addGroups,
+        );
+    }
+
+    public function withoutColors(): self
+    {
+        $dumper = new CliDumper;
+        $dumper->setColors(false);
+
+        return new self(
+            $dumper,
+            $this->cloner,
+            $this->addMarks,
+            $this->addGroups,
+        );
+    }
+
+    public function disableGitHubOutput(): self
+    {
+        return new self(
+            $this->dumper,
+            $this->cloner,
+            $this->addMarks,
+            false,
+        );
     }
 
     public function emptySet(IO $output, IO $error): void
@@ -145,6 +167,7 @@ final class Proof
 
     public function end(IO $output, IO $error): void
     {
+        $this->scenarii = 0;
         $output("\n\n");
 
         if ($this->addGroups) {

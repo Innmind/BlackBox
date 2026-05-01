@@ -10,21 +10,11 @@ use SebastianBergmann\Timer\{
 
 final class Printer
 {
-    private Timer $timer;
-    private bool $withColors;
-    private bool $addMarks;
-    private bool $addGroups;
-
     private function __construct(
-        bool $withColors,
-        ?Timer $timer = null,
-        ?bool $addMarks = null,
-        ?bool $addGroups = null,
+        private Timer $timer,
+        private Printer\Proof $proof,
+        private bool $addGroups,
     ) {
-        $this->timer = $timer ?? new Timer;
-        $this->withColors = $withColors;
-        $this->addMarks = $addMarks ?? \getenv('LC_TERMINAL') === 'iTerm2';
-        $this->addGroups = $addGroups ?? \getenv('GITHUB_ACTIONS') === 'true';
     }
 
     /**
@@ -32,15 +22,23 @@ final class Printer
      */
     public static function new(): self
     {
-        return new self(true);
+        $addGroups = \getenv('GITHUB_ACTIONS') === 'true';
+
+        return new self(
+            new Timer,
+            Printer\Proof::new(
+                \getenv('LC_TERMINAL') === 'iTerm2',
+                $addGroups,
+            ),
+            $addGroups,
+        );
     }
 
     public function withoutColors(): self
     {
         return new self(
-            false,
             $this->timer,
-            $this->addMarks,
+            $this->proof->withoutColors(),
             $this->addGroups,
         );
     }
@@ -48,9 +46,8 @@ final class Printer
     public function disableGitHubOutput(): self
     {
         return new self(
-            $this->withColors,
             $this->timer,
-            $this->addMarks,
+            $this->proof->disableGitHubOutput(),
             false,
         );
     }
@@ -90,11 +87,7 @@ final class Printer
 
         $output($header);
 
-        return Printer\Proof::new(
-            $this->withColors,
-            $this->addMarks,
-            $this->addGroups,
-        );
+        return $this->proof;
     }
 
     public function end(IO $output, IO $error, Stats $stats): void
