@@ -19,7 +19,7 @@ return static function($prove) {
                 $result = Application::new([])
                     ->displayOutputVia($io)
                     ->displayErrorVia($io)
-                    ->usePrinter(Printer::withoutColors())
+                    ->mapPrinter(static fn() => Printer::withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove
                             ->proof('must not contain a "0"')

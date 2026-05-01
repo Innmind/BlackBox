@@ -127,13 +127,16 @@ final class Application
 
     /**
      * @psalm-mutation-free
+     *
+     * @param callable(Printer): Printer $map
      */
     #[\NoDiscard]
-    public function usePrinter(Printer $printer): self
+    public function mapPrinter(callable $map): self
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return new self(
             $this->random,
-            $printer,
+            $map($this->printer),
             $this->output,
             $this->error,
             $this->runner,

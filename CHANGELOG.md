@@ -9,6 +9,7 @@
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
+- `Innmind\BlackBox\Application::mapPrinter()`
 
 ### Changed
 
@@ -31,6 +32,7 @@
 - Support for `phpunit/php-timer` `~6.0|~7.0|~8.0`
 - Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
 - `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Application::usePrinter()`
 - `Innmind\BlackBox\Runner\proof()`
 - `Innmind\BlackBox\Runner\test()`
 - `Innmind\BlackBox\Runner\given()`
