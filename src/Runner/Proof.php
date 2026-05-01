@@ -230,6 +230,11 @@ final class Proof
         return $this->tags;
     }
 
+    public function tagged(\UnitEnum $tag): bool
+    {
+        return \in_array($tag, $this->tags, true);
+    }
+
     /**
      * @internal
      *
