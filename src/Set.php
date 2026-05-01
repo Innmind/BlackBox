@@ -515,6 +515,21 @@ final class Set
     }
 
     /**
+     * This method does nothing.
+     *
+     * It's here for simplicity to coalesce either a Set or a Provider to a Set.
+     *
+     * @psalm-mutation-free
+     *
+     * @return Set<T>
+     */
+    #[\NoDiscard]
+    public function toSet(): self
+    {
+        return $this;
+    }
+
+    /**
      * @throws EmptySet When no value can be generated
      *
      * @return iterable<T>
