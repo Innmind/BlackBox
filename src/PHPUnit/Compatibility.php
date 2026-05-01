@@ -119,6 +119,10 @@ final class Compatibility
                     static fn($assert, ...$args) => $assert->not()->throws(
                         static fn() => $test(...$args),
                     ),
+                    static fn() => \array_map(
+                        static fn($parameter) => $parameter->getName(),
+                        new \ReflectionFunction(\Closure::fromCallable($test))->getParameters(),
+                    ),
                 );
             });
 
@@ -136,12 +140,7 @@ final class Compatibility
                 $error = $kind->value();
 
                 if ($error instanceof \Throwable) {
-                    $scenario = self::testArgs($test, $failure->scenario());
-
-                    Extension::record(
-                        $test,
-                        [...$scenario, ...$failure->debug()],
-                    );
+                    Extension::record($test, $failure->parameters());
 
                     throw $error;
                 }
@@ -159,14 +158,14 @@ final class Compatibility
             ) {
                 throw Scenario\Failure::from(
                     $kind->value(),
-                    self::testArgs($test, $failure->scenario()),
+                    $failure->scenario(),
                     $failure->debug(),
                 );
             }
 
             throw Scenario\Failure::from(
                 $failure->assertion(),
-                self::testArgs($test, $failure->scenario()),
+                $failure->scenario(),
                 $failure->debug(),
             );
         }
@@ -182,31 +181,5 @@ final class Compatibility
             $this->given,
             $test,
         );
-    }
-
-    /**
-     * @param list<array{string, mixed}> $scenario
-     *
-     * @return list<array{string, mixed}>
-     */
-    private static function testArgs(callable $test, array $scenario): array
-    {
-        $reflection = new \ReflectionFunction(\Closure::fromCallable($test));
-        $names = \array_map(
-            static fn($parameter) => $parameter->getName(),
-            $reflection->getParameters(),
-        );
-        /** @var list<array{string, mixed}> */
-        $parameters = [];
-
-        /** @var mixed $value */
-        foreach ($scenario as $index => [$_, $value]) {
-            $parameters[] = [
-                $names[$index] ?? 'undefined',
-                $value,
-            ];
-        }
-
-        return $parameters;
     }
 }
