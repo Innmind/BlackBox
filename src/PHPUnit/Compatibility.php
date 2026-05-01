@@ -162,10 +162,7 @@ final class Compatibility
                 );
             }
 
-            throw Scenario\Failure::from(
-                $failure->assertion(),
-                $failure->parameters(),
-            );
+            throw $failure;
         }
     }
 
