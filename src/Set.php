@@ -8,7 +8,6 @@ use Innmind\BlackBox\{
     Set\Provider,
     Set\Value,
     Set\Seed,
-    Set\Collapse,
     Exception\EmptySet,
 };
 
@@ -96,10 +95,10 @@ final class Set
         return new self(
             Set\Composite::implementation(
                 $aggregate,
-                Collapse::of($first)->implementation,
-                Collapse::of($second)->implementation,
+                $first->toSet()->implementation,
+                $second->toSet()->implementation,
                 ...\array_map(
-                    static fn($set) => Collapse::of($set)->implementation,
+                    static fn($set) => $set->toSet()->implementation,
                     $rest,
                 ),
             ),
@@ -179,7 +178,7 @@ final class Set
          */
         return Provider\Sequence::of(
             self::build(...),
-            Collapse::of($set)->implementation,
+            $set->toSet()->implementation,
         );
     }
 
@@ -210,10 +209,10 @@ final class Set
          */
         return new self(
             Set\Either::implementation(
-                Collapse::of($first)->implementation,
-                Collapse::of($second)->implementation,
+                $first->toSet()->implementation,
+                $second->toSet()->implementation,
                 ...\array_map(
-                    static fn($set) => Collapse::of($set)->implementation,
+                    static fn($set) => $set->toSet()->implementation,
                     $rest,
                 ),
             ),
@@ -482,7 +481,7 @@ final class Set
         /** @psalm-suppress InvalidArgument */
         return new self(
             Set\FlatMap::implementation(
-                static fn($input) => Collapse::of($map($input))->implementation,
+                static fn($input) => $map($input)->toSet()->implementation,
                 $this->implementation,
             ),
             $this->disableShrinking,
@@ -512,6 +511,21 @@ final class Set
     public function via(callable $via): self
     {
         return $via($this);
+    }
+
+    /**
+     * This method does nothing.
+     *
+     * It's here for simplicity to coalesce either a Set or a Provider to a Set.
+     *
+     * @psalm-mutation-free
+     *
+     * @return Set<T>
+     */
+    #[\NoDiscard]
+    public function toSet(): self
+    {
+        return $this;
     }
 
     /**

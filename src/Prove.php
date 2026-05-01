@@ -6,7 +6,6 @@ namespace Innmind\BlackBox;
 use Innmind\BlackBox\{
     Runner\Assert,
     Runner\Proof,
-    Set\Collapse,
     Set\Provider,
 };
 
@@ -58,7 +57,7 @@ final class Prove
         string $property,
         Set|Provider $systemUnderTest,
     ): Proof {
-        return Proof::property($property, Collapse::of($systemUnderTest));
+        return Proof::property($property, $systemUnderTest->toSet());
     }
 
     /**
@@ -75,8 +74,8 @@ final class Prove
     ): Proof {
         return Proof::properties(
             Proof\Name::of($name),
-            Collapse::of($properties),
-            Collapse::of($systemUnderTest),
+            $properties->toSet(),
+            $systemUnderTest->toSet(),
         );
     }
 }
