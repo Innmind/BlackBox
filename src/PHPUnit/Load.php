@@ -9,10 +9,6 @@ use Innmind\BlackBox\{
     PHPUnit\Framework\Attributes\Group,
     Tag,
 };
-use PHPUnit\Framework\Attributes\{
-    DataProvider as PHPUnitDataProvider,
-    Group as PHPUnitGroup,
-};
 
 final class Load
 {
@@ -61,16 +57,10 @@ final class Load
                     continue;
                 }
 
-                $attributes = \array_merge(
-                    $method->getAttributes(PHPUnitDataProvider::class),
-                    $method->getAttributes(DataProvider::class),
-                );
+                $attributes = $method->getAttributes(DataProvider::class);
                 $groups = \array_map(
                     static fn($group) => $group->newInstance()->name(),
-                    \array_merge(
-                        $method->getAttributes(PHPUnitGroup::class),
-                        $method->getAttributes(Group::class),
-                    ),
+                    $method->getAttributes(Group::class),
                 );
                 $tags = \array_values(\array_filter(
                     \array_map(
