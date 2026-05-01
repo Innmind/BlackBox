@@ -39,19 +39,6 @@ final class Debug
         $this->data[$name] = $value;
     }
 
-    public function empty(): bool
-    {
-        return \count($this->data) === 0;
-    }
-
-    /**
-     * @return array<non-empty-string, mixed>
-     */
-    public function all(): array
-    {
-        return $this->data;
-    }
-
     /**
      * @return list<array{non-empty-string, mixed}>
      */
