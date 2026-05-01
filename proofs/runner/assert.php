@@ -11,7 +11,7 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->proof('Assert->fail()')
         ->given(Set::strings())

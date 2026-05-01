@@ -23,7 +23,7 @@ use Fixtures\Innmind\BlackBox\{
     LowerBoundAtZero,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->test(
             'Printer->start()',

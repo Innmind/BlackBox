@@ -9,7 +9,7 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->test(
             'Test reduce Composite to the minimum values',

@@ -21,7 +21,7 @@ use Fixtures\Innmind\BlackBox\{
     UpperBoundAtHundred,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->proof('BlackBox can run with any of the random strategies')
         ->given(Set::of(...Random::cases()))

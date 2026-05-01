@@ -16,14 +16,13 @@ final class Load
      *
      * @return \Generator<Proof>
      */
-    public function __invoke(string $path): \Generator
+    public function __invoke(Prove $prove, string $path): \Generator
     {
         /**
          * @psalm-suppress UnresolvableInclude Presume the developer uses a valid absolute path
          * @var mixed $value
-         * @todo switch $this in Prove in v7
          */
-        foreach ((require $path)($this, Prove::new()) as $value) {
+        foreach ((require $path)($prove) as $value) {
             if ($value instanceof Proof) {
                 yield $value;
             }
@@ -31,42 +30,42 @@ final class Load
     }
 
     /**
-     * @return \Closure(): \Generator<Proof>
+     * @return \Closure(Prove): \Generator<Proof>
      */
     #[\NoDiscard]
     public static function file(string $path): \Closure
     {
-        return static function() use ($path) {
-            yield from (new self)($path);
+        return static function(Prove $prove) use ($path) {
+            yield from (new self)($prove, $path);
         };
     }
 
     /**
-     * @return \Closure(): \Generator<Proof>
+     * @return \Closure(Prove): \Generator<Proof>
      */
     #[\NoDiscard]
     public static function directory(string $path): \Closure
     {
-        return static function() use ($path) {
+        return static function(Prove $prove) use ($path) {
             $load = new self;
             $files = new \FilesystemIterator($path);
 
             /** @var \SplFileInfo $file */
             foreach ($files as $path => $file) {
                 if ($file->isFile() && \is_string($path)) {
-                    yield from $load($path);
+                    yield from $load($prove, $path);
                 }
             }
         };
     }
 
     /**
-     * @return \Closure(): \Generator<Proof>
+     * @return \Closure(Prove): \Generator<Proof>
      */
     #[\NoDiscard]
     public static function everythingIn(string $path): \Closure
     {
-        return static function() use ($path) {
+        return static function(Prove $prove) use ($path) {
             $load = new self;
             $files = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($path),
@@ -78,7 +77,7 @@ final class Load
              */
             foreach ($files as $path => $file) {
                 if ($file->isFile()) {
-                    yield from $load($path);
+                    yield from $load($prove, $path);
                 }
             }
         };

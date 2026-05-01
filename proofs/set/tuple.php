@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->proof('Set::tuple() values always contain the same number of elements as sets')
         ->given(

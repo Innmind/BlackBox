@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     $anySet = Set::of(
         Set::integers()->toSet(),
         // real numbers not used as it may return the type integer

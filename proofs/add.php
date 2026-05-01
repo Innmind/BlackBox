@@ -11,7 +11,7 @@ function add($a, $b): string
     return \gmp_strval(\gmp_add($a, $b));
 }
 
-return static function($_, $prove) {
+return static function($prove) {
     yield $prove
         ->proof('add is commutative')
         ->given(
