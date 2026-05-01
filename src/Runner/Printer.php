@@ -52,6 +52,9 @@ final class Printer
         );
     }
 
+    /**
+     * @internal
+     */
     public function start(IO $output, IO $error): void
     {
         $this->timer->start();
@@ -60,6 +63,8 @@ final class Printer
     }
 
     /**
+     * @internal
+     *
      * @param list<\UnitEnum> $tags
      */
     #[\NoDiscard]
@@ -90,6 +95,9 @@ final class Printer
         return $this->proof;
     }
 
+    /**
+     * @internal
+     */
     public function end(IO $output, IO $error, Stats $stats): void
     {
         $statsToPrint = \sprintf(
