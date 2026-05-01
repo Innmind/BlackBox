@@ -8,8 +8,7 @@ use Innmind\BlackBox\Runner\{
     IO,
     Proof,
     Runner,
-    Runner\WithShrinking,
-    Runner\WithoutShrinking,
+    Runner\Strategy,
     Result,
     Stats,
     Filter,
@@ -30,7 +29,7 @@ final class Application
         private Printer $printer,
         private IO $output,
         private IO $error,
-        private WithShrinking|WithoutShrinking $runner,
+        private Strategy $runner,
         private \Closure $parseTag,
         private ?CodeCoverage $codeCoverage,
         private array $args,
@@ -54,7 +53,7 @@ final class Application
             Printer::new(),
             IO\Standard::output,
             IO\Standard::error,
-            WithShrinking::keepErrorType(),
+            Strategy::keepErrorType,
             Tag::of(...),
             null,
             $args,
@@ -172,12 +171,14 @@ final class Application
     #[\NoDiscard]
     public function disableShrinking(): self
     {
+        $previous = $this->mapProof;
+
         return new self(
             $this->random,
             $this->printer,
             $this->output,
             $this->error,
-            new WithoutShrinking,
+            $this->runner,
             $this->parseTag,
             $this->codeCoverage,
             $this->args,
@@ -186,7 +187,7 @@ final class Application
             $this->stopOnFailure,
             $this->failWhenNoAssertions,
             $this->tags,
-            $this->mapProof,
+            static fn($proof) => $previous($proof)->disableShrinking(),
         );
     }
 
@@ -203,7 +204,7 @@ final class Application
             $this->printer,
             $this->output,
             $this->error,
-            WithShrinking::exhaustive(),
+            Strategy::exhaustive,
             $this->parseTag,
             $this->codeCoverage,
             $this->args,

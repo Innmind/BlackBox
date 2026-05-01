@@ -15,15 +15,10 @@ use Innmind\BlackBox\{
 /**
  * @internal
  */
-final class WithShrinking
+enum Strategy
 {
-    /**
-     * @psalm-mutation-free
-     */
-    private function __construct(
-        private bool $exhaustive,
-    ) {
-    }
+    case keepErrorType;
+    case exhaustive;
 
     /**
      * @param Value<Scenario> $scenario
@@ -52,24 +47,6 @@ final class WithShrinking
                 $debug,
             );
         }
-    }
-
-    /**
-     * @internal
-     * @psalm-pure
-     */
-    public static function keepErrorType(): self
-    {
-        return new self(false);
-    }
-
-    /**
-     * @internal
-     * @psalm-pure
-     */
-    public static function exhaustive(): self
-    {
-        return new self(true);
     }
 
     /**
@@ -153,7 +130,7 @@ final class WithShrinking
 
     private function canShrink(Assert\Failure $e, string $identity): bool
     {
-        if ($this->exhaustive) {
+        if ($this === self::exhaustive) {
             return true;
         }
 

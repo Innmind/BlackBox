@@ -5,8 +5,7 @@ namespace Innmind\BlackBox\Runner;
 
 use Innmind\BlackBox\{
     Random,
-    Runner\Runner\WithShrinking,
-    Runner\Runner\WithoutShrinking,
+    Runner\Runner\Strategy,
     Exception\EmptySet,
 };
 
@@ -24,7 +23,7 @@ final class Runner
         private Printer $print,
         private IO $output,
         private IO $error,
-        private WithShrinking|WithoutShrinking $run,
+        private Strategy $run,
         private \Generator $proofs,
         private int $scenariiPerProof,
         private bool $disableMemoryLimit,
@@ -74,6 +73,7 @@ final class Runner
                     $assertions = $stats->assertions();
 
                     try {
+                        /** @psalm-suppress InvalidFunctionCall */
                         ($this->run)(
                             $print,
                             $this->output,
@@ -142,7 +142,7 @@ final class Runner
         Printer $print,
         IO $output,
         IO $error,
-        WithShrinking|WithoutShrinking $run,
+        Strategy $run,
         \Generator $proofs,
         int $scenariiPerProof,
         bool $disableMemoryLimit,
