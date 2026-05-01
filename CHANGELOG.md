@@ -22,6 +22,7 @@
 - `Innmind\BlackBox\Runner\Proof::scenarii()` is now flagged as internal
 - PHPUnit attributes `Group` and `DataProvider` are now longer read when running tests with BlackBox, use the `Innmind\BlackBox\` prefixed ones instead
 - All proofs will fail if they throw an exception (instead of stopping the script)
+- `Innmind\BlackBox\Runner\Printer` is now a final class
 
 ### Removed
 

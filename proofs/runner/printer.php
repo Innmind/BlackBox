@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 use Innmind\BlackBox\{
-    Runner\Printer\Standard,
+    Runner\Printer,
     Runner\IO\Collect,
     Runner\Stats,
     Runner\Proof\Name,
@@ -28,7 +28,7 @@ return static function($prove) {
         ->test(
             'Printer->start()',
             static function($assert) {
-                $printer = Standard::new();
+                $printer = Printer::new();
                 $io = Collect::new();
 
                 $printer->start($io, $io);
@@ -46,7 +46,7 @@ return static function($prove) {
             Set::integers()->between(0, 10_000), // not above 10k to limit the time it takes
         )
         ->test(static function($assert, $proofs, $scenarii, $assertions) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
             $stats = Stats::new();
 
@@ -93,7 +93,7 @@ return static function($prove) {
             Set::integers()->between(1, 10_000), // not above 10k to limit the time it takes
         )
         ->test(static function($assert, $proofs, $scenarii, $assertions, $failures) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
             $stats = Stats::new();
 
@@ -142,10 +142,10 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
-            $printer->proof($io, $io, Name::of($name), $tags);
+            $_ = $printer->proof($io, $io, Name::of($name), $tags);
 
             $written = $io->toString();
 
@@ -168,10 +168,10 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
-            $printer->proof($io, $io, Name::of($name), $tags);
+            $_ = $printer->proof($io, $io, Name::of($name), $tags);
 
             $written = $io->toString();
 
@@ -195,7 +195,7 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -217,7 +217,7 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -239,7 +239,7 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -261,7 +261,7 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -284,7 +284,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $val, $truth) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -321,7 +321,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $val, $truth) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -360,7 +360,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $property, $val, $message) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -403,7 +403,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $property, $val, $message) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -448,7 +448,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $expected, $actual, $val, $message) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -495,7 +495,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $expected, $actual, $val, $message) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -540,7 +540,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $message) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
             $debug = Debug::new();
             $counter = new Counter;
@@ -587,7 +587,7 @@ return static function($prove) {
             Set::strings(),
         )
         ->test(static function($assert, $name, $message) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
             $debug = Debug::new();
             $counter = new Counter;
@@ -634,7 +634,7 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
 
             $printer
@@ -656,7 +656,7 @@ return static function($prove) {
             Set::sequence(Set::of(...Tag::cases())),
         )
         ->test(static function($assert, $name, $tags) {
-            $printer = Standard::new();
+            $printer = Printer::new();
             $io = Collect::new();
 
             $printer
@@ -683,7 +683,7 @@ return static function($prove) {
             Set::strings()->madeOf(Set::strings()->chars()->alphanumerical()),
         )
         ->test(static function($assert, $name, $expected, $actual, $val, $message, $debugName, $debugVariable) {
-            $printer = Standard::new()->disableGitHubOutput();
+            $printer = Printer::new()->disableGitHubOutput();
             $io = Collect::new();
             $debug = Debug::new();
             $debug->add($debugName, $debugVariable);

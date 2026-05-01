@@ -85,7 +85,7 @@ final class Application
     {
         return new self(
             Random::default,
-            Printer\Standard::new(),
+            Printer::new(),
             IO\Standard::output,
             IO\Standard::error,
             WithShrinking::keepErrorType(),

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 use Innmind\BlackBox\{
     Application,
     Runner\IO\Collect,
-    Runner\Printer\Standard,
+    Runner\Printer,
     Set,
     Tag,
 };
@@ -19,7 +19,7 @@ return static function($prove) {
                 $result = Application::new([])
                     ->displayOutputVia($io)
                     ->displayErrorVia($io)
-                    ->usePrinter(Standard::withoutColors())
+                    ->usePrinter(Printer::withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove
                             ->proof('must not contain a "0"')
