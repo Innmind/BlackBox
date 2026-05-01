@@ -158,15 +158,13 @@ final class Compatibility
             ) {
                 throw Scenario\Failure::from(
                     $kind->value(),
-                    $failure->scenario(),
-                    $failure->debug(),
+                    $failure->parameters(),
                 );
             }
 
             throw Scenario\Failure::from(
                 $failure->assertion(),
-                $failure->scenario(),
-                $failure->debug(),
+                $failure->parameters(),
             );
         }
     }

@@ -13,22 +13,17 @@ final class Failure extends \Exception
 {
     private Assert\Failure $failure;
     /** @var list<array{string, mixed}> */
-    private array $scenario;
-    /** @var list<array{string, mixed}> */
-    private array $debug;
+    private array $parameters;
 
     /**
-     * @param list<array{string, mixed}> $scenario
-     * @param list<array{string, mixed}> $debug
+     * @param list<array{string, mixed}> $parameters
      */
     private function __construct(
         Assert\Failure $failure,
-        array $scenario,
-        array $debug,
+        array $parameters,
     ) {
         $this->failure = $failure;
-        $this->scenario = $scenario;
-        $this->debug = $debug;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -43,23 +38,23 @@ final class Failure extends \Exception
     ): self {
         return new self(
             $failure,
-            $scenario->unwrap()->parameters(),
-            $debug->parameters(),
+            [
+                ...$scenario->unwrap()->parameters(),
+                ...$debug->parameters(),
+            ],
         );
     }
 
     /**
      * @internal
      *
-     * @param list<array{string, mixed}> $scenario
-     * @param list<array{string, mixed}> $debug
+     * @param list<array{string, mixed}> $parameters
      */
     public static function from(
         Assert\Failure $failure,
-        array $scenario,
-        array $debug,
+        array $parameters,
     ): self {
-        return new self($failure, $scenario, $debug);
+        return new self($failure, $parameters);
     }
 
     /**
@@ -67,26 +62,7 @@ final class Failure extends \Exception
      */
     public function parameters(): array
     {
-        return [
-            ...$this->scenario,
-            ...$this->debug,
-        ];
-    }
-
-    /**
-     * @return list<array{string, mixed}>
-     */
-    public function scenario(): array
-    {
-        return $this->scenario;
-    }
-
-    /**
-     * @return list<array{string, mixed}>
-     */
-    public function debug(): array
-    {
-        return $this->debug;
+        return $this->parameters;
     }
 
     public function assertion(): Assert\Failure
