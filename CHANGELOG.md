@@ -9,6 +9,7 @@
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
+- `Innmind\BlackBox\Application::mapPrinter()`
 
 ### Changed
 
@@ -22,6 +23,7 @@
 - `Innmind\BlackBox\Runner\Proof::scenarii()` is now flagged as internal
 - PHPUnit attributes `Group` and `DataProvider` are now longer read when running tests with BlackBox, use the `Innmind\BlackBox\` prefixed ones instead
 - All proofs will fail if they throw an exception (instead of stopping the script)
+- `Innmind\BlackBox\Runner\Printer` is now a final class
 
 ### Removed
 
@@ -30,6 +32,7 @@
 - Support for `phpunit/php-timer` `~6.0|~7.0|~8.0`
 - Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
 - `Innmind\BlackBox\Application::disableGlobalFunctions()`
+- `Innmind\BlackBox\Application::usePrinter()`
 - `Innmind\BlackBox\Runner\proof()`
 - `Innmind\BlackBox\Runner\test()`
 - `Innmind\BlackBox\Runner\given()`
