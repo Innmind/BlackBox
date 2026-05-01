@@ -12,18 +12,18 @@ use Innmind\BlackBox\{
 final class Failure extends \Exception
 {
     private Assert\Failure $failure;
-    /** @var Value<Scenario> */
-    private Value $scenario;
+    /** @var list<array{string, mixed}> */
+    private array $parameters;
 
     /**
-     * @param Value<Scenario> $scenario
+     * @param list<array{string, mixed}> $parameters
      */
     private function __construct(
         Assert\Failure $failure,
-        Value $scenario,
+        array $parameters,
     ) {
         $this->failure = $failure;
-        $this->scenario = $scenario;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -34,16 +34,35 @@ final class Failure extends \Exception
     public static function of(
         Assert\Failure $failure,
         Value $scenario,
+        Assert\Debug $debug,
     ): self {
-        return new self($failure, $scenario);
+        return new self(
+            $failure,
+            [
+                ...$scenario->unwrap()->parameters(),
+                ...$debug->parameters(),
+            ],
+        );
     }
 
     /**
-     * @return Value<Scenario>
+     * @internal
+     *
+     * @param list<array{string, mixed}> $parameters
      */
-    public function scenario(): Value
+    public static function from(
+        Assert\Failure $failure,
+        array $parameters,
+    ): self {
+        return new self($failure, $parameters);
+    }
+
+    /**
+     * @return list<array{string, mixed}>
+     */
+    public function parameters(): array
     {
-        return $this->scenario;
+        return $this->parameters;
     }
 
     public function assertion(): Assert\Failure

@@ -42,7 +42,7 @@ final class Prove
      */
     public function test(string $name, callable $test): Proof
     {
-        return Proof\Inline::test(
+        return Proof::test(
             Proof\Name::of($name),
             \Closure::fromCallable($test),
         );
@@ -57,8 +57,8 @@ final class Prove
     public function property(
         string $property,
         Set|Provider $systemUnderTest,
-    ): Proof\Property {
-        return Proof\Property::of($property, Collapse::of($systemUnderTest));
+    ): Proof {
+        return Proof::property($property, Collapse::of($systemUnderTest));
     }
 
     /**
@@ -73,7 +73,7 @@ final class Prove
         Set|Provider $properties,
         Set|Provider $systemUnderTest,
     ): Proof {
-        return Proof\Properties::of(
+        return Proof::properties(
             Proof\Name::of($name),
             Collapse::of($properties),
             Collapse::of($systemUnderTest),

@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\PHPUnit;
 
-use Innmind\BlackBox\{
-    PHPUnit\Extension\CurrentTest,
-    PHPUnit\Extension\SelectCurrentTest,
-    PHPUnit\Extension\EraseCurrentTest,
-    PHPUnit\Extension\RecordFailures,
-    PHPUnit\Extension\RecordErrors,
-    PHPUnit\Extension\PrintFailures,
-    Runner\Proof\Scenario,
-    Set\Value,
+use Innmind\BlackBox\PHPUnit\Extension\{
+    CurrentTest,
+    SelectCurrentTest,
+    EraseCurrentTest,
+    RecordFailures,
+    RecordErrors,
+    PrintFailures,
 };
 use PHPUnit\Runner\Extension\{
     Extension as ExtensionInterface,
@@ -30,7 +28,7 @@ final class Extension implements ExtensionInterface
     private CurrentTest $currentTest;
     private SelectCurrentTest $selectCurrentTest;
     private EraseCurrentTest $eraseCurrentTest;
-    /** @var \WeakMap<TestMethod, array{callable, Value<Scenario>}> */
+    /** @var \WeakMap<TestMethod, array{callable, list<array{string, mixed}>}> */
     private \WeakMap $scenarii;
     /** @var \SplQueue<TestMethod> */
     private \SplQueue $tests;
@@ -44,7 +42,7 @@ final class Extension implements ExtensionInterface
         $this->currentTest = new CurrentTest;
         $this->selectCurrentTest = new SelectCurrentTest($this->currentTest);
         $this->eraseCurrentTest = new EraseCurrentTest($this->currentTest);
-        /** @var \WeakMap<TestMethod, array{callable, Value<Scenario>}> */
+        /** @var \WeakMap<TestMethod, array{callable, list<array{string, mixed}>}> */
         $this->scenarii = new \WeakMap;
         /** @var \SplQueue<TestMethod> */
         $this->tests = new \SplQueue;
@@ -57,9 +55,9 @@ final class Extension implements ExtensionInterface
     /**
      * @internal
      *
-     * @param Value<Scenario> $scenario
+     * @param list<array{string, mixed}> $scenario
      */
-    public static function record(callable $callable, Value $scenario): void
+    public static function record(callable $callable, array $scenario): void
     {
         if (\is_null(self::$instance)) {
             return;

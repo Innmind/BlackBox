@@ -3,16 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Runner\Printer\Proof;
 
-use Innmind\BlackBox\{
-    Runner\Proof\Scenario\Failure,
-    Runner\Assert\Failure\Truth,
-    Runner\Assert\Failure\Property,
-    Runner\Assert\Failure\Comparison,
-    Runner\Assert\Debug,
-    Runner\IO,
-    Runner\Printer\Proof,
-    Runner\Proof\Scenario,
-    PHPUnit\Proof\Bridge,
+use Innmind\BlackBox\Runner\{
+    Proof\Scenario\Failure,
+    Assert\Failure\Truth,
+    Assert\Failure\Property,
+    Assert\Failure\Comparison,
+    IO,
+    Printer\Proof,
 };
 use Symfony\Component\VarDumper\{
     Dumper\CliDumper,
@@ -80,24 +77,10 @@ final class Standard implements Proof
         IO $output,
         IO $error,
         Failure $failure,
-        Debug $debug,
     ): void {
         $this->newLine($output);
         $output("F\n\n");
-        $this->renderScenario($output, $failure->scenario()->unwrap());
-
-        if (!$debug->empty()) {
-            $output("\n");
-
-            /** @var mixed $variable */
-            foreach ($debug->all() as $name => $variable) {
-                $output(\sprintf(
-                    '$%s = %s',
-                    $name,
-                    $this->dump($variable),
-                ));
-            }
-        }
+        $this->renderScenario($output, $failure);
 
         $output("\n");
 
@@ -218,45 +201,15 @@ final class Standard implements Proof
         ) ?? '';
     }
 
-    private function renderScenario(IO $output, Scenario $scenario): void
-    {
-        if (
-            $scenario instanceof Scenario\Inline ||
-            $scenario instanceof Bridge
-        ) {
-            $this->renderInlineScenario($output, $scenario);
-        }
-
-        if ($scenario instanceof Scenario\Property) {
-            $this->renderPropertyScenario($output, $scenario);
-        }
-
-        if ($scenario instanceof Scenario\Properties) {
-            $this->renderPropertiesScenario($output, $scenario);
-        }
-    }
-
-    private function renderInlineScenario(IO $output, Scenario\Inline|Bridge $scenario): void
+    private function renderScenario(IO $output, Failure $failure): void
     {
         /** @var mixed $value */
-        foreach ($scenario->parameters() as [$name, $value]) {
+        foreach ($failure->parameters() as [$name, $value]) {
             $output(\sprintf(
                 '$%s = ',
                 $name,
             ));
             $output($this->dump($value));
         }
-    }
-
-    private function renderPropertyScenario(IO $output, Scenario\Property $scenario): void
-    {
-        $output('$property = ');
-        $output($this->dump($scenario->property()));
-    }
-
-    private function renderPropertiesScenario(IO $output, Scenario\Properties $scenario): void
-    {
-        $output('$properties = ');
-        $output($this->dump($scenario->properties()));
     }
 }

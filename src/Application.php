@@ -433,6 +433,25 @@ final class Application
     #[\NoDiscard]
     public function tryToProve(callable $proofs): Result
     {
+        $failures = $this->failures($proofs);
+
+        while ($failures->valid()) {
+            $failures->next();
+        }
+
+        return $failures->getReturn();
+    }
+
+    /**
+     * @internal
+     *
+     * @param callable(Prove): \Generator<Proof> $proofs
+     *
+     * @return \Generator<int, Proof\Scenario\Failure, null, Result>
+     */
+    #[\NoDiscard]
+    public function failures(callable $proofs): \Generator
+    {
         if (\is_null($this->tags)) {
             $tags = \array_map($this->parseTag, $this->args);
             $tags = \array_filter($tags, static fn($tag) => $tag instanceof \UnitEnum);
@@ -456,7 +475,9 @@ final class Application
         );
         $stats = Stats::new();
 
-        $run($stats, $this->codeCoverage);
+        foreach ($run($stats, $this->codeCoverage) as $failure) {
+            yield $failure;
+        }
 
         return Result::of($stats);
     }

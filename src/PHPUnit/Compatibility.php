@@ -9,9 +9,8 @@ use Innmind\BlackBox\{
     Runner\Given,
     Runner\Proof,
     Runner\Proof\Scenario,
-    Set\Value,
+    Runner\IO\Collect,
     Random,
-    PHPUnit\Framework\TestCase,
 };
 
 final class Compatibility
@@ -108,43 +107,62 @@ final class Compatibility
      */
     public function then(callable $test): void
     {
-        /** @var \SplQueue<array{mixed, Value<Scenario>}> */
-        $failures = new \SplQueue;
-        $printer = new ExtractFailure($failures);
-
-        $_ = $this
+        $io = Collect::new();
+        $failures = $this
             ->app
-            ->usePrinter($printer)
-            ->tryToProve(function() use ($test) {
-                yield Proof\Inline::of(
-                    Proof\Name::of('name does not matter here'),
+            ->displayOutputVia($io)
+            ->displayErrorVia($io)
+            ->failures(function() use ($test) {
+                yield Proof::of(
+                    Proof\Name::of('name does not matter'),
                     $this->given,
-                    function($assert, ...$args) use ($test) {
-                        $assert->not()->throws(
-                            static fn() => $test(...$args),
-                        );
-                        // This is here to force capturing the $this context and
-                        // for the cs fixer to not enforce a static callable.
-                        // The capturing is used in Proof\Scenario\Inline to
-                        // determine the correct list of arguments
-                        $_ = $this;
-                    },
+                    static fn($assert, ...$args) => $assert->not()->throws(
+                        static fn() => $test(...$args),
+                    ),
+                    static fn() => \array_map(
+                        static fn($parameter) => $parameter->getName(),
+                        new \ReflectionFunction(\Closure::fromCallable($test))->getParameters(),
+                    ),
                 );
             });
 
-        if (!$failures->isEmpty()) {
-            /** @var mixed $failure */
-            [$failure, $scenario] = $failures->dequeue();
+        if (!$this->blackbox) {
+            // BlackBox here can only return a failure if the user test has
+            // thrown an exception.
+            foreach ($failures as $failure) {
+                $kind = $failure->assertion()->kind();
 
-            if ($failure instanceof Assert\Failure && $this->blackbox) {
-                throw Scenario\Failure::of($failure, $scenario);
+                if (!($kind instanceof Assert\Failure\Property)) {
+                    continue;
+                }
+
+                /** @var mixed */
+                $error = $kind->value();
+
+                if ($error instanceof \Throwable) {
+                    Extension::record($test, $failure->parameters());
+
+                    throw $error;
+                }
             }
 
-            if ($failure instanceof \Throwable) {
-                Extension::record($test, $scenario);
+            return;
+        }
 
-                throw $failure;
+        foreach ($failures as $failure) {
+            $kind = $failure->assertion()->kind();
+
+            if (
+                $kind instanceof Assert\Failure\Property &&
+                $kind->value() instanceof Assert\Failure
+            ) {
+                throw Scenario\Failure::from(
+                    $kind->value(),
+                    $failure->parameters(),
+                );
             }
+
+            throw $failure;
         }
     }
 
@@ -154,21 +172,9 @@ final class Compatibility
     #[\NoDiscard]
     public function prove(callable $test): BlackBox\Proof
     {
-        $wrapped = function(mixed ...$args) use ($test): void {
-            /** @psalm-suppress RedundantCondition Scope is changed below */
-            if (!($this instanceof TestCase)) {
-                throw new \LogicException('Test must be inside an instance of '.TestCase::class);
-            }
-
-            $this->executeClosure($test, \array_values($args));
-        };
-        $refl = new \ReflectionFunction(\Closure::fromCallable($test));
-        /** @var \Closure(...mixed): void */
-        $wrapped = $wrapped->bindTo($refl->getClosureThis());
-
         return BlackBox\Proof::of(
             $this->given,
-            $wrapped,
+            $test,
         );
     }
 }

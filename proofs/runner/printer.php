@@ -294,12 +294,12 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($truth)),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -331,12 +331,12 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($truth)),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -373,12 +373,12 @@ return static function($load, $prove) {
                             $property,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -416,12 +416,12 @@ return static function($load, $prove) {
                             $property,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -462,12 +462,12 @@ return static function($load, $prove) {
                             $actual,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -509,12 +509,12 @@ return static function($load, $prove) {
                             $actual,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        Debug::new(),
                     ),
-                    Debug::new(),
                 );
 
             $written = $io->toString();
@@ -553,12 +553,18 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
-                        Value::of(Scenario\Property::of(
-                            new LowerBoundAtZero,
-                            static fn() => $counter,
+                        Value::of(Scenario::of(
+                            [
+                                new LowerBoundAtZero,
+                                static fn() => $counter,
+                            ],
+                            static fn($assert, $property, $factory) => $assert->debug(
+                                'systemUnderTest',
+                                $factory(),
+                            ),
                         )),
+                        $debug,
                     ),
-                    $debug,
                 );
 
             $written = $io->toString();
@@ -594,12 +600,18 @@ return static function($load, $prove) {
                     $io,
                     Failure::of(
                         Assert\Failure::of(Truth::of($message)),
-                        Value::of(Scenario\Properties::of(
-                            Properties::of(new LowerBoundAtZero),
-                            static fn() => $counter,
+                        Value::of(Scenario::of(
+                            [
+                                Properties::of(new LowerBoundAtZero),
+                                static fn() => $counter,
+                            ],
+                            static fn($assert, $properties, $factory) => $assert->debug(
+                                'systemUnderTest',
+                                $factory(),
+                            ),
                         )),
+                        $debug,
                     ),
-                    $debug,
                 );
 
             $written = $io->toString();
@@ -687,12 +699,12 @@ return static function($load, $prove) {
                             $actual,
                             $message,
                         )),
-                        Value::of(Scenario\Inline::of(
+                        Value::of(Scenario::of(
                             [$val],
                             static fn($assert, $foo) => null,
                         )),
+                        $debug,
                     ),
-                    $debug,
                 );
 
             $written = $io->toString();

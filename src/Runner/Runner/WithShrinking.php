@@ -92,7 +92,11 @@ final class WithShrinking
 
         do {
             if (\is_null($dichotomy)) {
-                throw Scenario\Failure::of($previousFailure, $previousStrategy);
+                throw Scenario\Failure::of(
+                    $previousFailure,
+                    $previousStrategy,
+                    $debug,
+                );
             }
 
             $currentStrategy = $dichotomy->a();
