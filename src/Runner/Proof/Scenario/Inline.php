@@ -14,17 +14,22 @@ final class Inline implements Scenario
     private array $args;
     /** @var \Closure(Assert, ...mixed): void */
     private \Closure $test;
+    /** @var ?\Closure(): list<string> */
+    private ?\Closure $nameParameters;
 
     /**
      * @param list<mixed> $args
      * @param \Closure(Assert, ...mixed): void $test
+     * @param ?\Closure(): list<string> $nameParameters
      */
     private function __construct(
         array $args,
         \Closure $test,
+        ?\Closure $nameParameters,
     ) {
         $this->args = $args;
         $this->test = $test;
+        $this->nameParameters = $nameParameters;
     }
 
     #[\Override]
@@ -38,25 +43,32 @@ final class Inline implements Scenario
      *
      * @param list<mixed> $args
      * @param \Closure(Assert, ...mixed): void $test
+     * @param ?\Closure(): list<string> $nameParameters
      */
     public static function of(
         array $args,
         \Closure $test,
+        ?\Closure $nameParameters = null,
     ): self {
-        return new self($args, $test);
+        return new self($args, $test, $nameParameters);
     }
 
     #[\Override]
     public function parameters(): array
     {
-        $reflection = new \ReflectionFunction($this->test);
-        $parameters = $reflection->getParameters();
-        \array_shift($parameters); // to remove the Assert parameter
+        if (\is_null($this->nameParameters)) {
+            $reflection = new \ReflectionFunction($this->test);
+            $parameters = $reflection->getParameters();
+            \array_shift($parameters); // to remove the Assert parameter
 
-        $parameters = \array_map(
-            static fn($parameter) => $parameter->getName(),
-            $parameters,
-        );
+            $parameters = \array_map(
+                static fn($parameter) => $parameter->getName(),
+                $parameters,
+            );
+        } else {
+            $parameters = ($this->nameParameters)();
+        }
+
         $args = [];
 
         /** @var mixed $arg */

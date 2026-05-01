@@ -11,7 +11,6 @@ use Innmind\BlackBox\{
     Runner\Proof\Scenario,
     Runner\IO\Collect,
     Random,
-    PHPUnit\Framework\TestCase,
 };
 
 final class Compatibility
@@ -179,21 +178,9 @@ final class Compatibility
     #[\NoDiscard]
     public function prove(callable $test): BlackBox\Proof
     {
-        $wrapped = function(mixed ...$args) use ($test): void {
-            /** @psalm-suppress RedundantCondition Scope is changed below */
-            if (!($this instanceof TestCase)) {
-                throw new \LogicException('Test must be inside an instance of '.TestCase::class);
-            }
-
-            $this->executeClosure($test, \array_values($args));
-        };
-        $refl = new \ReflectionFunction(\Closure::fromCallable($test));
-        /** @var \Closure(...mixed): void */
-        $wrapped = $wrapped->bindTo($refl->getClosureThis());
-
         return BlackBox\Proof::of(
             $this->given,
-            $wrapped,
+            $test,
         );
     }
 

@@ -21,6 +21,8 @@ final class Inline implements Proof
     /** @var ?int<1, max> */
     private ?int $scenarii;
     private ?string $extraName;
+    /** @var ?\Closure(): list<string> */
+    private ?\Closure $nameParameters;
 
     /**
      * @psalm-mutation-free
@@ -28,6 +30,7 @@ final class Inline implements Proof
      * @param \Closure(Assert, ...mixed): void $test
      * @param list<\UnitEnum> $tags
      * @param ?int<1, max> $scenarii
+     * @param ?\Closure(): list<string> $nameParameters
      */
     private function __construct(
         Name $name,
@@ -36,6 +39,7 @@ final class Inline implements Proof
         array $tags,
         ?int $scenarii,
         ?string $extraName,
+        ?\Closure $nameParameters,
     ) {
         $this->name = $name;
         $this->values = $values;
@@ -43,19 +47,30 @@ final class Inline implements Proof
         $this->tags = $tags;
         $this->scenarii = $scenarii;
         $this->extraName = $extraName;
+        $this->nameParameters = $nameParameters;
     }
 
     /**
      * @psalm-pure
      *
      * @param \Closure(Assert, ...mixed): void $test
+     * @param ?\Closure(): list<string> $nameParameters
      */
     public static function of(
         Name $name,
         Given $values,
         \Closure $test,
+        ?\Closure $nameParameters = null,
     ): self {
-        return new self($name, $values, $test, [], null, null);
+        return new self(
+            $name,
+            $values,
+            $test,
+            [],
+            null,
+            null,
+            $nameParameters,
+        );
     }
 
     /**
@@ -73,6 +88,7 @@ final class Inline implements Proof
             $test,
             [],
             1,
+            null,
             null,
         );
     }
@@ -103,6 +119,7 @@ final class Inline implements Proof
             $this->tags,
             $this->scenarii,
             $name,
+            $this->nameParameters,
         );
     }
 
@@ -120,6 +137,7 @@ final class Inline implements Proof
             [...$this->tags, ...$tags],
             $this->scenarii,
             $this->extraName,
+            $this->nameParameters,
         );
     }
 
@@ -135,6 +153,7 @@ final class Inline implements Proof
             $this->tags,
             $take,
             $this->extraName,
+            $this->nameParameters,
         );
     }
 
@@ -151,7 +170,11 @@ final class Inline implements Proof
             ->values
             ->set()
             ->randomize()
-            ->map(fn(array $args) => Scenario\Inline::of($args, $this->test))
+            ->map(fn(array $args) => Scenario\Inline::of(
+                $args,
+                $this->test,
+                $this->nameParameters,
+            ))
             ->take($this->scenarii ?? $count);
     }
 }
