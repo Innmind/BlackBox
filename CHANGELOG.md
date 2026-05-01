@@ -8,6 +8,7 @@
 - `Innmind\BlackBox\Set::disableShrinking()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
+- `Innmind\BlackBox\Application::mapProof()`
 
 ### Changed
 

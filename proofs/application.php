@@ -588,4 +588,47 @@ return static function($prove) {
             },
         )
         ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Shrinking can be disabled on each proof',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayOutputVia($io)
+                    ->displayErrorVia($io)
+                    ->usePrinter(Standard::withoutColors())
+                    ->mapProof(static fn($proof) => match ($proof->tagged(Tag::positive)) {
+                        true => $proof->disableShrinking(),
+                        false => $proof,
+                    })
+                    ->tryToProve(static function($prove) {
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers()->between(1, 100))
+                            ->test(
+                                static fn($assert, $a) => $assert->same(0, $a),
+                            )
+                            ->tag(Tag::positive);
+
+                        yield $prove
+                            ->proof('example')
+                            ->given(Set::integers()->between(1, 100))
+                            ->test(
+                                static fn($assert, $b) => $assert->same(0, $b),
+                            )
+                            ->tag(Tag::negative);
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('$b = 1')
+                    ->not()
+                    ->contains('$a = 0')
+                    ->contains("SF\n\n\$a = 1\n");
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 };
