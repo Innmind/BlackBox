@@ -11,19 +11,13 @@ use Innmind\BlackBox\{
 
 final class Failure extends \Exception
 {
-    private Assert\Failure $failure;
-    /** @var list<array{string, mixed}> */
-    private array $parameters;
-
     /**
      * @param list<array{string, mixed}> $parameters
      */
     private function __construct(
-        Assert\Failure $failure,
-        array $parameters,
+        private Assert\Failure $failure,
+        private array $parameters,
     ) {
-        $this->failure = $failure;
-        $this->parameters = $parameters;
     }
 
     /**

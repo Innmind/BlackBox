@@ -11,13 +11,10 @@ use Innmind\BlackBox\Runner\{
 
 final class Number
 {
-    private Stats $stats;
-    private int|float $number;
-
-    private function __construct(Stats $stats, int|float $number)
-    {
-        $this->stats = $stats;
-        $this->number = $number;
+    private function __construct(
+        private Stats $stats,
+        private int|float $number,
+    ) {
     }
 
     /**

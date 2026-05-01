@@ -18,26 +18,6 @@ use Innmind\BlackBox\Runner\{
 
 final class Application
 {
-    private Random $random;
-    private Printer $printer;
-    private IO $output;
-    private IO $error;
-    private WithShrinking|WithoutShrinking $runner;
-    /** @var \Closure(string): ?\UnitEnum */
-    private \Closure $parseTag;
-    private ?CodeCoverage $codeCoverage;
-    /** @var list<string> */
-    private array $args;
-    /** @var int<1, max> */
-    private int $scenariiPerProof;
-    private bool $disableMemoryLimit;
-    private bool $stopOnFailure;
-    private bool $failWhenNoAssertions;
-    /** @var ?list<\UnitEnum> */
-    private ?array $tags;
-    /** @var \Closure(Proof): Proof */
-    private \Closure $mapProof;
-
     /**
      * @param \Closure(string): ?\UnitEnum $parseTag
      * @param list<string> $args
@@ -46,35 +26,21 @@ final class Application
      * @param \Closure(Proof): Proof $mapProof
      */
     private function __construct(
-        Random $random,
-        Printer $printer,
-        IO $output,
-        IO $error,
-        WithShrinking|WithoutShrinking $runner,
-        \Closure $parseTag,
-        ?CodeCoverage $codeCoverage,
-        array $args,
-        int $scenariiPerProof,
-        bool $disableMemoryLimit,
-        bool $stopOnFailure,
-        bool $failWhenNoAssertions,
-        ?array $tags,
-        \Closure $mapProof,
+        private Random $random,
+        private Printer $printer,
+        private IO $output,
+        private IO $error,
+        private WithShrinking|WithoutShrinking $runner,
+        private \Closure $parseTag,
+        private ?CodeCoverage $codeCoverage,
+        private array $args,
+        private int $scenariiPerProof,
+        private bool $disableMemoryLimit,
+        private bool $stopOnFailure,
+        private bool $failWhenNoAssertions,
+        private ?array $tags,
+        private \Closure $mapProof,
     ) {
-        $this->random = $random;
-        $this->printer = $printer;
-        $this->output = $output;
-        $this->error = $error;
-        $this->runner = $runner;
-        $this->parseTag = $parseTag;
-        $this->codeCoverage = $codeCoverage;
-        $this->args = $args;
-        $this->scenariiPerProof = $scenariiPerProof;
-        $this->disableMemoryLimit = $disableMemoryLimit;
-        $this->stopOnFailure = $stopOnFailure;
-        $this->failWhenNoAssertions = $failWhenNoAssertions;
-        $this->tags = $tags;
-        $this->mapProof = $mapProof;
     }
 
     /**

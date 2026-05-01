@@ -5,12 +5,10 @@ namespace Fixtures\Innmind\BlackBox;
 
 final class Counter
 {
-    private int $value;
     private bool $correct = true;
 
-    public function __construct(int $initial = 0)
+    public function __construct(private int $value = 0)
     {
-        $this->value = $initial;
     }
 
     public static function failOnPurpose(): self

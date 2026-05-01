@@ -15,17 +15,13 @@ use Innmind\BlackBox\{
  */
 final class Properties implements Provider
 {
-    /** @var Set<Concrete>|Provider<Concrete> */
-    private Set|Provider $properties;
-
     /**
      * @psalm-mutation-free
      *
      * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    private function __construct(Set|Provider $properties)
+    private function __construct(private Set|Provider $properties)
     {
-        $this->properties = $properties;
     }
 
     /**

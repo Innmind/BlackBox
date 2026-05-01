@@ -14,18 +14,14 @@ use Innmind\BlackBox\{
  */
 final class Matrix
 {
-    private Implementation $a;
-    /** @var Implementation<Combination> */
-    private Implementation $combinations;
-
     /**
      * @param Implementation<mixed> $a
      * @param Implementation<Combination> $combinations
      */
-    public function __construct(Implementation $a, Implementation $combinations)
-    {
-        $this->a = $a;
-        $this->combinations = $combinations;
+    public function __construct(
+        private Implementation $a,
+        private Implementation $combinations,
+    ) {
     }
 
     /**

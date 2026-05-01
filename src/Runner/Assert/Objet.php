@@ -13,13 +13,10 @@ use Innmind\BlackBox\Runner\{
  */
 final class Objet
 {
-    private Stats $stats;
-    private object $object;
-
-    private function __construct(Stats $stats, object $object)
-    {
-        $this->stats = $stats;
-        $this->object = $object;
+    private function __construct(
+        private Stats $stats,
+        private object $object,
+    ) {
     }
 
     /**

@@ -5,22 +5,14 @@ namespace Innmind\BlackBox\Runner\Assert\Failure;
 
 final class Comparison
 {
-    private mixed $expected;
-    private mixed $actual;
-    /** @var non-empty-string */
-    private string $message;
-
     /**
      * @param non-empty-string $message
      */
     private function __construct(
-        mixed $expected,
-        mixed $actual,
-        string $message,
+        private mixed $expected,
+        private mixed $actual,
+        private string $message,
     ) {
-        $this->expected = $expected;
-        $this->actual = $actual;
-        $this->message = $message;
     }
 
     /**

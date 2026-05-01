@@ -5,15 +5,11 @@ namespace Innmind\BlackBox\Runner\Assert\Failure;
 
 final class Truth
 {
-    /** @var non-empty-string */
-    private string $message;
-
     /**
      * @param non-empty-string $message
      */
-    private function __construct(string $message)
+    private function __construct(private string $message)
     {
-        $this->message = $message;
     }
 
     /**

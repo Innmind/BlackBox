@@ -11,11 +11,8 @@ use Innmind\BlackBox\Runner\Assert\Failure\{
 
 final class Failure extends \Exception
 {
-    private Truth|Property|Comparison $kind;
-
-    private function __construct(Truth|Property|Comparison $kind)
+    private function __construct(private Truth|Property|Comparison $kind)
     {
-        $this->kind = $kind;
     }
 
     /**

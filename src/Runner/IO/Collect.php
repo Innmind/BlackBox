@@ -10,15 +10,11 @@ use Innmind\BlackBox\Runner\IO;
  */
 final class Collect implements IO
 {
-    /** @var list<string> */
-    private array $written;
-
     /**
      * @param list<string> $written
      */
-    private function __construct(array $written)
+    private function __construct(private array $written)
     {
-        $this->written = $written;
     }
 
     #[\Override]

@@ -11,11 +11,8 @@ use Innmind\BlackBox\Runner\{
 
 final class Not
 {
-    private Stats $stats;
-
-    private function __construct(Stats $stats)
+    private function __construct(private Stats $stats)
     {
-        $this->stats = $stats;
     }
 
     /**

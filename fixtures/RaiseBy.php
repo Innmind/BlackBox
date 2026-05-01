@@ -11,11 +11,8 @@ use Innmind\BlackBox\{
 
 final class RaiseBy implements Property
 {
-    private int $raise;
-
-    public function __construct(int $raise)
+    public function __construct(private int $raise)
     {
-        $this->raise = $raise;
     }
 
     /**

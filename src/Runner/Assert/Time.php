@@ -7,17 +7,13 @@ use Innmind\BlackBox\Runner\Stats;
 
 final class Time
 {
-    private Stats $stats;
-    /** @var callable(): void */
-    private $action;
-
     /**
-     * @param callable(): void $action
+     * @param \Closure(): void $action
      */
-    private function __construct(Stats $stats, callable $action)
-    {
-        $this->stats = $stats;
-        $this->action = $action;
+    private function __construct(
+        private Stats $stats,
+        private \Closure $action,
+    ) {
     }
 
     /**
@@ -27,7 +23,7 @@ final class Time
      */
     public static function of(Stats $stats, callable $action): self
     {
-        return new self($stats, $action);
+        return new self($stats, \Closure::fromCallable($action));
     }
 
     #[\NoDiscard]

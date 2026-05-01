@@ -5,17 +5,13 @@ namespace Innmind\BlackBox\Runner\Assert\Failure;
 
 final class Property
 {
-    private mixed $value;
-    /** @var non-empty-string */
-    private string $message;
-
     /**
      * @param non-empty-string $message
      */
-    private function __construct(mixed $value, string $message)
-    {
-        $this->value = $value;
-        $this->message = $message;
+    private function __construct(
+        private mixed $value,
+        private string $message,
+    ) {
     }
 
     /**

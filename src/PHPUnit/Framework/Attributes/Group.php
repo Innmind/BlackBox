@@ -10,16 +10,10 @@ namespace Innmind\BlackBox\PHPUnit\Framework\Attributes;
 final readonly class Group
 {
     /**
-     * @var non-empty-string
-     */
-    private string $name;
-
-    /**
      * @param non-empty-string $name
      */
-    public function __construct(string $name)
+    public function __construct(private string $name)
     {
-        $this->name = $name;
     }
 
     /**

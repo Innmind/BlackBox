@@ -5,29 +5,17 @@ namespace Innmind\BlackBox\Util;
 
 final class Slice
 {
-    /** @var int<0, max> */
-    private int $offset;
-    /** @var int<0, max> */
-    private int $length;
-    /** @var int<0, max> */
-    private int $minimum;
-    private bool $takeLeading;
-
     /**
      * @param int<0, max> $offset
      * @param int<0, max> $length
      * @param int<0, max> $minimum
      */
     private function __construct(
-        int $offset,
-        int $length,
-        int $minimum,
-        bool $takeLeading,
+        private int $offset,
+        private int $length,
+        private int $minimum,
+        private bool $takeLeading,
     ) {
-        $this->offset = $offset;
-        $this->length = $length;
-        $this->minimum = $minimum;
-        $this->takeLeading = $takeLeading;
     }
 
     #[\NoDiscard]

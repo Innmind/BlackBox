@@ -10,16 +10,10 @@ namespace Innmind\BlackBox\PHPUnit\Framework\Attributes;
 final readonly class DataProvider
 {
     /**
-     * @var non-empty-string
-     */
-    private string $methodName;
-
-    /**
      * @param non-empty-string $methodName
      */
-    public function __construct(string $methodName)
+    public function __construct(private string $methodName)
     {
-        $this->methodName = $methodName;
     }
 
     /**

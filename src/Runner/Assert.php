@@ -14,13 +14,10 @@ use Innmind\BlackBox\Runner\Assert\{
 
 final class Assert
 {
-    private Stats $stats;
-    private Debug $debug;
-
-    private function __construct(Stats $stats, Debug $debug)
-    {
-        $this->stats = $stats;
-        $this->debug = $debug;
+    private function __construct(
+        private Stats $stats,
+        private Debug $debug,
+    ) {
     }
 
     /**

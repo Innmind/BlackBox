@@ -11,13 +11,10 @@ use Innmind\BlackBox\Runner\{
 
 final class Arr
 {
-    private Stats $stats;
-    private array $value;
-
-    private function __construct(Stats $stats, array $value)
-    {
-        $this->stats = $stats;
-        $this->value = $value;
+    private function __construct(
+        private Stats $stats,
+        private array $value,
+    ) {
     }
 
     /**
