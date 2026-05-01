@@ -7,7 +7,7 @@ use Innmind\BlackBox\{
     Tag,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->test(
             'Set::strings()->unsafe() shrink to an empty string',

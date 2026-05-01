@@ -22,7 +22,7 @@ use Fixtures\Innmind\BlackBox\{
     UpperBoundAtHundred,
 };
 
-return static function($load, $prove) {
+return static function($prove) {
     yield $prove
         ->property(
             DownAndUpIsAnIdentityFunction::class,
