@@ -7,6 +7,8 @@ use Innmind\BlackBox\{
     Set,
     Runner\Proof\Name,
     Runner\Proof\Scenario,
+    Property,
+    Properties,
 };
 
 final class Proof
@@ -91,6 +93,80 @@ final class Proof
             1,
             null,
             static fn() => [],
+        );
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     *
+     * @param class-string<Property> $property
+     * @param Set<callable(): object> $systemUnderTest
+     */
+    public static function property(
+        string $property,
+        Set $systemUnderTest,
+    ): self {
+        /** @var Set<Property> */
+        $propertySet = ([$property, 'any'])();
+
+        return self::of(
+            Name::of($property),
+            Given::of(Set::tuple(
+                $propertySet,
+                $systemUnderTest,
+            )),
+            static function($assert, Property $property, callable $factory) {
+                /** @var object */
+                $sut = $factory();
+                $assert->debug('systemUnderTest', $sut);
+
+                if (!$property->applicableTo($sut)) {
+                    $assert->fail('The property is not applicable to the system under test.');
+                }
+
+                try {
+                    $property->ensureHeldBy($assert, $sut);
+                } catch (Assert\Failure $e) {
+                    throw $e;
+                } catch (\Throwable $e) {
+                    $assert->not()->throws(static fn() => throw $e);
+                }
+            },
+        );
+    }
+
+    /**
+     * @internal
+     * @psalm-pure
+     *
+     * @param Set<Properties> $properties
+     * @param Set<callable(): object> $systemUnderTest
+     */
+    public static function properties(
+        Name $name,
+        Set $properties,
+        Set $systemUnderTest,
+    ): self {
+        return self::of(
+            $name,
+            Given::of(Set::tuple(
+                $properties,
+                $systemUnderTest,
+            )),
+            static function($assert, Properties $properties, callable $factory) {
+                /** @var object */
+                $sut = $factory();
+                $assert->debug('systemUnderTest', $sut);
+
+                try {
+                    $properties->ensureHeldBy($assert, $sut);
+                } catch (Assert\Failure $e) {
+                    throw $e;
+                } catch (\Throwable $e) {
+                    $assert->not()->throws(static fn() => throw $e);
+                }
+            },
         );
     }
 

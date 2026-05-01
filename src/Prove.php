@@ -58,7 +58,7 @@ final class Prove
         string $property,
         Set|Provider $systemUnderTest,
     ): Proof {
-        return Proof\Property::of($property, Collapse::of($systemUnderTest));
+        return Proof::property($property, Collapse::of($systemUnderTest));
     }
 
     /**
@@ -73,7 +73,7 @@ final class Prove
         Set|Provider $properties,
         Set|Provider $systemUnderTest,
     ): Proof {
-        return Proof\Properties::of(
+        return Proof::properties(
             Proof\Name::of($name),
             Collapse::of($properties),
             Collapse::of($systemUnderTest),
