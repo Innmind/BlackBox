@@ -28,20 +28,18 @@ enum Strategy
     public function __invoke(
         Printer\Proof $print,
         IO $output,
-        IO $error,
         Assert $assert,
         Value $scenario,
         Debug $debug,
     ): void {
         try {
             $scenario->unwrap()($assert);
-            $print->success($output, $error);
+            $print->success($output);
         } catch (Assert\Failure $e) {
             $this->shrink(
                 $e,
                 $print,
                 $output,
-                $error,
                 $assert,
                 $scenario,
                 $debug,
@@ -58,7 +56,6 @@ enum Strategy
         Assert\Failure $previousFailure,
         Printer\Proof $print,
         IO $output,
-        IO $error,
         Assert $assert,
         Value $scenario,
         Debug $debug,
@@ -120,7 +117,7 @@ enum Strategy
                 $previousFailure = $e;
                 $previousStrategy = $currentStrategy;
 
-                $print->shrunk($output, $error);
+                $print->shrunk($output);
 
                 continue;
             }

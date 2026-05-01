@@ -55,7 +55,7 @@ final class Printer
     /**
      * @internal
      */
-    public function start(IO $output, IO $error): void
+    public function start(IO $output): void
     {
         $this->timer->start();
 
@@ -70,7 +70,6 @@ final class Printer
     #[\NoDiscard]
     public function proof(
         IO $output,
-        IO $error,
         Proof\Name $proof,
         array $tags,
     ): Printer\Proof {
@@ -98,7 +97,7 @@ final class Printer
     /**
      * @internal
      */
-    public function end(IO $output, IO $error, Stats $stats): void
+    public function end(IO $output, Stats $stats): void
     {
         $statsToPrint = \sprintf(
             'Proofs: %s, Scenarii: %s, Assertions: %s',

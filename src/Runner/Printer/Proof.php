@@ -72,32 +72,29 @@ final class Proof
         );
     }
 
-    public function emptySet(IO $output, IO $error): void
+    public function emptySet(IO $output): void
     {
-        $error("No scenario found\n");
+        $output("No scenario found\n");
 
         if ($this->addGroups) {
             $output("::endgroup::\n");
         }
     }
 
-    public function success(IO $output, IO $error): void
+    public function success(IO $output): void
     {
         $this->newLine($output);
         $output('.');
     }
 
-    public function shrunk(IO $output, IO $error): void
+    public function shrunk(IO $output): void
     {
         $this->newLine($output);
         $output('S');
     }
 
-    public function failed(
-        IO $output,
-        IO $error,
-        Failure $failure,
-    ): void {
+    public function failed(IO $output, Failure $failure): void
+    {
         $this->newLine($output);
         $output("F\n\n");
         $this->renderScenario($output, $failure);
@@ -165,7 +162,7 @@ final class Proof
         }
     }
 
-    public function end(IO $output, IO $error): void
+    public function end(IO $output): void
     {
         $this->scenarii = 0;
         $output("\n\n");

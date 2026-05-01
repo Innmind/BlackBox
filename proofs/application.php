@@ -25,12 +25,9 @@ return static function($prove) {
         ->proof('BlackBox can run with any of the random strategies')
         ->given(Set::of(...Random::cases()))
         ->test(static function($assert, $random) {
-            $io = Collect::new();
-
             $result = Application::new([])
                 ->useRandom($random)
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
+                ->displayVia(Collect::new())
                 ->allowProofsToNotMakeAnyAssertions()
                 ->tryToProve(Load::file(__DIR__.'/../fixtures/proofs.php'));
 
@@ -46,8 +43,7 @@ return static function($prove) {
 
             $result = Application::new([])
                 ->scenariiPerProof($scenarii)
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
+                ->displayVia($io)
                 ->tryToProve(static function($prove) {
                     yield $prove
                         ->proof('example')
@@ -70,8 +66,7 @@ return static function($prove) {
 
             $result = Application::new([])
                 ->scenariiPerProof($scenarii)
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
+                ->displayVia($io)
                 ->tryToProve(static function($prove) {
                     yield $prove->property(
                         LowerBoundAtZero::class,
@@ -93,8 +88,7 @@ return static function($prove) {
 
             $result = Application::new([])
                 ->scenariiPerProof($scenarii)
-                ->displayOutputVia($io)
-                ->displayErrorVia($io)
+                ->displayVia($io)
                 ->allowProofsToNotMakeAnyAssertions()
                 ->tryToProve(static function($prove) {
                     yield $prove->properties(
@@ -128,8 +122,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove
@@ -160,8 +153,7 @@ return static function($prove) {
                 $value = null;
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->disableShrinking()
                     ->tryToProve(static function($prove) use (&$value) {
@@ -192,16 +184,13 @@ return static function($prove) {
         ->test(
             'BlackBox can disable the memory limit',
             static function($assert) {
-                $io = Collect::new();
-
                 $assert
                     ->expected('-1')
                     ->not()
                     ->same(\ini_get('memory_limit'));
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia(Collect::new())
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->disableMemoryLimit()
                     ->tryToProve(static function($prove) {
@@ -231,8 +220,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->stopOnFailure()
                     ->tryToProve(static function($prove) use (&$value) {
@@ -269,8 +257,7 @@ return static function($prove) {
                 $result = Application::new([])
                     ->map(
                         static fn($app) => $app
-                            ->displayOutputVia($io)
-                            ->displayErrorVia($io)
+                            ->displayVia($io)
                             ->mapPrinter(static fn($printer) => $printer->withoutColors())
                             ->stopOnFailure(),
                     )
@@ -306,8 +293,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->when(
                         true,
@@ -346,8 +332,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->when(
                         false,
@@ -386,8 +371,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) use (&$value) {
                         yield $prove
@@ -404,8 +388,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->allowProofsToNotMakeAnyAssertions()
                     ->tryToProve(static function($prove) use (&$value) {
@@ -431,8 +414,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) use (&$value) {
                         yield $prove
@@ -462,8 +444,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->useExhaustiveShrinking()
                     ->tryToProve(static function($prove) use (&$value) {
@@ -494,8 +475,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->filterOnTags(Tag::local)
                     ->tryToProve(static function($prove) {
@@ -529,8 +509,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove->test(
@@ -564,8 +543,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->tryToProve(static function($prove) {
                         yield $prove
@@ -595,8 +573,7 @@ return static function($prove) {
                 $io = Collect::new();
 
                 $result = Application::new([])
-                    ->displayOutputVia($io)
-                    ->displayErrorVia($io)
+                    ->displayVia($io)
                     ->mapPrinter(static fn($printer) => $printer->withoutColors())
                     ->mapProof(static fn($proof) => match ($proof->tagged(Tag::positive)) {
                         true => $proof->disableShrinking(),

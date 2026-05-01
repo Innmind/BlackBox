@@ -11,6 +11,7 @@
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
 - `Innmind\BlackBox\Application::mapPrinter()`
+- `Innmind\BlackBox\Application::displayVia()`
 
 ### Changed
 
@@ -34,6 +35,8 @@
 - Support for `phpunit/php-code-coverage` `~10.0|~11.0|~12.0`
 - `Innmind\BlackBox\Application::disableGlobalFunctions()`
 - `Innmind\BlackBox\Application::usePrinter()`
+- `Innmind\BlackBox\Application::displayOutputVia()`
+- `Innmind\BlackBox\Application::displayErrorVia()`
 - `Innmind\BlackBox\Runner\proof()`
 - `Innmind\BlackBox\Runner\test()`
 - `Innmind\BlackBox\Runner\given()`
