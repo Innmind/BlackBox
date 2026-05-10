@@ -73,4 +73,4 @@ composer require --dev innmind/black-box
 
 ## Documentation
 
-Full documentation can be found in the [here](https://innmind.github.io/BlackBox/).
+Full documentation can be found in the [here](https://innmind.org/BlackBox/).
