@@ -81,6 +81,44 @@ final class Strings implements Provider
     }
 
     /**
+     * @psalm-pure
+     * @no-named-arguments
+     *
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $second
+     * @param Set<string>|Provider<string> $rest
+     *
+     * @return Set<non-empty-list<string>>
+     */
+    #[\NoDiscard]
+    public function mutuallyExclusive(
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$rest,
+    ): Set {
+        /** @var Set<non-empty-list<string>> */
+        return Set::tuple(
+            $first,
+            $second,
+            ...$rest,
+        )->filter(static function($strings) {
+            foreach ($strings as $i => $a) {
+                foreach ($strings as $j => $b) {
+                    if ($i === $j) {
+                        continue;
+                    }
+
+                    if (\str_contains(\strtolower($a), \strtolower($b))) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        });
+    }
+
+    /**
      * @psalm-mutation-free
      *
      * @param int<0, max> $min

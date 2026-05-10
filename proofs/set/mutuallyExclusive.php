@@ -8,8 +8,8 @@ use Innmind\BlackBox\{
 
 return static function($prove) {
     yield $prove
-        ->proof('Set\MutuallyExclusive')
-        ->given(Set\MutuallyExclusive::of(
+        ->proof('Set::strings()->mutuallyExclusive()')
+        ->given(Set::strings()->mutuallyExclusive(
             Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
             Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
             Set::strings()->madeOf(Set::strings()->unicode()->char(), Set::strings()->chars()),
