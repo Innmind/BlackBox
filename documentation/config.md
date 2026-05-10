@@ -142,24 +142,26 @@ By default BlackBox will fail a proof when a scenario did not make any assertion
 
 However if your style of making assertions may not always lead to a proof making one, then you can disable this feature this way:
 
-```php hl_lines="4"
-use Innmind\BlackBox\Application;
+```php hl_lines="7"
+use Innmind\BlackBox\{
+    Application,
+    Prove,
+};
 
 Application::new([])
     ->allowProofsToNotMakeAnyAssertions()
-    ->tryToProve(static function() {
-        yield proof(
-            'Some proof',
-            given(Set::of('some input')),
-            static function($assert, $input) {
+    ->tryToProve(static function(Prove $prove) {
+        yield $prove
+            ->proof('Some proof')
+            ->given(Set::of('some input'))
+            ->test(static function($assert, $input) {
                 try {
                     doSomething($input);
                     $assert->fail('It should throw');
                 } catch (\Exception $e) {
                     // expected behaviour
                 }
-            },
-        );
+            });
     })
     ->exit();
 ```
