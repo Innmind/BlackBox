@@ -73,8 +73,8 @@ If you build packages, you can expose these properties. This allows developers t
 
 Innmind uses this approach for packages such as:
 
-- [`innmind/filesystem`](https://innmind.github.io/Filesystem/) used by [`innmind/s3`](https://packagist.org/packages/innmind/s3)
-- [`formal/orm`](https://formal-php.github.io/orm/) to test its different adapters
+- [`innmind/filesystem`](https://innmind.org/Filesystem/) used by [`innmind/s3`](https://packagist.org/packages/innmind/s3)
+- [`formal/orm`](https://formal-php.org/orm/) to test its different adapters
 
 ## Shrinking
 

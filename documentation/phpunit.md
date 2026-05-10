@@ -115,7 +115,7 @@ Like this BlackBox is able to shrink a failing scenario. But to see the generate
 
 If you wish to migrate to BlackBox but don't want to rewrite all your existing tests you can run them directly via BlackBox.
 
-The first step is to prefix the `PHPUnit\Framework\TestCase` class with `Innmind\BlackBox\`.
+The first step is to prefix the `PHPUnit\*` classes with `Innmind\BlackBox\`.
 
 The second step is to load the tests like this:
 
@@ -126,9 +126,7 @@ use Innmind\BlackBox\{
 };
 
 Application::new()
-    ->tryToProve(function() {
-        yield from Load::testsAt('path/to/your/tests');
-    })
+    ->tryToProve(Load::directory('path/to/your/tests'))
     ->exit();
 ```
 
@@ -146,9 +144,9 @@ You can better integrate these proofs inside BlackBox via these changes:
 ```php title="MyTestCase.php" hl_lines="11 13 18"
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
+    PHPUnit\Framework\TestCase,
     Set,
 };
-use PHPUnit\Framework\TestCase;
 
 final class MyTestCase extends TestCase
 {

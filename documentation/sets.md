@@ -447,18 +447,6 @@ Set::of(...$values);
 
 This describes all the values that you put in (ie `#!php Set::of(true, false)` to describe booleans).
 
-### From a generator
-
-```php
-use Innmind\BlackBox\Set;
-
-Set::generator(static function() {
-    yield from $values;
-});
-```
-
-This describes values that you will provide via a `Generator`.
-
 ## Higher order `Set`s
 
 ### Composite

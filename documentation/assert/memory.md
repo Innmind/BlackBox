@@ -16,11 +16,12 @@ In order for these assertions to work properly you need to:
     use Innmind\BlackBox\{
         Application,
         Runner\Assert,
+        Prove,
     };
 
     Application::new([])
-        ->tryToProve(static function(): \Generator {
-            yield test(
+        ->tryToProve(static function(Prove $prove): \Generator {
+            yield $prove->test(
                 'Some memory test',
                 static function(Assert $assert) {
                     $assert

@@ -6,13 +6,16 @@ Since it uses a `Generator` you can easily split them into multiple files:
 
 === "BlackBox"
     ```php title="blackbox.php"
-    use Innmind\BlackBox\Application;
+    use Innmind\BlackBox\{
+        Application,
+        Prove,
+    };
 
     Application::new([])
-        ->tryToProve(static function(): \Generator {
-            yield from (require 'proofs/file1.php')();
-            yield from (require 'proofs/file2.php')();
-            yield from (require 'proofs/etc.php')();
+        ->tryToProve(static function(Prove $prove): \Generator {
+            yield from (require 'proofs/file1.php')($prove);
+            yield from (require 'proofs/file2.php')($prove);
+            yield from (require 'proofs/etc.php')($prove);
         })
         ->exit();
     ```
@@ -22,16 +25,16 @@ Since it uses a `Generator` you can easily split them into multiple files:
     use Innmind\BlackBox\{
         Runner\Assert,
         Set,
+        Prove,
     };
 
-    return static function(): \Generator {
-        yield proof(
-            'Some proof',
-            given(Set\Integers::any()),
-            static function(Assert $assert, int $value) {
+    return static function(Prove $prove): \Generator {
+        yield $prove
+            ->proof('Some proof')
+            ->given(Set::integers()),
+            ->test(static function(Assert $assert, int $value) {
                 // your code here
-            },
-        );
+            });
     };
     ```
 
@@ -40,16 +43,16 @@ Since it uses a `Generator` you can easily split them into multiple files:
     use Innmind\BlackBox\{
         Runner\Assert,
         Set,
+        Prove,
     };
 
-    return static function(): \Generator {
-        yield proof(
-            'Some proof',
-            given(Set\Strings::any()),
-            static function(Assert $assert, int $value) {
+    return static function(Prove $prove): \Generator {
+        yield $prove
+            ->proof('Some proof')
+            ->given(Set::strings()),
+            ->test(static function(Assert $assert, int $value) {
                 // your code here
-            },
-        );
+            });
     };
     ```
 
@@ -58,10 +61,11 @@ Since it uses a `Generator` you can easily split them into multiple files:
     use Innmind\BlackBox\{
         Runner\Assert,
         Set,
+        Prove,
     };
 
-    return static function(): \Generator {
-        yield test(
+    return static function(Prove $prove): \Generator {
+        yield $prove->test(
             'Some proof',
             static function(Assert $assert) {
                 // your code here

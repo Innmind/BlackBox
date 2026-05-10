@@ -82,56 +82,20 @@ Application::new([])
     ->exit();
 ```
 
-## Changing the way the framework outputs the results
-
-By default the framework outputs any data as soon as possible to keep the usage of memory low but this means rewinding the output to find a failure. If you want to change the output you need to implement the interface `Innmind\BlackBox\Runner\Printer` and declare it liek this:
-
-```php
-use Innmind\BlackBox\{
-    Application,
-    Runner\Load,
-};
-
-Application::new([])
-    ->usePrinter(new YourPrinter())
-    ->tryToProve(Load::everythingIn('proofs/'))
-    ->exit();
-```
-
-## Disable global functions
-
-By default the framework exposes the `proof`, `test`, `property`, `properties` and `given` global functions but if you don't want them to avoid collisions with your own methods you can use the namespaced functions (available in the `Innmind\BlackBox\Runner` namespace).
-
-```php
-use Innmind\BlackBox\{
-    Application,
-    Runner\Load,
-};
-
-Application::new([])
-    ->disableGlobalFunctions()
-    ->tryToProve(Load::everythingIn('proofs/'))
-    ->exit();
-```
-
-??? warning
-    This method is deprecated and will be removed in the next major version.
-
 ## Disable GitHub Action output
 
 When it detects it's run inside a GitHub Action the framework groups each proof output to make the output more compact for large suites. It also adds annotations to quickly jump to each failing proof.
 
 You can disable such behaviour like this:
 
-```php hl_lines="4 8"
+```php hl_lines="7"
 use Innmind\BlackBox\{
     Application,
     Runner\Load,
-    Runner\Printer\Standard,
 };
 
 Application::new([])
-    ->usePrinter(Standard::new()->disableGitHubOutput())
+    ->mapPrinter(static fn($printer) => $printer->disableGitHubOutput())
     ->tryToProve(Load::everythingIn('proofs/'))
     ->exit();
 ```
@@ -142,24 +106,26 @@ By default BlackBox will fail a proof when a scenario did not make any assertion
 
 However if your style of making assertions may not always lead to a proof making one, then you can disable this feature this way:
 
-```php hl_lines="4"
-use Innmind\BlackBox\Application;
+```php hl_lines="7"
+use Innmind\BlackBox\{
+    Application,
+    Prove,
+};
 
 Application::new([])
     ->allowProofsToNotMakeAnyAssertions()
-    ->tryToProve(static function() {
-        yield proof(
-            'Some proof',
-            given(Set::of('some input')),
-            static function($assert, $input) {
+    ->tryToProve(static function(Prove $prove) {
+        yield $prove
+            ->proof('Some proof')
+            ->given(Set::of('some input'))
+            ->test(static function($assert, $input) {
                 try {
                     doSomething($input);
                     $assert->fail('It should throw');
                 } catch (\Exception $e) {
                     // expected behaviour
                 }
-            },
-        );
+            });
     })
     ->exit();
 ```
