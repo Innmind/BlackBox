@@ -127,7 +127,7 @@ class CompositeTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesUseTheDifferentStrategiesFromTheUnderlyingSets()
+    public function testShrunkValuesUseTheDifferentStrategiesFromTheUnderlyingSets()
     {
         $set = Set::compose(
             static function(...$args) {

@@ -63,7 +63,7 @@ class UnsafeStringsTest extends TestCase
         }
     }
 
-    public function testEmptyStringCannotBeShrinked()
+    public function testEmptyStringCannotBeShrunk()
     {
         $strings = Set::strings()
             ->unsafe()
@@ -88,7 +88,7 @@ class UnsafeStringsTest extends TestCase
         }
     }
 
-    public function testStringsAreShrinkedFromBothEnds()
+    public function testStringsAreShrunkFromBothEnds()
     {
         $strings = Set::strings()
             ->unsafe()
@@ -107,7 +107,7 @@ class UnsafeStringsTest extends TestCase
             $b = $dichotomy->b();
 
             if (\strlen($value->unwrap()) === 2) {
-                // we continue as the shrinked values won't match the set predicate
+                // we continue as the shrunk values won't match the set predicate
                 continue;
             }
 
@@ -134,7 +134,7 @@ class UnsafeStringsTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
+    public function testShrunkValuesAlwaysMatchTheGivenPredicate()
     {
         $strings = Set::strings()
             ->unsafe()

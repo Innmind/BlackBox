@@ -112,7 +112,7 @@ class DecorateTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesAlwaysRespectTheSetPredicate()
+    public function testShrunkValuesAlwaysRespectTheSetPredicate()
     {
         $set = Set::integers()
             ->map(static function(int $value) {
