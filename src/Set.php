@@ -217,6 +217,15 @@ final class Set
 
     /**
      * @psalm-pure
+     */
+    #[\NoDiscard]
+    public static function slice(): Provider\Slice
+    {
+        return Provider\Slice::any();
+    }
+
+    /**
+     * @psalm-pure
      *
      * @return self<non-empty-string>
      */

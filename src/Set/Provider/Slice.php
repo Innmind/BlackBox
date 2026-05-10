@@ -1,10 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Set;
+namespace Innmind\BlackBox\Set\Provider;
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
+    Set\Seed,
     Util\Slice as Util,
     Exception\EmptySet,
 };
@@ -38,15 +40,19 @@ final class Slice implements Provider
     }
 
     /**
-     * @psalm-pure
+     * @psalm-mutation-free
      *
      * @param int<0, max> $min
      * @param int<0, max> $max
      */
     #[\NoDiscard]
-    public static function between(int $min, int $max): self
+    public function between(int $min, int $max): self
     {
-        return new self($min, $max, 0);
+        return new self(
+            $min,
+            $max,
+            $this->atLeast,
+        );
     }
 
     /**

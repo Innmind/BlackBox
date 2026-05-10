@@ -9,6 +9,7 @@
 - `Innmind\BlackBox\Set::toSet()`
 - `Innmind\BlackBox\Set::zip()`
 - `Innmind\BlackBox\Set::properties()`
+- `Innmind\BlackBox\Set::slice()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
@@ -30,6 +31,7 @@
 - `Innmind\BlackBox\Runner\Printer` is now a final class
 - `Innmind\BlackBox\Set\MadeOf` have been moved to `Innmind\BlackBox\Set\Provider\Strings\MadeOf`
 - `Innmind\BlackBox\Set\Properties` have been moved to `Innmind\BlackBox\Set\Provider\Properties`
+- `Innmind\BlackBox\Set\Slice` have been moved to `Innmind\BlackBox\Set\Provider\Slice`
 
 ### Removed
 
