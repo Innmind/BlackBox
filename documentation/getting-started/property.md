@@ -102,7 +102,7 @@ You can run this property like this:
         ->tryToProve(static function(Prove $prove): \Generator {
             yield $prove->property(
                 AddIsCommutative::class,
-                Set::of(new Add),
+                Set::of(static fn() => new Add),
             );
         })
         ->exit();
@@ -130,27 +130,27 @@ Application::new([])
     ->tryToProve(static function(Prove $prove): \Generator {
         yield $prove->properties(
             'Add properties',
-            Set\Properties::any(
+            Set::properties(
                 AddIsCommutative::any(),
                 AddIsCumulative::any(),
                 ZeroIsAnIdentityValue::any(),
             ),
-            Set::of(new Add),
+            Set::of(static fn() => new Add),
         );
 
         yield $prove->property(
             AddIsCommutative::class,
-            Set::of(new Add),
+            Set::of(static fn() => new Add),
         );
 
         yield $prove->property(
             AddIsCumulative::class,
-            Set::of(new Add),
+            Set::of(static fn() => new Add),
         );
 
         yield $prove->property(
             ZeroIsAnIdentityValue::class,
-            Set::of(new Add),
+            Set::of(static fn() => new Add),
         );
     })
     ->exit();
