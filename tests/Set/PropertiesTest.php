@@ -95,14 +95,14 @@ class PropertiesTest extends TestCase
 
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($properties->toSet()->take(100)->values(Random::mersenneTwister)),
+                $this->unwrap($properties->toSet()->take(100)),
                 $hasUnder50Properties,
                 false,
             ),
         );
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($properties2->toSet()->take(100)->values(Random::mersenneTwister)),
+                $this->unwrap($properties2->toSet()->take(100)),
                 $hasUnder50Properties,
                 false,
             ),

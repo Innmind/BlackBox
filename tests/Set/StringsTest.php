@@ -17,11 +17,7 @@ class StringsTest extends TestCase
             static function(string $value): int {
                 return \strlen($value);
             },
-            $this->unwrap(
-                Set::strings()
-                    ->take(100)
-                    ->values(Random::mersenneTwister),
-            ),
+            $this->unwrap(Set::strings()->take(100)),
         );
 
         $this->assertLessThanOrEqual(128, \max($values));
@@ -36,8 +32,7 @@ class StringsTest extends TestCase
             $this->unwrap(
                 Set::strings()
                     ->atMost(256)
-                    ->take(100)
-                    ->values(Random::mersenneTwister),
+                    ->take(100),
             ),
         );
 
@@ -53,7 +48,7 @@ class StringsTest extends TestCase
 
         $this->assertNotSame($values, $others);
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($values->values(Random::mersenneTwister)),
+            $this->unwrap($values),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -62,7 +57,7 @@ class StringsTest extends TestCase
         $this->assertTrue($hasLengthAbove10);
 
         $hasLengthAbove10 = \array_reduce(
-            $this->unwrap($others->values(Random::mersenneTwister)),
+            $this->unwrap($others),
             static function(bool $hasLengthAbove10, string $value): bool {
                 return $hasLengthAbove10 || \strlen($value) > 10;
             },
@@ -77,8 +72,8 @@ class StringsTest extends TestCase
         $b = $a->take(50);
 
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
-        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
+        $this->assertCount(50, $this->unwrap($b));
     }
 
     public function testValues()
@@ -86,7 +81,7 @@ class StringsTest extends TestCase
         $a = Set::strings()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

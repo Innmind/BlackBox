@@ -20,7 +20,7 @@ class ElementsTest extends TestCase
     public function testTake100ValuesByDefault()
     {
         $elements = Set::of(...\range(0, 1000));
-        $values = $this->unwrap($elements->take(100)->values(Random::mersenneTwister));
+        $values = $this->unwrap($elements->take(100));
 
         $this->assertCount(100, $values);
     }
@@ -29,8 +29,8 @@ class ElementsTest extends TestCase
     {
         $elements = Set::of(...\range(0, 1000));
         $elements2 = $elements->take(10);
-        $aValues = $this->unwrap($elements->take(100)->values(Random::mersenneTwister));
-        $bValues = $this->unwrap($elements2->values(Random::mersenneTwister));
+        $aValues = $this->unwrap($elements->take(100));
+        $bValues = $this->unwrap($elements2);
 
         $this->assertInstanceOf(Set::class, $elements2);
         $this->assertNotSame($elements, $elements2);
@@ -52,14 +52,14 @@ class ElementsTest extends TestCase
         $this->assertNotSame($elements, $elements2);
         $this->assertFalse(
             \array_reduce(
-                $this->unwrap($elements2->values(Random::mersenneTwister)),
+                $this->unwrap($elements2),
                 $containsEvenInt,
                 false,
             ),
         );
         $this->assertTrue(
             \array_reduce(
-                $this->unwrap($elements->values(Random::mersenneTwister)),
+                $this->unwrap($elements),
                 $containsEvenInt,
                 false,
             ),
@@ -71,7 +71,7 @@ class ElementsTest extends TestCase
         $elements = Set::of(...\range(0, 1000))->take(100);
 
         $this->assertInstanceOf(\Generator::class, $elements->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($elements->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($elements));
 
         foreach ($elements->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

@@ -52,7 +52,7 @@ class DecorateTest extends TestCase
             ->set
             ->map(static fn($value) => [$value])
             ->filter(static fn($value) => $value[0][0][0] === 'e');
-        $values = $this->unwrap($values->values(Random::mersenneTwister));
+        $values = $this->unwrap($values);
 
         $this
             ->assert()
@@ -63,7 +63,7 @@ class DecorateTest extends TestCase
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set);
 
         $this
             ->assert()
@@ -77,7 +77,7 @@ class DecorateTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($this->set->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($this->set));
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

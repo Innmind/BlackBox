@@ -55,7 +55,7 @@ class RealNumbersTest extends TestCase
         $this->assertInstanceOf(Set::class, $positive);
         $this->assertNotSame($values, $positive);
         $hasNegative = \array_reduce(
-            $this->unwrap($values->values(Random::mersenneTwister)),
+            $this->unwrap($values),
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <=0;
             },
@@ -64,7 +64,7 @@ class RealNumbersTest extends TestCase
         $this->assertTrue($hasNegative);
 
         $hasNegative = \array_reduce(
-            $this->unwrap($positive->values(Random::mersenneTwister)),
+            $this->unwrap($positive),
             static function(bool $hasNegative, float $value): bool {
                 return $hasNegative || $value <= 0;
             },
@@ -80,8 +80,8 @@ class RealNumbersTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
-        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
+        $this->assertCount(50, $this->unwrap($b));
     }
 
     public function testValues()
@@ -89,7 +89,7 @@ class RealNumbersTest extends TestCase
         $a = Set::realNumbers()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
