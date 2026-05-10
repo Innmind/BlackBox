@@ -35,26 +35,26 @@ final class Either implements Implementation
     ): \Generator {
         /** @var list<Implementation<T>|Implementation<U>|Implementation<V>> */
         $sets = [$this->first, $this->second, ...$this->rest];
+        $count = \count($sets);
 
         while (true) {
-            $count = \count($sets);
-
-            if ($count === 0) {
-                return;
-            }
-
             $setToChoose = $random->between(0, $count - 1);
 
             $value = $sets[$setToChoose]($random, $predicate)->current();
 
-            if (\is_null($value)) {
-                unset($sets[$setToChoose]);
-                $sets = \array_values($sets);
+            if (!\is_null($value)) {
+                yield $value;
 
                 continue;
             }
 
-            yield $value;
+            unset($sets[$setToChoose]);
+            $sets = \array_values($sets);
+            $count--;
+
+            if ($count === 0) {
+                return;
+            }
         }
     }
 
