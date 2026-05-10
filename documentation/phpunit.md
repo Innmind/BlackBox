@@ -126,9 +126,7 @@ use Innmind\BlackBox\{
 };
 
 Application::new()
-    ->tryToProve(function() {
-        yield from Load::testsAt('path/to/your/tests');
-    })
+    ->tryToProve(Load::directory('path/to/your/tests'))
     ->exit();
 ```
 
