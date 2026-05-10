@@ -129,31 +129,6 @@ final class Set
     }
 
     /**
-     * By default the value created by this generator is considered immutable.
-     *
-     * This set can only contain immutable values as they're generated outside of the
-     * class, so it can't be re-generated on the fly
-     *
-     * @psalm-pure
-     *
-     * @template V
-     *
-     * @param callable(Random): \Generator<(V|Seed<V>)> $factory
-     *
-     * @return self<V>
-     */
-    #[\NoDiscard]
-    public static function generator(callable $factory): self
-    {
-        return new self(
-            Set\FromGenerator::implementation(
-                $factory,
-            ),
-            false,
-        );
-    }
-
-    /**
      * @psalm-pure
      *
      * @template V
@@ -295,22 +270,15 @@ final class Set
             self::integers(),
             self::realNumbers(),
             self::strings()->unicode(),
-            self::generator(static function() { // objects
-                while (true) {
-                    yield new class {
-                    };
-                }
+            self::of(null)->map(static fn() => new class { // objects
             }),
-            self::generator(static function() { // callables
-                while (true) {
-                    yield new class {
-                        public function __invoke()
-                        {
-                        }
-                    };
-                    yield static fn() => null;
-                    yield static fn() => null;
-                }
+            self::of(true, false)->map(static fn($value) => match ($value) { // callables
+                true => new class {
+                    public function __invoke()
+                    {
+                    }
+                },
+                false => static fn() => null,
             }),
         );
 

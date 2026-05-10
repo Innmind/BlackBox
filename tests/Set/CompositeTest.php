@@ -101,15 +101,9 @@ class CompositeTest extends TestCase
 
                 return $std;
             },
-            Set::generator(static function() {
-                yield 'e';
-                yield 'f';
-            }),
+            Set::of('e', 'f'),
             Set::integers(),
-            Set::generator(static function() {
-                yield 'c';
-                yield 'd';
-            }),
+            Set::of('c', 'd'),
         )->take(100);
 
         foreach ($shrinkable->values(Random::mersenneTwister) as $value) {
@@ -123,18 +117,9 @@ class CompositeTest extends TestCase
 
                 return $std;
             },
-            Set::generator(static function() {
-                yield 'e';
-                yield 'f';
-            }),
-            Set::generator(static function() {
-                yield 'a';
-                yield 'b';
-            }),
-            Set::generator(static function() {
-                yield 'c';
-                yield 'd';
-            }),
+            Set::of('e', 'f'),
+            Set::of('a', 'b'),
+            Set::of('c', 'd'),
         )->take(100);
 
         foreach ($nonShrinkable->values(Random::mersenneTwister) as $value) {

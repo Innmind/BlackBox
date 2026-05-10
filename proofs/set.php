@@ -264,33 +264,6 @@ return static function($prove) {
 
     yield $prove
         ->test(
-            'Set::generator() can collapse seeds from flatMaps',
-            static function($assert) {
-                $compose = Set::strings()->flatMap(
-                    static fn($stringSeed) => Set::generator(static function() use ($stringSeed) {
-                        yield $stringSeed;
-                    }),
-                );
-
-                // The calls to unwrap below are here to simulate the fact that a
-                // value is first unwrapped to be tested before eventually being
-                // shrunk in case of a test failure.
-                foreach ($compose->take(100)->values(Random::default) as $value) {
-                    $value->unwrap();
-
-                    while ($shrunk = $value->shrink()) {
-                        $value = $shrunk->a();
-                        $value->unwrap();
-                    }
-
-                    $assert->same('', $value->unwrap());
-                }
-            },
-        )
-        ->tag(Tag::ci, Tag::local);
-
-    yield $prove
-        ->test(
             'Set::flatMap()->map()->filter()',
             static function($assert) {
                 $compose = Set::integers()->flatMap(

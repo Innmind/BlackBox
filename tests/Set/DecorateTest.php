@@ -15,12 +15,12 @@ class DecorateTest extends TestCase
 
     public function setUp(): void
     {
-        $this->set = Set::generator(static function() {
-            yield 'ea';
-            yield 'fb';
-            yield 'gc';
-            yield 'eb';
-        })
+        $this->set = Set::of(
+            'ea',
+            'fb',
+            'gc',
+            'eb',
+        )
             ->map(static fn($value) => [$value])
             ->take(100);
     }
@@ -30,34 +30,20 @@ class DecorateTest extends TestCase
         $this->assertInstanceOf(Set::class, $this->set);
     }
 
-    public function testTake()
-    {
-        $values = $this->unwrap($this->set->take(2)->values(Random::mersenneTwister));
-
-        $this->assertSame(
-            [
-                ['ea'],
-                ['fb'],
-            ],
-            $values,
-        );
-    }
-
     public function testFilter()
     {
         $values = $this
             ->set
             ->filter(static function(array $value): bool {
                 return $value[0][0] === 'e';
-            });
+            })
+            ->enumerate();
 
-        $this->assertSame(
-            [
-                ['ea'],
-                ['eb'],
-            ],
-            $this->unwrap($values->values(Random::mersenneTwister)),
-        );
+        $this
+            ->assert()
+            ->array(\iterator_to_array($values))
+            ->contains(['ea'])
+            ->contains(['eb']);
     }
 
     public function testFilteringDecoratedDecoratorIsAppliedCorrectly()
@@ -66,35 +52,32 @@ class DecorateTest extends TestCase
             ->set
             ->map(static fn($value) => [$value])
             ->filter(static fn($value) => $value[0][0][0] === 'e');
+        $values = $this->unwrap($values->values(Random::mersenneTwister));
 
-        $this->assertSame(
-            [
-                [['ea']],
-                [['eb']],
-            ],
-            $this->unwrap($values->values(Random::mersenneTwister)),
-        );
+        $this
+            ->assert()
+            ->array($values)
+            ->contains([['ea']])
+            ->contains([['eb']]);
     }
 
     public function testReduce()
     {
         $values = $this->unwrap($this->set->values(Random::mersenneTwister));
 
-        $this->assertSame(
-            [
-                ['ea'],
-                ['fb'],
-                ['gc'],
-                ['eb'],
-            ],
-            $values,
-        );
+        $this
+            ->assert()
+            ->array($values)
+            ->contains(['ea'])
+            ->contains(['fb'])
+            ->contains(['gc'])
+            ->contains(['eb']);
     }
 
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
-        $this->assertCount(4, $this->unwrap($this->set->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($this->set->values(Random::mersenneTwister)));
 
         foreach ($this->set->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
@@ -103,12 +86,12 @@ class DecorateTest extends TestCase
 
     public function testConserveUnderlyingSetShrinkability()
     {
-        $nonShrinkable = Set::generator(static function() {
-            yield 'ea';
-            yield 'fb';
-            yield 'gc';
-            yield 'eb';
-        })
+        $nonShrinkable = Set::of(
+            'ea',
+            'fb',
+            'gc',
+            'eb',
+        )
             ->map(static function(string $value) {
                 return [$value];
             })
