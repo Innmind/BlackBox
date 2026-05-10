@@ -88,21 +88,8 @@ final class Set
         self|Provider $second,
         self|Provider ...$rest,
     ): self {
-        /**
-         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
-         * @psalm-suppress ImpureFunctionCall
-         */
-        return new self(
-            Set\Composite::implementation(
-                $aggregate,
-                $first->toSet()->implementation,
-                $second->toSet()->implementation,
-                ...\array_map(
-                    static fn($set) => $set->toSet()->implementation,
-                    $rest,
-                ),
-            ),
-            false,
+        return self::tuple($first, $second, ...$rest)->map(
+            static fn($args) => $aggregate(...$args),
         );
     }
 
