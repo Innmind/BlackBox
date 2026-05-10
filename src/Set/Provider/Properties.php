@@ -1,10 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Set;
+namespace Innmind\BlackBox\Set\Provider;
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
+    Set\Seed,
     Property as Concrete,
     Properties as Ensure,
     Exception\EmptySet,
@@ -25,6 +27,7 @@ final class Properties implements Provider
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @no-named-arguments

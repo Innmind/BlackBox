@@ -204,6 +204,20 @@ final class Set
     /**
      * @psalm-pure
      *
+     * @no-named-arguments
+     *
+     * @param self<Property>|Provider<Property> $first
+     * @param self<Property>|Provider<Property> $properties
+     */
+    #[\NoDiscard]
+    public static function properties(self|Provider $first, self|Provider ...$properties): Provider\Properties
+    {
+        return Provider\Properties::any($first, ...$properties);
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @return self<non-empty-string>
      */
     #[\NoDiscard]

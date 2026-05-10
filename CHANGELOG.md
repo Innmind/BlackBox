@@ -8,6 +8,7 @@
 - `Innmind\BlackBox\Set::disableShrinking()`
 - `Innmind\BlackBox\Set::toSet()`
 - `Innmind\BlackBox\Set::zip()`
+- `Innmind\BlackBox\Set::properties()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
@@ -28,6 +29,7 @@
 - All proofs will fail if they throw an exception (instead of stopping the script)
 - `Innmind\BlackBox\Runner\Printer` is now a final class
 - `Innmind\BlackBox\Set\MadeOf` have been moved to `Innmind\BlackBox\Set\Provider\Strings\MadeOf`
+- `Innmind\BlackBox\Set\Properties` have been moved to `Innmind\BlackBox\Set\Provider\Properties`
 
 ### Removed
 
