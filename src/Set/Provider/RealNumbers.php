@@ -20,11 +20,13 @@ final class RealNumbers implements Provider
      * @psalm-mutation-free
      *
      * @param pure-Closure(Implementation<float>): Set<float> $wrap
+     * @param ?Set<int<0, max>> $decimals
      */
     private function __construct(
         private \Closure $wrap,
         private ?int $min,
         private ?int $max,
+        private ?Set $decimals,
     ) {
     }
 
@@ -36,7 +38,7 @@ final class RealNumbers implements Provider
      */
     public static function of(\Closure $wrap): self
     {
-        return new self($wrap, null, null);
+        return new self($wrap, null, null, null);
     }
 
     /**
@@ -45,7 +47,7 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function between(int $min, int $max): self
     {
-        return new self($this->wrap, $min, $max);
+        return new self($this->wrap, $min, $max, $this->decimals);
     }
 
     /**
@@ -54,7 +56,7 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function above(int $min): self
     {
-        return new self($this->wrap, $min, null);
+        return new self($this->wrap, $min, null, $this->decimals);
     }
 
     /**
@@ -63,7 +65,23 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function below(int $max): self
     {
-        return new self($this->wrap, null, $max);
+        return new self($this->wrap, null, $max, $this->decimals);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param Set<int<0, max>>|Provider<int<0, max>> $decimals
+     */
+    #[\NoDiscard]
+    public function withDecimals(Set|Provider $decimals): self
+    {
+        return new self(
+            $this->wrap,
+            $this->min,
+            $this->max,
+            $decimals->toSet(),
+        );
     }
 
     /**
@@ -186,9 +204,28 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function toSet(): Set
     {
-        return ($this->wrap)(Set\RealNumbers::implementation(
-            $this->min,
-            $this->max,
-        ));
+        $min = $this->min;
+        $max = $this->max;
+
+        $set = ($this->wrap)(Set\Integers::implementation(
+            $min,
+            $max,
+        ))
+            ->zip($this->decimals ?? Set::integers()->above(0))
+            ->map(static fn($pair) => (float) \sprintf(
+                '%s.%s',
+                $pair[0],
+                $pair[1],
+            ));
+
+        if (!\is_null($min)) {
+            $set = $set->exclude(static fn($value) => $value < $min);
+        }
+
+        if (!\is_null($max)) {
+            $set = $set->exclude(static fn($value) => $value > $max);
+        }
+
+        return $set;
     }
 }

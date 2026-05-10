@@ -100,6 +100,7 @@ class RealNumbersTest extends TestCase
     {
         $numbers = Set::realNumbers()
             ->between(-1, 1)
+            ->withDecimals(Set::integers()->between(0, 1))
             ->filter(static fn($i) => $i === 0.0)
             ->take(100);
 
