@@ -88,7 +88,7 @@ class StringsTest extends TestCase
         }
     }
 
-    public function testEmptyStringCannotBeShrinked()
+    public function testEmptyStringCannotBeShrunk()
     {
         $strings = Set::strings()
             ->between(0, 1) // always generate string of length 1
@@ -121,7 +121,7 @@ class StringsTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesAlwaysMatchTheGivenPredicate()
+    public function testShrunkValuesAlwaysMatchTheGivenPredicate()
     {
         $strings = Set::strings()
             ->filter(static fn($string) => \strlen($string) > 20)

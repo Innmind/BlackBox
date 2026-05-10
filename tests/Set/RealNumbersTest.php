@@ -96,7 +96,7 @@ class RealNumbersTest extends TestCase
         }
     }
 
-    public function testZeroCannotBeShrinked()
+    public function testZeroCannotBeShrunk()
     {
         $number = Set::realNumbers()
             ->between(-1, 1)
@@ -111,7 +111,7 @@ class RealNumbersTest extends TestCase
         $this->assertSame(0, $number->unwrap());
     }
 
-    public function testRealNumbersCanBeShrinked()
+    public function testRealNumbersCanBeShrunk()
     {
         $numbers = Set::realNumbers()
             ->filter(static fn($i) => $i !== 0.0)
@@ -122,7 +122,7 @@ class RealNumbersTest extends TestCase
         }
     }
 
-    public function testRealNumbersAreShrinkedTowardZero()
+    public function testRealNumbersAreShrunkTowardZero()
     {
         $positive = Set::realNumbers()
             ->above(1)
@@ -153,7 +153,7 @@ class RealNumbersTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesNeverChangeSign()
+    public function testShrunkValuesNeverChangeSign()
     {
         $numbers = Set::realNumbers()->take(100);
 
@@ -174,7 +174,7 @@ class RealNumbersTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesAlwaysRespectThePredicate()
+    public function testShrunkValuesAlwaysRespectThePredicate()
     {
         $even = Set::realNumbers()
             ->filter(static fn($i) => $i !== 0 && (((int) \round($i)) % 2) === 0)

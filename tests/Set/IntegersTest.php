@@ -107,7 +107,7 @@ class IntegersTest extends TestCase
         }
     }
 
-    public function testZeroCannotBeShrinked()
+    public function testZeroCannotBeShrunk()
     {
         $ints = Set::integers()
             ->between(-1, 1)
@@ -119,7 +119,7 @@ class IntegersTest extends TestCase
         }
     }
 
-    public function testIntegersCanBeShrinked()
+    public function testIntegersCanBeShrunk()
     {
         $ints = Set::integers()
             ->filter(static fn($i) => $i !== 0)
@@ -130,7 +130,7 @@ class IntegersTest extends TestCase
         }
     }
 
-    public function testIntegersAreShrinkedTowardZero()
+    public function testIntegersAreShrunkTowardZero()
     {
         $positive = Set::integers()
             ->above(1)
@@ -161,7 +161,7 @@ class IntegersTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesNeverChangeSign()
+    public function testShrunkValuesNeverChangeSign()
     {
         $integers = Set::integers()->take(100);
 
@@ -177,7 +177,7 @@ class IntegersTest extends TestCase
         }
     }
 
-    public function testShrinkedValuesAlwaysRespectThePredicate()
+    public function testShrunkValuesAlwaysRespectThePredicate()
     {
         $even = Set::integers()
             ->filter(static fn($i) => $i !== 0 && ($i % 2) === 0)
