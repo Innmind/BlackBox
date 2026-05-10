@@ -83,6 +83,7 @@
 - `Innmind\BlackBox\Set\Uuid`
 - `Innmind\BlackBox\Set::decorate()`
 - `Innmind\BlackBox\Set::call()`
+- `Innmind\BlackBox\Set::generator()`
 - `Innmind\BlackBox\Set\Provider\Composite`
 - `Innmind\BlackBox\Set\Provider\Generator`
 - `Innmind\BlackBox\Runner\CodeCoverage::enableWhen()`

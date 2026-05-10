@@ -74,10 +74,9 @@ class EitherTest extends TestCase
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
         $set = Set::either(
-            Set::generator(static function() {
-                if (\mt_rand(0, 1) === 1) {
-                    yield \mt_rand();
-                }
+            Set::integers()->filter(static fn() => match (\mt_rand(0, 1)) {
+                1 => true,
+                0 => false,
             }),
             Set::of(2),
         )->take(100);

@@ -65,7 +65,7 @@ class RandomizeTest extends TestCase
     public function testAlwaysTakeTheFirstValueGeneratedByTheUnderlyingSet()
     {
         $expected = new \stdClass;
-        $set = Set::generator(static fn() => yield $expected)
+        $set = Set::of($expected)
             ->randomize()
             ->take(100);
 
@@ -76,11 +76,11 @@ class RandomizeTest extends TestCase
 
     public function testAlwaysReturnAValueEvenWhenTheUnderlyingSetMayNotBeAbleToGenerateAnyValue()
     {
-        $set = Set::generator(static function() {
-            if (\mt_rand(0, 1) === 1) {
-                yield \mt_rand();
-            }
-        })
+        $set = Set::integers()
+            ->filter(static fn() => match (\mt_rand(0, 1)) {
+                1 => true,
+                0 => false,
+            })
             ->randomize()
             ->take(100);
 
