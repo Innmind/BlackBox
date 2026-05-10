@@ -1,86 +1,73 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Set;
+namespace Innmind\BlackBox\Set\Provider;
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
+    Set\Seed,
+    Util\Slice as Util,
     Exception\EmptySet,
 };
 
 /**
- * @implements Provider<string>
+ * @implements Provider<Util>
  */
-final class MadeOf implements Provider
+final class Slice implements Provider
 {
     /**
      * @psalm-mutation-free
      *
-     * @param Set<string>|Provider<string> $chars
+     * @param int<0, max> $min
+     * @param int<0, max> $max
+     * @param int<0, max> $atLeast
      */
-    private function __construct(private Set|Provider $chars)
-    {
+    private function __construct(
+        private int $min,
+        private int $max,
+        private int $atLeast,
+    ) {
     }
 
     /**
      * @psalm-pure
-     *
-     * @no-named-arguments
-     *
-     * @param Set<string>|Provider<string> $first
-     * @param Set<string>|Provider<string> $rest
      */
     #[\NoDiscard]
-    public static function of(Set|Provider $first, Set|Provider ...$rest): self
+    public static function any(): self
     {
-        $chars = $first;
-
-        if (\count($rest) > 0) {
-            return new self(Set::either($first, ...$rest));
-        }
-
-        return new self($chars);
+        return new self(0, 100, 0);
     }
 
     /**
      * @psalm-mutation-free
      *
-     * @param int<0, max> $minLength
-     * @param int<1, max> $maxLength
-     *
-     * @return Set<string>
+     * @param int<0, max> $min
+     * @param int<0, max> $max
      */
     #[\NoDiscard]
-    public function between(int $minLength, int $maxLength): Set
+    public function between(int $min, int $max): self
     {
-        return $this->build($minLength, $maxLength);
+        return new self(
+            $min,
+            $max,
+            $this->atLeast,
+        );
     }
 
     /**
      * @psalm-mutation-free
      *
-     * @param int<1, max> $length
-     *
-     * @return Set<non-empty-string>
+     * @param int<0, max> $length
      */
     #[\NoDiscard]
-    public function atLeast(int $length): Set
+    public function atLeast(int $length): self
     {
-        /** @var Set<non-empty-string> */
-        return $this->build($length, $length + 128);
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param int<1, max> $length
-     *
-     * @return Set<string>
-     */
-    #[\NoDiscard]
-    public function atMost(int $length): Set
-    {
-        return $this->build(0, $length);
+        return new self(
+            $this->min,
+            $this->max,
+            $length,
+        );
     }
 
     /**
@@ -88,7 +75,7 @@ final class MadeOf implements Provider
      *
      * @param int<1, max> $size
      *
-     * @return Set<string>
+     * @return Set<Util>
      */
     #[\NoDiscard]
     public function take(int $size): Set
@@ -99,9 +86,9 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param callable(string): bool $predicate
+     * @param callable(Util): bool $predicate
      *
-     * @return Set<string>
+     * @return Set<Util>
      */
     #[\NoDiscard]
     public function filter(callable $predicate): Set
@@ -112,9 +99,9 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param callable(string): bool $predicate
+     * @param callable(Util): bool $predicate
      *
-     * @return Set<string>
+     * @return Set<Util>
      */
     #[\NoDiscard]
     public function exclude(callable $predicate): Set
@@ -127,7 +114,7 @@ final class MadeOf implements Provider
      *
      * @template V
      *
-     * @param callable(string): (V|Seed<V>) $map
+     * @param callable(Util): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -142,7 +129,7 @@ final class MadeOf implements Provider
      *
      * @template V
      *
-     * @param callable(Seed<string>): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<Util>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */
@@ -159,7 +146,7 @@ final class MadeOf implements Provider
      *
      * @param Set<R>|Provider<R> $right
      *
-     * @return Set<array{string, R}>
+     * @return Set<array{Util, R}>
      */
     #[\NoDiscard]
     public function zip(Set|Provider $right): Set
@@ -170,7 +157,7 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<string>
+     * @return Set<Util>
      */
     #[\NoDiscard]
     public function randomize(): Set
@@ -181,7 +168,7 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<?string>
+     * @return Set<?Util>
      */
     #[\NoDiscard]
     public function nullable(): Set
@@ -192,7 +179,7 @@ final class MadeOf implements Provider
     /**
      * @throws EmptySet When no value can be generated
      *
-     * @return iterable<string>
+     * @return iterable<Util>
      */
     #[\NoDiscard]
     public function enumerate(): iterable
@@ -203,27 +190,18 @@ final class MadeOf implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<string>
+     * @return Set<Util>
      */
     #[\Override]
     #[\NoDiscard]
     public function toSet(): Set
     {
-        return $this->build(0, 128);
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param int<0, max> $min
-     * @param int<1, max> $max
-     *
-     * @return Set<string>
-     */
-    private function build(int $min, int $max): Set
-    {
-        return Set::sequence($this->chars)
-            ->between($min, $max)
-            ->map(static fn(array $chars) => \implode('', $chars));
+        return Set::compose(
+            Util::of(...),
+            Set::integers()->between($this->min, $this->max),
+            Set::integers()->between($this->atLeast, $this->max - $this->min),
+            Set::of($this->atLeast),
+            Set::of(true, false),
+        );
     }
 }

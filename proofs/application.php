@@ -93,7 +93,7 @@ return static function($prove) {
                 ->tryToProve(static function($prove) {
                     yield $prove->properties(
                         'Counter properties',
-                        Set\Properties::any(
+                        Set::properties(
                             DownAndUpIsAnIdentityFunction::any(),
                             DownChangeState::any(),
                             LowerBoundAtZero::any(),

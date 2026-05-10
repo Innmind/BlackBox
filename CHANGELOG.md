@@ -8,6 +8,9 @@
 - `Innmind\BlackBox\Set::disableShrinking()`
 - `Innmind\BlackBox\Set::toSet()`
 - `Innmind\BlackBox\Set::zip()`
+- `Innmind\BlackBox\Set::properties()`
+- `Innmind\BlackBox\Set::slice()`
+- `Innmind\BlackBox\Set\Provider\Strings::mutuallyExclusive()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
@@ -27,6 +30,9 @@
 - PHPUnit attributes `Group` and `DataProvider` are now longer read when running tests with BlackBox, use the `Innmind\BlackBox\` prefixed ones instead
 - All proofs will fail if they throw an exception (instead of stopping the script)
 - `Innmind\BlackBox\Runner\Printer` is now a final class
+- `Innmind\BlackBox\Set\MadeOf` have been moved to `Innmind\BlackBox\Set\Provider\Strings\MadeOf`
+- `Innmind\BlackBox\Set\Properties` have been moved to `Innmind\BlackBox\Set\Provider\Properties`
+- `Innmind\BlackBox\Set\Slice` have been moved to `Innmind\BlackBox\Set\Provider\Slice`
 
 ### Removed
 
@@ -79,6 +85,7 @@
 - `Innmind\BlackBox\Set\Tuple`
 - `Innmind\BlackBox\Set\Type`
 - `Innmind\BlackBox\Set\Unicode`
+- `Innmind\BlackBox\Set\MutuallyExclusive`
 - `Innmind\BlackBox\Set\UnsafeStrings::any()`
 - `Innmind\BlackBox\Set\Uuid`
 - `Innmind\BlackBox\Set::decorate()`

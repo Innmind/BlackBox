@@ -8,10 +8,10 @@ use Innmind\BlackBox\{
 
 return static function($prove) {
     yield $prove
-        ->proof('Set\Slice')
+        ->proof('Set::slice()')
         ->given(
             Set::sequence(Set::type())->atLeast(11),
-            Set\Slice::between(10, 20),
+            Set::slice()->between(10, 20),
         )
         ->test(static function($assert, $values, $slice) {
             $subset = $slice($values);
@@ -31,10 +31,10 @@ return static function($prove) {
         ->tag(Tag::ci, Tag::local);
 
     yield $prove
-        ->proof('Set\Slice min length')
+        ->proof('Set::slice() min length')
         ->given(
             Set::sequence(Set::type())->atLeast(2),
-            Set\Slice::any()->atLeast(2),
+            Set::slice()->atLeast(2),
         )
         ->test(static function($assert, $values, $slice) {
             $subset = $slice($values);

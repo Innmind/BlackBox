@@ -204,6 +204,29 @@ final class Set
     /**
      * @psalm-pure
      *
+     * @no-named-arguments
+     *
+     * @param self<Property>|Provider<Property> $first
+     * @param self<Property>|Provider<Property> $properties
+     */
+    #[\NoDiscard]
+    public static function properties(self|Provider $first, self|Provider ...$properties): Provider\Properties
+    {
+        return Provider\Properties::any($first, ...$properties);
+    }
+
+    /**
+     * @psalm-pure
+     */
+    #[\NoDiscard]
+    public static function slice(): Provider\Slice
+    {
+        return Provider\Slice::any();
+    }
+
+    /**
+     * @psalm-pure
+     *
      * @return self<non-empty-string>
      */
     #[\NoDiscard]

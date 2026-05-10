@@ -1,58 +1,89 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Set;
+namespace Innmind\BlackBox\Set\Provider\Strings;
 
 use Innmind\BlackBox\{
     Set,
-    Property as Concrete,
-    Properties as Ensure,
+    Set\Provider,
+    Set\Seed,
     Exception\EmptySet,
 };
 
 /**
- * @implements Provider<Ensure>
+ * @implements Provider<string>
  */
-final class Properties implements Provider
+final class MadeOf implements Provider
 {
     /**
      * @psalm-mutation-free
      *
-     * @param Set<Concrete>|Provider<Concrete> $properties
+     * @param Set<string>|Provider<string> $chars
      */
-    private function __construct(private Set|Provider $properties)
+    private function __construct(private Set|Provider $chars)
     {
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @no-named-arguments
      *
-     * @param Set<Concrete>|Provider<Concrete> $first
-     * @param Set<Concrete>|Provider<Concrete> $properties
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $rest
      */
     #[\NoDiscard]
-    public static function any(Set|Provider $first, Set|Provider ...$properties): self
+    public static function of(Set|Provider $first, Set|Provider ...$rest): self
     {
-        if (\count($properties) === 0) {
-            return new self($first);
+        $chars = $first;
+
+        if (\count($rest) > 0) {
+            return new self(Set::either($first, ...$rest));
         }
 
-        return new self(Set::either($first, ...$properties));
+        return new self($chars);
     }
 
     /**
      * @psalm-mutation-free
      *
-     * @param int<1, max> $max
+     * @param int<0, max> $minLength
+     * @param int<1, max> $maxLength
      *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
     #[\NoDiscard]
-    public function atMost(int $max): Set
+    public function between(int $minLength, int $maxLength): Set
     {
-        return $this->ensure($max);
+        return $this->build($minLength, $maxLength);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param int<1, max> $length
+     *
+     * @return Set<non-empty-string>
+     */
+    #[\NoDiscard]
+    public function atLeast(int $length): Set
+    {
+        /** @var Set<non-empty-string> */
+        return $this->build($length, $length + 128);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param int<1, max> $length
+     *
+     * @return Set<string>
+     */
+    #[\NoDiscard]
+    public function atMost(int $length): Set
+    {
+        return $this->build(0, $length);
     }
 
     /**
@@ -60,7 +91,7 @@ final class Properties implements Provider
      *
      * @param int<1, max> $size
      *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
     #[\NoDiscard]
     public function take(int $size): Set
@@ -71,9 +102,9 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param callable(Ensure): bool $predicate
+     * @param callable(string): bool $predicate
      *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
     #[\NoDiscard]
     public function filter(callable $predicate): Set
@@ -84,9 +115,9 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param callable(Ensure): bool $predicate
+     * @param callable(string): bool $predicate
      *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
     #[\NoDiscard]
     public function exclude(callable $predicate): Set
@@ -99,7 +130,7 @@ final class Properties implements Provider
      *
      * @template V
      *
-     * @param callable(Ensure): (V|Seed<V>) $map
+     * @param callable(string): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -114,7 +145,7 @@ final class Properties implements Provider
      *
      * @template V
      *
-     * @param callable(Seed<Ensure>): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<string>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */
@@ -131,7 +162,7 @@ final class Properties implements Provider
      *
      * @param Set<R>|Provider<R> $right
      *
-     * @return Set<array{Ensure, R}>
+     * @return Set<array{string, R}>
      */
     #[\NoDiscard]
     public function zip(Set|Provider $right): Set
@@ -142,18 +173,7 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<?Ensure>
-     */
-    #[\NoDiscard]
-    public function nullable(): Set
-    {
-        return $this->toSet()->nullable();
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
     #[\NoDiscard]
     public function randomize(): Set
@@ -162,9 +182,20 @@ final class Properties implements Provider
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @return Set<?string>
+     */
+    #[\NoDiscard]
+    public function nullable(): Set
+    {
+        return $this->toSet()->nullable();
+    }
+
+    /**
      * @throws EmptySet When no value can be generated
      *
-     * @return iterable<Ensure>
+     * @return iterable<string>
      */
     #[\NoDiscard]
     public function enumerate(): iterable
@@ -175,29 +206,27 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
     #[\Override]
     #[\NoDiscard]
     public function toSet(): Set
     {
-        return $this->ensure(100);
+        return $this->build(0, 128);
     }
 
     /**
      * @psalm-mutation-free
      *
+     * @param int<0, max> $min
      * @param int<1, max> $max
      *
-     * @return Set<Ensure>
+     * @return Set<string>
      */
-    private function ensure(int $max): Set
+    private function build(int $min, int $max): Set
     {
-        /** @var Set<non-empty-list<Concrete>> */
-        $sequences = Set::sequence($this->properties)->between(1, $max);
-
-        return $sequences->map(
-            static fn(array $properties): Ensure => Ensure::of(...$properties),
-        );
+        return Set::sequence($this->chars)
+            ->between($min, $max)
+            ->map(static fn(array $chars) => \implode('', $chars));
     }
 }

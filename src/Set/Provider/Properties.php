@@ -1,67 +1,61 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Set;
+namespace Innmind\BlackBox\Set\Provider;
 
 use Innmind\BlackBox\{
     Set,
-    Util\Slice as Util,
+    Set\Provider,
+    Set\Seed,
+    Property as Concrete,
+    Properties as Ensure,
     Exception\EmptySet,
 };
 
 /**
- * @implements Provider<Util>
+ * @implements Provider<Ensure>
  */
-final class Slice implements Provider
+final class Properties implements Provider
 {
     /**
      * @psalm-mutation-free
      *
-     * @param int<0, max> $min
-     * @param int<0, max> $max
-     * @param int<0, max> $atLeast
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
-    private function __construct(
-        private int $min,
-        private int $max,
-        private int $atLeast,
-    ) {
-    }
-
-    /**
-     * @psalm-pure
-     */
-    #[\NoDiscard]
-    public static function any(): self
+    private function __construct(private Set|Provider $properties)
     {
-        return new self(0, 100, 0);
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
-     * @param int<0, max> $min
-     * @param int<0, max> $max
+     * @no-named-arguments
+     *
+     * @param Set<Concrete>|Provider<Concrete> $first
+     * @param Set<Concrete>|Provider<Concrete> $properties
      */
     #[\NoDiscard]
-    public static function between(int $min, int $max): self
+    public static function any(Set|Provider $first, Set|Provider ...$properties): self
     {
-        return new self($min, $max, 0);
+        if (\count($properties) === 0) {
+            return new self($first);
+        }
+
+        return new self(Set::either($first, ...$properties));
     }
 
     /**
      * @psalm-mutation-free
      *
-     * @param int<0, max> $length
+     * @param int<1, max> $max
+     *
+     * @return Set<Ensure>
      */
     #[\NoDiscard]
-    public function atLeast(int $length): self
+    public function atMost(int $max): Set
     {
-        return new self(
-            $this->min,
-            $this->max,
-            $length,
-        );
+        return $this->ensure($max);
     }
 
     /**
@@ -69,7 +63,7 @@ final class Slice implements Provider
      *
      * @param int<1, max> $size
      *
-     * @return Set<Util>
+     * @return Set<Ensure>
      */
     #[\NoDiscard]
     public function take(int $size): Set
@@ -80,9 +74,9 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param callable(Util): bool $predicate
+     * @param callable(Ensure): bool $predicate
      *
-     * @return Set<Util>
+     * @return Set<Ensure>
      */
     #[\NoDiscard]
     public function filter(callable $predicate): Set
@@ -93,9 +87,9 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param callable(Util): bool $predicate
+     * @param callable(Ensure): bool $predicate
      *
-     * @return Set<Util>
+     * @return Set<Ensure>
      */
     #[\NoDiscard]
     public function exclude(callable $predicate): Set
@@ -108,7 +102,7 @@ final class Slice implements Provider
      *
      * @template V
      *
-     * @param callable(Util): (V|Seed<V>) $map
+     * @param callable(Ensure): (V|Seed<V>) $map
      *
      * @return Set<V>
      */
@@ -123,7 +117,7 @@ final class Slice implements Provider
      *
      * @template V
      *
-     * @param callable(Seed<Util>): (Set<V>|Provider<V>) $map
+     * @param callable(Seed<Ensure>): (Set<V>|Provider<V>) $map
      *
      * @return Set<V>
      */
@@ -140,7 +134,7 @@ final class Slice implements Provider
      *
      * @param Set<R>|Provider<R> $right
      *
-     * @return Set<array{Util, R}>
+     * @return Set<array{Ensure, R}>
      */
     #[\NoDiscard]
     public function zip(Set|Provider $right): Set
@@ -151,18 +145,7 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<Util>
-     */
-    #[\NoDiscard]
-    public function randomize(): Set
-    {
-        return $this->toSet()->randomize();
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @return Set<?Util>
+     * @return Set<?Ensure>
      */
     #[\NoDiscard]
     public function nullable(): Set
@@ -171,9 +154,20 @@ final class Slice implements Provider
     }
 
     /**
+     * @psalm-mutation-free
+     *
+     * @return Set<Ensure>
+     */
+    #[\NoDiscard]
+    public function randomize(): Set
+    {
+        return $this->toSet()->randomize();
+    }
+
+    /**
      * @throws EmptySet When no value can be generated
      *
-     * @return iterable<Util>
+     * @return iterable<Ensure>
      */
     #[\NoDiscard]
     public function enumerate(): iterable
@@ -184,18 +178,29 @@ final class Slice implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @return Set<Util>
+     * @return Set<Ensure>
      */
     #[\Override]
     #[\NoDiscard]
     public function toSet(): Set
     {
-        return Set::compose(
-            Util::of(...),
-            Set::integers()->between($this->min, $this->max),
-            Set::integers()->between($this->atLeast, $this->max - $this->min),
-            Set::of($this->atLeast),
-            Set::of(true, false),
+        return $this->ensure(100);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @param int<1, max> $max
+     *
+     * @return Set<Ensure>
+     */
+    private function ensure(int $max): Set
+    {
+        /** @var Set<non-empty-list<Concrete>> */
+        $sequences = Set::sequence($this->properties)->between(1, $max);
+
+        return $sequences->map(
+            static fn(array $properties): Ensure => Ensure::of(...$properties),
         );
     }
 }

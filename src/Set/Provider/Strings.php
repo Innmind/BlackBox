@@ -75,9 +75,47 @@ final class Strings implements Provider
      * @param Set<string>|Provider<string> $rest
      */
     #[\NoDiscard]
-    public function madeOf(Set|Provider $first, Set|Provider ...$rest): Set\MadeOf
+    public function madeOf(Set|Provider $first, Set|Provider ...$rest): Strings\MadeOf
     {
-        return Set\MadeOf::of($first, ...$rest);
+        return Strings\MadeOf::of($first, ...$rest);
+    }
+
+    /**
+     * @psalm-pure
+     * @no-named-arguments
+     *
+     * @param Set<string>|Provider<string> $first
+     * @param Set<string>|Provider<string> $second
+     * @param Set<string>|Provider<string> $rest
+     *
+     * @return Set<non-empty-list<string>>
+     */
+    #[\NoDiscard]
+    public function mutuallyExclusive(
+        Set|Provider $first,
+        Set|Provider $second,
+        Set|Provider ...$rest,
+    ): Set {
+        /** @var Set<non-empty-list<string>> */
+        return Set::tuple(
+            $first,
+            $second,
+            ...$rest,
+        )->filter(static function($strings) {
+            foreach ($strings as $i => $a) {
+                foreach ($strings as $j => $b) {
+                    if ($i === $j) {
+                        continue;
+                    }
+
+                    if (\str_contains(\strtolower($a), \strtolower($b))) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        });
     }
 
     /**

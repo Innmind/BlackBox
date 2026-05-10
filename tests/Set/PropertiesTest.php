@@ -4,9 +4,8 @@ declare(strict_types = 1);
 namespace Tests\Innmind\BlackBox\Set;
 
 use Innmind\BlackBox\{
-    Set\Properties,
     Set,
-    Properties as PropertiesModel,
+    Properties,
     Random,
     PHPUnit\BlackBox,
 };
@@ -20,7 +19,7 @@ class PropertiesTest extends TestCase
     {
         $this->assertInstanceOf(
             Set\Provider::class,
-            Properties::any(
+            Set::properties(
                 Set::of(new LowerBoundAtZero),
             ),
         );
@@ -28,7 +27,7 @@ class PropertiesTest extends TestCase
 
     public function testGenerate100ScenariiByDefault()
     {
-        $properties = Properties::any(
+        $properties = Set::properties(
             Set::of(new LowerBoundAtZero),
         );
 
@@ -45,18 +44,18 @@ class PropertiesTest extends TestCase
 
     public function testGeneratePropertiesModel()
     {
-        $properties = Properties::any(
+        $properties = Set::properties(
             Set::of(new LowerBoundAtZero),
         );
 
         foreach ($properties->toSet()->take(100)->values(Random::mersenneTwister) as $scenario) {
-            $this->assertInstanceOf(PropertiesModel::class, $scenario->unwrap());
+            $this->assertInstanceOf(Properties::class, $scenario->unwrap());
         }
     }
 
     public function testScenariiAreOfDifferentSizes()
     {
-        $properties = Properties::any(
+        $properties = Set::properties(
             Set::of(new LowerBoundAtZero),
         );
         $sizes = [];
@@ -70,7 +69,7 @@ class PropertiesTest extends TestCase
 
     public function testTake()
     {
-        $properties = Properties::any(
+        $properties = Set::properties(
             Set::of(new LowerBoundAtZero),
         )->take(100);
         $properties2 = $properties->take(50);
@@ -83,7 +82,7 @@ class PropertiesTest extends TestCase
 
     public function testFilter()
     {
-        $properties = Properties::any(
+        $properties = Set::properties(
             Set::of(new LowerBoundAtZero),
         );
         $properties2 = $properties->filter(static fn($scenario) => \count($scenario->properties()) > 50);
@@ -111,7 +110,7 @@ class PropertiesTest extends TestCase
 
     public function testMaxNumberOfPropertiesGeneratedAtOnce()
     {
-        $properties = Properties::any(
+        $properties = Set::properties(
             Set::of(new LowerBoundAtZero),
         )->atMost(50);
         $sizes = [];
