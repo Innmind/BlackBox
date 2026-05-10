@@ -88,15 +88,14 @@ When it detects it's run inside a GitHub Action the framework groups each proof 
 
 You can disable such behaviour like this:
 
-```php hl_lines="4 8"
+```php hl_lines="7"
 use Innmind\BlackBox\{
     Application,
     Runner\Load,
-    Runner\Printer\Standard,
 };
 
 Application::new([])
-    ->usePrinter(Standard::new()->disableGitHubOutput())
+    ->mapPrinter(static fn($printer) => $printer->disableGitHubOutput())
     ->tryToProve(Load::everythingIn('proofs/'))
     ->exit();
 ```
