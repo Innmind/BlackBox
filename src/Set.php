@@ -491,6 +491,26 @@ final class Set
     /**
      * @psalm-mutation-free
      *
+     * @template R
+     *
+     * @param self<R>|Provider<R> $right
+     *
+     * @return self<array{T, R}>
+     */
+    public function zip(self|Provider $right): self
+    {
+        return new self(
+            Set\Zip::implementation(
+                $this->implementation,
+                $right->toSet()->implementation,
+            ),
+            $this->disableShrinking,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @return Set<T>
      */
     #[\NoDiscard]

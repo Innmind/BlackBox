@@ -470,4 +470,35 @@ return static function($prove) {
             }
         })
         ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            'Set->zip()',
+            static function($assert) {
+                $set = Set::integers()
+                    ->toSet()
+                    ->zip(Set::integers())
+                    ->take(100);
+
+                foreach ($set->enumerate() as [$left, $right]) {
+                    $assert
+                        ->number($left)
+                        ->int();
+                    $assert
+                        ->number($right)
+                        ->int();
+                }
+
+                $value = $set
+                    ->values(Random::default)
+                    ->current();
+
+                while ($shrunk = $value->shrink()) {
+                    $value = $shrunk->a();
+                }
+
+                $assert->same([0, 0], $value->unwrap());
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
 };
