@@ -26,7 +26,7 @@ class IntegersExceptZeroTest extends TestCase
         $this->assertInstanceOf(Set::class, $even);
         $this->assertNotSame($integers, $even);
         $hasOddInteger = \array_reduce(
-            $this->unwrap($integers->values(Random::mersenneTwister)),
+            $this->unwrap($integers),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -35,7 +35,7 @@ class IntegersExceptZeroTest extends TestCase
         $this->assertTrue($hasOddInteger);
 
         $hasOddInteger = \array_reduce(
-            $this->unwrap($even->values(Random::mersenneTwister)),
+            $this->unwrap($even),
             static function(bool $hasOddInteger, int $value): bool {
                 return $hasOddInteger || $value % 2 === 1;
             },
@@ -51,8 +51,8 @@ class IntegersExceptZeroTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
-        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
+        $this->assertCount(50, $this->unwrap($b));
     }
 
     public function testValues()
@@ -60,7 +60,7 @@ class IntegersExceptZeroTest extends TestCase
         $a = Set::integers()->exceptZero()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

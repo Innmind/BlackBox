@@ -25,7 +25,7 @@ class RandomizeTest extends TestCase
             ->randomize()
             ->take(100);
 
-        $this->assertCount(100, $this->unwrap($set->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($set));
     }
 
     public function testTake()
@@ -37,8 +37,8 @@ class RandomizeTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $set2);
         $this->assertNotSame($set2, $set1);
-        $this->assertCount(100, $this->unwrap($set1->values(Random::mersenneTwister)));
-        $this->assertCount(50, $this->unwrap($set2->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($set1));
+        $this->assertCount(50, $this->unwrap($set2));
     }
 
     public function testFilter()
@@ -50,15 +50,15 @@ class RandomizeTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $set2);
         $this->assertNotSame($set2, $set1);
-        $this->assertCount(100, $this->unwrap($set1->values(Random::mersenneTwister)));
-        $this->assertCount(100, $this->unwrap($set2->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($set1));
+        $this->assertCount(100, $this->unwrap($set2));
         $this->assertCount(
             2,
-            \array_unique($this->unwrap($set1->values(Random::mersenneTwister))),
+            \array_unique($this->unwrap($set1)),
         );
         $this->assertCount(
             1,
-            \array_unique($this->unwrap($set2->values(Random::mersenneTwister))),
+            \array_unique($this->unwrap($set2)),
         );
     }
 

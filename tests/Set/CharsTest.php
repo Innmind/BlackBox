@@ -21,7 +21,7 @@ class CharsTest extends TestCase
         $this->assertInstanceOf(Set::class, $even);
         $this->assertNotSame($values, $even);
         $hasOddChar = \array_reduce(
-            $this->unwrap($values->take(100)->values(Random::mersenneTwister)),
+            $this->unwrap($values->take(100)),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || \ord($value) % 2 === 1;
             },
@@ -30,7 +30,7 @@ class CharsTest extends TestCase
         $this->assertTrue($hasOddChar);
 
         $hasOddChar = \array_reduce(
-            $this->unwrap($even->take(100)->values(Random::mersenneTwister)),
+            $this->unwrap($even->take(100)),
             static function(bool $hasOddChar, string $value): bool {
                 return $hasOddChar || \ord($value) % 2 === 1;
             },
@@ -46,8 +46,8 @@ class CharsTest extends TestCase
 
         $this->assertInstanceOf(Set::class, $b);
         $this->assertNotSame($a, $b);
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
-        $this->assertCount(50, $this->unwrap($b->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
+        $this->assertCount(50, $this->unwrap($b));
     }
 
     public function testValues()
@@ -55,7 +55,7 @@ class CharsTest extends TestCase
         $a = Set::strings()->chars()->take(100);
 
         $this->assertInstanceOf(\Generator::class, $a->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($a->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($a));
 
         foreach ($a->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);

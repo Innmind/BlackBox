@@ -30,7 +30,7 @@ class CompositeTest extends TestCase
 
     public function testTake()
     {
-        $values = $this->unwrap($this->set->take(500)->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->take(500));
 
         $this
             ->assert()
@@ -53,7 +53,7 @@ class CompositeTest extends TestCase
 
         $this
             ->assert()
-            ->array($this->unwrap($values->values(Random::mersenneTwister)))
+            ->array($this->unwrap($values))
             ->contains('eac')
             ->contains('ead')
             ->contains('ebc')
@@ -67,7 +67,7 @@ class CompositeTest extends TestCase
 
     public function testReduce()
     {
-        $values = $this->unwrap($this->set->take(100)->values(Random::mersenneTwister));
+        $values = $this->unwrap($this->set->take(100));
 
         $this
             ->assert()
@@ -85,7 +85,7 @@ class CompositeTest extends TestCase
     public function testValues()
     {
         $this->assertInstanceOf(\Generator::class, $this->set->values(Random::mersenneTwister));
-        $this->assertCount(100, $this->unwrap($this->set->take(100)->values(Random::mersenneTwister)));
+        $this->assertCount(100, $this->unwrap($this->set->take(100)));
 
         foreach ($this->set->take(100)->values(Random::mersenneTwister) as $value) {
             $this->assertInstanceOf(Value::class, $value);
