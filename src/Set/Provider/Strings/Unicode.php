@@ -7,7 +7,6 @@ use Innmind\BlackBox\{
     Set,
     Set\Provider,
     Set\Seed,
-    Set\MadeOf,
     Exception\EmptySet,
 };
 

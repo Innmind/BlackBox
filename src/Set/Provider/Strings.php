@@ -75,9 +75,9 @@ final class Strings implements Provider
      * @param Set<string>|Provider<string> $rest
      */
     #[\NoDiscard]
-    public function madeOf(Set|Provider $first, Set|Provider ...$rest): Set\MadeOf
+    public function madeOf(Set|Provider $first, Set|Provider ...$rest): Strings\MadeOf
     {
-        return Set\MadeOf::of($first, ...$rest);
+        return Strings\MadeOf::of($first, ...$rest);
     }
 
     /**

@@ -1,10 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\BlackBox\Set;
+namespace Innmind\BlackBox\Set\Provider\Strings;
 
 use Innmind\BlackBox\{
     Set,
+    Set\Provider,
+    Set\Seed,
     Exception\EmptySet,
 };
 
@@ -23,6 +25,7 @@ final class MadeOf implements Provider
     }
 
     /**
+     * @internal
      * @psalm-pure
      *
      * @no-named-arguments
