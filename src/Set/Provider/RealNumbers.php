@@ -19,14 +19,12 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param pure-Closure(Implementation<float>): Set<float> $wrap
-     * @param ?Set<int<0, max>> $decimals
+     * @param pure-Closure(Implementation<int>): Set<int> $wrap
      */
     private function __construct(
         private \Closure $wrap,
         private ?int $min,
         private ?int $max,
-        private ?Set $decimals,
     ) {
     }
 
@@ -34,11 +32,11 @@ final class RealNumbers implements Provider
      * @internal
      * @psalm-pure
      *
-     * @param pure-Closure(Implementation<float>): Set<float> $wrap
+     * @param pure-Closure(Implementation<int>): Set<int> $wrap
      */
     public static function of(\Closure $wrap): self
     {
-        return new self($wrap, null, null, null);
+        return new self($wrap, null, null);
     }
 
     /**
@@ -47,7 +45,7 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function between(int $min, int $max): self
     {
-        return new self($this->wrap, $min, $max, $this->decimals);
+        return new self($this->wrap, $min, $max);
     }
 
     /**
@@ -56,7 +54,7 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function above(int $min): self
     {
-        return new self($this->wrap, $min, null, $this->decimals);
+        return new self($this->wrap, $min, null);
     }
 
     /**
@@ -65,23 +63,7 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function below(int $max): self
     {
-        return new self($this->wrap, null, $max, $this->decimals);
-    }
-
-    /**
-     * @psalm-mutation-free
-     *
-     * @param Set<int<0, max>>|Provider<int<0, max>> $decimals
-     */
-    #[\NoDiscard]
-    public function withDecimals(Set|Provider $decimals): self
-    {
-        return new self(
-            $this->wrap,
-            $this->min,
-            $this->max,
-            $decimals->toSet(),
-        );
+        return new self($this->wrap, null, $max);
     }
 
     /**
@@ -221,17 +203,22 @@ final class RealNumbers implements Provider
     {
         $min = $this->min;
         $max = $this->max;
+        $decimals = Set::integers()
+            ->above(1)
+            ->map(static fn($fraction) => 1 / $fraction);
 
+        /** @psalm-suppress InvalidOperand */
         $set = ($this->wrap)(Set\Integers::implementation(
             $min,
             $max,
         ))
-            ->zip($this->decimals ?? Set::integers()->above(0))
-            ->map(static fn($pair) => (float) \sprintf(
-                '%s.%s',
-                $pair[0],
-                $pair[1],
-            ));
+            ->exclude(static fn($int) => $int === 0)
+            ->zip($decimals)
+            ->map(static fn($pair) => match ($pair[0] <=> 0) {
+                0 => $pair[1],
+                1 => $pair[0] - $pair[1],
+                -1 => $pair[0] + $pair[1],
+            });
 
         if (!\is_null($min)) {
             $set = $set->exclude(static fn($value) => $value < $min);

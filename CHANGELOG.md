@@ -8,7 +8,6 @@
 - `Innmind\BlackBox\Set::disableShrinking()`
 - `Innmind\BlackBox\Set::toSet()`
 - `Innmind\BlackBox\Set::zip()`
-- `Innmind\BlackBox\Set\Provider\RealsNumbers::withDecimals()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
 - `Innmind\BlackBox\Application::mapProof()`
