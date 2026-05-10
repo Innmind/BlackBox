@@ -11,7 +11,7 @@ use Innmind\BlackBox\Set\{
 
 /**
  * @internal
- * @implements Value\Shrinker<mixed>
+ * @implements Value\Shrinker<Value>
  */
 enum Shrinker implements Value\Shrinker
 {

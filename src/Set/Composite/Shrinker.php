@@ -11,7 +11,7 @@ use Innmind\BlackBox\Set\{
 
 /**
  * @internal
- * @implements Value\Shrinker<mixed>
+ * @implements Value\Shrinker<Combination>
  */
 final class Shrinker implements Value\Shrinker
 {
@@ -38,7 +38,10 @@ final class Shrinker implements Value\Shrinker
     }
 
     /**
+     * @param Value<Combination> $value
      * @param int<0, max> $n
+     *
+     * @return ?Value<Combination>
      */
     private function shrinkANth(Value $value, int $n): ?Value
     {
@@ -71,7 +74,10 @@ final class Shrinker implements Value\Shrinker
     }
 
     /**
+     * @param Value<Combination> $value
      * @param int<0, max> $n
+     *
+     * @return ?Value<Combination>
      */
     private function shrinkBNth(Value $value, int $n = 0): ?Value
     {
