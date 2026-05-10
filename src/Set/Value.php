@@ -151,7 +151,7 @@ final class Value
     /**
      * @psalm-mutation-free
      *
-     * @param callable(mixed): (mixed|End) $shrink
+     * @param callable(T): (T|End|null) $shrink
      *
      * @return self<T>|End|null
      */
@@ -159,7 +159,7 @@ final class Value
     {
         /**
          * @psalm-suppress ImpureFunctionCall
-         * @psalm-suppress MixedAssignment
+         * @psalm-suppress MixedArgument
          */
         $shrunk = $shrink($this->source);
 

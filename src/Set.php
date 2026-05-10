@@ -88,21 +88,8 @@ final class Set
         self|Provider $second,
         self|Provider ...$rest,
     ): self {
-        /**
-         * @psalm-suppress ImpurePropertyFetch Only the ::values() method is impure
-         * @psalm-suppress ImpureFunctionCall
-         */
-        return new self(
-            Set\Composite::implementation(
-                $aggregate,
-                $first->toSet()->implementation,
-                $second->toSet()->implementation,
-                ...\array_map(
-                    static fn($set) => $set->toSet()->implementation,
-                    $rest,
-                ),
-            ),
-            false,
+        return self::tuple($first, $second, ...$rest)->map(
+            static fn($args) => $aggregate(...$args),
         );
     }
 
@@ -126,12 +113,18 @@ final class Set
         self|Provider $second,
         self|Provider ...$rest,
     ): self {
-        /** @var self<non-empty-list<A|B|C>> */
-        return self::compose(
-            static fn(mixed ...$args) => $args,
-            $first,
-            $second,
-            ...$rest,
+        $tuple = $first->toSet()->zip($second);
+
+        /**
+         * @psalm-suppress InvalidOperand
+         * @var self<non-empty-list<A|B|C>>
+         */
+        return \array_reduce(
+            $rest,
+            static fn(self $tuple, self|Provider $set) => $tuple
+                ->zip($set)
+                ->map(static fn($pair) => [...$pair[0], $pair[1]]),
+            $tuple,
         );
     }
 
@@ -483,6 +476,26 @@ final class Set
             Set\FlatMap::implementation(
                 static fn($input) => $map($input)->toSet()->implementation,
                 $this->implementation,
+            ),
+            $this->disableShrinking,
+        );
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
+     * @template R
+     *
+     * @param self<R>|Provider<R> $right
+     *
+     * @return self<array{T, R}>
+     */
+    public function zip(self|Provider $right): self
+    {
+        return new self(
+            Set\Zip::implementation(
+                $this->implementation,
+                $right->toSet()->implementation,
             ),
             $this->disableShrinking,
         );

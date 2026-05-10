@@ -98,14 +98,17 @@ class RealNumbersTest extends TestCase
 
     public function testZeroCannotBeShrinked()
     {
-        $numbers = Set::realNumbers()
+        $number = Set::realNumbers()
             ->between(-1, 1)
-            ->filter(static fn($i) => $i === 0.0)
-            ->take(100);
+            ->take(100)
+            ->values(Random::mersenneTwister)
+            ->current();
 
-        foreach ($numbers->values(Random::mersenneTwister) as $value) {
-            $this->assertNull($value->shrink());
+        while ($shrunk = $number->shrink()) {
+            $number = $shrunk->a();
         }
+
+        $this->assertSame(0, $number->unwrap());
     }
 
     public function testRealNumbersCanBeShrinked()

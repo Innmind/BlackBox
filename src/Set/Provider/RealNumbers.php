@@ -19,7 +19,7 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      *
-     * @param pure-Closure(Implementation<float>): Set<float> $wrap
+     * @param pure-Closure(Implementation<int>): Set<int> $wrap
      */
     private function __construct(
         private \Closure $wrap,
@@ -32,7 +32,7 @@ final class RealNumbers implements Provider
      * @internal
      * @psalm-pure
      *
-     * @param pure-Closure(Implementation<float>): Set<float> $wrap
+     * @param pure-Closure(Implementation<int>): Set<int> $wrap
      */
     public static function of(\Closure $wrap): self
     {
@@ -138,6 +138,21 @@ final class RealNumbers implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @template R
+     *
+     * @param Set<R>|Provider<R> $right
+     *
+     * @return Set<array{float, R}>
+     */
+    #[\NoDiscard]
+    public function zip(Set|Provider $right): Set
+    {
+        return $this->toSet()->zip($right);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @return Set<float>
      */
     #[\NoDiscard]
@@ -186,9 +201,33 @@ final class RealNumbers implements Provider
     #[\NoDiscard]
     public function toSet(): Set
     {
-        return ($this->wrap)(Set\RealNumbers::implementation(
-            $this->min,
-            $this->max,
-        ));
+        $min = $this->min;
+        $max = $this->max;
+        $decimals = Set::integers()
+            ->above(1)
+            ->map(static fn($fraction) => 1 / $fraction);
+
+        /** @psalm-suppress InvalidOperand */
+        $set = ($this->wrap)(Set\Integers::implementation(
+            $min,
+            $max,
+        ))
+            ->exclude(static fn($int) => $int === 0)
+            ->zip($decimals)
+            ->map(static fn($pair) => match ($pair[0] <=> 0) {
+                0 => $pair[1],
+                1 => $pair[0] - $pair[1],
+                -1 => $pair[0] + $pair[1],
+            });
+
+        if (!\is_null($min)) {
+            $set = $set->exclude(static fn($value) => $value < $min);
+        }
+
+        if (!\is_null($max)) {
+            $set = $set->exclude(static fn($value) => $value > $max);
+        }
+
+        return $set;
     }
 }

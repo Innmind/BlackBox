@@ -44,20 +44,6 @@ This design makes sure all elements are shrunk to their minimum values. It's ass
 
 This strategy means the values that affect the failing test are shrunk last. So it will take more shrinking steps to find the minimum values that make a test fail.
 
-## `Composite`
-
-```mermaid
-graph TB
-    Composite -->|Next| RecursiveNthShrink{Either}
-    RecursiveNthShrink -->|"a(n)"| ShrinkANth
-    RecursiveNthShrink -->|"b(n+1)"| ShrinkANth
-    ShrinkANth -->|When n overflows| ShrinkBNth[Shrink nth element with strategy B]
-    ShrinkBNth -->|Next| RecursiveNthShrink
-    ShrinkBNth -->|When no longer shrinkable| Identity
-```
-
-This design is identical to the [`Sequence` one](#sequence) except it doesn't need to remove elements from the composite. It only shrinks elements of the composite.
-
 ## `Seed`ed values
 
 The complexity of seeded values lies with the filtering of these values when shrinking.

@@ -153,6 +153,30 @@ As you can see with `flatMap` you can locally define what you want without havin
 
     If you want a more wide range of seeded values you should call the `->randomize()` method after `->flatMap()`.
 
+### Zip
+
+To reuse the password example from above. You can combine a password with a user like so:
+
+```php
+$set = Set::strings()
+    ->map(static fn($string) => new Password($string))
+    ->zip(
+        Set::strings()
+            ->map(static fn($string) => new User($string)),
+    );
+$set; // instance of Set<array{Password, User}>
+```
+
+This is the same as:
+
+```php
+Set::compose(
+    static fn($password, $user) => [$password, $user],
+    Set::strings()->map(static fn($string) => new Password($string)),
+    Set::strings()->map(static fn($string) => new User($string)),
+);
+```
+
 ### Filter
 
 To reuse the password example from above. Say that your password needs to contain the character `$`. You can do:

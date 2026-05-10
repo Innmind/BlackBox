@@ -127,6 +127,21 @@ final class Properties implements Provider
     /**
      * @psalm-mutation-free
      *
+     * @template R
+     *
+     * @param Set<R>|Provider<R> $right
+     *
+     * @return Set<array{Ensure, R}>
+     */
+    #[\NoDiscard]
+    public function zip(Set|Provider $right): Set
+    {
+        return $this->toSet()->zip($right);
+    }
+
+    /**
+     * @psalm-mutation-free
+     *
      * @return Set<?Ensure>
      */
     #[\NoDiscard]
