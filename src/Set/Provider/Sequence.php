@@ -145,7 +145,7 @@ final class Sequence implements Provider
      *
      * @template U
      *
-     * @param callable(list<V>): (U|Seed<U>) $map
+     * @param callable(list<V>): U $map
      *
      * @return Set<U>
      */

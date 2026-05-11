@@ -31,17 +31,9 @@ final class Map implements Implementation
         \Closure $predicate,
     ): \Generator {
         $map = $this->map;
-        $mappedPredicate = static function(mixed $value) use ($map, $predicate): bool {
+        $mappedPredicate = static fn(mixed $value): bool =>
             /** @var I $value */
-            $mapped = $map($value);
-
-            if ($mapped instanceof Seed) {
-                /** @var D */
-                $mapped = $mapped->unwrap();
-            }
-
-            return $predicate($mapped);
-        };
+            $predicate($map($value));
 
         foreach (($this->set)($random, $mappedPredicate) as $value) {
             yield Value::of($value)
@@ -59,7 +51,7 @@ final class Map implements Implementation
      * @template T
      * @template V
      *
-     * @param callable(V): (Seed<T>|T) $map It must be a pure function (no randomness, no side effects)
+     * @param callable(V): T $map It must be a pure function (no randomness, no side effects)
      * @param Implementation<V> $set
      *
      * @return self<T,V>

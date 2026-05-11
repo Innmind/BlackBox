@@ -15,14 +15,12 @@ use Innmind\BlackBox\Set\Value\{
  */
 final class Value
 {
-    private ?Seed $seed = null;
-
     /**
      * @psalm-mutation-free
      *
      * @param Map<T> $map
      * @param \Closure(mixed): bool $predicate
-     * @param T|Seed<T> $unwrapped
+     * @param T $unwrapped
      */
     private function __construct(
         private mixed $source,
@@ -38,7 +36,7 @@ final class Value
      * @psalm-pure
      * @template V
      *
-     * @param V|Seed<V> $value
+     * @param V $value
      *
      * @return self<V>
      */
@@ -103,7 +101,7 @@ final class Value
      * @psalm-mutation-free
      * @template V
      *
-     * @param callable(T): (V|Seed<V>) $map
+     * @param callable(T): V $map
      *
      * @return self<V>
      */
@@ -193,9 +191,11 @@ final class Value
      */
     public function shrink(): ?Dichotomy
     {
-        $dichotomy = ($this->shrink)?->__invoke($this) ?? $this->seed?->shrink($this->predicate);
+        if (\is_null($this->shrink)) {
+            return null;
+        }
 
-        return $dichotomy?->default($this->withoutShrinking());
+        return ($this->shrink)($this)?->default($this->withoutShrinking());
     }
 
     /**
@@ -203,19 +203,6 @@ final class Value
      */
     public function unwrap()
     {
-        $value = $this->unwrapped;
-
-        // This is not ideal to hide the seeded value this way and to hijack
-        // the shrinking system in self::shrinkable() and self::shrink() as it
-        // complexifies the understanding of what's happening. Because now the
-        // filtering can happen in 2 places.
-        // Until a better idea comes along, this will stay this way.
-        if ($value instanceof Seed) {
-            $this->seed = $value;
-            /** @var T */
-            $value = $value->unwrap();
-        }
-
-        return $value;
+        return $this->unwrapped;
     }
 }

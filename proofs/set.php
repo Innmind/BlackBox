@@ -147,10 +147,10 @@ return static function($prove) {
             'Set::flatMap() input value is shrinkable',
             static function($assert) {
                 $compose = Set::integers()->flatMap(
-                    static fn($seed) => Set::strings()->map(
-                        static fn($string) => $seed->map(
-                            static fn($i) => $i.$string,
-                        ),
+                    static fn($seed) => Set::compose(
+                        static fn($string, $i) => $i.$string,
+                        Set::strings(),
+                        $seed->toSet(),
                     ),
                 );
 
@@ -170,10 +170,9 @@ return static function($prove) {
 
                 $compose = Set::strings()->flatMap(
                     static fn($seed) => Set::compose(
-                        static fn($a, $b) => $seed->map(
-                            static fn($string) => $a.$string.$b,
-                        ),
+                        static fn($a, $string, $b) => $a.$string.$b,
                         Set::integers(),
+                        $seed->toSet(),
                         Set::integers(),
                     ),
                 );
@@ -198,15 +197,13 @@ return static function($prove) {
             static function($assert) {
                 $compose = Set::strings()->flatMap(
                     static fn($stringSeed) => Set::integers()->flatMap(
-                        static fn($aSeed) => Set::integers()->map(
-                            static fn($b) => $stringSeed
-                                ->flatMap(
-                                    static fn($string) => $aSeed->map(
-                                        static fn($a) => $a.'|'.$string.'|'.$b,
-                                    ),
-                                )
-                                ->map(static fn($string) => "($string)"),
-                        ),
+                        static fn($aSeed) => Set::compose(
+                            static fn($a, $string, $b) => $a.'|'.$string.'|'.$b,
+                            $aSeed->toSet(),
+                            $stringSeed->toSet(),
+                            Set::integers(),
+                        )
+                            ->map(static fn($string) => "($string)"),
                     ),
                 );
 
@@ -234,12 +231,10 @@ return static function($prove) {
                 $compose = Set::strings()->flatMap(
                     static fn($stringSeed) => Set::integers()->flatMap(
                         static fn($aSeed) => Set::compose(
-                            static fn($b, $stringB) => $stringSeed->flatMap(
-                                static fn($string) => $aSeed->map(
-                                    static fn($a) => $a.'|'.$string.'|'.$stringB.'|'.$b,
-                                ),
-                            ),
+                            static fn($a, $b, $string, $stringB) => $a.'|'.$string.'|'.$stringB.'|'.$b,
+                            $aSeed->toSet(),
                             Set::integers(),
+                            $stringSeed->toSet(),
                             Set::strings(),
                         ),
                     ),
@@ -267,10 +262,11 @@ return static function($prove) {
             'Set::flatMap()->map()->filter()',
             static function($assert) {
                 $compose = Set::integers()->flatMap(
-                    static fn($seed) => Set::strings()
-                        ->map(static fn($string) => $seed->map(
-                            static fn($i) => $i.$string,
-                        ))
+                    static fn($seed) => Set::compose(
+                        static fn($string, $i) => $i.$string,
+                        Set::strings(),
+                        $seed->toSet(),
+                    )
                         ->filter(static fn($string) => $string !== '0'),
                 );
 
@@ -299,12 +295,12 @@ return static function($prove) {
             static function($assert) {
                 $compose = Set::integers()->flatMap(
                     static fn($seedA) => Set::integers()->flatMap(
-                        static fn($seedB) => Set::strings()
-                            ->map(static fn($string) => $seedA->flatMap(
-                                static fn($a) => $seedB->map(
-                                    static fn($b) => $a.$string.$b,
-                                ),
-                            ))
+                        static fn($seedB) => Set::compose(
+                            static fn($a, $string, $b) => $a.$string.$b,
+                            $seedA->toSet(),
+                            Set::strings(),
+                            $seedB->toSet(),
+                        )
                             ->filter(static fn($string) => $string !== '00'),
                     ),
                 );
@@ -337,10 +333,9 @@ return static function($prove) {
             static function($assert) {
                 $compose = Set::strings()->madeOf(Set::of('a'))->flatMap(
                     static fn($seed) => Set::compose(
-                        static fn($a, $b) => $seed->map(
-                            static fn($string) => $a.'|'.$string.'|'.$b,
-                        ),
+                        static fn($a, $string, $b) => $a.'|'.$string.'|'.$b,
                         Set::integers()->above(0), // to simplify the assertion
+                        $seed->toSet(),
                         Set::integers()->above(0),
                     )->filter(static fn($string) => $string !== '0||0'),
                 );

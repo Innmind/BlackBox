@@ -102,7 +102,7 @@ final class Properties implements Provider
      *
      * @template V
      *
-     * @param callable(Ensure): (V|Seed<V>) $map
+     * @param callable(Ensure): V $map
      *
      * @return Set<V>
      */

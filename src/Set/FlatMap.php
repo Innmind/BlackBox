@@ -21,10 +21,12 @@ final class FlatMap implements Implementation
      *
      * @param \Closure(Seed<I>): Implementation<D> $decorate
      * @param Implementation<I> $set
+     * @param \Closure(Implementation<I>): Set<I> $wrap
      */
     private function __construct(
         private \Closure $decorate,
         private Implementation $set,
+        private \Closure $wrap,
     ) {
     }
 
@@ -35,7 +37,10 @@ final class FlatMap implements Implementation
         // from the underlying set. To generate a more wide range of seeds one
         // can use the ->randomize() method.
         foreach (($this->set)($random, static fn() => true) as $seed) {
-            $set = ($this->decorate)(Seed::of($seed));
+            $set = ($this->decorate)(Seed::of(
+                $this->wrap,
+                $seed,
+            ));
 
             yield from $set($random, $predicate);
         }
@@ -50,13 +55,15 @@ final class FlatMap implements Implementation
      *
      * @param callable(Seed<V>): Implementation<T> $decorate It must be a pure function (no randomness, no side effects)
      * @param Implementation<V> $set
+     * @param \Closure(Implementation<V>): Set<V> $wrap
      *
      * @return self<T,V>
      */
     public static function implementation(
         callable $decorate,
         Implementation $set,
+        \Closure $wrap,
     ): self {
-        return new self(\Closure::fromCallable($decorate), $set);
+        return new self(\Closure::fromCallable($decorate), $set, $wrap);
     }
 }
