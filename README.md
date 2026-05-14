@@ -1,6 +1,6 @@
 # BlackBox
 
-[![CI](https://github.com/Innmind/BlackBox/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Innmind/BlackBox/actions/workflows/ci.yml)
+[![CI](https://github.com/Innmind/BlackBox/actions/workflows/ci.yml/badge.svg)](https://github.com/Innmind/BlackBox/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Innmind/BlackBox/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/BlackBox)
 [![Type Coverage](https://shepherd.dev/github/Innmind/BlackBox/coverage.svg)](https://shepherd.dev/github/Innmind/BlackBox)
 
