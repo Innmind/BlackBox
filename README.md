@@ -63,7 +63,8 @@ By default BlackBox will generate 100 scenarii for each proof.
 
 ![](add.png)
 
-> **Note** BlackBox use the term _proof_ to emphasize that you are testing behaviours not specific scenarii, but these are NOT [formal proofs](https://en.wikipedia.org/wiki/Formal_proof)
+> [!NOTE]
+> BlackBox use the term _proof_ to emphasize that you are testing behaviours not specific scenarii, but these are NOT [formal proofs](https://en.wikipedia.org/wiki/Formal_proof)
 
 ## Installation
 
