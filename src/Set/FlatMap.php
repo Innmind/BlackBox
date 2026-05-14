@@ -33,6 +33,8 @@ final class FlatMap implements Implementation
     #[\Override]
     public function __invoke(Random $random, \Closure $predicate): \Generator
     {
+        $yielded = false;
+
         // By default we favor reusing the same seed to generate multiple values
         // from the underlying set. To generate a more wide range of seeds one
         // can use the ->randomize() method.
@@ -42,7 +44,15 @@ final class FlatMap implements Implementation
                 $seed,
             ));
 
-            yield from $set($random, $predicate);
+            foreach ($set($random, $predicate) as $value) {
+                yield $value;
+                $yielded = true;
+            }
+
+            // This means the underlying Set cannot produce any value
+            if (!$yielded) {
+                return;
+            }
         }
     }
 

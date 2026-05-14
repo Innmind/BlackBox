@@ -5,6 +5,7 @@ use Innmind\BlackBox\{
     Set,
     Random,
     Tag,
+    Exception\EmptySet,
 };
 
 return static function($prove) {
@@ -469,4 +470,22 @@ return static function($prove) {
             },
         )
         ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->proof('Filtered out seed throws EmptySet')
+        ->given($anySet)
+        ->test(static function($assert, $set) {
+            $assert->throws(
+                static fn() => $set
+                    ->flatMap(
+                        static fn($seed) => $seed
+                            ->toSet()
+                            ->filter(static fn() => false),
+                    )
+                    ->enumerate()
+                    ->current(),
+                EmptySet::class,
+            );
+        })
+        ->tag(Tag::ci, Tag::local, Tag::wip);
 };
