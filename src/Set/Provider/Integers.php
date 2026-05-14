@@ -151,7 +151,7 @@ final class Integers implements Provider
      *
      * @template V
      *
-     * @param callable(int): (V|Seed<V>) $map
+     * @param callable(int): V $map
      *
      * @return Set<V>
      */

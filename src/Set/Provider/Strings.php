@@ -204,7 +204,7 @@ final class Strings implements Provider
      *
      * @template V
      *
-     * @param callable(string): (V|Seed<V>) $map
+     * @param callable(string): V $map
      *
      * @return Set<V>
      */

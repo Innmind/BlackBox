@@ -114,7 +114,7 @@ final class Slice implements Provider
      *
      * @template V
      *
-     * @param callable(Util): (V|Seed<V>) $map
+     * @param callable(Util): V $map
      *
      * @return Set<V>
      */

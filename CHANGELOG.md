@@ -10,6 +10,7 @@
 - `Innmind\BlackBox\Set::zip()`
 - `Innmind\BlackBox\Set::properties()`
 - `Innmind\BlackBox\Set::slice()`
+- `Innmind\BlackBox\Set\Seed::toSet()`
 - `Innmind\BlackBox\Set\Provider\Strings::mutuallyExclusive()`
 - `Innmind\BlackBox\Runner\Proof::tagged()`
 - `Innmind\BlackBox\Runner\Proof::disableShrinking()`
@@ -88,6 +89,9 @@
 - `Innmind\BlackBox\Set\MutuallyExclusive`
 - `Innmind\BlackBox\Set\UnsafeStrings::any()`
 - `Innmind\BlackBox\Set\Uuid`
+- `Innmind\BlackBox\Set\Seed::map()`
+- `Innmind\BlackBox\Set\Seed::flatMap()`
+- `Innmind\BlackBox\Set\Seed::shrink()`
 - `Innmind\BlackBox\Set::decorate()`
 - `Innmind\BlackBox\Set::call()`
 - `Innmind\BlackBox\Set::generator()`

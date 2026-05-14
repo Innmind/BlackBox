@@ -136,17 +136,15 @@ As you can see with `flatMap` you can locally define what you want without havin
     };
 
     $set = Set::integers()->flatMap(
-        static fn(Seed $int) => Set::strings()->map(
-            static fn(string $string) => $int->map(
-                static fn(int $int) => $int.$string,
-            ),
+        static fn(Seed $int) => Set::compose(
+            static fn(string $string, int $int) => $int.$string,
+            Set::strings(),
+            $int->toSet(),
         ),
     );
     ```
 
     This way BlackBox knows every transformations of a seeded value and re-apply then after shrinking it.
-
-    And you can also compose multiple `Seed`s via the `Seed::flatMap()` method.
 
 ??? warning "Randomness"
     By default the `Set` returned by `flatMap` will produce values with the same _seed_ (the callable argument).

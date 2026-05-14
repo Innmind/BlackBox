@@ -77,7 +77,7 @@ final class Set
      * @template A
      * @no-named-arguments
      *
-     * @param callable(mixed...): (A|Seed<A>) $aggregate It must be a pure function (no randomness, no side effects)
+     * @param callable(mixed...): A $aggregate It must be a pure function (no randomness, no side effects)
      *
      * @return self<A>
      */
@@ -431,7 +431,7 @@ final class Set
      *
      * @template V
      *
-     * @param callable(T): (V|Seed<V>) $map
+     * @param callable(T): V $map
      *
      * @return self<V>
      */
@@ -467,6 +467,7 @@ final class Set
             Set\FlatMap::implementation(
                 static fn($input) => $map($input)->toSet()->implementation,
                 $this->implementation,
+                self::build(...),
             ),
             $this->disableShrinking,
         );

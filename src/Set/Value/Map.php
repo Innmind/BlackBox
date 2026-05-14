@@ -3,11 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\BlackBox\Set\Value;
 
-use Innmind\BlackBox\Set\{
-    Seed,
-    Value,
-};
-
 /**
  * @internal
  * @template-covariant T
@@ -17,7 +12,7 @@ final class Map
     /**
      * @psalm-mutation-free
      *
-     * @param \Closure(mixed): (T|Seed<T>) $map
+     * @param \Closure(mixed): T $map
      */
     private function __construct(
         private \Closure $map,
@@ -25,7 +20,7 @@ final class Map
     }
 
     /**
-     * @return T|Seed<T>
+     * @return T
      */
     public function __invoke(mixed $source): mixed
     {
@@ -45,7 +40,7 @@ final class Map
      * @psalm-mutation-free
      * @template V
      *
-     * @param callable(T): (V|Seed<V>) $map
+     * @param callable(T): V $map
      *
      * @return self<V>
      */
@@ -53,23 +48,8 @@ final class Map
     {
         $previous = $this->map;
 
-        return new self(static function(mixed $source) use ($map, $previous): mixed {
-            $value = $previous($source);
-
-            if ($value instanceof Seed) {
-                return $value->flatMap(static function($value) use ($map) {
-                    /** @var T $value */
-                    $mapped = $map($value);
-
-                    if ($mapped instanceof Seed) {
-                        return $mapped;
-                    }
-
-                    return Seed::of(Value::of($mapped));
-                });
-            }
-
-            return $map($value);
-        });
+        return new self(
+            static fn(mixed $source) => $map($previous($source)),
+        );
     }
 }

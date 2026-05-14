@@ -110,7 +110,7 @@ final class RealNumbers implements Provider
      *
      * @template V
      *
-     * @param callable(float): (V|Seed<V>) $map
+     * @param callable(float): V $map
      *
      * @return Set<V>
      */
