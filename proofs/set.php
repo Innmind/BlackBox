@@ -420,11 +420,12 @@ return static function($prove) {
         ->test(static fn($assert, $in, $out) => $assert->same(
             $out,
             $in->via(static function($set) use ($assert, $in, $out) {
-                $assert->same($in, $test);
+                $assert->same($in, $set);
 
                 return $out;
             }),
-        ));
+        ))
+        ->tag(Tag::ci, Tag::local);
 
     yield $prove
         ->proof('Set->disableShrinking()')
