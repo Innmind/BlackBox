@@ -487,5 +487,5 @@ return static function($prove) {
                 EmptySet::class,
             );
         })
-        ->tag(Tag::ci, Tag::local, Tag::wip);
+        ->tag(Tag::ci, Tag::local);
 };
