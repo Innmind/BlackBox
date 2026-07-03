@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- `$assert->debug()` was leaking the last successful shrunk values
+
 ## 7.0.0 - 2026-05-14
 
 ### Added
