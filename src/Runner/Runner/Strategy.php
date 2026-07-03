@@ -62,6 +62,7 @@ enum Strategy
     ): void {
         $identity = $this->hash($previousFailure);
         $previousStrategy = $scenario;
+        $previousDebug = $debug;
         $dichotomy = $scenario->shrink();
 
         do {
@@ -69,7 +70,7 @@ enum Strategy
                 throw Scenario\Failure::of(
                     $previousFailure,
                     $previousStrategy,
-                    $debug,
+                    $previousDebug,
                 );
             }
 
@@ -114,6 +115,7 @@ enum Strategy
                 $dichotomy = null;
             } catch (Assert\Failure $e) {
                 $dichotomy = $currentStrategy->shrink();
+                $previousDebug = $debug->snapshot();
                 $previousFailure = $e;
                 $previousStrategy = $currentStrategy;
 

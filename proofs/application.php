@@ -5,8 +5,10 @@ use Innmind\BlackBox\{
     Application,
     Random,
     Set,
+    Runner\Assert,
     Runner\Load,
     Runner\IO\Collect,
+    Prove,
     Tag,
 };
 use Fixtures\Innmind\BlackBox\{
@@ -20,7 +22,7 @@ use Fixtures\Innmind\BlackBox\{
     UpperBoundAtHundred,
 };
 
-return static function($prove) {
+return static function(Prove $prove) {
     yield $prove
         ->proof('BlackBox can run with any of the random strategies')
         ->given(Set::of(...Random::cases()))
@@ -604,6 +606,38 @@ return static function($prove) {
                     ->not()
                     ->contains('$a = 0')
                     ->contains("SF\n\n\$a = 1\n");
+            },
+        )
+        ->tag(Tag::ci, Tag::local);
+
+    yield $prove
+        ->test(
+            '$assert->debug() does not leak the last successful shrunk value',
+            static function($assert) {
+                $io = Collect::new();
+
+                $result = Application::new([])
+                    ->displayVia($io)
+                    ->mapPrinter(static fn($printer) => $printer->withoutColors())
+                    ->tryToProve(static function(Prove $prove) {
+                        yield $prove
+                            ->proof('debug')
+                            ->given(Set::integers()->above(0))
+                            ->test(static function(Assert $assert, $i) {
+                                $assert->debug('shrunk', $i);
+
+                                if ($i > 0) {
+                                    $assert->true(false);
+                                }
+
+                                $assert->true(true);
+                            });
+                    });
+
+                $assert->false($result->successful());
+                $assert
+                    ->string($io->toString())
+                    ->contains('$shrunk = 1');
             },
         )
         ->tag(Tag::ci, Tag::local);

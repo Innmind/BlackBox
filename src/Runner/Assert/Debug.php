@@ -31,6 +31,16 @@ final class Debug
 
     /**
      * @internal
+     */
+    public function snapshot(): self
+    {
+        $snapshot = new self($this->data);
+
+        return $snapshot;
+    }
+
+    /**
+     * @internal
      *
      * @param non-empty-string $name
      */
