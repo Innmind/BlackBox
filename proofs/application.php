@@ -622,17 +622,15 @@ return static function(Prove $prove) {
                     ->tryToProve(static function(Prove $prove) {
                         yield $prove
                             ->proof('debug')
-                            ->given(Set::integers()->between(0, 100))
+                            ->given(Set::integers()->above(0))
                             ->test(static function(Assert $assert, $i) {
                                 $assert->debug('shrunk', $i);
 
-                                if ($i > 50 || $i === 0) {
-                                    $assert->true(true);
-
-                                    return;
+                                if ($i > 0) {
+                                    $assert->true(false);
                                 }
 
-                                $assert->true(false);
+                                $assert->true(true);
                             });
                     });
 
