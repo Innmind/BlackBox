@@ -48,7 +48,7 @@ final class Report
         }
 
         $this->coverage = new CodeCoverage(
-            (new Selector)->forLineCoverage($filter),
+            (new Selector)->select($filter),
             $filter,
         );
         $this->reportPath = $reportPath;

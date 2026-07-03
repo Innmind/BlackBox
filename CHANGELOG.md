@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Requires `phpunit/php-code-coverage` `~14.2` to avoid using deprecated code
+
 ## 7.0.0 - 2026-05-14
 
 ### Added

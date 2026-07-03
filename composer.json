@@ -18,7 +18,7 @@
         "php": "~8.4",
         "symfony/var-dumper": "~8.0",
         "phpunit/php-timer": "~9.0",
-        "phpunit/php-code-coverage": "~13.0|~14.0"
+        "phpunit/php-code-coverage": "~14.2"
     },
     "autoload": {
         "psr-4": {
